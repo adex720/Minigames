@@ -1,0 +1,151 @@
+package io.github.adex720.minigames.party;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import io.github.adex720.minigames.data.IdCompound;
+import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.util.JsonHelper;
+
+import java.util.HashSet;
+import java.util.Set;
+
+
+public class Party implements JsonSavable<Party>, IdCompound {
+
+    public static final int MAX_SIZE = 10;
+
+    private long owner;
+    private final Set<Long> members;
+
+    private long lastActive;
+
+    public Party(long ownerId, long... memberIds) {
+        this.owner = ownerId;
+        this.members = new HashSet<>();
+
+        for (long id : memberIds) {
+            this.members.add(id);
+        }
+
+        lastActive = System.currentTimeMillis();
+    }
+
+    public long getOwnerId() {
+        return owner;
+    }
+
+    public int size() {
+        return members.size() + 1;
+    }
+
+    public boolean removeMember(long memberId) {
+        return members.remove(memberId);
+    }
+
+    public boolean addMember(long memberId) {
+        if (size() < MAX_SIZE && !members.contains(memberId)) {
+            members.add(memberId);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean transfer(long newOwner) {
+        if (members.add(owner)) {
+            members.remove(newOwner);
+            owner = newOwner;
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isInParty(long memberId) {
+        if (owner == memberId) return true;
+
+        return members.contains(memberId);
+    }
+
+    public Set<Long> getMembersWithoutOwner() {
+        return new HashSet<>(this.members);
+    }
+
+    public Set<Long> getMembersWithOwner() {
+        Set<Long> members = new HashSet<>(this.members);
+        members.add(owner);
+        return members;
+    }
+
+    public void active(){
+        lastActive = System.currentTimeMillis();
+    }
+
+    public boolean isInactive(long limit){
+        return lastActive <= limit;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) owner;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Party party) {
+            return party.owner == owner;
+        } else return false;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    public Long getId() {
+        return getOwnerId();
+    }
+
+    @Override
+    public JsonObject getAsJson() {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", owner);
+
+        JsonArray members = new JsonArray();
+        for (long memberId : this.members) {
+            members.add(memberId);
+        }
+        json.add("members", members);
+
+        return json;
+    }
+
+    public static Party fromJson(JsonObject json) {
+        long ownerId = JsonHelper.getLong(json, "id");
+
+        JsonArray membersJson = JsonHelper.getJsonArray(json, "members");
+
+        int members = membersJson.size();
+        long[] memberIds = new long[members];
+        for (int i = 0; i < members; i++) {
+            memberIds[i] = membersJson.get(i).getAsLong();
+        }
+
+        return new Party(ownerId, memberIds);
+    }
+
+    public void onCreate(){
+
+    }
+
+    public void onDelete(){
+
+    }
+
+    public void onTransfer(long oldOwner){
+
+    }
+
+
+}

@@ -1,0 +1,7 @@
+/.gradle
+/.idea
+/out
+
+config.json
+
+/savedata
