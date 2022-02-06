@@ -23,7 +23,7 @@ public class CommandPing extends Command {
             AtomicReference<OffsetDateTime> end = new AtomicReference<>();
             action.editOriginal("Pong :ping_pong:!").queue(message -> {
                 end.set(message.getTimeCreated());
-                long ping = start.until(end.get(), ChronoUnit.MILLIS) / 2L; // average of 2 actions
+                long ping = start.until(end.get(), ChronoUnit.MILLIS);
                 action.editOriginal("Ping: " + ping + "ms | Websocket: " + event.getJDA().getGatewayPing() + "ms :ping_pong:").queue();
             });
 

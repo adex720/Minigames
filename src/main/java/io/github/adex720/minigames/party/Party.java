@@ -5,11 +5,13 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
-import io.github.adex720.minigames.manager.party.PartyManager;
-import io.github.adex720.minigames.manager.profile.ProfileManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -116,8 +118,60 @@ public class Party implements JsonSavable<Party>, IdCompound {
         Util.schedule(() -> invites.remove(id), 60000);
     }
 
-    public boolean isInvited(long id){
+    public boolean isInvited(long id) {
         return invites.contains(id);
+    }
+
+    public void updatePartyId() {
+        members.forEach(id -> bot.getProfileManager().getProfile(id).partyJoined(owner));
+        bot.getProfileManager().getProfile(owner).partyJoined(owner);
+    }
+
+    public MessageEmbed getInfo(User user) {
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("**Size: ")
+                .append(size())
+                .append("**");
+
+        if (size() >= MAX_SIZE) {
+            stringBuilder.append("\n**The party is full.");
+        }
+
+        // TODO: show current minigame
+
+        return new EmbedBuilder()
+                .setTitle("PARTY INFO")
+                .addField("Owner: " + user.getAsTag(), stringBuilder.toString(), false)
+                .setColor(Util.getColor(owner))
+                .setFooter(user.getName(), user.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build();
+    }
+
+    public MessageEmbed getMembers(User user) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (!members.isEmpty()) {
+            stringBuilder.append("**Members:**");
+            for (long memberId : members) {
+                stringBuilder.append(" - <@!")
+                        .append(memberId)
+                        .append(">");
+            }
+            if (size() >= MAX_SIZE) {
+                stringBuilder.append("\n**The party is full.");
+            }
+        }
+
+        return new EmbedBuilder()
+                .setTitle("PARTY MEMBERS")
+                .addField("Owner: " + user.getAsTag(), stringBuilder.toString(), false)
+                .setColor(Util.getColor(owner))
+                .setFooter(user.getName(), user.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build();
+
     }
 
     @Override
@@ -180,14 +234,18 @@ public class Party implements JsonSavable<Party>, IdCompound {
     }
 
     public void onTransfer(long oldOwner) {
+        updatePartyId();
+    }
+
+    public void onMemberJoin(long member) {
 
     }
 
-    public void onMemberJoin(long member){
+    public void onMemberLeave(long member) {
 
     }
 
-    public void onMemberLeave(long member){
+    public void onMemberKicked(long member) {
 
     }
 
