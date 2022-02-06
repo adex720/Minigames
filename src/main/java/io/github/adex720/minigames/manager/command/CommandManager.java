@@ -2,7 +2,9 @@ package io.github.adex720.minigames.manager.command;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.command.Command;
+import io.github.adex720.minigames.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.command.miscellaneous.CommandPing;
+import io.github.adex720.minigames.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.command.party.*;
 import io.github.adex720.minigames.manager.Manager;
 import net.dv8tion.jda.api.JDA;
@@ -23,7 +25,9 @@ public class CommandManager extends Manager {
     }
 
     private void initCommands(MinigamesBot bot) {
+        COMMANDS.add(new CommandInvite(bot));
         COMMANDS.add(new CommandPing(bot));
+        COMMANDS.add(new CommandServer(bot));
 
         COMMANDS.add(new CommandPartyCreate(bot));
         COMMANDS.add(new CommandPartyDelete(bot));
