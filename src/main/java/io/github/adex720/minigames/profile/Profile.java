@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.command.profile;
+package io.github.adex720.minigames.profile;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.data.IdCompound;
@@ -13,6 +13,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public Profile(long userId) {
         this.userId = userId;
+        isInParty = false;
+        partyId = userId;
     }
 
     @Override

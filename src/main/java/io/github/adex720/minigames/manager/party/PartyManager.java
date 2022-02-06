@@ -52,6 +52,10 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
         PARTIES.put(id, party);
     }
 
+    public void removeParty(long id){
+        PARTIES.remove(id);
+    }
+
     public boolean isPartyOwner(long id){
         return PARTIES.containsKey(id);
     }

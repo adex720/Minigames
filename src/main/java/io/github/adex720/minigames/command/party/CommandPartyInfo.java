@@ -9,7 +9,8 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 public class CommandPartyInfo  extends Command {
 
     public CommandPartyInfo(MinigamesBot bot) {
-        super(bot, "", "", CommandCategory.PARTY);
+        super(bot, "party info", "Shows information about your party.", CommandCategory.PARTY);
+        requiresProfile();
     }
 
     @Override

@@ -9,7 +9,8 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 public class CommandPartyPublic  extends Command {
 
     public CommandPartyPublic(MinigamesBot bot) {
-        super(bot, "", "", CommandCategory.PARTY);
+        super(bot, "party public", "Makes it possible for everyone to join your party.", CommandCategory.PARTY);
+        requiresProfile();
     }
 
     @Override

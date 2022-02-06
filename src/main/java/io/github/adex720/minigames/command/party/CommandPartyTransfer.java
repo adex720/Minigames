@@ -9,7 +9,8 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 public class CommandPartyTransfer  extends Command {
 
     public CommandPartyTransfer(MinigamesBot bot) {
-        super(bot, "", "", CommandCategory.PARTY);
+        super(bot, "party transfer", "Transfers the party ownership to another member.", CommandCategory.PARTY);
+        requiresProfile();
     }
 
     @Override

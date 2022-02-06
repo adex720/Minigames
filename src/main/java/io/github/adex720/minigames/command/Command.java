@@ -21,7 +21,7 @@ public abstract class Command {
 
     protected Command(MinigamesBot bot, String name, String description, CommandCategory category) {
         this.bot = bot;
-        this.name = name;
+        this.name = name.replace(' ', '-');
         this.description = description;
         Category = category;
 
@@ -32,6 +32,7 @@ public abstract class Command {
         if (requiresProfile) {
             if (!ci.hasProfile()) {
                 event.reply(ci.authorMention() + "You need to create a profile with the start-command to use this command!").queue();
+                return true;
             }
         }
         return execute(event, ci);

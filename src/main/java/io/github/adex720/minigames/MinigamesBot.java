@@ -112,3 +112,27 @@ public class MinigamesBot {
         return json;
     }
 }
+
+
+/*
+   TODO: minigames to add
+  - hangman
+  - unscramble
+  - wordle
+  - higher-lower
+  - counting
+  - counting variations (hex, binary, letters)
+  - tic-tac-toe
+  - connect 4
+
+  TODO: commands to add
+  - leaderboard
+  - quests
+  - profile
+  - kits (daily, hourly, supporter)
+
+  TODO: trivia
+   (https://opentdb.com/api_config.php)
+
+
+*/

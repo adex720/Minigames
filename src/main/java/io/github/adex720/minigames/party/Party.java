@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.manager.party.PartyManager;
+import io.github.adex720.minigames.manager.profile.ProfileManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 
@@ -36,6 +38,8 @@ public class Party implements JsonSavable<Party>, IdCompound {
         for (long id : memberIds) {
             this.members.add(id);
         }
+
+        isPublic = true;
 
         lastActive = System.currentTimeMillis();
     }
@@ -171,14 +175,19 @@ public class Party implements JsonSavable<Party>, IdCompound {
     }
 
     public void onDelete() {
-
+        bot.getProfileManager().getProfile(owner).partyLeft();
+        members.forEach(id -> bot.getProfileManager().getProfile(id).partyLeft());
     }
 
     public void onTransfer(long oldOwner) {
 
     }
 
-    public void onMemberJoin(long newMember){
+    public void onMemberJoin(long member){
+
+    }
+
+    public void onMemberLeave(long member){
 
     }
 

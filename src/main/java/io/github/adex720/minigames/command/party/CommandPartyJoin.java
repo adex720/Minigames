@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.command.Command;
 import io.github.adex720.minigames.command.CommandCategory;
 import io.github.adex720.minigames.command.CommandInfo;
-import io.github.adex720.minigames.command.profile.Profile;
+import io.github.adex720.minigames.profile.Profile;
 import io.github.adex720.minigames.party.Party;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -12,14 +12,15 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 public class CommandPartyJoin extends Command {
 
-    protected CommandPartyJoin(MinigamesBot bot) {
-        super(bot, "party join", "Join a party", CommandCategory.PARTY);
+    public CommandPartyJoin(MinigamesBot bot) {
+        super(bot, "party join", "Joins a party.", CommandCategory.PARTY);
+        requiresProfile();
     }
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         if (ci.isInParty()) {
-            event.reply(ci.authorMention() + ", You can't join a party because you already are in one.").queue();
+            event.reply("You can't join a party because you already are in one.").queue();
             return true;
         }
 
@@ -48,7 +49,7 @@ public class CommandPartyJoin extends Command {
         if (party.size() < Party.MAX_SIZE) {
             if (!party.isPublic()) {
                 if (!party.isInvited(authorId)) {
-                    event.reply(ci.authorMention() + ", this party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
+                    event.reply("This party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
                     return true;
                 }
             }
@@ -58,6 +59,8 @@ public class CommandPartyJoin extends Command {
         party.onMemberJoin(authorId);
 
         ci.profile().partyJoined(partyId);
+
+        event.reply("You successfully joined the party.").queue();
 
         return true;
     }

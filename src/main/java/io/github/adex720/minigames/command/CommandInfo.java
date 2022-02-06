@@ -1,6 +1,6 @@
 package io.github.adex720.minigames.command;
 
-import io.github.adex720.minigames.command.profile.Profile;
+import io.github.adex720.minigames.profile.Profile;
 import io.github.adex720.minigames.party.Party;
 import net.dv8tion.jda.api.entities.User;
 

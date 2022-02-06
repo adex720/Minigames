@@ -19,7 +19,7 @@ public class CommandPartyCreate extends Command {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
 
         if (ci.isInParty()) {
-            event.reply(ci.authorMention() + ", You can't create a party because you are in one").queue();
+            event.reply("You can't create a party because you are in one").queue();
             return true;
         }
 
@@ -27,10 +27,11 @@ public class CommandPartyCreate extends Command {
         party.onCreate();
 
         bot.getPartyManager().addParty(ci.authorId(), party);
+        ci.profile().partyJoined(ci.authorId());
 
         event.replyEmbeds(new EmbedBuilder()
                 .setTitle("PARTY")
-                .addField("Party created", "Others can join the party with `/party join " + ci.authorMention() + "`", false)
+                .addField("Party created", "Others can join the party with /party join " + ci.authorMention(), false)
                 .setColor(Command.SUCCESSFUL)
                 .build()).queue();
 
