@@ -46,6 +46,7 @@ public class MinigamesBot {
 
         partyManager = new PartyManager(this);
 
+
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
