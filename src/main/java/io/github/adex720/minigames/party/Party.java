@@ -2,9 +2,11 @@ package io.github.adex720.minigames.party;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Util;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,14 +16,22 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     public static final int MAX_SIZE = 10;
 
+    private final MinigamesBot bot;
+
     private long owner;
     private final Set<Long> members;
 
+    private final Set<Long> invites;
+    private boolean isPublic;
+
     private long lastActive;
 
-    public Party(long ownerId, long... memberIds) {
+    public Party(MinigamesBot bot, long ownerId, long... memberIds) {
+        this.bot = bot;
         this.owner = ownerId;
         this.members = new HashSet<>();
+
+        invites = new HashSet<>();
 
         for (long id : memberIds) {
             this.members.add(id);
@@ -77,12 +87,33 @@ public class Party implements JsonSavable<Party>, IdCompound {
         return members;
     }
 
-    public void active(){
+    public void active() {
         lastActive = System.currentTimeMillis();
     }
 
-    public boolean isInactive(long limit){
+    public boolean isInactive(long limit) {
         return lastActive <= limit;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void makePublic() {
+        isPublic = true;
+    }
+
+    public void makePrivate() {
+        isPublic = false;
+    }
+
+    public void invite(long id) {
+        invites.add(id);
+        Util.schedule(() -> invites.remove(id), 60000);
+    }
+
+    public boolean isInvited(long id){
+        return invites.contains(id);
     }
 
     @Override
@@ -121,7 +152,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
         return json;
     }
 
-    public static Party fromJson(JsonObject json) {
+    public static Party fromJson(MinigamesBot bot, JsonObject json) {
         long ownerId = JsonHelper.getLong(json, "id");
 
         JsonArray membersJson = JsonHelper.getJsonArray(json, "members");
@@ -132,18 +163,22 @@ public class Party implements JsonSavable<Party>, IdCompound {
             memberIds[i] = membersJson.get(i).getAsLong();
         }
 
-        return new Party(ownerId, memberIds);
+        return new Party(bot, ownerId, memberIds);
     }
 
-    public void onCreate(){
-
-    }
-
-    public void onDelete(){
+    public void onCreate() {
 
     }
 
-    public void onTransfer(long oldOwner){
+    public void onDelete() {
+
+    }
+
+    public void onTransfer(long oldOwner) {
+
+    }
+
+    public void onMemberJoin(long newMember){
 
     }
 

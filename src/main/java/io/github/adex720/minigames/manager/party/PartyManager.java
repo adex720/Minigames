@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.party.Party;
 import io.github.adex720.minigames.manager.IdCompoundSavableManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +23,7 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
 
     @Override
     public Party fromJson(JsonObject json) {
-        return Party.fromJson(json);
+        return Party.fromJson(bot, json);
     }
 
     @Override
@@ -43,8 +44,21 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
         }
     }
 
+    public void createParty(long id){
+        PARTIES.put(id, new Party(bot, id));
+    }
+
     public void addParty(long id, Party party){
         PARTIES.put(id, party);
+    }
+
+    public boolean isPartyOwner(long id){
+        return PARTIES.containsKey(id);
+    }
+
+    @Nullable
+    public Party getParty(long id){
+        return PARTIES.get(id);
     }
 
 }

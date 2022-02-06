@@ -25,7 +25,24 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return null;
     }
 
-    public static Profile fromJson(JsonObject json){
+    public static Profile fromJson(JsonObject json) {
+        return new Profile(1L);
+    }
 
+    public boolean isInParty() {
+        return isInParty;
+    }
+
+    public long getPartyId() {
+        return partyId;
+    }
+
+    public void partyJoined(long partyId){
+        isInParty = true;
+        this.partyId = partyId;
+    }
+
+    public void partyLeft(){
+        isInParty = false;
     }
 }

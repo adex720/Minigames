@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.listener.CommandListener;
 import io.github.adex720.minigames.manager.command.CommandManager;
 import io.github.adex720.minigames.manager.party.PartyManager;
+import io.github.adex720.minigames.manager.profile.ProfileManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -30,6 +31,8 @@ public class MinigamesBot {
     private final CommandManager commandManager;
     private final CommandListener commandListener;
 
+    private final ProfileManager profileManager;
+
     private final PartyManager partyManager;
 
     public MinigamesBot(String token) throws LoginException, InterruptedException {
@@ -38,6 +41,8 @@ public class MinigamesBot {
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
+
+        profileManager = new ProfileManager(this);
 
         partyManager = new PartyManager(this);
 
@@ -74,6 +79,10 @@ public class MinigamesBot {
 
     public CommandListener getCommandListener() {
         return commandListener;
+    }
+
+    public ProfileManager getProfileManager() {
+        return profileManager;
     }
 
     public PartyManager getPartyManager() {

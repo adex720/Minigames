@@ -23,7 +23,7 @@ public class CommandPartyCreate extends Command {
             return true;
         }
 
-        Party party = new Party(ci.authorId());
+        Party party = new Party(bot, ci.authorId());
         party.onCreate();
 
         bot.getPartyManager().addParty(ci.authorId(), party);
