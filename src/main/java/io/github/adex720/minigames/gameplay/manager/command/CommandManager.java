@@ -2,8 +2,8 @@ package io.github.adex720.minigames.gameplay.manager.command;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
-import io.github.adex720.minigames.discord.command.ParentCommand;
 import io.github.adex720.minigames.discord.command.Subcommand;
+import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandPing;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
@@ -21,7 +21,8 @@ public class CommandManager extends Manager {
     public final Set<Command> MAIN_COMMANDS;
     public final Set<Command> SUBCOMMANDS;
 
-    public final ParentCommand parentCommandParty;
+    public final CommandParty parentCommandParty;
+    public final CommandPlay parentCommandPlay;
 
     public CommandManager(MinigamesBot bot) {
         super(bot, "command_manager");
@@ -29,6 +30,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS = new HashSet<>();
 
         parentCommandParty = new CommandParty(bot);
+        parentCommandPlay = new CommandPlay(bot);
     }
 
     public void initCommands(MinigamesBot bot) {
@@ -37,6 +39,7 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandServer(bot));
 
         MAIN_COMMANDS.add(parentCommandParty);
+        MAIN_COMMANDS.add(parentCommandPlay);
         SUBCOMMANDS.add(new CommandPartyCreate(bot));
         SUBCOMMANDS.add(new CommandPartyDelete(bot));
         SUBCOMMANDS.add(new CommandPartyInfo(bot));
@@ -69,6 +72,10 @@ public class CommandManager extends Manager {
                 ((Subcommand) command).registerSubcommand();
             }
         }
+    }
+
+    public void addSubcommand(Subcommand subcommand) {
+        SUBCOMMANDS.add(subcommand);
     }
 
 

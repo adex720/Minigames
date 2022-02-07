@@ -19,6 +19,7 @@ public class Util {
     public interface Task {
         void run();
     }
+
     public static Color getColor(long id) {
         int color = (int) (id + 12582870); // That number is fancy
 
@@ -27,6 +28,10 @@ public class Util {
         int blue = (color >> 16) & 0xFF;
 
         return new Color(red, green, blue);
+    }
+
+    public static boolean isUserNormal(String input) {
+        return !input.contains("<@");
     }
 
 }

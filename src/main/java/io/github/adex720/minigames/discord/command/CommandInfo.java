@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.discord.command;
 
+import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import net.dv8tion.jda.api.entities.User;
@@ -15,12 +16,15 @@ public class CommandInfo {
     private final CalculableValue<User> author;
     private User authorUser;
 
-    public CommandInfo(CalculableValue<Boolean> isInParty, CalculableValue<Party> party, CalculableValue<Boolean> hasProfile, CalculableValue<Profile> profile, CalculableValue<User> author) {
+    private final MinigamesBot bot;
+
+    public CommandInfo(CalculableValue<Boolean> isInParty, CalculableValue<Party> party, CalculableValue<Boolean> hasProfile, CalculableValue<Profile> profile, CalculableValue<User> author, MinigamesBot bot) {
         this.isInParty = isInParty;
         this.party = party;
         this.hasProfile = hasProfile;
         this.profile = profile;
         this.author = author;
+        this.bot = bot;
         authorUser = null;
     }
 
@@ -63,6 +67,10 @@ public class CommandInfo {
 
     public String authorMention() {
         return "<@!" + author.calculate().getId() + ">";
+    }
+
+    public MinigamesBot bot() {
+        return bot;
     }
 
     @FunctionalInterface

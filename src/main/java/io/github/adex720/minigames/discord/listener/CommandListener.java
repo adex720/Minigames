@@ -36,7 +36,7 @@ public class CommandListener extends ListenerAdapter {
                         () -> bot.getPartyManager().getParty(bot.getProfileManager().getProfile(userId).getPartyId()),
                         () -> bot.getProfileManager().hasProfile(userId),
                         () -> bot.getProfileManager().getProfile(userId),
-                        member::getUser);
+                        member::getUser, bot);
                 command.onRun(event, commandInfo);
                 break;
             }

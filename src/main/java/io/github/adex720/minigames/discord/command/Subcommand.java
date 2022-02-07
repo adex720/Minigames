@@ -14,9 +14,7 @@ public abstract class Subcommand extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        return true;
-    }
+    public abstract boolean execute(SlashCommandEvent event, CommandInfo ci);
 
     @Override
     public String getWholeName() {
@@ -27,7 +25,7 @@ public abstract class Subcommand extends Command {
         return new SubcommandData(name, description);
     }
 
-    public void registerSubcommand(){
+    public void registerSubcommand() {
         parent.addSubcommand(this);
     }
 

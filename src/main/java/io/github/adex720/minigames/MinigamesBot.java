@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
+import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
+import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -35,6 +37,9 @@ public class MinigamesBot {
 
     private final PartyManager partyManager;
 
+    private final MinigameTypeManager minigameTypeManager;
+    private final MinigameManager minigameManager;
+
     public MinigamesBot(String token) throws LoginException, InterruptedException {
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
@@ -46,6 +51,9 @@ public class MinigamesBot {
         profileManager = new ProfileManager(this);
 
         partyManager = new PartyManager(this);
+
+        minigameTypeManager = new MinigameTypeManager(this);
+        minigameManager = new MinigameManager(this);
 
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
@@ -85,8 +93,16 @@ public class MinigamesBot {
         return profileManager;
     }
 
+    public MinigameTypeManager getMinigameTypeManager() {
+        return minigameTypeManager;
+    }
+
     public PartyManager getPartyManager() {
         return partyManager;
+    }
+
+    public MinigameManager getMinigameManager() {
+        return minigameManager;
     }
 
     private static JsonObject getConfigJson() {
@@ -131,9 +147,12 @@ public class MinigamesBot {
     - quests
     - profile
     - kits (daily, hourly, supporter)
+    - quit (removes minigame)
 
   TODO: trivia
    (https://opentdb.com/api_config.php)
+
+   TODO: text command system for dev commands
 
 
 */

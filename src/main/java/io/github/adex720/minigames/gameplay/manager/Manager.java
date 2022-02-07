@@ -7,10 +7,9 @@ public abstract class Manager {
 
     public final String name;
 
-    @Nullable
     protected final MinigamesBot bot;
 
-    protected Manager(@Nullable MinigamesBot bot, String name) {
+    protected Manager(MinigamesBot bot, String name) {
         this.name = name;
         this.bot = bot;
     }
