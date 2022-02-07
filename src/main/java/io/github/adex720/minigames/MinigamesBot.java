@@ -2,10 +2,10 @@ package io.github.adex720.minigames;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.github.adex720.minigames.listener.CommandListener;
-import io.github.adex720.minigames.manager.command.CommandManager;
-import io.github.adex720.minigames.manager.party.PartyManager;
-import io.github.adex720.minigames.manager.profile.ProfileManager;
+import io.github.adex720.minigames.discord.listener.CommandListener;
+import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
+import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
+import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -41,6 +41,7 @@ public class MinigamesBot {
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
+        commandManager.initCommands(this);
 
         profileManager = new ProfileManager(this);
 
@@ -63,7 +64,6 @@ public class MinigamesBot {
 
         MinigamesBot minigamesBot = new MinigamesBot(token);
     }
-
 
     public JDA getJda() {
         return jda;
