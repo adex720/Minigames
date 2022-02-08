@@ -10,6 +10,7 @@ public abstract class MinigameSubcommand extends Subcommand {
 
     public MinigameSubcommand(MinigamesBot bot, MinigameType<? extends Minigame> type, String name, String description) {
         super(bot, type.getCommand(), name, description, CommandCategory.MINIGAME);
+        requiresProfile();
     }
 
 }

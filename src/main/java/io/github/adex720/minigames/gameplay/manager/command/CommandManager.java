@@ -39,7 +39,6 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandServer(bot));
 
         MAIN_COMMANDS.add(parentCommandParty);
-        MAIN_COMMANDS.add(parentCommandPlay);
         SUBCOMMANDS.add(new CommandPartyCreate(bot));
         SUBCOMMANDS.add(new CommandPartyDelete(bot));
         SUBCOMMANDS.add(new CommandPartyInfo(bot));
@@ -51,6 +50,14 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyPrivate(bot));
         SUBCOMMANDS.add(new CommandPartyPublic(bot));
         SUBCOMMANDS.add(new CommandPartyTransfer(bot));
+
+
+        MAIN_COMMANDS.add(parentCommandPlay);
+        MAIN_COMMANDS.add(bot.getMinigameTypeManager().HANGMAN.getCommand());
+    }
+
+    public void addCommand(Command command){
+        MAIN_COMMANDS.add(command);
     }
 
     public void registerCommands(JDA jda) {

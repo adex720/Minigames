@@ -13,12 +13,12 @@ public class CommandPlay extends ParentCommand {
 
     public CommandPlay(MinigamesBot bot) {
         super(bot, "play", "Starts a minigame.", CommandCategory.MINIGAME);
+        requiresProfile();
     }
 
-    public Subcommand createSubcommand(MinigameType<? extends Minigame> type) {
+    public void createSubcommand(MinigameType<? extends Minigame> type) {
         Subcommand subcommand = new SubcommandPlay(type);
         addSubcommand(subcommand);
-        return subcommand;
     }
 
     public class SubcommandPlay extends Subcommand {

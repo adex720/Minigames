@@ -33,13 +33,14 @@ public abstract class MinigameType<M> {
 
     public abstract M create(SlashCommandEvent event, CommandInfo ci);
 
-    public abstract Subcommand createPlayCommand();
+    public abstract void createPlayCommand();
 
     public abstract Set<Subcommand> getSubcommands();
 
     public void initCommand(){
         command = new MinigameCommand(bot, name, description);
         getSubcommands().forEach(command::addSubcommand);
+        //bot.getCommandManager().addCommand(command);
     }
 
     public MinigameCommand getCommand() {

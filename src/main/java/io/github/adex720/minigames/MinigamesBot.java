@@ -46,7 +46,6 @@ public class MinigamesBot {
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
-        commandManager.initCommands(this);
 
         profileManager = new ProfileManager(this);
 
@@ -54,6 +53,8 @@ public class MinigamesBot {
 
         minigameTypeManager = new MinigameTypeManager(this);
         minigameManager = new MinigameManager(this);
+
+        commandManager.initCommands(this);
 
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)

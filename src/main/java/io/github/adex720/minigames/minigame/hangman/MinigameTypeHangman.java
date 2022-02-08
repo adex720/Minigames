@@ -19,8 +19,8 @@ public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
     }
 
     @Override
-    public Subcommand createPlayCommand() {
-        return bot.getCommandManager().parentCommandPlay.createSubcommand(this);
+    public void createPlayCommand() {
+         bot.getCommandManager().parentCommandPlay.createSubcommand(this);
     }
 
     @Override
@@ -30,7 +30,6 @@ public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
 
     @Override
     public Set<Subcommand> getSubcommands() {
-        createPlayCommand();
         Set<Subcommand> subcommands = new HashSet<>();
 
         subcommands.add(new CommandHangmanGuess(bot, typeManager));

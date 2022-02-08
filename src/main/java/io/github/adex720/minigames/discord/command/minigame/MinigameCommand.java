@@ -9,11 +9,11 @@ public class MinigameCommand extends ParentCommand {
 
     public MinigameCommand(MinigamesBot bot, String name, String description) {
         super(bot, name, description, CommandCategory.MINIGAME);
+        requiresProfile();
     }
 
     @Override
     public void addSubcommand(Subcommand subcommand) {
         super.addSubcommand(subcommand);
-        bot.getCommandManager().addSubcommand(subcommand);
     }
 }

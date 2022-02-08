@@ -6,8 +6,6 @@ import io.github.adex720.minigames.minigame.MinigameHangman;
 import io.github.adex720.minigames.minigame.MinigameType;
 import io.github.adex720.minigames.minigame.hangman.MinigameTypeHangman;
 
-import java.util.Set;
-
 public class MinigameTypeManager extends Manager {
 
     public MinigameType<MinigameHangman> HANGMAN;
@@ -20,6 +18,9 @@ public class MinigameTypeManager extends Manager {
     private void init() {
         HANGMAN = new MinigameTypeHangman(bot, this);
         HANGMAN.initCommand();
+
+        HANGMAN.getSubcommands();
+        HANGMAN.createPlayCommand();
     }
 
 }
