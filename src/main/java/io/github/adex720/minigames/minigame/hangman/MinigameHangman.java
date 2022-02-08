@@ -55,9 +55,27 @@ public class MinigameHangman extends Minigame {
                 return;
             }
 
-            if (guesses.add(guessLetter)) {
-                if (word.contains(guessLetter + "")) {
+            if (!guesses.contains(guessLetter)) {
+
+                int size = guesses.size();
+                if (size == 0) {
                     guesses.add(guessLetter);
+                } else {
+                    for (int i = 0; i <= size; i++) {
+                        if (i==size){
+                            guesses.add(guessLetter);
+                            break;
+                        }
+
+                        if (guesses.get(i) > guessLetter) {
+                            guesses.add(i, guessLetter);
+                            break;
+                        }
+                    }
+                }
+
+
+                if (word.contains(guessLetter + "")) {
 
                     StringBuilder wordBuilder = new StringBuilder();
                     int length = word.length();
@@ -77,7 +95,7 @@ public class MinigameHangman extends Minigame {
 
                     if (lettersLeft) {
                         wordGuessed = wordBuilder.toString();
-                        event.reply("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed).queue();
+                        event.reply("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
                         return;
                     }
 
@@ -92,12 +110,12 @@ public class MinigameHangman extends Minigame {
                         return;
                     }
 
-                    event.reply("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed).queue();
+                    event.reply("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
                 }
 
 
             } else {
-                event.reply("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed).queue();
+                event.reply("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
             }
 
         } else {
@@ -115,9 +133,9 @@ public class MinigameHangman extends Minigame {
             }
 
             if (Util.isUserNormal(guess)) {
-                event.reply(guess + " was not the word. You have " + life + " health left. The word is: " + wordGuessed).queue();
+                event.reply(guess + " was not the word. You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
             } else {
-                event.reply("That was not the word!").queue();
+                event.reply("That was not the word! You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
             }
         }
     }
@@ -157,6 +175,20 @@ public class MinigameHangman extends Minigame {
         }
 
         return new MinigameHangman(bot, id, isParty, lastActive, word, life, guesses);
+    }
+
+    public String getGuesses() {
+        if (guesses.isEmpty()) return "";
+
+        StringBuilder builder = new StringBuilder("\nGuessed letters: ");
+        boolean comma = false;
+
+        for (char c : guesses) {
+            if (comma) builder.append(", ");
+            comma = true;
+            builder.append(c);
+        }
+        return builder.toString();
     }
 
     public static String getWord() {
