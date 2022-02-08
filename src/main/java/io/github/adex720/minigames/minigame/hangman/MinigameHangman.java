@@ -1,25 +1,26 @@
-package io.github.adex720.minigames.minigame;
+package io.github.adex720.minigames.minigame.hangman;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Set;
 
 public class MinigameHangman extends Minigame {
 
     private final String word;
     private String wordGuessed;
     private int life;
-    private final Set<Character> guesses;
+    private final ArrayList<Character> guesses;
 
-    public MinigameHangman(MinigamesBot bot, long id, boolean isParty, long lastActive, String word, int life, Set<Character> guesses) {
+    public MinigameHangman(MinigamesBot bot, long id, boolean isParty, long lastActive, String word, int life, ArrayList<Character> guesses) {
         super(bot, bot.getMinigameTypeManager().HANGMAN, id, isParty, lastActive);
         this.word = word;
         wordGuessed = "\\_".repeat(word.length());
@@ -28,7 +29,7 @@ public class MinigameHangman extends Minigame {
     }
 
     public MinigameHangman(CommandInfo ci) {
-        this(ci.bot(), ci.authorId(), ci.isInParty(), System.currentTimeMillis(), getWord(), 10, new HashSet<>());
+        this(ci.bot(), ci.authorId(), ci.isInParty(), System.currentTimeMillis(), getWord(), 10, new ArrayList<>());
     }
 
     public static MinigameHangman start(SlashCommandEvent event, CommandInfo ci) {
@@ -47,6 +48,11 @@ public class MinigameHangman extends Minigame {
 
             if (guessLetter >= 'A' && guessLetter <= 'Z') {
                 guessLetter -= 0x20;
+            }
+
+            if (guessLetter < 'a' || guessLetter > 'z') {
+                event.reply("You should only guess English letters!").queue();
+                return;
             }
 
             if (guesses.add(guessLetter)) {
@@ -71,41 +77,50 @@ public class MinigameHangman extends Minigame {
 
                     if (lettersLeft) {
                         wordGuessed = wordBuilder.toString();
-                        event.reply("The word contains the letter " + guessLetter + ". The word is: " + wordGuessed).queue();
+                        event.reply("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed).queue();
                         return;
                     }
 
-                    event.reply("Good job! The word was " + word + ".").queue();
+                    event.reply("Good job! The word was " + word + ". You had " + length + "tries left!").queue();
                     finish(true);
-                    return;
 
                 } else {
-                    event.reply("The word doesn't contain the letter " + guessLetter + ". The word is: " + wordGuessed).queue();
+                    life--;
+                    if (life == 0) {
+                        event.reply("You ran out of life. The word was " + word + ".").queue();
+                        finish(false);
+                        return;
+                    }
+
+                    event.reply("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed).queue();
                 }
 
 
             } else {
-                event.reply("You have already guessed the letter. The word is: " + wordGuessed).queue();
-                return;
+                event.reply("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed).queue();
             }
 
         } else {
             if (word.equals(guess.toLowerCase(Locale.ROOT))) {
-                event.reply("Good Job! " + guess + " was the word").queue();
+                event.reply("Good Job! " + guess + " was the word! You had " + life + " health left.").queue();
                 finish(true);
                 return;
             }
 
-        }
+            life--;
+            if (life == 0) {
+                event.reply("You ran out of life. The word was " + word + ".").queue();
+                finish(false);
+                return;
+            }
 
-        life--;
-        if (life == 0) {
-            event.reply("You ran out of life. The word was " + word + ".").queue();
-            finish(false);
+            if (Util.isUserNormal(guess)) {
+                event.reply(guess + " was not the word. You have " + life + " health left. The word is: " + wordGuessed).queue();
+            } else {
+                event.reply("That was not the word!").queue();
+            }
         }
-
     }
-
 
     @Override
     public JsonObject getAsJson() {
@@ -136,7 +151,7 @@ public class MinigameHangman extends Minigame {
         long lastActive = JsonHelper.getLong(json, "active");
         boolean isParty = JsonHelper.getBoolean(json, "party");
 
-        Set<Character> guesses = new HashSet<>();
+        ArrayList<Character> guesses = new ArrayList<>();
         for (JsonElement guess : JsonHelper.getJsonArray(json, "guesses", new JsonArray())) {
             guesses.add((char) guess.getAsByte());
         }
@@ -145,7 +160,7 @@ public class MinigameHangman extends Minigame {
     }
 
     public static String getWord() {
-        return "Discord"; // TODO: randomize word
+        return "discord"; // TODO: randomize word
     }
 
 
