@@ -635,7 +635,6 @@ carpet
 carriage
 carrot
 carry
-carry on
 carrying
 carsick
 cart
@@ -2186,7 +2185,6 @@ hypocrisy
 hysterical
 i
 ice
-ice cream
 idea
 ideal
 identify
@@ -2243,7 +2241,6 @@ incite
 inclose
 include
 income
-income tax
 incomplete
 inconvenience
 incorrect
@@ -2408,7 +2405,6 @@ june
 jungle
 junior
 junk
-junk food
 jury
 just
 justice
@@ -2805,7 +2801,6 @@ mixed
 mixture
 mob
 mobile
-mobile phone
 mock
 model
 modeling
@@ -2946,7 +2941,6 @@ nineteen
 ninety
 ninth
 no
-no way
 noble
 nobody
 nod
@@ -3024,7 +3018,6 @@ october
 odd
 odds
 of
-of course
 off
 offense
 offensive
@@ -3360,7 +3353,6 @@ possession
 possibility
 possibly
 post
-post office
 postage
 poster
 postman
