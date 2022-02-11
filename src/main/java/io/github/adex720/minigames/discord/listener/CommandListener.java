@@ -22,7 +22,10 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
-        if (!event.isFromGuild()) event.reply("Commands cannot be used on dms").queue();
+        if (!event.isFromGuild()) {
+            event.reply("Commands cannot be used on dms").queue();
+            return;
+        }
 
         String commandName = event.getName();
         Member member = event.getInteraction().getMember();
