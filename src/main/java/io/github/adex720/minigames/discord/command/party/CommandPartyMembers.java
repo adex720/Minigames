@@ -23,7 +23,7 @@ public class CommandPartyMembers extends Subcommand {
 
         Party party = ci.party();
 
-        event.replyEmbeds(party.getMembers(ci.author())).queue();
+        event.getHook().sendMessageEmbeds(party.getMembers(ci.author())).queue();
         return true;
     }
 }

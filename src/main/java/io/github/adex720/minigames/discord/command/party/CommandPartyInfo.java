@@ -17,13 +17,13 @@ public class CommandPartyInfo extends Subcommand {
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         if (!ci.isInParty()) {
-            event.reply("You aren't in a party").queue();
+            event.getHook().sendMessage("You aren't in a party").queue();
             return true;
         }
 
         Party party = ci.party();
 
-        event.replyEmbeds(party.getInfo(ci.author())).queue();
+        event.getHook().sendMessageEmbeds(party.getInfo(ci.author())).queue();
         return true;
     }
 }

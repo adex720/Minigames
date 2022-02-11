@@ -30,7 +30,7 @@ public class CommandPartyCreate extends Subcommand {
         bot.getPartyManager().addParty(ci.authorId(), party);
         ci.profile().partyJoined(ci.authorId());
 
-        event.replyEmbeds(new EmbedBuilder() // todo embed
+        event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("PARTY")
                 .addField("Party created", "Others can join the party with /party join " + ci.authorMention(), false)
                 .setColor(Command.SUCCESSFUL)
