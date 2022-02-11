@@ -142,6 +142,11 @@ public class MinigameHangman extends Minigame {
     }
 
     @Override
+    public String quit(){
+       return "You quit your previous game of hangman. The word was " + word + " and you had " + life + " health left.";
+    }
+
+    @Override
     public JsonObject getAsJson() {
         JsonObject json = new JsonObject();
 

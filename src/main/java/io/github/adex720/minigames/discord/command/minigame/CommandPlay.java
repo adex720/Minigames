@@ -32,6 +32,10 @@ public class CommandPlay extends ParentCommand {
 
         @Override
         public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+            if (ci.hasMinigame()){
+               event.getHook().sendMessage(ci.minigame().quit()).queue();
+            }
+
             Minigame minigame = this.minigame.create(event, ci);
             bot.getMinigameManager().addMinigame(minigame);
 

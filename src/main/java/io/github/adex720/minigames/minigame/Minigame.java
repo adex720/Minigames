@@ -42,8 +42,9 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         bot.getMinigameManager().deleteMinigame(id);
     }
 
-    public void quit(SlashCommandEvent event){
+    public String quit(){
         delete();
+        return "";
     }
 
 }
