@@ -11,7 +11,7 @@ public abstract class Command {
     public static final Color SUCCESSFUL = new Color(0, 186, 0);
 
     protected final MinigamesBot bot;
-    private final CommandData commandData;
+    public final CommandData commandData;
 
     public final String name;
     public final String description;
@@ -45,10 +45,6 @@ public abstract class Command {
 
     protected CommandData createCommandData() {
         return new CommandData(name, description);
-    }
-
-    public CommandData getCommandData() {
-        return commandData;
     }
 
     public boolean isSubcommand() {

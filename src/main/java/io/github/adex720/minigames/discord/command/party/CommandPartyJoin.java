@@ -9,6 +9,7 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 public class CommandPartyJoin extends Subcommand {
 
@@ -60,14 +61,14 @@ public class CommandPartyJoin extends Subcommand {
 
         ci.profile().partyJoined(partyId);
 
-        event.reply("You successfully joined the party.").queue();
+        event.getHook().sendMessage("You successfully joined the party.").queue();
 
         return true;
     }
 
     @Override
-    public CommandData createCommandData() {
-        return super.createCommandData()
+    protected SubcommandData getSubcommandData() {
+        return super.getSubcommandData()
                 .addOption(OptionType.USER, "party", "A member of the party", true);
     }
 }

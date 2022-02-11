@@ -17,7 +17,7 @@ public class CommandHangmanGuess extends MinigameSubcommand {
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        Minigame minigame = bot.getMinigameManager().getMinigame(ci.authorId());
+        Minigame minigame = ci.minigame();
 
         if (minigame != null) {
             if (minigame.getType() == bot.getMinigameTypeManager().HANGMAN) {

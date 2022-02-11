@@ -61,6 +61,10 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(command);
     }
 
+    public void addSubcommand(Subcommand subcommand) {
+        SUBCOMMANDS.add(subcommand);
+    }
+
     public void registerCommands(JDA jda) {
         for (Command command : SUBCOMMANDS) {
             ((Subcommand) command).registerSubcommand();
@@ -68,16 +72,12 @@ public class CommandManager extends Manager {
         if (SHOULD_RELOAD_COMMANDS) {
 
             Set<CommandData> commandData = new HashSet<>();
-            MAIN_COMMANDS.forEach(command -> commandData.add(command.getCommandData()));
+            MAIN_COMMANDS.forEach(command -> commandData.add(command.commandData));
 
             jda.updateCommands().addCommands(commandData).queue();
 
             bot.getLogger().info("Registered all commands");
         }
-    }
-
-    public void addSubcommand(Subcommand subcommand) {
-        SUBCOMMANDS.add(subcommand);
     }
 
 

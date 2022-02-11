@@ -30,7 +30,7 @@ public abstract class ParentCommand extends Command {
 
     public void addSubcommand(Subcommand subcommand) {
         SUB_COMMANDS.add(subcommand);
-        getCommandData().addSubcommands(subcommand.getSubcommandData());
+        commandData.addSubcommands(subcommand.getSubcommandData());
     }
 
 }

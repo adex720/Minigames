@@ -30,7 +30,7 @@ public class MinigameHangman extends Minigame {
     }
 
     public MinigameHangman(CommandInfo ci) {
-        this(ci.bot(), ci.authorId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), 10, new ArrayList<>());
+        this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), 10, new ArrayList<>());
     }
 
     public static MinigameHangman start(SlashCommandEvent event, CommandInfo ci) {
