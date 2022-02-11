@@ -9,6 +9,7 @@ import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.ArrayList;
@@ -41,6 +42,14 @@ public class MinigameHangman extends Minigame {
         return minigame;
     }
 
+    public static MinigameHangman start(ButtonClickEvent event, CommandInfo ci) {
+        MinigameHangman minigame = new MinigameHangman(ci);
+
+        event.reply("You started a new game of hangman. The word is: " + minigame.wordGuessed).queue();
+
+        return minigame;
+    }
+
     public void guess(SlashCommandEvent event, CommandInfo ci) {
         String guess = event.getOption("guess").getAsString();
 
@@ -63,7 +72,7 @@ public class MinigameHangman extends Minigame {
                     guesses.add(guessLetter);
                 } else {
                     for (int i = 0; i <= size; i++) {
-                        if (i==size){
+                        if (i == size) {
                             guesses.add(guessLetter);
                             break;
                         }
@@ -101,13 +110,13 @@ public class MinigameHangman extends Minigame {
                     }
 
                     event.getHook().sendMessage("Good job! The word was " + word + ". You had " + length + "tries left!").queue();
-                    finish(true);
+                    finish(event, true);
 
                 } else {
                     life--;
                     if (life == 0) {
                         event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
-                        finish(false);
+                        finish(event, false);
                         return;
                     }
 
@@ -122,14 +131,14 @@ public class MinigameHangman extends Minigame {
         } else {
             if (word.equals(guess.toLowerCase(Locale.ROOT))) {
                 event.getHook().sendMessage("Good Job! " + guess + " was the word! You had " + life + " health left.").queue();
-                finish(true);
+                finish(event, true);
                 return;
             }
 
             life--;
             if (life == 0) {
                 event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
-                finish(false);
+                finish(event, false);
                 return;
             }
 
@@ -142,8 +151,8 @@ public class MinigameHangman extends Minigame {
     }
 
     @Override
-    public String quit(){
-       return "You quit your previous game of hangman. The word was " + word + " and you had " + life + " health left.";
+    public String quit() {
+        return "You quit your previous game of hangman. The word was " + word + " and you had " + life + " health left.";
     }
 
     @Override

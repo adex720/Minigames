@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.MinigameCommand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Set;
@@ -32,6 +33,8 @@ public abstract class MinigameType<M> {
     }
 
     public abstract M create(SlashCommandEvent event, CommandInfo ci);
+
+    public abstract M create(ButtonClickEvent event, CommandInfo ci);
 
     public abstract void createPlayCommand();
 

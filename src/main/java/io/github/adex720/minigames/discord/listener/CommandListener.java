@@ -29,16 +29,13 @@ public class CommandListener extends ListenerAdapter {
 
         String commandName = event.getName();
         Member member = event.getInteraction().getMember();
-        long userId = member.getIdLong();
+        //long userId = member.getIdLong();
         //TODO: check if user is banned
 
         for (Command command : commandManager.MAIN_COMMANDS) {
             if (commandName.equals(command.getMainName())) {
                 event.deferReply().queue();
-                CommandInfo commandInfo = new CommandInfo(
-                        () -> bot.getProfileManager().hasProfile(userId),
-                        () -> bot.getProfileManager().getProfile(userId),
-                        member::getUser, bot);
+                CommandInfo commandInfo = CommandInfo.create(event, bot);
                 command.onRun(event, commandInfo);
                 break;
             }

@@ -4,7 +4,10 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class CommandInfo {
     private Party calculatedParty;
@@ -27,6 +30,22 @@ public class CommandInfo {
         calculatedParty = null;
         calculatedProfile = null;
         calculatedAuthor = null;
+    }
+
+    public static CommandInfo create(SlashCommandEvent event, MinigamesBot bot) {
+        Member member = event.getMember();
+        return new CommandInfo(
+                () -> bot.getProfileManager().hasProfile(member.getIdLong()),
+                () -> bot.getProfileManager().getProfile(member.getIdLong()),
+                member::getUser, bot);
+    }
+
+    public static CommandInfo create(ButtonClickEvent event, MinigamesBot bot) {
+        Member member = event.getMember();
+        return new CommandInfo(
+                () -> bot.getProfileManager().hasProfile(member.getIdLong()),
+                () -> bot.getProfileManager().getProfile(member.getIdLong()),
+                member::getUser, bot);
     }
 
     public boolean isInParty() {

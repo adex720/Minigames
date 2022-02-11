@@ -3,6 +3,8 @@ package io.github.adex720.minigames.minigame;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
@@ -31,8 +33,14 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return type;
     }
 
-    public void finish(boolean won) {
+    public void finish(SlashCommandEvent event, boolean won) {
         bot.getMinigameManager().deleteMinigame(id);
+
+        event.getHook().sendMessage("Press this button to play again")
+                .addActionRow(Button.primary("play-again", "Play again")).queue();
+
+        bot.getReplayManager().addReplay(id, type);
+
         // TODO: append quests
     }
 

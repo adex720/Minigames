@@ -2,8 +2,10 @@ package io.github.adex720.minigames;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.github.adex720.minigames.discord.listener.ButtonListener;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
+import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
@@ -36,6 +38,9 @@ public class MinigamesBot {
     private final CommandManager commandManager;
     private final CommandListener commandListener;
 
+    private final ButtonListener buttonListener;
+    private final ReplayManager replayManager;
+
     private final ProfileManager profileManager;
 
     private final PartyManager partyManager;
@@ -53,6 +58,9 @@ public class MinigamesBot {
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
 
+        buttonListener = new ButtonListener(this);
+        replayManager = new ReplayManager(this);
+
         profileManager = new ProfileManager(this);
 
         partyManager = new PartyManager(this);
@@ -68,7 +76,7 @@ public class MinigamesBot {
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
-                .addEventListeners(commandListener)
+                .addEventListeners(commandListener, buttonListener)
                 .build()
                 .awaitReady();
 
@@ -97,6 +105,14 @@ public class MinigamesBot {
 
     public CommandListener getCommandListener() {
         return commandListener;
+    }
+
+    public ButtonListener getButtonListener() {
+        return buttonListener;
+    }
+
+    public ReplayManager getReplayManager() {
+        return replayManager;
     }
 
     public ProfileManager getProfileManager() {
@@ -168,6 +184,7 @@ public class MinigamesBot {
     - profile
     - kits (daily, hourly, supporter)
     - quit (removes minigame)
+    - uptime
 
    TODO: trivia
     (https://opentdb.com/api_config.php)
