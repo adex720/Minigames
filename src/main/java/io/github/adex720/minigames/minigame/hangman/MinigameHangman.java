@@ -48,7 +48,7 @@ public class MinigameHangman extends Minigame {
             char guessLetter = guess.charAt(0);
 
             if (guessLetter >= 'A' && guessLetter <= 'Z') {
-                guessLetter -= 0x20;
+                guessLetter += 0x20;
             }
 
             if (guessLetter < 'a' || guessLetter > 'z') {
