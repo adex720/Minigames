@@ -166,7 +166,7 @@ public class MinigamesBot {
 
 /*
    TODO: minigames to add
-    - unscramble
+    - unscramble  ()
     - wordle
     - higher-lower
     - counting
@@ -175,8 +175,8 @@ public class MinigamesBot {
     - connect 4
 
   TODO: commands to add
-    - start
-    - delete
+    - start   ()
+    - delete  ()
     - help
     - leaderboard
     - quests
@@ -188,7 +188,9 @@ public class MinigamesBot {
    TODO: trivia
     (https://opentdb.com/api_config.php)
 
-   TODO: text command system for dev commands
+   TODO: save data ()
+
+   TODO: text command system for dev commands ()
 
    TODO: badges
 
