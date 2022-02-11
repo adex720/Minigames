@@ -19,7 +19,7 @@ public class MinigameTypeManager extends Manager {
         HANGMAN = new MinigameTypeHangman(bot, this);
         HANGMAN.initCommand();
 
-        HANGMAN.getSubcommands();
+        //HANGMAN.getSubcommands();
         HANGMAN.createPlayCommand();
     }
 

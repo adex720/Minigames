@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
+import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
+import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -40,7 +43,10 @@ public class MinigamesBot {
     private final MinigameTypeManager minigameTypeManager;
     private final MinigameManager minigameManager;
 
-    public MinigamesBot(String token) throws LoginException, InterruptedException {
+    private final FilePathManager filePathManager;
+    private final WordManager wordManager;
+
+    public MinigamesBot(String token) throws LoginException, InterruptedException, FileNotFoundException {
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
 
@@ -54,6 +60,9 @@ public class MinigamesBot {
         minigameTypeManager = new MinigameTypeManager(this);
         minigameManager = new MinigameManager(this);
 
+        filePathManager = new FilePathManager(this);
+        wordManager = new WordManager(this);
+
         commandManager.initCommands(this);
 
         jda = JDABuilder.createDefault(token)
@@ -66,12 +75,12 @@ public class MinigamesBot {
         commandManager.registerCommands(jda);
     }
 
-    public static void main(String[] args) throws LoginException, InterruptedException {
+    public static void main(String[] args) throws LoginException, InterruptedException, FileNotFoundException {
         JsonObject configJson = getConfigJson();
 
         String token = JsonHelper.getStringOrThrow(configJson, "token", "Missing entry on config json: token");
 
-        MinigamesBot minigamesBot = new MinigamesBot(token);
+        MinigamesBot minigamesBot = new MinigamesBot(token); // TODO: catch exceptions
     }
 
     public JDA getJda() {
@@ -104,6 +113,14 @@ public class MinigamesBot {
 
     public MinigameManager getMinigameManager() {
         return minigameManager;
+    }
+
+    public FilePathManager getFilePathManager() {
+        return filePathManager;
+    }
+
+    public WordManager getWordManager() {
+        return wordManager;
     }
 
     private static JsonObject getConfigJson() {

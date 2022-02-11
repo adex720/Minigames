@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
@@ -29,7 +30,7 @@ public class MinigameHangman extends Minigame {
     }
 
     public MinigameHangman(CommandInfo ci) {
-        this(ci.bot(), ci.authorId(), ci.isInParty(), System.currentTimeMillis(), getWord(), 10, new ArrayList<>());
+        this(ci.bot(), ci.authorId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), 10, new ArrayList<>());
     }
 
     public static MinigameHangman start(SlashCommandEvent event, CommandInfo ci) {
@@ -191,8 +192,8 @@ public class MinigameHangman extends Minigame {
         return builder.toString();
     }
 
-    public static String getWord() {
-        return "discord"; // TODO: randomize word
+    public static String getWord(WordManager wordManager) {
+        return wordManager.getWordForHangman();
     }
 
 

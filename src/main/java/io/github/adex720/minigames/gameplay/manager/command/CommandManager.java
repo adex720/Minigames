@@ -10,13 +10,14 @@ import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.discord.command.party.*;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class CommandManager extends Manager {
 
-    private static final boolean SHOULD_RELOAD_COMMANDS = false;
+    private static final boolean SHOULD_RELOAD_COMMANDS = true;
 
     public final Set<Command> MAIN_COMMANDS;
     public final Set<Command> SUBCOMMANDS;
@@ -56,28 +57,22 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().HANGMAN.getCommand());
     }
 
-    public void addCommand(Command command){
+    public void addCommand(Command command) {
         MAIN_COMMANDS.add(command);
     }
 
     public void registerCommands(JDA jda) {
+        for (Command command : SUBCOMMANDS) {
+            ((Subcommand) command).registerSubcommand();
+        }
         if (SHOULD_RELOAD_COMMANDS) {
 
-            jda.updateCommands().queue(); // deleting previous commands
+            Set<CommandData> commandData = new HashSet<>();
+            MAIN_COMMANDS.forEach(command -> commandData.add(command.getCommandData()));
 
-            for (Command command : SUBCOMMANDS) {
-                ((Subcommand) command).registerSubcommand();
-            } // all subcommands should be created before registering the parent command
-
-            for (Command command : MAIN_COMMANDS) {
-                jda.upsertCommand(command.getCommandData()).queue();
-            }
+            jda.updateCommands().addCommands(commandData).queue();
 
             bot.getLogger().info("Registered all commands");
-        } else {
-            for (Command command : SUBCOMMANDS) {
-                ((Subcommand) command).registerSubcommand();
-            }
         }
     }
 

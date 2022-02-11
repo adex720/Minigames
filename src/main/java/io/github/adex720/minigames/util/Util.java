@@ -19,6 +19,7 @@ public class Util {
     public interface Task {
         void run();
     }
+
     public static Color getColor(long id) {
         int color = (int) (id + 12582870); // That number is fancy
 
