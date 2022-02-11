@@ -18,7 +18,7 @@ public class CommandPartyLeave extends Subcommand {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
 
         if (!ci.isInParty()) {
-            event.reply("You aren't in a party.").queue();
+            event.getHook().sendMessage("You aren't in a party.").queue();
             return true;
         }
 
@@ -26,7 +26,7 @@ public class CommandPartyLeave extends Subcommand {
         long userId = ci.authorId();
 
         if (userId == party.getId()) {
-            event.reply("You can't leave your own party. Transfer it to someone else with `/party transfer` or delete it with `/party delete` first.").queue();
+            event.getHook().sendMessage("You can't leave your own party. Transfer it to someone else with `/party transfer` or delete it with `/party delete` first.").queue();
             return true;
         }
 
@@ -35,7 +35,7 @@ public class CommandPartyLeave extends Subcommand {
 
         ci.profile().partyLeft();
 
-        event.reply("You left your party.").queue();
+        event.getHook().sendMessage("You left your party.").queue();
 
         return true;
     }

@@ -27,7 +27,7 @@ public class CommandHangmanGuess extends MinigameSubcommand {
                 return true;
             }
         }
-        event.reply("You don't have an ongoing hangman game!").queue();
+        event.getHook().sendMessage("You don't have an ongoing hangman game!").queue();
         return true;
     }
 

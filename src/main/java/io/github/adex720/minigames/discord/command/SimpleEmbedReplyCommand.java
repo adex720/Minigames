@@ -47,7 +47,7 @@ public abstract class SimpleEmbedReplyCommand extends Command {
                 .setFooter(author.getName(), author.getAvatarUrl())
                 .setTimestamp(new Date().toInstant());
 
-        event.replyEmbeds(builder.build()).queue();
+        event.getHook().sendMessageEmbeds(builder.build()).queue();
         return true;
     }
 }

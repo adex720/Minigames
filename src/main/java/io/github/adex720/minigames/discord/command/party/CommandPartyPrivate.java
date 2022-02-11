@@ -17,7 +17,7 @@ public class CommandPartyPrivate extends Subcommand {
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         if (!ci.isInParty()) {
-            event.reply("You don't have a party!").queue();
+            event.getHook().sendMessage("You don't have a party!").queue();
             return true;
         }
 
@@ -25,12 +25,12 @@ public class CommandPartyPrivate extends Subcommand {
         long userId = ci.authorId();
 
         if (party.getId() != userId) {
-            event.reply("Only the party owner can delete the party.").queue();
+            event.getHook().sendMessage("Only the party owner can delete the party.").queue();
             return true;
         }
 
         party.makePrivate();
-        event.reply("You changed the party to private. You now need to invite people for them to be able to join.").queue();
+        event.getHook().sendMessage("You changed the party to private. You now need to invite people for them to be able to join.").queue();
 
         return true;
     }

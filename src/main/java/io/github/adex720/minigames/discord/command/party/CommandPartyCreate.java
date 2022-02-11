@@ -20,7 +20,7 @@ public class CommandPartyCreate extends Subcommand {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
 
         if (ci.isInParty()) {
-            event.reply("You can't create a party because you are in one").queue();
+            event.getHook().sendMessage("You can't create a party because you are in one").queue();
             return true;
         }
 
@@ -30,7 +30,7 @@ public class CommandPartyCreate extends Subcommand {
         bot.getPartyManager().addParty(ci.authorId(), party);
         ci.profile().partyJoined(ci.authorId());
 
-        event.replyEmbeds(new EmbedBuilder()
+        event.replyEmbeds(new EmbedBuilder() // todo embed
                 .setTitle("PARTY")
                 .addField("Party created", "Others can join the party with /party join " + ci.authorMention(), false)
                 .setColor(Command.SUCCESSFUL)

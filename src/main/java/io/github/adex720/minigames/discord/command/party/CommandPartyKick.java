@@ -19,7 +19,7 @@ public class CommandPartyKick extends Subcommand {
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         if (ci.isInParty()) {
-            event.reply("You aren't in a party.").queue();
+            event.getHook().sendMessage("You aren't in a party.").queue();
             return true;
         }
 
@@ -27,18 +27,18 @@ public class CommandPartyKick extends Subcommand {
         long kickId = event.getOption("party").getAsUser().getIdLong();
 
         if (authorId == kickId) {
-            event.reply("You can't kick yourself.").queue();
+            event.getHook().sendMessage("You can't kick yourself.").queue();
             return true;
         }
 
         Party party = ci.party();
         if (party.getOwnerId() != authorId) {
-            event.reply("You need to be the owner of the party to kick others!").queue();
+            event.getHook().sendMessage("You need to be the owner of the party to kick others!").queue();
             return true;
         }
 
         if (!party.isInParty(kickId)) {
-            event.reply("The user you tried to kick isn't in your party.").queue();
+            event.getHook().sendMessage("The user you tried to kick isn't in your party.").queue();
             return true;
         }
 
@@ -46,7 +46,7 @@ public class CommandPartyKick extends Subcommand {
         party.onMemberKicked(kickId);
         bot.getProfileManager().getProfile(kickId).partyLeft();
 
-        event.reply(ci.authorMention() + " kicked <@!" + kickId + "> from the party!").queue();
+        event.getHook().sendMessage(ci.authorMention() + " kicked <@!" + kickId + "> from the party!").queue();
 
         return true;
     }

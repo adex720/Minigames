@@ -14,7 +14,7 @@ public abstract class SimpleReplyCommand extends Command {
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        event.reply(reply).queue();
+        event.getHook().sendMessage(reply).queue();
         return true;
     }
 }

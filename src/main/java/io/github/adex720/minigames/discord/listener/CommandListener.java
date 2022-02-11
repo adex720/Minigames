@@ -31,7 +31,7 @@ public class CommandListener extends ListenerAdapter {
 
         for (Command command : commandManager.MAIN_COMMANDS) {
             if (commandName.equals(command.getMainName())) {
-                //event.deferReply().queue();
+                event.deferReply().queue();
                 CommandInfo commandInfo = new CommandInfo(
                         () -> bot.getProfileManager().hasProfile(userId),
                         () -> bot.getProfileManager().getProfile(userId),

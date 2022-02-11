@@ -3,7 +3,6 @@ package io.github.adex720.minigames.minigame;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
@@ -12,7 +11,6 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     public final long id;
     public final boolean isParty;
-
 
     protected long lastActive;
 
@@ -42,7 +40,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         bot.getMinigameManager().deleteMinigame(id);
     }
 
-    public String quit(){
+    public String quit() {
         delete();
         return "";
     }

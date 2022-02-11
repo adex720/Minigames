@@ -36,7 +36,7 @@ public class MinigameHangman extends Minigame {
     public static MinigameHangman start(SlashCommandEvent event, CommandInfo ci) {
         MinigameHangman minigame = new MinigameHangman(ci);
 
-        event.reply("You started a new game of hangman. The word is: " + minigame.wordGuessed).queue();
+        event.getHook().sendMessage("You started a new game of hangman. The word is: " + minigame.wordGuessed).queue();
 
         return minigame;
     }

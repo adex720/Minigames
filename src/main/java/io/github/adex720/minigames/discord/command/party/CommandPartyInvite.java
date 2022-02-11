@@ -17,7 +17,7 @@ public class CommandPartyInvite extends Subcommand {
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        return true;
+        return true; // TODO: create invite command
     }
 
     @Override

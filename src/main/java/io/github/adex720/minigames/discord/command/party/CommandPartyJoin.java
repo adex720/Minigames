@@ -20,7 +20,7 @@ public class CommandPartyJoin extends Subcommand {
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         if (ci.isInParty()) {
-            event.reply("You can't join a party because you already are in one.").queue();
+            event.getHook().sendMessage("You can't join a party because you already are in one.").queue();
             return true;
         }
 
@@ -36,11 +36,11 @@ public class CommandPartyJoin extends Subcommand {
                     party = bot.getPartyManager().getParty(checkedProfile.getPartyId());
                     partyId = party.getId();
                 } else {
-                    event.reply("The user is not in a party").queue();
+                    event.getHook().sendMessage("The user is not in a party").queue();
                     return true;
                 }
             } else {
-                event.reply("The user is not in a party").queue();
+                event.getHook().sendMessage("The user is not in a party").queue();
                 return true;
             }
 

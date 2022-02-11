@@ -33,7 +33,7 @@ public abstract class Command {
     public boolean onRun(SlashCommandEvent event, CommandInfo ci) {
         if (requiresProfile) {
             if (!ci.hasProfile()) {
-                event.reply(ci.authorMention() + "You need to create a profile with the start-command to use this command!").queue();
+                event.getHook().sendMessage(ci.authorMention() + "You need to create a profile with the start-command to use this command!").queue();
                 return true;
             }
         }

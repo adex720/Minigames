@@ -19,7 +19,7 @@ public class CommandPartyTransfer extends Subcommand {
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         if (!ci.isInParty()) {
-            event.reply("You don't have a party!").queue();
+            event.getHook().sendMessage("You don't have a party!").queue();
             return true;
         }
 
@@ -27,25 +27,25 @@ public class CommandPartyTransfer extends Subcommand {
         long userId = ci.authorId();
 
         if (party.getId() != userId) {
-            event.reply("Only the party owner can transfer the party ownership.").queue();
+            event.getHook().sendMessage("Only the party owner can transfer the party ownership.").queue();
             return true;
         }
 
         long newOwnerId = event.getOption("party").getAsUser().getIdLong();
         if (newOwnerId == userId) {
-            event.reply("You are already the owner for the party!").queue();
+            event.getHook().sendMessage("You are already the owner for the party!").queue();
             return true;
         }
 
         if (!party.isInParty(newOwnerId)) {
-            event.reply("The new owner must be in the party.").queue();
+            event.getHook().sendMessage("The new owner must be in the party.").queue();
             return true;
         }
 
         party.transfer(newOwnerId);
         party.onTransfer(userId);
 
-        event.reply(ci.authorMention() + " transferred the party to <@!" + newOwnerId + ">!").queue();
+        event.getHook().sendMessage(ci.authorMention() + " transferred the party to <@!" + newOwnerId + ">!").queue();
 
         return true;
     }

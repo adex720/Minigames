@@ -18,7 +18,7 @@ public class CommandPartyDelete extends Subcommand {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
 
         if (!ci.isInParty()) {
-            event.reply("You don't have a party!").queue();
+            event.getHook().sendMessage("You don't have a party!").queue();
             return true;
         }
 
@@ -26,14 +26,14 @@ public class CommandPartyDelete extends Subcommand {
         long userId = ci.authorId();
 
         if (party.getId() != userId) {
-            event.reply("Only the party owner can delete the party.").queue();
+            event.getHook().sendMessage("Only the party owner can delete the party.").queue();
             return true;
         }
 
         party.onDelete();
         bot.getPartyManager().removeParty(userId);
 
-        event.reply("Successfully deleted the party!").queue();
+        event.getHook().sendMessage("Successfully deleted the party!").queue();
 
 
         return true;

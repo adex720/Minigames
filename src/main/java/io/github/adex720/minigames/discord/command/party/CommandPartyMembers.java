@@ -17,7 +17,7 @@ public class CommandPartyMembers extends Subcommand {
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         if (!ci.isInParty()) {
-            event.reply("You aren't in a party").queue();
+            event.getHook().sendMessage("You aren't in a party").queue();
             return true;
         }
 

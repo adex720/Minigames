@@ -17,7 +17,6 @@ public abstract class ParentCommand extends Command {
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-
         String subCommandName = event.getSubcommandName();
 
         for (Subcommand subCommand : SUB_COMMANDS) {
