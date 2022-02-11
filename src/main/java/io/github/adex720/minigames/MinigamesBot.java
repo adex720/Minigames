@@ -160,6 +160,8 @@ public class MinigamesBot {
     - connect 4
 
   TODO: commands to add
+    - start
+    - delete
     - help
     - leaderboard
     - quests
@@ -167,10 +169,12 @@ public class MinigamesBot {
     - kits (daily, hourly, supporter)
     - quit (removes minigame)
 
-  TODO: trivia
-   (https://opentdb.com/api_config.php)
+   TODO: trivia
+    (https://opentdb.com/api_config.php)
 
    TODO: text command system for dev commands
+
+   TODO: badges
 
 
 */
