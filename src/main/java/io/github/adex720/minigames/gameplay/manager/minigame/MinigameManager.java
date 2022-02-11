@@ -28,15 +28,19 @@ public class MinigameManager extends IdCompoundSavableManager<Minigame> {
         return new HashSet<>(MINIGAMES.values());
     }
 
-    public void addMinigame(Minigame minigame){
+    public void addMinigame(Minigame minigame) {
         MINIGAMES.put(minigame.id, minigame);
     }
 
-    public Minigame getMinigame(long id){
-       return MINIGAMES.get(id);
+    public Minigame getMinigame(long id) {
+        return MINIGAMES.get(id);
     }
 
-    public void deleteMinigame(long id){
+    public boolean hasMinigame(long id) {
+        return MINIGAMES.containsKey(id);
+    }
+
+    public void deleteMinigame(long id) {
         MINIGAMES.remove(id);
     }
 }

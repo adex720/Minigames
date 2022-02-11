@@ -3,6 +3,7 @@ package io.github.adex720.minigames.minigame;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
@@ -39,6 +40,10 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     public void delete() {
         bot.getMinigameManager().deleteMinigame(id);
+    }
+
+    public void quit(SlashCommandEvent event){
+        delete();
     }
 
 }

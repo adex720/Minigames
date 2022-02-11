@@ -3,37 +3,46 @@ package io.github.adex720.minigames.discord.command;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.minigame.Minigame;
 import net.dv8tion.jda.api.entities.User;
 
 public class CommandInfo {
-
-    private final CalculableValue<Boolean> isInParty;
-    private final CalculableValue<Party> party;
+    private Party calculatedParty;
 
     private final CalculableValue<Boolean> hasProfile;
     private final CalculableValue<Profile> profile;
+    private Profile calculatedProfile;
 
     private final CalculableValue<User> author;
-    private User authorUser;
+    private User calculatedAuthor;
 
     private final MinigamesBot bot;
 
-    public CommandInfo(CalculableValue<Boolean> isInParty, CalculableValue<Party> party, CalculableValue<Boolean> hasProfile, CalculableValue<Profile> profile, CalculableValue<User> author, MinigamesBot bot) {
-        this.isInParty = isInParty;
-        this.party = party;
+    public CommandInfo(CalculableValue<Boolean> hasProfile, CalculableValue<Profile> profile, CalculableValue<User> author, MinigamesBot bot) {
         this.hasProfile = hasProfile;
         this.profile = profile;
         this.author = author;
         this.bot = bot;
-        authorUser = null;
+
+        calculatedParty = null;
+        calculatedProfile = null;
+        calculatedAuthor = null;
     }
 
     public boolean isInParty() {
-        return isInParty.calculate();
+        return profile().isInParty();
     }
 
     public Party party() {
-        return party.calculate();
+        if (calculatedParty == null) {
+            calculatedParty = bot.getPartyManager().getParty(profile().getPartyId());
+        }
+
+        return calculatedParty;
+    }
+
+    public long gameId() {
+        return isInParty() ? profile().getPartyId() : profile().getId();
     }
 
     public boolean hasProfile() {
@@ -41,28 +50,40 @@ public class CommandInfo {
     }
 
     public Profile profile() {
+        if (calculatedProfile == null) {
+            calculatedProfile = profile.calculate();
+        }
+
         return profile.calculate();
     }
 
+    public boolean hasMinigame() {
+        return bot.getMinigameManager().hasMinigame(gameId());
+    }
+
+    public Minigame minigame() {
+        return bot.getMinigameManager().getMinigame(gameId());
+    }
+
     public User author() {
-        if (authorUser == null) {
-            authorUser = author.calculate();
+        if (calculatedAuthor == null) {
+            calculatedAuthor = author.calculate();
         }
-        return authorUser;
+        return calculatedAuthor;
     }
 
     public long authorId() {
-        if (authorUser == null) {
-            authorUser = author.calculate();
+        if (calculatedAuthor == null) {
+            calculatedAuthor = author.calculate();
         }
-        return authorUser.getIdLong();
+        return calculatedAuthor.getIdLong();
     }
 
     public String getAuthorTag() {
-        if (authorUser == null) {
-            authorUser = author.calculate();
+        if (calculatedAuthor == null) {
+            calculatedAuthor = author.calculate();
         }
-        return authorUser.getAsTag();
+        return calculatedAuthor.getAsTag();
     }
 
     public String authorMention() {

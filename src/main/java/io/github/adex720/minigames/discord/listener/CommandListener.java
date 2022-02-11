@@ -32,8 +32,7 @@ public class CommandListener extends ListenerAdapter {
         for (Command command : commandManager.MAIN_COMMANDS) {
             if (commandName.equals(command.getMainName())) {
                 //event.deferReply().queue();
-                CommandInfo commandInfo = new CommandInfo(() -> bot.getProfileManager().getProfile(userId).isInParty(),
-                        () -> bot.getPartyManager().getParty(bot.getProfileManager().getProfile(userId).getPartyId()),
+                CommandInfo commandInfo = new CommandInfo(
                         () -> bot.getProfileManager().hasProfile(userId),
                         () -> bot.getProfileManager().getProfile(userId),
                         member::getUser, bot);
