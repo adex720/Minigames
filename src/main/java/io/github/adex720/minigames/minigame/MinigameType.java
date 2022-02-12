@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Set;
 
-public abstract class MinigameType<M> {
+public abstract class MinigameType<M extends Minigame> {
 
     protected final MinigamesBot bot;
     protected final MinigameTypeManager typeManager;
@@ -36,7 +36,9 @@ public abstract class MinigameType<M> {
 
     public abstract M create(ButtonClickEvent event, CommandInfo ci);
 
-    public abstract void createPlayCommand();
+    public  void createPlayCommand(){
+        bot.getCommandManager().parentCommandPlay.createSubcommand(this);
+    }
 
     public abstract Set<Subcommand> getSubcommands();
 

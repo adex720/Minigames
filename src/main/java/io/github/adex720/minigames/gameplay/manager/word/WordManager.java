@@ -10,25 +10,30 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class WordManager extends Manager {
 
-    private final ArrayList<String> NICE_WORDS; // length: 4+, 10k most common
-    private final int NICE_WORDS_AMOUNT;
+    private final ArrayList<String> HANGMAN_WORDS; // length: 4+, 10k most common
+    private final int HANGMAN_WORDS_AMOUNT;
 
-    private final ArrayList<String> NICE_WORDLES; // length: 5, 10k most common
-    private final int NICE_WORDLES_AMOUNT;
+    private final ArrayList<String> UNSCRAMBLE_WORDS; // length: 6+, 10k most common
+    private final int UNSCRAMBLE_WORDS_AMOUNT;
+
+    private final ArrayList<String> COMMON_WORDLES; // length: 5, 10k most common
+    private final int COMMON_WORDLES_AMOUNT;
 
     private final ArrayList<String> LEGTH_OF_5; //length: 5,
     //private final int LENGTH_OF_5_AMOUNT;
 
     public WordManager(MinigamesBot bot) throws FileNotFoundException {
         super(bot, "word-manager");
-        NICE_WORDS = new ArrayList<>();
-        NICE_WORDLES = new ArrayList<>();
+        HANGMAN_WORDS = new ArrayList<>();
+        UNSCRAMBLE_WORDS = new ArrayList<>();
+        COMMON_WORDLES = new ArrayList<>();
         LEGTH_OF_5 = new ArrayList<>();
 
         loadWords();
 
-        NICE_WORDS_AMOUNT = NICE_WORDS.size();
-        NICE_WORDLES_AMOUNT = NICE_WORDLES.size();
+        HANGMAN_WORDS_AMOUNT = HANGMAN_WORDS.size();
+        UNSCRAMBLE_WORDS_AMOUNT = UNSCRAMBLE_WORDS.size();
+        COMMON_WORDLES_AMOUNT = COMMON_WORDLES.size();
         //LENGTH_OF_5_AMOUNT = LEGTH_OF_5.size();
     }
 
@@ -44,9 +49,11 @@ public class WordManager extends Manager {
             String word = reader.nextLine();
             int length = word.length();
             if (length >= 4) {
-                NICE_WORDS.add(word);
+                HANGMAN_WORDS.add(word);
                 if (isValidWordForWordleWord(word)) {
-                    NICE_WORDLES.add(word);
+                    COMMON_WORDLES.add(word);
+                } else if(length >= 6){
+                    UNSCRAMBLE_WORDS.add(word);
                 }
             }
 
@@ -62,11 +69,15 @@ public class WordManager extends Manager {
     }
 
     public String getWordForHangman() {
-        return NICE_WORDS.get(ThreadLocalRandom.current().nextInt(NICE_WORDS_AMOUNT));
+        return HANGMAN_WORDS.get(ThreadLocalRandom.current().nextInt(HANGMAN_WORDS_AMOUNT));
+    }
+
+    public String getWordForUnscramble() {
+        return UNSCRAMBLE_WORDS.get(ThreadLocalRandom.current().nextInt(UNSCRAMBLE_WORDS_AMOUNT));
     }
 
     public String getWordForWordle() {
-        return NICE_WORDLES.get(ThreadLocalRandom.current().nextInt(NICE_WORDLES_AMOUNT));
+        return COMMON_WORDLES.get(ThreadLocalRandom.current().nextInt(COMMON_WORDLES_AMOUNT));
     }
 
     public boolean isValidWordForWordle(String word) {
@@ -81,7 +92,7 @@ public class WordManager extends Manager {
         for (int i = 0; i < 5; i++) {
             char current = word.charAt(i);
 
-            for (int i2 = 0; i2 < i; i2++){
+            for (int i2 = 0; i2 < i; i2++) {
                 if (word.charAt(i2) == current) return false; // Word contains same letter twice
             }
 

@@ -55,6 +55,7 @@ public class CommandManager extends Manager {
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().HANGMAN.getCommand());
+        MAIN_COMMANDS.add(bot.getMinigameTypeManager().UNSCRAMBLE.getCommand());
     }
 
     public void addCommand(Command command) {

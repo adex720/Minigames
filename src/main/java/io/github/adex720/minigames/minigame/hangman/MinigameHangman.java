@@ -50,7 +50,7 @@ public class MinigameHangman extends Minigame {
         return minigame;
     }
 
-    public void guess(SlashCommandEvent event, CommandInfo ci) {
+    public void guess(SlashCommandEvent event) {
         String guess = event.getOption("guess").getAsString();
 
         if (guess.length() == 1) {
@@ -152,6 +152,7 @@ public class MinigameHangman extends Minigame {
 
     @Override
     public String quit() {
+        super.quit();
         return "You quit your previous game of hangman. The word was " + word + " and you had " + life + " health left.";
     }
 
@@ -173,7 +174,7 @@ public class MinigameHangman extends Minigame {
             json.add("guesses", guessesJson);
         }
 
-        return null;
+        return json;
     }
 
     public static MinigameHangman fromJson(JsonObject json, MinigamesBot bot) {

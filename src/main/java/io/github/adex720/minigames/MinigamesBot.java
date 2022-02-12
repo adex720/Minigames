@@ -166,7 +166,6 @@ public class MinigamesBot {
 
 /*
    TODO: minigames to add
-    - unscramble  ()
     - wordle
     - higher-lower
     - counting

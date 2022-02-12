@@ -19,11 +19,6 @@ public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
     }
 
     @Override
-    public void createPlayCommand() {
-         bot.getCommandManager().parentCommandPlay.createSubcommand(this);
-    }
-
-    @Override
     public MinigameHangman create(SlashCommandEvent event, CommandInfo ci) {
         return MinigameHangman.start(event, ci);
     }
