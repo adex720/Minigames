@@ -1,15 +1,14 @@
 package io.github.adex720.minigames.gameplay.manager.profile;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.Util;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ProfileManager extends IdCompoundSavableManager<Profile> {
@@ -23,18 +22,18 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
 
         PROFILES = new HashMap<>();
         DELETION_CODES = new HashMap<>();
-        createProfile(560815341140181034L);
-        createProfile(864318052812062731L);
+
+        loadProfiles((JsonArray) bot.loadJson("profiles"));
     }
 
     @Override
     public Profile fromJson(JsonObject json) {
-        return null;
+        return Profile.fromJson(json);
     }
 
     @Override
     public Set<Profile> getValues() {
-        return null;
+        return new HashSet<>(PROFILES.values());
     }
 
     public boolean hasProfile(long userId) {
@@ -50,7 +49,11 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         PROFILES.put(id, profile);
     }
 
-    public void deleteProfile(long id){
+    private void addProfile(Profile profile) {
+        PROFILES.put(profile.getId(), profile);
+    }
+
+    public void deleteProfile(long id) {
         PROFILES.remove(id);
     }
 
@@ -68,10 +71,17 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         return code;
     }
 
-    public boolean doesDeletionCodeMatch(long id, String code){
+    public boolean doesDeletionCodeMatch(long id, String code) {
         String correct = DELETION_CODES.get(id);
         if (correct == null) return false;
 
         return correct.equals(code.toUpperCase(Locale.ROOT));
+    }
+
+    @Override
+    public void loadProfiles(JsonArray data) {
+        for (JsonElement json : data) {
+            addProfile(fromJson((JsonObject) json));
+        }
     }
 }

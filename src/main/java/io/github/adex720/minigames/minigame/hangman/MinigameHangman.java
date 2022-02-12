@@ -109,7 +109,7 @@ public class MinigameHangman extends Minigame {
                         return;
                     }
 
-                    event.getHook().sendMessage("Good job! The word was " + word + ". You had " + length + "tries left!").queue();
+                    event.getHook().sendMessage("Good job! The word was " + word + ". You had " + life + " tries left!").queue();
                     finish(event, true);
 
                 } else {
@@ -159,6 +159,7 @@ public class MinigameHangman extends Minigame {
     @Override
     public JsonObject getAsJson() {
         JsonObject json = new JsonObject();
+        json.addProperty("type", "hangman");
 
         json.addProperty("id", id);
         json.addProperty("word", word);

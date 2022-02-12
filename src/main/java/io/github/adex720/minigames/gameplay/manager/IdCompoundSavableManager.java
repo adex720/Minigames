@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.gameplay.manager;
 
+import com.google.gson.JsonArray;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
@@ -10,4 +11,6 @@ public abstract class IdCompoundSavableManager<T extends IdCompound & JsonSavabl
     public IdCompoundSavableManager(MinigamesBot bot, String name) {
         super(bot, name);
     }
+
+    public abstract void loadProfiles(JsonArray data);
 }

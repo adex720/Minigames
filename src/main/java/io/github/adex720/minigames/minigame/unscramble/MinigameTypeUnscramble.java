@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.minigame.unscramble;
 
+import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
@@ -26,6 +27,11 @@ public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
     @Override
     public MinigameUnscramble create(ButtonClickEvent event, CommandInfo ci) {
         return MinigameUnscramble.start(event, ci);
+    }
+
+    @Override
+    public MinigameUnscramble fromJson(JsonObject json) {
+        return MinigameUnscramble.fromJson(json, bot);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.minigame;
 
+import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
@@ -35,6 +36,8 @@ public abstract class MinigameType<M extends Minigame> {
     public abstract M create(SlashCommandEvent event, CommandInfo ci);
 
     public abstract M create(ButtonClickEvent event, CommandInfo ci);
+
+    public abstract M fromJson(JsonObject json);
 
     public  void createPlayCommand(){
         bot.getCommandManager().parentCommandPlay.createSubcommand(this);

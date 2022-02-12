@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.minigame.hangman;
 
+import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
@@ -26,6 +27,11 @@ public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
     @Override
     public MinigameHangman create(ButtonClickEvent event, CommandInfo ci) {
         return MinigameHangman.start(event, ci);
+    }
+
+    @Override
+    public MinigameHangman fromJson(JsonObject json) {
+        return MinigameHangman.fromJson(json, bot);
     }
 
     @Override

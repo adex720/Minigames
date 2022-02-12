@@ -1,16 +1,19 @@
 package io.github.adex720.minigames;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.ButtonListener;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
+import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
+import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.JDA;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 
 public class MinigamesBot {
 
@@ -45,15 +49,20 @@ public class MinigamesBot {
 
     private final PartyManager partyManager;
 
+    private final BotDataManager dataManager;
+
     private final MinigameTypeManager minigameTypeManager;
     private final MinigameManager minigameManager;
 
     private final FilePathManager filePathManager;
     private final WordManager wordManager;
 
-    public MinigamesBot(String token) throws LoginException, InterruptedException, FileNotFoundException {
+    private final TimerManager timerManager;
+
+    public MinigamesBot(String token, JsonObject databaseConfig) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
+        dataManager = new BotDataManager(this, databaseConfig);
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
@@ -71,6 +80,8 @@ public class MinigamesBot {
         filePathManager = new FilePathManager(this);
         wordManager = new WordManager(this);
 
+        timerManager = new TimerManager(this);
+
         commandManager.initCommands(this);
 
         jda = JDABuilder.createDefault(token)
@@ -81,14 +92,17 @@ public class MinigamesBot {
                 .awaitReady();
 
         commandManager.registerCommands(jda);
+
+        timerManager.add(this::save, 300000);
     }
 
-    public static void main(String[] args) throws LoginException, InterruptedException, FileNotFoundException {
+    public static void main(String[] args) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
         JsonObject configJson = getConfigJson();
 
         String token = JsonHelper.getStringOrThrow(configJson, "token", "Missing entry on config json: token");
+        JsonObject databaseConfig = JsonHelper.getJsonObjectOrThrow(configJson, "database", "Missing database information on config json");
 
-        MinigamesBot minigamesBot = new MinigamesBot(token); // TODO: catch exceptions
+        MinigamesBot minigamesBot = new MinigamesBot(token, databaseConfig); // TODO: catch exceptions
     }
 
     public JDA getJda() {
@@ -161,6 +175,34 @@ public class MinigamesBot {
 
         return json;
     }
+
+    public void saveJson(JsonElement json, String name) {
+        if (!dataManager.saveJson(json, name)) {
+            logger.error("Failed to save json file {}", name);
+        }
+    }
+
+    public JsonElement loadJson(String name) {
+        return dataManager.loadJson(name);
+    }
+
+    public void save() {
+        long start = System.currentTimeMillis();
+
+        saveJson(profileManager.asJson(), "profiles");
+        saveJson(partyManager.asJson(), "parties");
+        saveJson(minigameManager.asJson(), "minigames");
+
+        long end = System.currentTimeMillis();
+        logger.info("Saved all data in {}ms", end - start);
+    }
+
+    public void stop() {
+        jda.shutdown();
+        timerManager.stop();
+    }
+
+
 }
 
 
@@ -184,8 +226,6 @@ public class MinigamesBot {
 
    TODO: trivia
     (https://opentdb.com/api_config.php)
-
-   TODO: save data ()
 
    TODO: text command system for dev commands ()
 

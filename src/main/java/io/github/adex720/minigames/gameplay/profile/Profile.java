@@ -3,6 +3,7 @@ package io.github.adex720.minigames.gameplay.profile;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.util.JsonHelper;
 
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
@@ -30,11 +31,19 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     @Override
     public JsonObject getAsJson() {
-        return null;
+        JsonObject json = new JsonObject();
+
+        json.addProperty("id", userId);
+        json.addProperty("created", created);
+
+        return json;
     }
 
     public static Profile fromJson(JsonObject json) {
-        return create(1L);
+        long id = JsonHelper.getLong(json, "id");
+        long created = JsonHelper.getLong(json, "created");
+
+        return new Profile(id, created);
     }
 
     public boolean isInParty() {

@@ -1,9 +1,11 @@
 package io.github.adex720.minigames.gameplay.manager.minigame;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 import io.github.adex720.minigames.minigame.Minigame;
+import io.github.adex720.minigames.util.JsonHelper;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,7 +22,8 @@ public class MinigameManager extends IdCompoundSavableManager<Minigame> {
 
     @Override
     public Minigame fromJson(JsonObject json) {
-        return null;
+        String type = JsonHelper.getString(json, "type");
+        return bot.getMinigameTypeManager().getType(type).fromJson(json);
     }
 
     @Override
@@ -42,5 +45,10 @@ public class MinigameManager extends IdCompoundSavableManager<Minigame> {
 
     public void deleteMinigame(long id) {
         MINIGAMES.remove(id);
+    }
+
+    @Override
+    public void loadProfiles(JsonArray data) {
+
     }
 }

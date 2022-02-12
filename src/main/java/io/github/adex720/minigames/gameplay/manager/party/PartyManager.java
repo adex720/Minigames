@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.gameplay.manager.party;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.party.Party;
@@ -65,4 +66,8 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
         return PARTIES.get(id);
     }
 
+    @Override
+    public void loadProfiles(JsonArray data) {
+
+    }
 }

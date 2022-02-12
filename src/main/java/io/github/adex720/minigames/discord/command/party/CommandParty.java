@@ -8,5 +8,6 @@ public class CommandParty extends ParentCommand {
 
     public CommandParty(MinigamesBot bot) {
         super(bot, "party", "Interacts with parties.", CommandCategory.PARTY);
+        requiresProfile();
     }
 }
