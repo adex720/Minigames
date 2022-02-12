@@ -7,14 +7,20 @@ import io.github.adex720.minigames.data.JsonSavable;
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final long userId;
+    private final long created;
 
     private boolean isInParty;
     private long partyId;
 
-    public Profile(long userId) {
+    public Profile(long userId, long crated) {
         this.userId = userId;
+        this.created = crated;
         isInParty = false;
         partyId = userId;
+    }
+
+    public static Profile create(long id) {
+        return new Profile(id, System.currentTimeMillis());
     }
 
     @Override
@@ -28,7 +34,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     }
 
     public static Profile fromJson(JsonObject json) {
-        return new Profile(1L);
+        return create(1L);
     }
 
     public boolean isInParty() {
@@ -39,12 +45,12 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return partyId;
     }
 
-    public void partyJoined(long partyId){
+    public void partyJoined(long partyId) {
         isInParty = true;
         this.partyId = partyId;
     }
 
-    public void partyLeft(){
+    public void partyLeft() {
         isInParty = false;
     }
 }

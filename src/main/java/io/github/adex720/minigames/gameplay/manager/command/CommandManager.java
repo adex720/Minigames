@@ -8,6 +8,8 @@ import io.github.adex720.minigames.discord.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandPing;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.discord.command.party.*;
+import io.github.adex720.minigames.discord.command.user.CommandDelete;
+import io.github.adex720.minigames.discord.command.user.CommandStart;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -39,6 +41,9 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandPing(bot));
         MAIN_COMMANDS.add(new CommandServer(bot));
 
+        MAIN_COMMANDS.add(new CommandStart(bot));
+        MAIN_COMMANDS.add(new CommandDelete(bot));
+
         MAIN_COMMANDS.add(parentCommandParty);
         SUBCOMMANDS.add(new CommandPartyCreate(bot));
         SUBCOMMANDS.add(new CommandPartyDelete(bot));
@@ -51,7 +56,6 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyPrivate(bot));
         SUBCOMMANDS.add(new CommandPartyPublic(bot));
         SUBCOMMANDS.add(new CommandPartyTransfer(bot));
-
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().HANGMAN.getCommand());

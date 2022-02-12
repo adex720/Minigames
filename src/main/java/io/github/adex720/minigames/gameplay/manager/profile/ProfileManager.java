@@ -4,18 +4,25 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.util.Util;
 
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ProfileManager extends IdCompoundSavableManager<Profile> {
 
     private final HashMap<Long, Profile> PROFILES;
 
+    private final HashMap<Long, String> DELETION_CODES;
+
     public ProfileManager(MinigamesBot bot) {
         super(bot, "profile_manager");
 
         PROFILES = new HashMap<>();
+        DELETION_CODES = new HashMap<>();
         createProfile(560815341140181034L);
         createProfile(864318052812062731L);
     }
@@ -38,9 +45,33 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         return PROFILES.get(userId);
     }
 
-    public Profile createProfile(long id) {
-        Profile profile = new Profile(id);
+    public void createProfile(long id) {
+        Profile profile = Profile.create(id);
         PROFILES.put(id, profile);
-        return profile;
+    }
+
+    public void deleteProfile(long id){
+        PROFILES.remove(id);
+    }
+
+    public String generateDeletionCode(long id) {
+        char[] letters = new char[5];
+
+        Random random = ThreadLocalRandom.current();
+        for (int i = 0; i < 5; i++) {
+            letters[i] = (char) ('A' + random.nextInt(26));
+        }
+
+        String code = new String(letters);
+        DELETION_CODES.put(id, code);
+        Util.schedule(() -> DELETION_CODES.remove(id, code), 10000);
+        return code;
+    }
+
+    public boolean doesDeletionCodeMatch(long id, String code){
+        String correct = DELETION_CODES.get(id);
+        if (correct == null) return false;
+
+        return correct.equals(code.toUpperCase(Locale.ROOT));
     }
 }
