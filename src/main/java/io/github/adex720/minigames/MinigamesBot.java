@@ -174,8 +174,6 @@ public class MinigamesBot {
     - connect 4
 
   TODO: commands to add
-    - start   ()
-    - delete  ()
     - help
     - leaderboard
     - quests
