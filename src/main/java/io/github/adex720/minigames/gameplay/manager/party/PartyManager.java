@@ -1,10 +1,11 @@
 package io.github.adex720.minigames.gameplay.manager.party;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
-import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
+import io.github.adex720.minigames.gameplay.party.Party;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
         super(bot, "party_manager");
 
         PARTIES = new HashMap<>();
+        load((JsonArray) bot.loadJson("parties"));
     }
 
     @Override
@@ -45,29 +47,36 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
         }
     }
 
-    public void createParty(long id){
+    public void createParty(long id) {
         PARTIES.put(id, new Party(bot, id));
     }
 
-    public void addParty(long id, Party party){
-        PARTIES.put(id, party);
+    public void addParty(Party party) {
+        PARTIES.put(party.getId(), party);
     }
 
-    public void removeParty(long id){
+    public void addPartyAndMembers(Party party) {
+        addParty(party);
+        party.updatePartyId();
+    }
+
+    public void removeParty(long id) {
         PARTIES.remove(id);
     }
 
-    public boolean isPartyOwner(long id){
+    public boolean isPartyOwner(long id) {
         return PARTIES.containsKey(id);
     }
 
     @Nullable
-    public Party getParty(long id){
+    public Party getParty(long id) {
         return PARTIES.get(id);
     }
 
     @Override
-    public void loadProfiles(JsonArray data) {
-
+    public void load(JsonArray data) {
+        for (JsonElement json : data) {
+            addPartyAndMembers(fromJson((JsonObject) json));
+        }
     }
 }

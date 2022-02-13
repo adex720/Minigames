@@ -1,6 +1,7 @@
 package io.github.adex720.minigames.gameplay.manager.minigame;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
@@ -18,6 +19,8 @@ public class MinigameManager extends IdCompoundSavableManager<Minigame> {
     public MinigameManager(MinigamesBot bot) {
         super(bot, "minigame-manager");
         MINIGAMES = new HashMap<>();
+
+        load((JsonArray) bot.loadJson("minigames"));
     }
 
     @Override
@@ -48,7 +51,9 @@ public class MinigameManager extends IdCompoundSavableManager<Minigame> {
     }
 
     @Override
-    public void loadProfiles(JsonArray data) {
-
+    public void load(JsonArray data) {
+        for (JsonElement json : data) {
+            addMinigame(fromJson((JsonObject) json));
+        }
     }
 }

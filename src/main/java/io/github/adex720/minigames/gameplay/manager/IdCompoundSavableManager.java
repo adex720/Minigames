@@ -12,5 +12,5 @@ public abstract class IdCompoundSavableManager<T extends IdCompound & JsonSavabl
         super(bot, name);
     }
 
-    public abstract void loadProfiles(JsonArray data);
+    public abstract void load(JsonArray data);
 }
