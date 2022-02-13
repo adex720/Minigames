@@ -3,6 +3,8 @@ package io.github.adex720.minigames.gameplay.manager.command;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.Subcommand;
+import io.github.adex720.minigames.discord.command.devcommand.DevCommandSave;
+import io.github.adex720.minigames.discord.command.devcommand.DevCommandShutdown;
 import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandPing;
@@ -11,6 +13,7 @@ import io.github.adex720.minigames.discord.command.miscellaneous.CommandUptime;
 import io.github.adex720.minigames.discord.command.party.*;
 import io.github.adex720.minigames.discord.command.user.CommandDelete;
 import io.github.adex720.minigames.discord.command.user.CommandStart;
+import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -67,6 +70,15 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().HANGMAN.getCommand());
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().UNSCRAMBLE.getCommand());
+
+        initDevCommands(bot);
+    }
+
+    private void initDevCommands(MinigamesBot bot) {
+        DevCommandListener devCommandListener = bot.getDevCommandListener();
+
+        devCommandListener.addCommand(new DevCommandSave(bot));
+        devCommandListener.addCommand(new DevCommandShutdown(bot));
     }
 
     public void addCommand(Command command) {

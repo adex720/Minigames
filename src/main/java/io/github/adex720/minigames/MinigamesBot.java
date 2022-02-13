@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.ButtonListener;
 import io.github.adex720.minigames.discord.listener.CommandListener;
+import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
@@ -42,6 +43,8 @@ public class MinigamesBot {
     private final CommandManager commandManager;
     private final CommandListener commandListener;
 
+    private final DevCommandListener devCommandListener;
+
     private final ButtonListener buttonListener;
     private final ReplayManager replayManager;
 
@@ -59,7 +62,7 @@ public class MinigamesBot {
 
     private final TimerManager timerManager;
 
-    public MinigamesBot(String token, JsonObject databaseConfig) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
+    public MinigamesBot(String token, JsonObject databaseConfig, long developerId) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
         long startTime = System.currentTimeMillis();
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
@@ -67,6 +70,8 @@ public class MinigamesBot {
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
+
+        devCommandListener = new DevCommandListener(this, developerId, "-");
 
         buttonListener = new ButtonListener(this);
         replayManager = new ReplayManager(this);
@@ -88,12 +93,13 @@ public class MinigamesBot {
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
-                .addEventListeners(commandListener, buttonListener)
+                .addEventListeners(commandListener, buttonListener, devCommandListener)
                 .build()
                 .awaitReady();
         long botOnlineTime = System.currentTimeMillis();
 
         commandManager.registerCommands(jda);
+
 
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
@@ -107,7 +113,9 @@ public class MinigamesBot {
         String token = JsonHelper.getStringOrThrow(configJson, "token", "Missing entry on config json: token");
         JsonObject databaseConfig = JsonHelper.getJsonObjectOrThrow(configJson, "database", "Missing database information on config json");
 
-        MinigamesBot minigamesBot = new MinigamesBot(token, databaseConfig); // TODO: catch exceptions
+        long developerId = JsonHelper.getLong(configJson, "developer");
+
+        MinigamesBot minigamesBot = new MinigamesBot(token, databaseConfig, developerId); // TODO: catch exceptions
     }
 
     public JDA getJda() {
@@ -124,6 +132,10 @@ public class MinigamesBot {
 
     public CommandListener getCommandListener() {
         return commandListener;
+    }
+
+    public DevCommandListener getDevCommandListener() {
+        return devCommandListener;
     }
 
     public ButtonListener getButtonListener() {
