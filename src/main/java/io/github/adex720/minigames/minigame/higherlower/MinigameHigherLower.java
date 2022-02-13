@@ -52,12 +52,12 @@ public class MinigameHigherLower extends Minigame {
         int guess = (int) event.getOption("number").getAsDouble();
 
         if (guess == number) {
-            event.getHook().sendMessage("Good job! " + number + "was the number!").queue();
+            event.getHook().sendMessage("Good job! " + number + " was the number!").queue();
             finish(event, true);
         } else {
 
             if (guess > max || guess < min) {
-                event.getHook().sendMessage("That number is outside the range! The range is " + min + "-" + max).queue();
+                event.getHook().sendMessage("That number is outside the range! The range is " + min + "-" + max + ".").queue();
                 return;
             }
 
@@ -68,10 +68,10 @@ public class MinigameHigherLower extends Minigame {
                     event.getHook().sendMessage(guess + " was too high. You have " + life + " tries left. The range is " + min + "-" + max + ".").queue();
                 } else {
                     min = guess + 1;
-                    event.getHook().sendMessage(guess + " was too low. You have " + life + " tries left The range is " + min + "-" + max).queue();
+                    event.getHook().sendMessage(guess + " was too low. You have " + life + " tries left The range is " + min + "-" + max + ".").queue();
                 }
             } else {
-                event.getHook().sendMessage("Wrong number. You ran out of tries. The number was " + number).queue();
+                event.getHook().sendMessage("Wrong number. You ran out of tries. The number was " + number + ".").queue();
                 finish(event, false);
             }
         }
