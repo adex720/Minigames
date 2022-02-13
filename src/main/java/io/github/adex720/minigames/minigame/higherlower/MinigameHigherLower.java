@@ -29,7 +29,7 @@ public class MinigameHigherLower extends Minigame {
     }
 
     public MinigameHigherLower(CommandInfo ci) {
-        this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getNumber(), 1, 50, 5);
+        this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getNumber(), 1, 60, 6);
     }
 
     public static MinigameHigherLower start(SlashCommandEvent event, CommandInfo ci) {
@@ -115,6 +115,6 @@ public class MinigameHigherLower extends Minigame {
     }
 
     public static int getNumber() {
-        return ThreadLocalRandom.current().nextInt(50) + 1;
+        return ThreadLocalRandom.current().nextInt(60) + 1;
     }
 }
