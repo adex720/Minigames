@@ -253,5 +253,7 @@ public class MinigamesBot {
 
    TODO: badges
 
+   TODO: sharding
+
 
 */
