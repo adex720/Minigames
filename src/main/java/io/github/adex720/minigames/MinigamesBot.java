@@ -242,8 +242,6 @@ public class MinigamesBot {
    TODO: trivia
     (https://opentdb.com/api_config.php)
 
-   TODO: text command system for dev commands ()
-
    TODO: badges
 
 
