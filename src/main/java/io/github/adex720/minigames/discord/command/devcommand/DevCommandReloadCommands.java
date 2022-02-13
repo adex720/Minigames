@@ -12,7 +12,7 @@ public class DevCommandReloadCommands extends DevCommand {
     @Override
     public boolean onRun(MessageReceivedEvent event) {
         bot.getCommandManager().registerCommands(bot.getJda());
-        event.getChannel().sendMessage("Reloaded slash commands.").queue();
+        event.getChannel().sendMessage("Reloaded commands.").queue();
         return true;
     }
 }
