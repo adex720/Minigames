@@ -1,6 +1,7 @@
 package io.github.adex720.minigames;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.ButtonListener;
@@ -212,6 +213,17 @@ public class MinigamesBot {
 
         long end = System.currentTimeMillis();
         logger.info("Saved all data in {}ms", end - start);
+    }
+
+    public void reload(){
+        long start = System.currentTimeMillis();
+
+        profileManager.load((JsonArray) dataManager.loadJson("profiles"));
+        partyManager.load((JsonArray) dataManager.loadJson("parties"));
+        minigameManager.load((JsonArray) dataManager.loadJson("minigames"));
+
+        long end = System.currentTimeMillis();
+        logger.info("Reloaded all data in {}ms", end - start);
     }
 
     public void stop() {
