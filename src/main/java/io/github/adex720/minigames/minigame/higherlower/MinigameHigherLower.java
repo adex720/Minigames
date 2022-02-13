@@ -49,7 +49,7 @@ public class MinigameHigherLower extends Minigame {
     }
 
     public void guess(SlashCommandEvent event) {
-        int guess = (int) event.getOption("number").getAsLong();
+        int guess = (int) event.getOption("number").getAsDouble();
 
         if (guess == number) {
             event.getHook().sendMessage("Good job! " + number + "was the number!").queue();
