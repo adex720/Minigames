@@ -3,6 +3,8 @@ package io.github.adex720.minigames.gameplay.manager.command;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.Subcommand;
+import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadCommands;
+import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadData;
 import io.github.adex720.minigames.discord.command.devcommand.DevCommandSave;
 import io.github.adex720.minigames.discord.command.devcommand.DevCommandShutdown;
 import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
@@ -81,7 +83,11 @@ public class CommandManager extends Manager {
         DevCommandListener devCommandListener = bot.getDevCommandListener();
 
         devCommandListener.addCommand(new DevCommandSave(bot));
+        devCommandListener.addCommand(new DevCommandReloadData(bot));
+
         devCommandListener.addCommand(new DevCommandShutdown(bot));
+
+        devCommandListener.addCommand(new DevCommandReloadCommands(bot));
     }
 
     public void addCommand(Command command) {
