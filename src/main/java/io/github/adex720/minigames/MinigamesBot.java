@@ -247,7 +247,6 @@ public class MinigamesBot {
     - quests
     - profile
     - kits (daily, hourly, supporter)
-    - quit (removes minigame)
 
    TODO: trivia
     (https://opentdb.com/api_config.php)
