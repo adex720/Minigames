@@ -236,7 +236,6 @@ public class MinigamesBot {
 /*
    TODO: minigames to add
     - wordle
-    - higher-lower
     - counting
     - counting variations (hex, binary, letters)
     - tic-tac-toe
@@ -249,7 +248,6 @@ public class MinigamesBot {
     - profile
     - kits (daily, hourly, supporter)
     - quit (removes minigame)
-    - uptime
 
    TODO: trivia
     (https://opentdb.com/api_config.php)
