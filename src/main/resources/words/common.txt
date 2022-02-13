@@ -1243,7 +1243,6 @@ dimension
 diner
 ding
 dining
-dining-room
 dinner
 dip
 direct
@@ -1355,7 +1354,6 @@ during
 dust
 duty
 dying
-e-book
 each
 eager
 eagle
@@ -2638,7 +2636,6 @@ machinery
 mad
 madam
 made
-made-up
 madness
 magazine
 magic
@@ -3032,7 +3029,6 @@ oily
 ointment
 okay
 old
-old-fashioned
 older
 oldest
 olympics
@@ -3163,7 +3159,6 @@ parole
 parrot
 parsley
 part
-part-time
 partial
 participant
 participate
@@ -4096,7 +4091,6 @@ snap
 sneak
 snow
 so
-so-called
 soap
 sob
 sober
@@ -4376,7 +4370,6 @@ sworn
 symbol
 sympathy
 system
-t-shirt
 table
 tablet
 tabloid
