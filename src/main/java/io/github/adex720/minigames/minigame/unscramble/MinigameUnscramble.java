@@ -114,6 +114,7 @@ public class MinigameUnscramble extends Minigame {
     @Override
     public JsonObject getAsJson() {
         JsonObject json = new JsonObject();
+        json.addProperty("type", "unscramble");
 
         json.addProperty("id", id);
         json.addProperty("word", word);
@@ -132,7 +133,6 @@ public class MinigameUnscramble extends Minigame {
 
         long lastActive = JsonHelper.getLong(json, "active");
         boolean isParty = JsonHelper.getBoolean(json, "party");
-
 
         return new MinigameUnscramble(bot, id, isParty, lastActive, word, life);
     }
