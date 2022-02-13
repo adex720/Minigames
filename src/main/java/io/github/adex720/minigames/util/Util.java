@@ -34,4 +34,13 @@ public class Util {
         return !input.contains("<@");
     }
 
+    public static String formatTime(int seconds) {
+        int secondsDifference = seconds % 60;
+        int minutes = seconds / 60;
+        int minutesDifference = minutes % 60;
+        int hours = minutes / 60;
+
+        return hours + ":" + minutesDifference + ":" + secondsDifference;
+    }
+
 }

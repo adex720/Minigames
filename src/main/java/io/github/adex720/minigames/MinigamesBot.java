@@ -60,6 +60,7 @@ public class MinigamesBot {
     private final TimerManager timerManager;
 
     public MinigamesBot(String token, JsonObject databaseConfig) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
+        long startTime = System.currentTimeMillis();
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
         dataManager = new BotDataManager(this, databaseConfig);
@@ -90,8 +91,12 @@ public class MinigamesBot {
                 .addEventListeners(commandListener, buttonListener)
                 .build()
                 .awaitReady();
+        long botOnlineTime = System.currentTimeMillis();
 
         commandManager.registerCommands(jda);
+
+        commandManager.commandUptime.setStarted(startTime);
+        commandManager.commandUptime.botOnline(botOnlineTime);
 
         timerManager.add(this::save, 300000);
     }
@@ -202,9 +207,7 @@ public class MinigamesBot {
         timerManager.stop();
     }
 
-
 }
-
 
 /*
    TODO: minigames to add

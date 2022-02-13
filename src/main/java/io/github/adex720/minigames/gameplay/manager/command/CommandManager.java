@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandPing;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
+import io.github.adex720.minigames.discord.command.miscellaneous.CommandUptime;
 import io.github.adex720.minigames.discord.command.party.*;
 import io.github.adex720.minigames.discord.command.user.CommandDelete;
 import io.github.adex720.minigames.discord.command.user.CommandStart;
@@ -27,6 +28,9 @@ public class CommandManager extends Manager {
     public final CommandParty parentCommandParty;
     public final CommandPlay parentCommandPlay;
 
+
+    public final CommandUptime commandUptime;
+
     public CommandManager(MinigamesBot bot) {
         super(bot, "command_manager");
         MAIN_COMMANDS = new HashSet<>();
@@ -34,12 +38,15 @@ public class CommandManager extends Manager {
 
         parentCommandParty = new CommandParty(bot);
         parentCommandPlay = new CommandPlay(bot);
+
+        commandUptime = new CommandUptime(bot);
     }
 
     public void initCommands(MinigamesBot bot) {
         MAIN_COMMANDS.add(new CommandInvite(bot));
         MAIN_COMMANDS.add(new CommandPing(bot));
         MAIN_COMMANDS.add(new CommandServer(bot));
+        MAIN_COMMANDS.add(commandUptime);
 
         MAIN_COMMANDS.add(new CommandStart(bot));
         MAIN_COMMANDS.add(new CommandDelete(bot));
