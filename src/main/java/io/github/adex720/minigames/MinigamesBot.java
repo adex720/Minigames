@@ -105,7 +105,8 @@ public class MinigamesBot {
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
 
-        timerManager.add(this::save, 300000);
+        timerManager.add(this::save, 1000 * 60 * 5);
+        timerManager.add(this::clearInactive, 1000 * 60 * 5);
     }
 
     public static void main(String[] args) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
@@ -215,7 +216,7 @@ public class MinigamesBot {
         logger.info("Saved all data in {}ms", end - start);
     }
 
-    public void reload(){
+    public void reload() {
         long start = System.currentTimeMillis();
 
         profileManager.load((JsonArray) dataManager.loadJson("profiles"));
@@ -229,6 +230,11 @@ public class MinigamesBot {
     public void stop() {
         jda.shutdown();
         timerManager.stop();
+    }
+
+    public void clearInactive() {
+        minigameManager.clearInactiveMinigames();
+        partyManager.clearInactiveParties();
     }
 
 }

@@ -10,6 +10,7 @@ import io.github.adex720.minigames.util.JsonHelper;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class MinigameManager extends IdCompoundSavableManager<Minigame> {
@@ -55,5 +56,20 @@ public class MinigameManager extends IdCompoundSavableManager<Minigame> {
         for (JsonElement json : data) {
             addMinigame(fromJson((JsonObject) json));
         }
+    }
+
+    public void clearInactiveMinigames() {
+        long limit = System.currentTimeMillis() - 1000 * 60 * 30;
+        int amount = 0;
+
+        Iterator<Minigame> iterator = MINIGAMES.values().iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().isInactive(limit)) {
+                iterator.remove();
+                amount++;
+            }
+        }
+
+        bot.getLogger().info("Cleared {} inactive minigame{}.", amount, amount != 1 ? "s" : "");
     }
 }

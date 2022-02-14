@@ -75,6 +75,7 @@ public class MinigameUnscramble extends Minigame {
     }
 
     public void guess(SlashCommandEvent event) {
+        active();
         String guess = event.getOption("word").getAsString();
 
         if (guess.equals(word)) {

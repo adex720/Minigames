@@ -53,4 +53,12 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return "";
     }
 
+    public void active(){
+        lastActive = System.currentTimeMillis();
+    }
+
+    public boolean isInactive(long limit) {
+        return lastActive <= limit;
+    }
+
 }

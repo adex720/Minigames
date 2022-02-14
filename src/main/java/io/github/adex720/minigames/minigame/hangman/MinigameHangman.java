@@ -51,6 +51,7 @@ public class MinigameHangman extends Minigame {
     }
 
     public void guess(SlashCommandEvent event) {
+        active();
         String guess = event.getOption("guess").getAsString();
 
         if (guess.length() == 1) {

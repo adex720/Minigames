@@ -36,6 +36,7 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
 
     public void clearInactiveParties() {
         long time = System.currentTimeMillis() - 1000 * 60 * 30;
+        int amount = 0;
 
         Iterator<Party> iterator = PARTIES.values().iterator();
         while (iterator.hasNext()) {
@@ -43,8 +44,11 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
             if (party.isInactive(time)) {
                 iterator.remove();
                 party.onDelete();
+                amount++;
             }
         }
+
+        bot.getLogger().info("Cleared {} inactive part{}.", amount, amount != 1 ? "ies" : "y");
     }
 
     public void createParty(long id) {
