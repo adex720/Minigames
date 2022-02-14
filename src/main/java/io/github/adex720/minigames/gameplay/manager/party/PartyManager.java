@@ -52,7 +52,9 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
     }
 
     public void createParty(long id) {
-        PARTIES.put(id, new Party(bot, id));
+        Party party = new Party(bot,id);
+        party.onCreate();
+        PARTIES.put(id, party);
     }
 
     public void addParty(Party party) {

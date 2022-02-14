@@ -24,10 +24,7 @@ public class CommandPartyCreate extends Subcommand {
             return true;
         }
 
-        Party party = new Party(bot, ci.authorId());
-        party.onCreate();
-
-        bot.getPartyManager().addParty(party);
+        bot.getPartyManager().createParty(ci.authorId());
         ci.profile().partyJoined(ci.authorId());
 
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
