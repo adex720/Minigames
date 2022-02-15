@@ -20,7 +20,7 @@ public class CommandStart extends Command {
         }
 
         bot.getProfileManager().createProfile(ci.authorId());
-        event.getHook().sendMessage("You now have a profile. View your profile with `/profile`").queue();
+        event.getHook().sendMessage("You now have a profile. View your profile with `/profile`. View list of commands with `/help`.").queue();
 
         return true;
     }
