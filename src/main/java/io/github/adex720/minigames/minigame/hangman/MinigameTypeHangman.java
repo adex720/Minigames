@@ -16,7 +16,7 @@ import java.util.Set;
 public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
 
     public MinigameTypeHangman(MinigamesBot bot, MinigameTypeManager typeManager) {
-        super(bot, typeManager, "hangman", false, 1); // TODO: add description
+        super(bot, typeManager, "hangman", false, 1);
     }
 
     @Override
