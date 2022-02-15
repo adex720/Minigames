@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.ButtonListener;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
+import io.github.adex720.minigames.discord.listener.GuildJoinListener;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
@@ -49,6 +50,8 @@ public class MinigamesBot {
     private final ButtonListener buttonListener;
     private final ReplayManager replayManager;
 
+    private final GuildJoinListener guildJoinListener;
+
     private final ProfileManager profileManager;
 
     private final PartyManager partyManager;
@@ -77,6 +80,8 @@ public class MinigamesBot {
         buttonListener = new ButtonListener(this);
         replayManager = new ReplayManager(this);
 
+        guildJoinListener = new GuildJoinListener(this);
+
         profileManager = new ProfileManager(this);
 
         partyManager = new PartyManager(this);
@@ -94,7 +99,7 @@ public class MinigamesBot {
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
-                .addEventListeners(commandListener, buttonListener, devCommandListener)
+                .addEventListeners(commandListener, buttonListener, devCommandListener, guildJoinListener)
                 .build()
                 .awaitReady();
         long botOnlineTime = System.currentTimeMillis();
@@ -146,6 +151,10 @@ public class MinigamesBot {
 
     public ReplayManager getReplayManager() {
         return replayManager;
+    }
+
+    public GuildJoinListener getGuildJoinListener() {
+        return guildJoinListener;
     }
 
     public ProfileManager getProfileManager() {
