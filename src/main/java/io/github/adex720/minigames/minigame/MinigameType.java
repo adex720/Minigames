@@ -6,6 +6,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.MinigameCommand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
+import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
@@ -24,13 +25,20 @@ public abstract class MinigameType<M extends Minigame> {
 
     private MinigameCommand command;
 
-    protected MinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name, String description, boolean requiresParty, int minPartySize) {
+    protected MinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name, boolean requiresParty, int minPartySize) {
         this.bot = bot;
         this.typeManager = typeManager;
         this.name = name;
-        this.description = description;
+        this.description = getDescription();
         this.requiresParty = requiresParty;
         this.minPartySize = minPartySize;
+    }
+
+    protected String getDescription() {
+        JsonObject json = bot.getResourceJson("minigames").getAsJsonObject();
+
+        JsonObject minigameJson = JsonHelper.getJsonObject(json, name);
+        return JsonHelper.getString(minigameJson, "description");
     }
 
     public abstract M create(SlashCommandEvent event, CommandInfo ci);
@@ -39,14 +47,14 @@ public abstract class MinigameType<M extends Minigame> {
 
     public abstract M fromJson(JsonObject json);
 
-    public  void createPlayCommand(){
+    public void createPlayCommand() {
         bot.getCommandManager().parentCommandPlay.createSubcommand(this);
     }
 
     public abstract Set<Subcommand> getSubcommands();
 
-    public void initCommand(){
-        command = new MinigameCommand(bot, name, description);
+    public void initCommand() {
+        command = new MinigameCommand(bot, name, "Performs actions in a game of " + name);
         getSubcommands().forEach(command::addSubcommand);
         //bot.getCommandManager().addCommand(command);
     }

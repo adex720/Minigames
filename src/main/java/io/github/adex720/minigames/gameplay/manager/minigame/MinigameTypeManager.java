@@ -11,9 +11,12 @@ import io.github.adex720.minigames.minigame.higherlower.MinigameTypeHigherLower;
 import io.github.adex720.minigames.minigame.unscramble.MinigameTypeUnscramble;
 import io.github.adex720.minigames.minigame.unscramble.MinigameUnscramble;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class MinigameTypeManager extends Manager {
+
+    private final ArrayList<String> types;
 
     public MinigameType<MinigameHangman> HANGMAN;
     public MinigameType<MinigameUnscramble> UNSCRAMBLE;
@@ -21,21 +24,26 @@ public class MinigameTypeManager extends Manager {
 
     public MinigameTypeManager(MinigamesBot bot) {
         super(bot, "minigame-type-manager");
-        init();
+        types = new ArrayList<>();
+
+        initAll();
     }
 
-    private void init() {
+    private void initAll() {
         HANGMAN = new MinigameTypeHangman(bot, this);
-        HANGMAN.initCommand();
-        HANGMAN.createPlayCommand();
+        initCommand(HANGMAN);
 
         UNSCRAMBLE = new MinigameTypeUnscramble(bot, this);
-        UNSCRAMBLE.initCommand();
-        UNSCRAMBLE.createPlayCommand();
+        initCommand(UNSCRAMBLE);
 
         HIGHER_OR_LOWER = new MinigameTypeHigherLower(bot, this);
-        HIGHER_OR_LOWER.initCommand();
-        HIGHER_OR_LOWER.createPlayCommand();
+        initCommand(HIGHER_OR_LOWER);
+    }
+
+    private void initCommand(MinigameType<?> minigameType) {
+        minigameType.initCommand();
+        minigameType.createPlayCommand();
+        types.add(minigameType.name);
     }
 
     public MinigameType<? extends Minigame> getType(String name) {
@@ -47,4 +55,7 @@ public class MinigameTypeManager extends Manager {
         };
     }
 
+    public ArrayList<String> getTypes() {
+        return types;
+    }
 }

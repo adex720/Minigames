@@ -26,7 +26,7 @@ public class CommandPlay extends ParentCommand {
         private final MinigameType<? extends Minigame> minigame;
 
         protected SubcommandPlay(MinigameType<? extends Minigame> minigame) {
-            super(CommandPlay.this.bot, CommandPlay.this, minigame.name, minigame.description, CommandCategory.MINIGAME);
+            super(CommandPlay.this.bot, CommandPlay.this, minigame.name, "Starts a game of " + minigame.name + ".", CommandCategory.MINIGAME);
             this.minigame = minigame;
         }
 

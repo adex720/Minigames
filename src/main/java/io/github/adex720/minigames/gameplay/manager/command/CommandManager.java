@@ -8,6 +8,7 @@ import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadCo
 import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadData;
 import io.github.adex720.minigames.discord.command.devcommand.DevCommandSave;
 import io.github.adex720.minigames.discord.command.devcommand.DevCommandShutdown;
+import io.github.adex720.minigames.discord.command.minigame.CommandMinigameInfo;
 import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
 import io.github.adex720.minigames.discord.command.minigame.CommandQuit;
 import io.github.adex720.minigames.discord.command.miscellaneous.*;
@@ -75,6 +76,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyTransfer(bot));
 
         MAIN_COMMANDS.add(parentCommandPlay);
+        MAIN_COMMANDS.add(new CommandMinigameInfo(bot));
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().HANGMAN.getCommand());
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().UNSCRAMBLE.getCommand());
         MAIN_COMMANDS.add(bot.getMinigameTypeManager().HIGHER_OR_LOWER.getCommand());

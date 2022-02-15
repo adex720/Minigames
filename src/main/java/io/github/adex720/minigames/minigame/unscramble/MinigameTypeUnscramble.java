@@ -16,7 +16,7 @@ import java.util.Set;
 public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
 
     public MinigameTypeUnscramble(MinigamesBot bot, MinigameTypeManager typeManager) {
-        super(bot, typeManager, "unscramble", "description", false, 1); // TODO: add description
+        super(bot, typeManager, "unscramble", false, 1); // TODO: add description
     }
 
     @Override

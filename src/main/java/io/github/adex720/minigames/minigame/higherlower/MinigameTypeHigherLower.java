@@ -16,7 +16,7 @@ import java.util.Set;
 public class MinigameTypeHigherLower extends MinigameType<MinigameHigherLower> {
 
     public MinigameTypeHigherLower(MinigamesBot bot, MinigameTypeManager typeManager) {
-        super(bot, typeManager, "higher-lower", "description", false, 1); // TODO: add description
+        super(bot, typeManager, "higher-lower", false, 1); // TODO: add description
     }
 
     @Override

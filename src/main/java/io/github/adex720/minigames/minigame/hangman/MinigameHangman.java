@@ -22,6 +22,7 @@ public class MinigameHangman extends Minigame {
     private int life;
     private final ArrayList<Character> guesses;
 
+    // TODO: make replies embed and include image of hangman stage regarding to current life
     public MinigameHangman(MinigamesBot bot, long id, boolean isParty, long lastActive, String word, int life, ArrayList<Character> guesses) {
         super(bot, bot.getMinigameTypeManager().HANGMAN, id, isParty, lastActive);
         this.word = word;

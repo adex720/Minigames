@@ -11,6 +11,7 @@ import io.github.adex720.minigames.discord.listener.GuildJoinListener;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
+import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
@@ -56,7 +57,8 @@ public class MinigamesBot {
 
     private final PartyManager partyManager;
 
-    private final BotDataManager dataManager;
+    private final BotDataManager saveDataManager;
+    private final ResourceDataManager resourceDataManager;
 
     private final MinigameTypeManager minigameTypeManager;
     private final MinigameManager minigameManager;
@@ -70,7 +72,8 @@ public class MinigamesBot {
         long startTime = System.currentTimeMillis();
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
-        dataManager = new BotDataManager(this, databaseConfig);
+        saveDataManager = new BotDataManager(this, databaseConfig);
+        resourceDataManager = new ResourceDataManager(this);
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
@@ -112,6 +115,7 @@ public class MinigamesBot {
 
         timerManager.add(this::save, 1000 * 60 * 5);
         timerManager.add(this::clearInactive, 1000 * 60 * 5);
+        timerManager.add(resourceDataManager::clearCache, 1000 * 60 * 60 * 6);
     }
 
     public static void main(String[] args) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
@@ -204,14 +208,18 @@ public class MinigamesBot {
         return json;
     }
 
+    public JsonElement getResourceJson(String name) {
+        return resourceDataManager.loadJson(name);
+    }
+
     public void saveJson(JsonElement json, String name) {
-        if (!dataManager.saveJson(json, name)) {
+        if (!saveDataManager.saveJson(json, name)) {
             logger.error("Failed to save json file {}", name);
         }
     }
 
     public JsonElement loadJson(String name) {
-        return dataManager.loadJson(name);
+        return saveDataManager.loadJson(name);
     }
 
     public void save() {
@@ -228,9 +236,9 @@ public class MinigamesBot {
     public void reload() {
         long start = System.currentTimeMillis();
 
-        profileManager.load((JsonArray) dataManager.loadJson("profiles"));
-        partyManager.load((JsonArray) dataManager.loadJson("parties"));
-        minigameManager.load((JsonArray) dataManager.loadJson("minigames"));
+        profileManager.load((JsonArray) saveDataManager.loadJson("profiles"));
+        partyManager.load((JsonArray) saveDataManager.loadJson("parties"));
+        minigameManager.load((JsonArray) saveDataManager.loadJson("minigames"));
 
         long end = System.currentTimeMillis();
         logger.info("Reloaded all data in {}ms", end - start);
@@ -257,7 +265,6 @@ public class MinigamesBot {
     - connect 4
 
   TODO: commands to add
-    - help
     - leaderboard
     - quests
     - profile
@@ -270,6 +277,8 @@ public class MinigamesBot {
    TODO: badges
 
    TODO: sharding
+
+   TODO: tips for minigames
 
 
 */
