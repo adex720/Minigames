@@ -16,7 +16,7 @@ public abstract class Command {
     public final String name;
     public final String description;
 
-    public final CommandCategory Category;
+    public final CommandCategory category;
 
     public boolean requiresProfile;
 
@@ -24,7 +24,7 @@ public abstract class Command {
         this.bot = bot;
         this.name = name.replace(' ', '-');
         this.description = description;
-        Category = category;
+        this.category = category;
 
         requiresProfile = false;
         this.commandData = createCommandData();
@@ -61,5 +61,9 @@ public abstract class Command {
 
     public String getWholeName() {
         return name;
+    }
+
+    public boolean shouldBeInHelp(CommandCategory category){
+        return category == this.category;
     }
 }

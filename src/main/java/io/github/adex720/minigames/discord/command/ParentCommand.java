@@ -33,4 +33,8 @@ public abstract class ParentCommand extends Command {
         commandData.addSubcommands(subcommand.getSubcommandData());
     }
 
+    @Override
+    public boolean shouldBeInHelp(CommandCategory category) {
+        return false;
+    }
 }

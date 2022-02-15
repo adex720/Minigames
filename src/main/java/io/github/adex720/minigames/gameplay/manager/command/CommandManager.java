@@ -2,6 +2,7 @@ package io.github.adex720.minigames.gameplay.manager.command;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
+import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadCommands;
 import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadData;
@@ -18,15 +19,17 @@ import io.github.adex720.minigames.gameplay.manager.Manager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class CommandManager extends Manager {
 
     private static final boolean SHOULD_RELOAD_COMMANDS = true;
 
-    public final Set<Command> MAIN_COMMANDS;
-    public final Set<Command> SUBCOMMANDS;
+    public final ArrayList<Command> MAIN_COMMANDS;
+    public final ArrayList<Command> SUBCOMMANDS;
 
     public final CommandParty parentCommandParty;
     public final CommandPlay parentCommandPlay;
@@ -36,8 +39,8 @@ public class CommandManager extends Manager {
 
     public CommandManager(MinigamesBot bot) {
         super(bot, "command_manager");
-        MAIN_COMMANDS = new HashSet<>();
-        SUBCOMMANDS = new HashSet<>();
+        MAIN_COMMANDS = new ArrayList<>();
+        SUBCOMMANDS = new ArrayList<>();
 
         parentCommandParty = new CommandParty(bot);
         parentCommandPlay = new CommandPlay(bot);
@@ -46,6 +49,7 @@ public class CommandManager extends Manager {
     }
 
     public void initCommands(MinigamesBot bot) {
+        MAIN_COMMANDS.add(new CommandHelp(bot));
         MAIN_COMMANDS.add(new CommandInvite(bot));
         MAIN_COMMANDS.add(new CommandPing(bot));
         MAIN_COMMANDS.add(new CommandServer(bot));
@@ -113,5 +117,43 @@ public class CommandManager extends Manager {
         }
     }
 
+    public CommandCategory[] getCategories() {
+        return CommandCategory.values();
+    }
 
+    public CommandCategory getCategory(String name) {
+        return CommandCategory.valueOf(name.toUpperCase(Locale.ROOT));
+    }
+
+    public ArrayList<Command> getCommands(CommandCategory category) {
+        ArrayList<Command> commands = new ArrayList<>();
+        for (Command command : MAIN_COMMANDS) {
+            if (command.shouldBeInHelp(category)) {
+                commands.add(command);
+            }
+        }
+        for (Command command : SUBCOMMANDS) {
+            if (command.shouldBeInHelp(category)) {
+                commands.add(command);
+            }
+        }
+
+        return commands;
+    }
+
+    public int getCommandAmount(CommandCategory category) {
+        int amount = 0;
+        for (Command command : MAIN_COMMANDS) {
+            if (command.category == category) {
+                amount++;
+            }
+        }
+        for (Command command : SUBCOMMANDS) {
+            if (command.category == category) {
+                amount++;
+            }
+        }
+
+        return amount;
+    }
 }

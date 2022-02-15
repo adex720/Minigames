@@ -43,7 +43,7 @@ public abstract class SimpleEmbedReplyCommand extends Command {
         EmbedBuilder builder = new EmbedBuilder()
                 .setTitle(title)
                 .addField(header, reply, false)
-                .setColor(Objects.requireNonNullElseGet(color, () -> Util.getColor(author.getIdLong())))
+                .setColor(Objects.requireNonNullElseGet(color, () -> new Color(Util.getColor(author.getIdLong()))))
                 .setFooter(author.getName(), author.getAvatarUrl())
                 .setTimestamp(new Date().toInstant());
 

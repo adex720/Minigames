@@ -5,6 +5,5 @@ public enum CommandCategory {
     MINIGAME,
     PARTY,
     USER,
-    MISCELLANEOUS,
-    ADMIN;
+    MISCELLANEOUS;
 }
