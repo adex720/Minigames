@@ -3,12 +3,12 @@
     "description": "Hangman is a classic game originally played with paper and pencil. A word is chosen and the guessers get to know its length. The guessers proceed to guessing letters. If the word contains at least one of the letter places of all of that letter are revealed. If the word does not contain the guessed letter a picture of hang is drawn to be closer to finished. If the picture gets finished the game is lost. If the guesser thinks he/she knows the word he can also guess the word but if it's wrong a the picture is being continued on."
   },
   "unscramble": {
-    "description": "Unscramble is a game where you have to guess a word in 3 tries. The letters are shuffled but you will get more hints after each guess."
+    "description": "Unscramble is a game where you have to guess a word in 3 tries. The letters are shuffled but you will get more hints after each guess. You will also get extra hints for longer words."
   },
   "higher-lower": {
-    "description": "Higher or Lower is a number guessing game where you guess a number. You will be told if your guess was too high or low. But you only have little tries so you must guess wisely to win."
+    "description": "Higher or Lower is a number guessing game where you guess a number. You will be told if your guess was too high or low. But you only have little tries, so you must guess wisely to win."
   },
   "tic-tac-toe": {
-    "description": "Tic Tac toe is TELL ADEX TO FIX THIS IF HE FORGOT!!!"
+    "description": "Tic Tac toe is a two player minigame. This bot has a simple AI for it. On their turn, each player puts one mark on the board on an empty spot. The winner is the player who first gets 3 marks in a horizontal, vertical or diagonal line. If the board gets full with neither of the players having a winning line, the game ends as draw."
   }
 }
