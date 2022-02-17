@@ -1,10 +1,12 @@
 package io.github.adex720.minigames.minigame.tictactoe;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.duel.DuelMinigame;
+import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -29,13 +31,15 @@ public class MinigameTicTacToe extends DuelMinigame {
     public String lastAIMove;
 
     public MinigameTicTacToe(MinigamesBot bot, MinigameTypeManager typeManager, long id, long lastActive) {
-        super(bot, typeManager.TIC_TAC_TOE, id, bot.getJda().getSelfUser().getIdLong(), false, lastActive);
+        super(bot, typeManager.TIC_TAC_TOE, id, Util.MINIGAMES_BOT_ID, false, lastActive);
 
         board = new char[3][3];
         fillBoard();
 
         if (!isFirstPlayersTurn) {
             makeAIMove();
+            isFirstPlayersTurn = true;
+
         }
     }
 
@@ -44,6 +48,23 @@ public class MinigameTicTacToe extends DuelMinigame {
 
         board = new char[3][3];
         fillBoard();
+    }
+
+    public MinigameTicTacToe(MinigamesBot bot, MinigameTypeManager typeManager, long id, long lastActive, char[][] board) {
+        this(bot, typeManager, id, lastActive);
+        fillBoard(board);
+    }
+
+    public MinigameTicTacToe(MinigamesBot bot, MinigameTypeManager typeManager, long id, long opponentId, long lastActive, char[][] board, boolean isFirstPlayersTurn) {
+        this(bot, typeManager, id, opponentId, lastActive);
+        fillBoard(board);
+        this.isFirstPlayersTurn = isFirstPlayersTurn;
+    }
+
+    private void fillBoard(char[][] board) {
+        for (int x = 0; x < 3; x++) {
+            System.arraycopy(board[x], 0, this.board[x], 0, 3);
+        }
     }
 
     public static MinigameTicTacToe start(SlashCommandEvent event, CommandInfo ci) {
@@ -341,10 +362,48 @@ public class MinigameTicTacToe extends DuelMinigame {
 
     @Override
     public JsonObject getAsJson() {
-        return null;
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "tic-tac-toe");
+
+        json.addProperty("active", lastActive);
+        json.addProperty("duel", isParty);
+
+        JsonArray boardJson = new JsonArray();
+        for (char[] column : board) {
+            boardJson.add(JsonHelper.arrayToJsonArray(column));
+        }
+        json.add("board", boardJson);
+
+        if (isParty) {
+            json.addProperty("first", id);
+            json.addProperty("second", opponentId);
+            json.addProperty("turn", isFirstPlayersTurn ? "first" : "second");
+        } else {
+            json.addProperty("id", id);
+        }
+
+        return json;
     }
 
-    public static MinigameTicTacToe fromJson(JsonObject json) {
-        return null;
+    public static MinigameTicTacToe fromJson(JsonObject json, MinigamesBot bot) {
+        long lastActive = JsonHelper.getLong(json, "active");
+
+        char[][] board = new char[3][3];
+        JsonArray boardJson = JsonHelper.getJsonArray(json, "board");
+        for (int column = 0; column < 3; column++) {
+            board[column] = JsonHelper.jsonArrayToArray(boardJson.get(column).getAsJsonArray());
+        }
+
+        if (JsonHelper.getBoolean(json, "duel")) {
+            long firstId = JsonHelper.getLong(json, "first");
+            long secondId = JsonHelper.getLong(json, "second");
+            boolean isFirstTurn = JsonHelper.getString(json, "turn").equals("first");
+
+            return new MinigameTicTacToe(bot, bot.getMinigameTypeManager(), firstId, secondId, lastActive, board, isFirstTurn);
+        } else {
+            long id = JsonHelper.getLong(json, "id");
+
+            return new MinigameTicTacToe(bot, bot.getMinigameTypeManager(), id, lastActive, board);
+        }
     }
 }

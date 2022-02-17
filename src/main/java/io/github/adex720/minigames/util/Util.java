@@ -6,6 +6,7 @@ import java.util.TimerTask;
 public class Util {
 
     public static final int MINIGAMES_COLOR = 0x3D6bf4;
+    public static final long MINIGAMES_BOT_ID = 814109421118554134L;
 
     public static void schedule(Task task, long delay) {
         new Timer().schedule(new TimerTask() {

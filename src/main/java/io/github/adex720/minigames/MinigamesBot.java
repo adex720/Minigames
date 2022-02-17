@@ -253,7 +253,6 @@ public class MinigamesBot {
         minigameManager.clearInactiveMinigames();
         partyManager.clearInactiveParties();
     }
-
 }
 
 /*

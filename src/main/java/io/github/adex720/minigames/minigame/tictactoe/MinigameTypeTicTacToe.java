@@ -31,7 +31,7 @@ public class MinigameTypeTicTacToe extends DuelMinigameType<MinigameTicTacToe> {
 
     @Override
     public MinigameTicTacToe fromJson(JsonObject json) {
-        return null;
+        return MinigameTicTacToe.fromJson(json, bot);
     }
 
     @Override
