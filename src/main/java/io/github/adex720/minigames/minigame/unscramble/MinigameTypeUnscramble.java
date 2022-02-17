@@ -43,4 +43,9 @@ public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
         return subcommands;
     }
 
+    @Override
+    public String getReplyForInvalidStartState() {
+        return "";
+    }
+
 }

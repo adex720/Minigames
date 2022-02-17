@@ -43,4 +43,9 @@ public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
         return subcommands;
     }
 
+    @Override
+    public String getReplyForInvalidStartState() {
+        return "";
+    }
+
 }

@@ -8,6 +8,8 @@ import io.github.adex720.minigames.minigame.hangman.MinigameHangman;
 import io.github.adex720.minigames.minigame.hangman.MinigameTypeHangman;
 import io.github.adex720.minigames.minigame.higherlower.MinigameHigherLower;
 import io.github.adex720.minigames.minigame.higherlower.MinigameTypeHigherLower;
+import io.github.adex720.minigames.minigame.tictactoe.MinigameTicTacToe;
+import io.github.adex720.minigames.minigame.tictactoe.MinigameTypeTicTacToe;
 import io.github.adex720.minigames.minigame.unscramble.MinigameTypeUnscramble;
 import io.github.adex720.minigames.minigame.unscramble.MinigameUnscramble;
 
@@ -21,6 +23,7 @@ public class MinigameTypeManager extends Manager {
     public MinigameType<MinigameHangman> HANGMAN;
     public MinigameType<MinigameUnscramble> UNSCRAMBLE;
     public MinigameType<MinigameHigherLower> HIGHER_OR_LOWER;
+    public MinigameType<MinigameTicTacToe> TIC_TAC_TOE;
 
     public MinigameTypeManager(MinigamesBot bot) {
         super(bot, "minigame-type-manager");
@@ -38,11 +41,15 @@ public class MinigameTypeManager extends Manager {
 
         HIGHER_OR_LOWER = new MinigameTypeHigherLower(bot, this);
         initCommand(HIGHER_OR_LOWER);
+
+        TIC_TAC_TOE = new MinigameTypeTicTacToe(bot, this);
+        initCommand(TIC_TAC_TOE);
     }
 
     private void initCommand(MinigameType<?> minigameType) {
         minigameType.initCommand();
         minigameType.createPlayCommand();
+        bot.getCommandManager().addCommand(minigameType.getCommand());
         types.add(minigameType.name);
     }
 
@@ -51,6 +58,7 @@ public class MinigameTypeManager extends Manager {
             case "hangman" -> HANGMAN;
             case "unscramble" -> UNSCRAMBLE;
             case "higher-lower" -> HIGHER_OR_LOWER;
+            case "tic-tac-toe" -> TIC_TAC_TOE;
             default -> throw new IllegalStateException("Unexpected minigame type: " + name);
         };
     }

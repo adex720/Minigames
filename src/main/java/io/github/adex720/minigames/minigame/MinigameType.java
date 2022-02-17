@@ -9,6 +9,7 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager
 import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -41,8 +42,10 @@ public abstract class MinigameType<M extends Minigame> {
         return JsonHelper.getString(minigameJson, "description");
     }
 
+    @Nullable
     public abstract M create(SlashCommandEvent event, CommandInfo ci);
 
+    @Nullable
     public abstract M create(ButtonClickEvent event, CommandInfo ci);
 
     public abstract M fromJson(JsonObject json);
@@ -62,4 +65,6 @@ public abstract class MinigameType<M extends Minigame> {
     public MinigameCommand getCommand() {
         return command;
     }
+
+    public abstract String getReplyForInvalidStartState();
 }

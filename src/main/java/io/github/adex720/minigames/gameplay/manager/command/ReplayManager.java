@@ -32,7 +32,11 @@ public class ReplayManager extends Manager {
         MinigameType<? extends Minigame> type = WAITING.remove(presser.getIdLong());
 
         if (type != null) {
-            bot.getMinigameManager().addMinigame(type.create(event, ci));
+            Minigame minigame = type.create(event, ci);
+            if (minigame != null) {
+                bot.getMinigameManager().addMinigame(minigame);
+            }
+            event.reply(type.getReplyForInvalidStartState()).queue();
         }
     }
 }

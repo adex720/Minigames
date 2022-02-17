@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.DataManager;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -13,16 +14,16 @@ import java.util.HashMap;
 
 public class ResourceDataManager extends DataManager {
 
-    private final HashMap<String, JsonElement> CACHED;
+    private final HashMap<String, JsonElement> CACHED_JSON;
 
     public ResourceDataManager(MinigamesBot bot) {
         super(bot, "resource-data-manager");
-        CACHED = new HashMap<>();
+        CACHED_JSON = new HashMap<>();
     }
 
     @Override
     public JsonElement loadJson(String name) {
-        JsonElement cached = CACHED.get(name);
+        JsonElement cached = CACHED_JSON.get(name);
         if (cached != null) return cached;
 
         String path = "src/main/resources/" + name + ".json";
@@ -36,7 +37,7 @@ public class ResourceDataManager extends DataManager {
             return new JsonObject();
         }
 
-        CACHED.put(name, json);
+        CACHED_JSON.put(name, json);
 
         return json;
     }
@@ -48,7 +49,7 @@ public class ResourceDataManager extends DataManager {
     }
 
     public void clearCache(){
-        CACHED.clear();
+        CACHED_JSON.clear();
         bot.getLogger().info("Cleared resource json cache");
     }
 }

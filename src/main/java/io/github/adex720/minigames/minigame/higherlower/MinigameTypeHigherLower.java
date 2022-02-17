@@ -42,4 +42,9 @@ public class MinigameTypeHigherLower extends MinigameType<MinigameHigherLower> {
 
         return subcommands;
     }
+
+    @Override
+    public String getReplyForInvalidStartState() {
+        return "";
+    }
 }

@@ -41,6 +41,10 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
         bot.getReplayManager().addReplay(id, type);
 
+        appendQuest(id, won);
+    }
+
+    public void appendQuest(long id, boolean won) {
         // TODO: append quests
     }
 
@@ -53,7 +57,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return "";
     }
 
-    public void active(){
+    public void active() {
         lastActive = System.currentTimeMillis();
     }
 

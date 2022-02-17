@@ -77,9 +77,6 @@ public class CommandManager extends Manager {
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(new CommandMinigameInfo(bot));
-        MAIN_COMMANDS.add(bot.getMinigameTypeManager().HANGMAN.getCommand());
-        MAIN_COMMANDS.add(bot.getMinigameTypeManager().UNSCRAMBLE.getCommand());
-        MAIN_COMMANDS.add(bot.getMinigameTypeManager().HIGHER_OR_LOWER.getCommand());
         MAIN_COMMANDS.add(new CommandQuit(bot));
 
         initDevCommands(bot);

@@ -7,5 +7,8 @@
   },
   "higher-lower": {
     "description": "Higher or Lower is a number guessing game where you guess a number. You will be told if your guess was too high or low. But you only have little tries so you must guess wisely to win."
+  },
+  "tic-tac-toe": {
+    "description": "Tic Tac toe is TELL ADEX TO FIX THIS IF HE FORGOT!!!"
   }
 }

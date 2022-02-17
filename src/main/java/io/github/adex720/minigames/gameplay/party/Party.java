@@ -90,7 +90,15 @@ public class Party implements JsonSavable<Party>, IdCompound {
     public Set<Long> getMembersWithOwner() {
         Set<Long> members = new HashSet<>(this.members);
         members.add(owner);
+
         return members;
+    }
+
+    /**
+     * @return the first element of Set#toArray() is called from the list of non owner members.
+     */
+    public long getMemberId() {
+       return (long) members.toArray()[0];
     }
 
     public void active() {
