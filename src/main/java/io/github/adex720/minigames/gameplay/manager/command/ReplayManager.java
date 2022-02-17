@@ -35,6 +35,7 @@ public class ReplayManager extends Manager {
             Minigame minigame = type.create(event, ci);
             if (minigame != null) {
                 bot.getMinigameManager().addMinigame(minigame);
+                return;
             }
             event.reply(type.getReplyForInvalidStartState()).queue();
         }
