@@ -260,7 +260,6 @@ public class MinigamesBot {
     - wordle
     - counting
     - counting variations (hex, binary, letters)
-    - tic-tac-toe
     - connect 4
 
   TODO: commands to add
