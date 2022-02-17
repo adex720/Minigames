@@ -118,4 +118,8 @@ public class CommandInfo {
         T calculate();
     }
 
+    @Override
+    public String toString() {
+        return "Author id: " + authorId() + " is in party: " + isInParty() + " active minigame: " + (hasMinigame() ? minigame().getType().name : "none");
+    }
 }

@@ -36,7 +36,9 @@ public class CommandListener extends ListenerAdapter {
             if (commandName.equals(command.getMainName())) {
                 event.deferReply().queue();
                 CommandInfo commandInfo = CommandInfo.create(event, bot);
-                command.onRun(event, commandInfo);
+                if (!command.onRun(event, commandInfo)) {
+                    bot.getLogger().error("Failed to run command {}, info: {}", command.getWholeName(), commandInfo);
+                }
                 break;
             }
         }

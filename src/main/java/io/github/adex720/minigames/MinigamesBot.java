@@ -35,6 +35,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class MinigamesBot {
 
@@ -126,7 +127,22 @@ public class MinigamesBot {
 
         long developerId = JsonHelper.getLong(configJson, "developer");
 
-        MinigamesBot minigamesBot = new MinigamesBot(token, databaseConfig, developerId); // TODO: catch exceptions
+        MinigamesBot minigamesBot = null;
+        try {
+            minigamesBot = new MinigamesBot(token, databaseConfig, developerId);
+        } catch (LoginException e) {
+            System.out.println("Invalid token for Discord bot!");
+            System.exit(-1);
+        } catch (InterruptedException e) {
+            System.out.println("Failed to wait for bot to finish!");
+            System.exit(-1);
+        } catch (Exception e) {
+            if (minigamesBot != null) {
+                minigamesBot.onException(e);
+            } else {
+                System.out.println("Unknown error happened while setting up: " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+            }
+        }
     }
 
     public JDA getJda() {
@@ -252,6 +268,10 @@ public class MinigamesBot {
     public void clearInactive() {
         minigameManager.clearInactiveMinigames();
         partyManager.clearInactiveParties();
+    }
+
+    private void onException(Exception exception) {
+        logger.error("Exception: {} Message: {} Stack-trace: {}", exception.getClass().getPackageName() + "." + exception.getClass().getName(), exception.getMessage(), exception.getStackTrace());
     }
 }
 
