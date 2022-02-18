@@ -18,6 +18,7 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
+import io.github.adex720.minigames.gameplay.manager.stat.LeaderboardManager;
 import io.github.adex720.minigames.gameplay.manager.stat.StatManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
@@ -72,6 +73,7 @@ public class MinigamesBot {
     private final WordManager wordManager;
 
     private final TimerManager timerManager;
+    private final LeaderboardManager leaderboardManager;
 
     public MinigamesBot(String token, JsonObject databaseConfig, long developerId) throws LoginException, InterruptedException, FileNotFoundException {
         long startTime = System.currentTimeMillis();
@@ -104,8 +106,11 @@ public class MinigamesBot {
         wordManager = new WordManager(this);
 
         timerManager = new TimerManager(this);
+        leaderboardManager = new LeaderboardManager(this);
 
         commandManager.initCommands(this);
+
+        statManager.updateLeaderboards();
 
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
@@ -120,6 +125,8 @@ public class MinigamesBot {
 
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
+
+        leaderboardManager.start();
 
         addTimerTask(this::save, 1000 * 60 * 5, true);
         addTimerTask(this::clearInactive, 1000 * 60 * 5, true);
@@ -212,6 +219,9 @@ public class MinigamesBot {
         return badgeManager;
     }
 
+    public StatManager getStatManager() {
+        return statManager;
+    }
 
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
         timerManager.add(task, delay, repeat);
@@ -280,6 +290,7 @@ public class MinigamesBot {
     public void stop() {
         jda.shutdown();
         timerManager.stop();
+        leaderboardManager.interrupt();
     }
 
     public void clearInactive() {

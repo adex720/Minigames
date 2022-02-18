@@ -2,6 +2,8 @@ package io.github.adex720.minigames.gameplay.profile.stat;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Value;
 
 import java.util.HashMap;
@@ -9,24 +11,61 @@ import java.util.Map;
 
 public class StatList {
 
-    private final HashMap<String, Value<Integer>> stats;
+    private final HashMap<String, Value<Integer>> statsByName;
+    private final HashMap<Integer, Value<Integer>> statsById;
 
-    public StatList() {
-        stats = new HashMap<>();
+    public StatList(MinigamesBot bot) {
+        statsByName = new HashMap<>();
+        statsById = new HashMap<>();
+
+        for (Stat stat : bot.getStatManager().getAll()) {
+            Value<Integer> value = new Value<>(0);
+
+            statsByName.put(stat.name(), value);
+            statsById.put(stat.id(), value);
+        }
+    }
+
+    public StatList(MinigamesBot bot, JsonObject json) {
+        statsByName = new HashMap<>();
+        statsById = new HashMap<>();
+
+        for (Stat stat : bot.getStatManager().getAll()) {
+            Value<Integer> value = new Value<>(JsonHelper.getInt(json, Integer.toString(stat.id())));
+
+            statsByName.put(stat.name(), value);
+            statsById.put(stat.id(), value);
+        }
+    }
+
+    public int getValue(String stat) {
+        return statsByName.get(stat).value;
+    }
+
+    public int getValue(int stat) {
+        return statsById.get(stat).value;
     }
 
     public void increaseStat(String stat) {
-        stats.get(stat).value++;
+        statsByName.get(stat).value++;
     }
 
     public void increaseStat(String stat, int amount) {
-        stats.get(stat).value += amount;
+        statsByName.get(stat).value += amount;
+    }
+
+    public void increaseStat(int stat) {
+        statsById.get(stat).value++;
+    }
+
+    public void increaseStat(int stat, int amount) {
+        statsById.get(stat).value += amount;
     }
 
     public JsonArray asJson() {
         JsonArray jsonArray = new JsonArray();
 
-        for (Map.Entry<String, Value<Integer>> entry : stats.entrySet()) {
+        for (Map.Entry<String, Value<Integer>> entry : statsByName.entrySet()) {
             JsonObject json = new JsonObject();
 
             json.addProperty("stat", entry.getKey());

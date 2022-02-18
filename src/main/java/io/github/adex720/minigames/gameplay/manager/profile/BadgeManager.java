@@ -52,6 +52,7 @@ public class BadgeManager extends Manager {
 
     public ArrayList<Badge> getBadges(Set<Integer> ids) {
         ArrayList<Badge> badges = new ArrayList<>();
+        badges.ensureCapacity(ids.size());
         int found = 0;
         int badgesObtained = ids.size();
 

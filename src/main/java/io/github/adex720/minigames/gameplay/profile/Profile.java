@@ -18,6 +18,8 @@ import java.util.Set;
 
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
+    private final MinigamesBot bot;
+
     private final long userId;
     private final long created;
 
@@ -30,7 +32,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final StatList statList;
 
-    public Profile(long userId) {
+    public Profile(MinigamesBot bot, long userId) {
+        this.bot = bot;
         this.userId = userId;
         created = System.currentTimeMillis();
         isInParty = false;
@@ -38,10 +41,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         coins = 0;
         badges = new HashSet<>();
-        statList = new StatList();
+        statList = new StatList(bot);
     }
 
-    public Profile(long userId, long crated, int coins) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson) {
+        this.bot = bot;
         this.userId = userId;
         this.created = crated;
         isInParty = false;
@@ -49,11 +53,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         this.coins = coins;
         badges = new HashSet<>();
-        statList = new StatList();
+        statList = new StatList(bot, statsJson);
     }
 
-    public static Profile create(long id) {
-        return new Profile(id);
+    public static Profile create(MinigamesBot bot, long id) {
+        return new Profile(bot, id);
     }
 
     @Override
@@ -73,13 +77,14 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return json;
     }
 
-    public static Profile fromJson(JsonObject json) {
+    public static Profile fromJson(MinigamesBot bot, JsonObject json) {
         long id = JsonHelper.getLong(json, "id");
         long created = JsonHelper.getLong(json, "created");
 
         int coins = JsonHelper.getInt(json, "coins");
+        JsonObject statsJson = JsonHelper.getJsonObject(json, "stats");
 
-        return new Profile(id, created, coins);
+        return new Profile(bot, id, created, coins, statsJson);
     }
 
     public boolean isInParty() {
@@ -111,11 +116,27 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         badges.add(id);
     }
 
+    public int getValue(int id) {
+        return statList.getValue(id);
+    }
+
+    public int getValue(String name) {
+        return statList.getValue(name);
+    }
+
     public void increaseStat(String stat) {
         statList.increaseStat(stat);
     }
 
     public void increaseStat(String stat, int amount) {
+        statList.increaseStat(stat, amount);
+    }
+
+    public void increaseStat(int stat) {
+        statList.increaseStat(stat);
+    }
+
+    public void increaseStat(int stat, int amount) {
         statList.increaseStat(stat, amount);
     }
 

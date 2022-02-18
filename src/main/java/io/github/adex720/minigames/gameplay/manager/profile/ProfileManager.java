@@ -45,7 +45,7 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
     }
 
     public void createProfile(long id) {
-        Profile profile = Profile.create(id);
+        Profile profile = Profile.create(bot, id);
         PROFILES.put(id, profile);
     }
 
