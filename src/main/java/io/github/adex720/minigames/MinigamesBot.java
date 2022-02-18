@@ -294,7 +294,6 @@ public class MinigamesBot {
   TODO: commands to add
     - leaderboard
     - quests
-    - profile
     - kits (daily, hourly, supporter)
 
    TODO: trivia
