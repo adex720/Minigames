@@ -16,6 +16,7 @@ import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
+import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
@@ -54,6 +55,8 @@ public class MinigamesBot {
 
     private final GuildJoinListener guildJoinListener;
 
+    private final BadgeManager badgeManager;
+
     private final ProfileManager profileManager;
 
     private final PartyManager partyManager;
@@ -69,7 +72,7 @@ public class MinigamesBot {
 
     private final TimerManager timerManager;
 
-    public MinigamesBot(String token, JsonObject databaseConfig, long developerId) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
+    public MinigamesBot(String token, JsonObject databaseConfig, long developerId) throws LoginException, InterruptedException, FileNotFoundException {
         long startTime = System.currentTimeMillis();
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
@@ -85,6 +88,8 @@ public class MinigamesBot {
         replayManager = new ReplayManager(this);
 
         guildJoinListener = new GuildJoinListener(this);
+
+        badgeManager = new BadgeManager(this);
 
         profileManager = new ProfileManager(this);
 
@@ -119,7 +124,7 @@ public class MinigamesBot {
         timerManager.add(resourceDataManager::clearCache, 1000 * 60 * 60 * 6);
     }
 
-    public static void main(String[] args) throws LoginException, InterruptedException, FileNotFoundException, SQLException {
+    public static void main(String[] args) {
         JsonObject configJson = getConfigJson();
 
         String token = JsonHelper.getStringOrThrow(configJson, "token", "Missing entry on config json: token");
@@ -199,6 +204,10 @@ public class MinigamesBot {
 
     public WordManager getWordManager() {
         return wordManager;
+    }
+
+    public BadgeManager getBadgeManager() {
+        return badgeManager;
     }
 
     private static JsonObject getConfigJson() {
@@ -290,8 +299,6 @@ public class MinigamesBot {
 
    TODO: trivia
     (https://opentdb.com/api_config.php)
-
-   TODO: badges
 
    TODO: sharding
 

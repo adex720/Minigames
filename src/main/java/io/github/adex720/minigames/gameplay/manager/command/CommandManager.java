@@ -14,6 +14,7 @@ import io.github.adex720.minigames.discord.command.minigame.CommandQuit;
 import io.github.adex720.minigames.discord.command.miscellaneous.*;
 import io.github.adex720.minigames.discord.command.party.*;
 import io.github.adex720.minigames.discord.command.user.CommandDelete;
+import io.github.adex720.minigames.discord.command.user.CommandProfile;
 import io.github.adex720.minigames.discord.command.user.CommandStart;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.gameplay.manager.Manager;
@@ -59,6 +60,7 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandReportBug(bot));
         MAIN_COMMANDS.add(commandUptime);
 
+        MAIN_COMMANDS.add(new CommandProfile(bot));
         MAIN_COMMANDS.add(new CommandStart(bot));
         MAIN_COMMANDS.add(new CommandDelete(bot));
 

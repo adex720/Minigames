@@ -20,7 +20,7 @@ public class BotDataManager extends DataManager {
     private final String password;
     // TODO: create database inside vm
 
-    public BotDataManager(MinigamesBot bot, JsonObject databaseDetails) throws SQLException {
+    public BotDataManager(MinigamesBot bot, JsonObject databaseDetails) {
         super(bot, "data-manager");
 
         databaseUri = JsonHelper.getStringOrThrow(databaseDetails, "uri", "Invalid database config json! Missing uri") + "\\";

@@ -1,9 +1,19 @@
 package io.github.adex720.minigames.gameplay.profile;
 
 import com.google.gson.JsonObject;
+import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Util;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
@@ -13,15 +23,32 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     private boolean isInParty;
     private long partyId;
 
-    public Profile(long userId, long crated) {
+    private int coins;
+
+    private final Set<Integer> badges;
+
+    public Profile(long userId) {
+        this.userId = userId;
+        created = System.currentTimeMillis();
+        isInParty = false;
+        partyId = userId;
+
+        coins = 0;
+        badges = new HashSet<>();
+    }
+
+    public Profile(long userId, long crated, int coins) {
         this.userId = userId;
         this.created = crated;
         isInParty = false;
         partyId = userId;
+
+        this.coins = coins;
+        badges = new HashSet<>();
     }
 
     public static Profile create(long id) {
-        return new Profile(id, System.currentTimeMillis());
+        return new Profile(id);
     }
 
     @Override
@@ -36,6 +63,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         json.addProperty("id", userId);
         json.addProperty("created", created);
 
+        json.addProperty("coins", coins);
+
         return json;
     }
 
@@ -43,7 +72,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         long id = JsonHelper.getLong(json, "id");
         long created = JsonHelper.getLong(json, "created");
 
-        return new Profile(id, created);
+        int coins = JsonHelper.getInt(json, "coins");
+
+        return new Profile(id, created, coins);
     }
 
     public boolean isInParty() {
@@ -61,5 +92,48 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public void partyLeft() {
         isInParty = false;
+    }
+
+    public void addCoins(int amount) {
+        coins += amount;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    public void addBadge(int id) {
+        badges.add(id);
+    }
+
+    public MessageEmbed getEmbed(User user, MinigamesBot bot) {
+        EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setTitle("PROFILE")
+                .setColor(Util.getColor(userId));
+
+        StringBuilder text = new StringBuilder();
+
+        ArrayList<Badge> badges = bot.getBadgeManager().getBadges(this.badges);
+        if (!badges.isEmpty()) {
+            StringBuilder badgesText = new StringBuilder();
+
+            badges.forEach((badge -> badgesText.append(' ').append(badge)));
+
+            text.append(badgesText);
+        }
+
+
+        text.append("Coins: ").append(coins);
+        if (isInParty) {
+            text.append("\nIn party of <@!").append(partyId).append('>');
+        } else {
+            text.append("\nNot in a party");
+        }
+
+
+        embedBuilder.addField(user.getAsTag(), text.toString(), true);
+
+        return embedBuilder.setFooter(user.getName(), user.getAvatarUrl())
+                .setTimestamp(new Date().toInstant()).build();
     }
 }
