@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.Arrays;
 
 public class MinigamesBot {
@@ -119,9 +118,9 @@ public class MinigamesBot {
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
 
-        timerManager.add(this::save, 1000 * 60 * 5);
-        timerManager.add(this::clearInactive, 1000 * 60 * 5);
-        timerManager.add(resourceDataManager::clearCache, 1000 * 60 * 60 * 6);
+        addTimerTask(this::save, 1000 * 60 * 5, true);
+        addTimerTask(this::clearInactive, 1000 * 60 * 5, true);
+        addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true);
     }
 
     public static void main(String[] args) {
@@ -209,6 +208,12 @@ public class MinigamesBot {
     public BadgeManager getBadgeManager() {
         return badgeManager;
     }
+
+
+    public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
+        timerManager.add(task, delay, repeat);
+    }
+
 
     private static JsonObject getConfigJson() {
         String filePath = "config.json";

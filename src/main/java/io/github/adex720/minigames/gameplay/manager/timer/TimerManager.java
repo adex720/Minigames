@@ -17,8 +17,8 @@ public class TimerManager extends Manager {
         TIMERS = new HashSet<>();
     }
 
-    public void add(Task task, int delay) {
-        TIMERS.add(new TimerObject(task, delay));
+    public void add(Task task, int delay, boolean repeat) {
+        TIMERS.add(new TimerObject(task, delay, repeat));
     }
 
     public void stop() {
@@ -30,22 +30,33 @@ public class TimerManager extends Manager {
         private final Timer timer;
         private final Task task;
         private final int delay;
+        private final boolean repeat;
 
-        private TimerObject(Task task, int delay) {
+        private TimerObject(Task task, int delay, boolean repeat) {
             timer = new Timer();
             this.task = task;
             this.delay = delay;
+            this.repeat = repeat;
 
             start();
         }
 
         private void start() {
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    task.run();
-                }
-            }, delay, delay);
+            if (repeat) {
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        task.run();
+                    }
+                }, delay, delay);
+            } else {
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        task.run();
+                    }
+                }, delay);
+            }
         }
 
         public void cancel() {
