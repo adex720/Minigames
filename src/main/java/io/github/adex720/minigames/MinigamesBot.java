@@ -18,6 +18,7 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
+import io.github.adex720.minigames.gameplay.manager.stat.StatManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -55,6 +56,7 @@ public class MinigamesBot {
     private final GuildJoinListener guildJoinListener;
 
     private final BadgeManager badgeManager;
+    private final StatManager statManager;
 
     private final ProfileManager profileManager;
 
@@ -89,6 +91,7 @@ public class MinigamesBot {
         guildJoinListener = new GuildJoinListener(this);
 
         badgeManager = new BadgeManager(this);
+        statManager = new StatManager(this);
 
         profileManager = new ProfileManager(this);
 

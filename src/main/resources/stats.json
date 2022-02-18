@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Minigames finished",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 2,
+    "name": "Minigames won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 3,
+    "name": "Hangman games finished",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 4,
+    "name": "Hangman games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 3,
+    "name": "Unscramble games finished",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 4,
+    "name": "Unscramble games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 3,
+    "name": "Higher or lower games finished",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 4,
+    "name": "Higher or lower games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 3,
+    "name": "Tic tac toe games finished",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 4,
+    "name": "Tic tac toe games won",
+    "description": "",
+    "on_leaderboard": false
+  }
+]

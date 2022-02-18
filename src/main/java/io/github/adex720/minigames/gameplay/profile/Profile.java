@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -27,6 +28,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final Set<Integer> badges;
 
+    private final StatList statList;
+
     public Profile(long userId) {
         this.userId = userId;
         created = System.currentTimeMillis();
@@ -35,6 +38,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         coins = 0;
         badges = new HashSet<>();
+        statList = new StatList();
     }
 
     public Profile(long userId, long crated, int coins) {
@@ -45,6 +49,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         this.coins = coins;
         badges = new HashSet<>();
+        statList = new StatList();
     }
 
     public static Profile create(long id) {
@@ -104,6 +109,14 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public void addBadge(int id) {
         badges.add(id);
+    }
+
+    public void increaseStat(String stat) {
+        statList.increaseStat(stat);
+    }
+
+    public void increaseStat(String stat, int amount) {
+        statList.increaseStat(stat, amount);
     }
 
     public MessageEmbed getEmbed(User user, MinigamesBot bot) {
