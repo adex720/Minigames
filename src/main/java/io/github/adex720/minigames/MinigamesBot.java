@@ -299,7 +299,6 @@ public class MinigamesBot {
   TODO: commands to add
     - leaderboard
     - quests
-    - kits (daily, hourly, supporter)
 
    TODO: trivia
     (https://opentdb.com/api_config.php)
