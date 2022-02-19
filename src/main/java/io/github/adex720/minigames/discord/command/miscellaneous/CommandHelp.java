@@ -57,6 +57,7 @@ public class CommandHelp extends Command {
             if (page == max) {
                 last = commandsAmount - 1;
             }
+
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("HELP")
                     .setColor(Util.getColor(ci.authorId()));
@@ -69,7 +70,6 @@ public class CommandHelp extends Command {
                     .setFooter(author.getName(), author.getAvatarUrl())
                     .setTimestamp(new Date().toInstant())
                     .build()).queue();
-
 
         } else {
             StringBuilder categories = new StringBuilder();

@@ -64,8 +64,8 @@ public class StatList {
     public JsonObject asJson() {
         JsonObject json = new JsonObject();
 
-        for (Map.Entry<String, Value<Integer>> entry : statsByName.entrySet()) {
-            json.addProperty(entry.getKey(), entry.getValue().value);
+        for (Map.Entry<Integer, Value<Integer>> entry : statsById.entrySet()) {
+            json.addProperty(Integer.toString(entry.getKey()), entry.getValue().value);
         }
 
         return json;

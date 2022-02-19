@@ -117,11 +117,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         badges.add(id);
     }
 
-    public int getValue(int id) {
+    public int getStatValue(int id) {
         return statList.getValue(id);
     }
 
-    public int getValue(String name) {
+    public int getStatValue(String name) {
         return statList.getValue(name);
     }
 

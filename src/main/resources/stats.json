@@ -2,14 +2,14 @@
   {
     "id": 1,
     "name": "minigames played",
-    "description": "",
-    "on_leaderboard": false
+    "description": "Amount of minigames played.",
+    "on_leaderboard": true
   },
   {
     "id": 2,
     "name": "minigames won",
     "description": "",
-    "on_leaderboard": false
+    "on_leaderboard": true
   },
   {
     "id": 3,

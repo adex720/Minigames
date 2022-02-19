@@ -14,6 +14,7 @@ public class LeaderboardManager extends Thread {
     public LeaderboardManager(MinigamesBot bot) {
         super();
         setPriority(Thread.MIN_PRIORITY);
+        setName("Leaderboard updater Thread");
 
         this.bot = bot;
         lastUpdated = 1;

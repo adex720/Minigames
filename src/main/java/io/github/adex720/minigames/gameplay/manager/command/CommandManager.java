@@ -4,10 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.Subcommand;
-import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadCommands;
-import io.github.adex720.minigames.discord.command.devcommand.DevCommandReloadData;
-import io.github.adex720.minigames.discord.command.devcommand.DevCommandSave;
-import io.github.adex720.minigames.discord.command.devcommand.DevCommandShutdown;
+import io.github.adex720.minigames.discord.command.devcommand.*;
 import io.github.adex720.minigames.discord.command.minigame.CommandMinigameInfo;
 import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
 import io.github.adex720.minigames.discord.command.minigame.CommandQuit;
@@ -102,6 +99,8 @@ public class CommandManager extends Manager {
         devCommandListener.addCommand(new DevCommandShutdown(bot));
 
         devCommandListener.addCommand(new DevCommandReloadCommands(bot));
+
+        devCommandListener.addCommand(new DevCommandUpdateLeaderboards(bot));
     }
 
     public void addCommand(Command command) {

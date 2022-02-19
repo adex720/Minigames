@@ -28,7 +28,7 @@ public class StatManager extends Manager {
 
         for (Stat stat : LEADERBOARD_STATS) {
             final int id = stat.id();
-            LEADERBOARDS.put(stat.id(), new TreeSet<>(Comparator.comparing(profile -> profile.getValue(id))));
+            LEADERBOARDS.put(stat.id(), new TreeSet<>(Comparator.comparing(profile -> profile.getStatValue(id))));
         }
     }
 
@@ -65,12 +65,13 @@ public class StatManager extends Manager {
             if (!stat.onLeaderboard()) continue;
             updateLeaderboard(stat);
         }
+        bot.getLogger().info("Updated leaderboards.");
     }
 
     public void updateLeaderboard(Stat stat) {
         int statId = stat.id();
 
-        TreeSet<Profile> leaderboard = new TreeSet<>(Comparator.comparing(profile -> profile.getValue(statId)));
+        TreeSet<Profile> leaderboard = new TreeSet<>(Comparator.comparing(profile -> -profile.getStatValue(statId)));
         leaderboard.addAll(bot.getProfileManager().getValues());
 
         LEADERBOARDS.put(statId, leaderboard);

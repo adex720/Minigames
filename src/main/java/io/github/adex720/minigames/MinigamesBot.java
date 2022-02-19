@@ -110,8 +110,6 @@ public class MinigamesBot {
 
         commandManager.initCommands(this);
 
-        statManager.updateLeaderboards();
-
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
