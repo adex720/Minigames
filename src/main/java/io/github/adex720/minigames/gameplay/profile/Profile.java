@@ -73,6 +73,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         json.addProperty("created", created);
 
         json.addProperty("coins", coins);
+        json.add("stats", statList.asJson());
 
         return json;
     }

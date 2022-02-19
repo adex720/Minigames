@@ -11,12 +11,10 @@ import io.github.adex720.minigames.discord.command.devcommand.DevCommandShutdown
 import io.github.adex720.minigames.discord.command.minigame.CommandMinigameInfo;
 import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
 import io.github.adex720.minigames.discord.command.minigame.CommandQuit;
+import io.github.adex720.minigames.discord.command.minigame.CommandTip;
 import io.github.adex720.minigames.discord.command.miscellaneous.*;
 import io.github.adex720.minigames.discord.command.party.*;
-import io.github.adex720.minigames.discord.command.user.CommandDelete;
-import io.github.adex720.minigames.discord.command.user.CommandProfile;
-import io.github.adex720.minigames.discord.command.user.CommandStart;
-import io.github.adex720.minigames.discord.command.user.KitCommand;
+import io.github.adex720.minigames.discord.command.user.*;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import net.dv8tion.jda.api.JDA;
@@ -64,6 +62,8 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandProfile(bot));
         MAIN_COMMANDS.add(new CommandStart(bot));
         MAIN_COMMANDS.add(new CommandDelete(bot));
+        MAIN_COMMANDS.add(new CommandStats(bot));
+        MAIN_COMMANDS.add(new CommandLeaderboard(bot));
 
         MAIN_COMMANDS.add(new KitCommand(bot, "hourly", 1000, 1));
         MAIN_COMMANDS.add(new KitCommand(bot, "coiner", 4500, 4));
@@ -87,6 +87,7 @@ public class CommandManager extends Manager {
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(new CommandMinigameInfo(bot));
+        MAIN_COMMANDS.add(new CommandTip(bot));
         MAIN_COMMANDS.add(new CommandQuit(bot));
 
         initDevCommands(bot);
