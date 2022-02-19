@@ -74,13 +74,13 @@ public class MinigameUnscramble extends Minigame {
         return shuffled;
     }
 
-    public void guess(SlashCommandEvent event) {
+    public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
         active();
         String guess = event.getOption("word").getAsString();
 
         if (guess.equals(word)) {
             event.getHook().sendMessage("Good job! " + word + " was the word.").queue();
-            finish(event, true);
+            finish(event, commandInfo, true);
             return;
         }
 
@@ -103,7 +103,7 @@ public class MinigameUnscramble extends Minigame {
             event.getHook().sendMessage("That was not the word. You ran out of life. The word was " + word + ".").queue();
         }
 
-        finish(event, false);
+        finish(event, commandInfo, false);
     }
 
     @Override

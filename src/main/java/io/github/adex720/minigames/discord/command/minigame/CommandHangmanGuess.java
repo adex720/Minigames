@@ -22,7 +22,7 @@ public class CommandHangmanGuess extends MinigameSubcommand {
         if (minigame != null) {
             if (minigame.getType() == bot.getMinigameTypeManager().HANGMAN) {
                 MinigameHangman hangman = (MinigameHangman) minigame;
-                hangman.guess(event);
+                hangman.guess(event, ci);
 
                 return true;
             }

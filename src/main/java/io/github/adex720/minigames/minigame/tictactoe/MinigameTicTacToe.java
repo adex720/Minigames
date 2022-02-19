@@ -206,13 +206,13 @@ public class MinigameTicTacToe extends DuelMinigame {
 
         if (winner == 3) {
             event.getHook().sendMessageEmbeds(getEmbedWithField("The game ended in a draw", "The board is full yet neither of the players has won.")).queue();
-            finish(event, winner);
+            finish(event, ci, winner);
             return;
         }
 
         String winnerMention = "<@!" + (winner == FIRST_PLAYER_WON ? id : opponentId) + ">";
         event.getHook().sendMessageEmbeds(getEmbedWithField("The game ended", winnerMention + " won the game!")).queue();
-        finish(event, winner);
+        finish(event, ci, winner);
     }
 
     public void place(int x, int y, boolean firstPlayer) {

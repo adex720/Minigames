@@ -51,7 +51,7 @@ public class MinigameHangman extends Minigame {
         return minigame;
     }
 
-    public void guess(SlashCommandEvent event) {
+    public void guess(SlashCommandEvent event, CommandInfo ci) {
         active();
         String guess = event.getOption("guess").getAsString();
 
@@ -112,13 +112,13 @@ public class MinigameHangman extends Minigame {
                     }
 
                     event.getHook().sendMessage("Good job! The word was " + word + ". You had " + life + " tries left!").queue();
-                    finish(event, true);
+                    finish(event, ci, true);
 
                 } else {
                     life--;
                     if (life == 0) {
                         event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
-                        finish(event, false);
+                        finish(event, ci, false);
                         return;
                     }
 
@@ -133,14 +133,14 @@ public class MinigameHangman extends Minigame {
         } else {
             if (word.equals(guess.toLowerCase(Locale.ROOT))) {
                 event.getHook().sendMessage("Good Job! " + guess + " was the word! You had " + life + " health left.").queue();
-                finish(event, true);
+                finish(event, ci, true);
                 return;
             }
 
             life--;
             if (life == 0) {
                 event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
-                finish(event, false);
+                finish(event, ci, false);
                 return;
             }
 

@@ -48,13 +48,13 @@ public class MinigameHigherLower extends Minigame {
         return minigame;
     }
 
-    public void guess(SlashCommandEvent event) {
+    public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
         active();
         int guess = (int) event.getOption("number").getAsDouble();
 
         if (guess == number) {
             event.getHook().sendMessage("Good job! " + number + " was the number!").queue();
-            finish(event, true);
+            finish(event, commandInfo, true);
         } else {
 
             if (guess > max || guess < min) {
@@ -73,7 +73,7 @@ public class MinigameHigherLower extends Minigame {
                 }
             } else {
                 event.getHook().sendMessage("Wrong number. You ran out of tries. The number was " + number + ".").queue();
-                finish(event, false);
+                finish(event, commandInfo, false);
             }
         }
     }

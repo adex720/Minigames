@@ -22,7 +22,7 @@ public class CommandHigherLowerGuess extends MinigameSubcommand {
         if (minigame != null) {
             if (minigame.getType() == bot.getMinigameTypeManager().HIGHER_OR_LOWER) {
                 MinigameHigherLower higherLower = (MinigameHigherLower) minigame;
-                higherLower.guess(event);
+                higherLower.guess(event,ci);
 
                 return true;
             }

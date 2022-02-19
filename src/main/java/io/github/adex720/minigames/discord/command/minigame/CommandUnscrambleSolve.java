@@ -23,7 +23,7 @@ public class CommandUnscrambleSolve extends MinigameSubcommand {
         if (minigame != null) {
             if (minigame.getType() == bot.getMinigameTypeManager().UNSCRAMBLE) {
                 MinigameUnscramble unscramble = (MinigameUnscramble) minigame;
-                unscramble.guess(event);
+                unscramble.guess(event,ci);
 
                 return true;
             }

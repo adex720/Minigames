@@ -28,7 +28,7 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
 
     @Override
     public Profile fromJson(JsonObject json) {
-        return Profile.fromJson(json);
+        return Profile.fromJson(bot, json);
     }
 
     @Override

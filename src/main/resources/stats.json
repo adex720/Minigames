@@ -1,61 +1,61 @@
 [
   {
     "id": 1,
-    "name": "Minigames finished",
+    "name": "minigames played",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 2,
-    "name": "Minigames won",
+    "name": "minigames won",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 3,
-    "name": "Hangman games finished",
+    "name": "hangman games played",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 4,
-    "name": "Hangman games won",
+    "name": "hangman games won",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 3,
-    "name": "Unscramble games finished",
+    "name": "unscramble games played",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 4,
-    "name": "Unscramble games won",
+    "name": "unscramble games won",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 3,
-    "name": "Higher or lower games finished",
+    "name": "higher or lower games played",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 4,
-    "name": "Higher or lower games won",
+    "name": "higher or lower games won",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 3,
-    "name": "Tic tac toe games finished",
+    "name": "tic tac toe games played",
     "description": "",
     "on_leaderboard": false
   },
   {
     "id": 4,
-    "name": "Tic tac toe games won",
+    "name": "tic-tac-toe games won",
     "description": "",
     "on_leaderboard": false
   }
