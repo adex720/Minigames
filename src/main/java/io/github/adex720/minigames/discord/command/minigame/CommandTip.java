@@ -4,10 +4,16 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.minigame.Minigame;
+import io.github.adex720.minigames.minigame.MinigameType;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+
+import java.util.Date;
 
 public class CommandTip extends Command {
 
@@ -17,7 +23,18 @@ public class CommandTip extends Command {
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        return false;
+        User author = ci.author();
+        String minigameName = event.getOption("minigame").getAsString();
+        MinigameType<? extends Minigame> minigame = bot.getMinigameTypeManager().getType(minigameName);
+
+        event.getHook().sendMessageEmbeds(new EmbedBuilder()
+                .setTitle("MINIGAME TIPS")
+                .addField("Tips for " + minigameName, minigame.tips, false)
+                .setColor(minigame.color)
+                .setFooter(author.getName(), author.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build()).queue();
+        return true;
     }
 
     @Override

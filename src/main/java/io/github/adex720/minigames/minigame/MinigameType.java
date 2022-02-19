@@ -20,6 +20,9 @@ public abstract class MinigameType<M extends Minigame> {
 
     public final String name;
     public final String description;
+    public final String tips;
+
+    public final int color;
 
     public final boolean requiresParty;
     public final int minPartySize;
@@ -30,16 +33,16 @@ public abstract class MinigameType<M extends Minigame> {
         this.bot = bot;
         this.typeManager = typeManager;
         this.name = name;
-        this.description = getDescription();
+
         this.requiresParty = requiresParty;
         this.minPartySize = minPartySize;
-    }
 
-    protected String getDescription() {
         JsonObject json = bot.getResourceJson("minigames").getAsJsonObject();
 
         JsonObject minigameJson = JsonHelper.getJsonObject(json, name);
-        return JsonHelper.getString(minigameJson, "description");
+        this.description = JsonHelper.getString(json, "description");
+        this.tips = JsonHelper.getString(json, "tips");
+        this.color = Integer.parseInt(JsonHelper.getString(json, "color"), 16);
     }
 
     @Nullable
