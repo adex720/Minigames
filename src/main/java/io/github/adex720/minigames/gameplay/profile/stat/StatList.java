@@ -1,6 +1,5 @@
 package io.github.adex720.minigames.gameplay.profile.stat;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -62,19 +61,14 @@ public class StatList {
         statsById.get(stat).value += amount;
     }
 
-    public JsonArray asJson() {
-        JsonArray jsonArray = new JsonArray();
+    public JsonObject asJson() {
+        JsonObject json = new JsonObject();
 
         for (Map.Entry<String, Value<Integer>> entry : statsByName.entrySet()) {
-            JsonObject json = new JsonObject();
-
-            json.addProperty("stat", entry.getKey());
-            json.addProperty("value", entry.getValue().value);
-
-            jsonArray.add(json);
+            json.addProperty(entry.getKey(), entry.getValue().value);
         }
 
-        return jsonArray;
+        return json;
     }
 
 }

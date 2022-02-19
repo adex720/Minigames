@@ -40,9 +40,9 @@ public abstract class MinigameType<M extends Minigame> {
         JsonObject json = bot.getResourceJson("minigames").getAsJsonObject();
 
         JsonObject minigameJson = JsonHelper.getJsonObject(json, name);
-        this.description = JsonHelper.getString(json, "description");
-        this.tips = JsonHelper.getString(json, "tips");
-        this.color = Integer.parseInt(JsonHelper.getString(json, "color"), 16);
+        this.description = JsonHelper.getString(minigameJson, "description");
+        this.tips = JsonHelper.getString(minigameJson, "tips");
+        this.color = Integer.parseInt(JsonHelper.getString(minigameJson, "color"), 16);
     }
 
     @Nullable
