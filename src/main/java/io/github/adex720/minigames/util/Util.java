@@ -25,11 +25,6 @@ public class Util {
 
     public static int getColor(long id) {
         int color = (int) (id + 12582870); // That number is fancy
-
-        int red = color & 0xFF;
-        int green = (color >> 8) & 0xFF;
-        int blue = (color >> 16) & 0xFF;
-
         return color & 0xFFFFFF;
     }
 
