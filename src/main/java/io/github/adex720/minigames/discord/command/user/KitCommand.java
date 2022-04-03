@@ -6,6 +6,7 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
+import io.github.adex720.minigames.gameplay.profile.Profile;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.time.Duration;
@@ -92,9 +93,12 @@ public class KitCommand extends Command {
                 }
             }
 
-            ci.profile().addCoins(reward);
+            Profile profile = ci.profile();
+            profile.addCoins(reward, true);
             startCooldown(ci.authorId(), current);
             event.getHook().sendMessage("You claimed your " + name + " kit. You received " + reward + " coins.").queue();
+
+            profile.appendQuests(quest -> quest.kitClaimed(name, profile));
         } else {
             event.getHook().sendMessage(permissionCheck.getFailMessage(event, ci, canClaim)).queue();
         }
