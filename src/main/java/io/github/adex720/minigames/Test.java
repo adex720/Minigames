@@ -1,15 +1,18 @@
 package io.github.adex720.minigames;
 
-import java.io.File;
-import java.io.FileWriter;
+import io.github.adex720.minigames.gameplay.manager.quest.QuestManager;
+
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Scanner;
 
 public class Test {
 
     public static void main(String[] args) throws IOException {
-        Scanner reader = new Scanner(new File("src/main/resources/words/raw.txt"));
+
+        for (int i = 0; i < 16; i++){
+            System.out.println(QuestManager.shuffle(i));
+        }
+
+        /*Scanner reader = new Scanner(new File("src/main/resources/words/raw.txt"));
 
         StringBuilder words = new StringBuilder();
         while (reader.hasNext()) {
@@ -26,7 +29,7 @@ public class Test {
         writer.write(toWrite);
         writer.flush();
 
-        System.out.println("Finished writing");
+        System.out.println("Finished writing");*/
 
     }
 

@@ -1,0 +1,271 @@
+{
+  "difficulties": [
+    {
+      "id": 0,
+      "name": "easy",
+      "reward": 200
+    },
+    {
+      "id": 1,
+      "name": "normal",
+      "reward": 350
+    },
+    {
+      "id": 2,
+      "name": "hard",
+      "reward": 500
+    }
+  ],
+  "types": [
+    {
+      "id": 0,
+      "type": "minigame",
+      "name": {
+        "start": "Play",
+        "end": "minigames"
+      },
+      "hint": "You can start a minigame with `/play`",
+      "goals": [
+        3,
+        5,
+        8
+      ]
+    },
+    {
+      "id": 1,
+      "type": "minigame",
+      "win": true,
+      "name": {
+        "start": "Win",
+        "end": "minigames"
+      },
+      "hint": "You can start a minigame with `/play`",
+      "goals": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "id": 2,
+      "type": "minigame",
+      "party": true,
+      "name": {
+        "start": "Play",
+        "end": "party minigames"
+      },
+      "hint": "You can create a party with `/party create`",
+      "goals": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "id": 3,
+      "type": "minigame",
+      "party": true,
+      "win": true,
+      "name": {
+        "start": "Win",
+        "end": "party minigames"
+      },
+      "hint": "You can create a party with `/party create`",
+      "goals": [
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "id": 4,
+      "type": "minigame",
+      "minigame": "hangman",
+      "name": {
+        "name": "Play hangman",
+        "start": "Play",
+        "end": "hangman minigames"
+      },
+      "hint": "You can start a hangman game with `/play hangman`",
+      "goals": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "id": 5,
+      "type": "minigame",
+      "minigame": "hangman",
+      "win": true,
+      "name": {
+        "name": "Win hangman",
+        "start": "Win",
+        "end": "hangman minigames"
+      },
+      "hint": "You can start a hangman game with `/play hangman`",
+      "goals": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "id": 6,
+      "type": "minigame",
+      "minigame": "higher-lower",
+      "name": {
+        "name": "Play higher-lower",
+        "start": "Play",
+        "end": "higher-lower minigames"
+      },
+      "hint": "You can start a higher-lower game with `/play higher-lower`",
+      "goals": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "id": 7,
+      "type": "minigame",
+      "minigame": "higher-lower",
+      "win": true,
+      "name": {
+        "name": "Win higher-lower",
+        "start": "Win",
+        "end": "higher-lower minigames"
+      },
+      "hint": "You can start a higher-lower game with `/play higher-lower`",
+      "goals": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "id": 8,
+      "type": "minigame",
+      "minigame": "tic-tac-toe",
+      "name": {
+        "name": "Play tic-tac-toe",
+        "start": "Play",
+        "end": "tic-tac-toe minigames"
+      },
+      "hint": "You can start a tic-tac-toe game with `/play tic-tac-toe`",
+      "goals": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "id": 9,
+      "type": "minigame",
+      "minigame": "tic-tac-toe",
+      "win": true,
+      "name": {
+        "name": "Win tic-tac-toe",
+        "start": "Win",
+        "end": "tic-tac-toe minigames"
+      },
+      "hint": "You can start a tic-tac-toe game with `/play tic-tac-toe`",
+      "goals": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "id": 10,
+      "type": "minigame",
+      "minigame": "unscramble",
+      "name": {
+        "name": "Play unscramble",
+        "start": "Play",
+        "end": "unscramble minigames"
+      },
+      "hint": "You can start a unscramble game with `/play unscramble`",
+      "goals": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "id": 11,
+      "type": "minigame",
+      "minigame": "unscramble",
+      "win": true,
+      "name": {
+        "name": "Win unscramble",
+        "start": "Win",
+        "end": "unscramble minigames"
+      },
+      "hint": "You can start a unscramble game with `/play unscramble`",
+      "goals": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "id": 12,
+      "type": "coin",
+      "name": {
+        "start": "Earn",
+        "end": "coins"
+      },
+      "hint": "You can earn coins from for example playing minigames or opening crates",
+      "goals": [
+        1000,
+        2000,
+        3000
+      ]
+    },
+    {
+      "id": 13,
+      "type": "crate",
+      "name": {
+        "start": "Open",
+        "end": "crates"
+      },
+      "hint": "You can open crates with `/open`",
+      "goals": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "id": 14,
+      "type": "booster",
+      "name": {
+        "name": "Use boosters",
+        "start": "Use boosters",
+        "end": "times"
+      },
+      "hint": "You can use `/boosters` to view your boosters",
+      "goals": [
+        4,
+        8,
+        12
+      ]
+    },
+    {
+      "id": 15,
+      "type": "kit",
+      "name": {
+        "name": "Claim kits",
+        "start": "Claim %s kit",
+        "end": "times"
+      },
+      "hint": "You can see your kits with `/kits`",
+      "goals": [
+        3,
+        6,
+        9
+      ]
+    }
+  ]
+}

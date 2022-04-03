@@ -8,6 +8,7 @@ import io.github.adex720.minigames.discord.listener.ButtonListener;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.discord.listener.GuildJoinListener;
+import io.github.adex720.minigames.gameplay.manager.quest.QuestManager;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
@@ -22,6 +23,7 @@ import io.github.adex720.minigames.gameplay.manager.stat.LeaderboardManager;
 import io.github.adex720.minigames.gameplay.manager.stat.StatManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
+import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -72,6 +74,9 @@ public class MinigamesBot {
     private final FilePathManager filePathManager;
     private final WordManager wordManager;
 
+    private final QuestManager questManager;
+    private final QuestList questList;
+
     private final TimerManager timerManager;
     private final LeaderboardManager leaderboardManager;
 
@@ -104,6 +109,9 @@ public class MinigamesBot {
 
         filePathManager = new FilePathManager(this);
         wordManager = new WordManager(this);
+
+        questManager = new QuestManager(this);
+        questList = new QuestList(this);
 
         timerManager = new TimerManager(this);
         leaderboardManager = new LeaderboardManager(this);
@@ -221,6 +229,14 @@ public class MinigamesBot {
         return statManager;
     }
 
+    public QuestManager getQuestManager() {
+        return questManager;
+    }
+
+    public QuestList getQuestList() {
+        return questList;
+    }
+
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
         timerManager.add(task, delay, repeat);
     }
@@ -309,7 +325,6 @@ public class MinigamesBot {
     - connect 4
 
   TODO: commands to add
-    - leaderboard
     - quests
 
    TODO: trivia

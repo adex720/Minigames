@@ -131,7 +131,7 @@ public class JsonHelper {
         return json.has(key) ? json.get(key).getAsJsonArray() : defaultValue;
     }
 
-    public static char[] jsonArrayToArray(JsonArray jsonArray) {
+    public static char[] jsonArrayToCharArray(JsonArray jsonArray) {
         int size = jsonArray.size();
         char[] array = new char[size];
 
@@ -147,6 +147,27 @@ public class JsonHelper {
 
         for (char c : array) {
             jsonArray.add(c);
+        }
+
+        return jsonArray;
+    }
+
+    public static int[] jsonArrayToIntArray(JsonArray jsonArray) {
+        int size = jsonArray.size();
+        int[] array = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            array[i] = jsonArray.get(i).getAsInt(); // aaaaaaaaaa, Deprecated
+        }
+
+        return array;
+    }
+
+    public static JsonArray arrayToJsonArray(int[] array) {
+        JsonArray jsonArray = new JsonArray();
+
+        for (int i : array) {
+            jsonArray.add(i);
         }
 
         return jsonArray;

@@ -70,4 +70,8 @@ public abstract class MinigameType<M extends Minigame> {
     }
 
     public abstract String getReplyForInvalidStartState();
+
+    public String getUserFriendlyName() {
+        return name.replaceAll("-", " ");
+    }
 }

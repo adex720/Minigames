@@ -2,6 +2,7 @@ package io.github.adex720.minigames.minigame.duel;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -35,8 +36,8 @@ public abstract class DuelMinigame extends Minigame {
         return true;
     }
 
-    public void makeAIMove(){
-        if (type instanceof DuelMinigameType<? extends DuelMinigame> duelMinigameType){
+    public void makeAIMove() {
+        if (type instanceof DuelMinigameType<? extends DuelMinigame> duelMinigameType) {
             assert duelMinigameType.ai != null;
             duelMinigameType.ai.makeMove(this);
         }
@@ -64,6 +65,8 @@ public abstract class DuelMinigame extends Minigame {
     public void finish(SlashCommandEvent event, CommandInfo commandInfo, int winState) {
         super.finish(event, commandInfo, winState == FIRST_PLAYER_WON);
 
-        appendQuest(opponentId, winState == SECOND_PLAYER_WON);
+        Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
+        appendQuest(opponentProfile, opponentId, winState == SECOND_PLAYER_WON);
+        appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
     }
 }

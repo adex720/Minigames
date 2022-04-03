@@ -1,7 +1,6 @@
 package io.github.adex720.minigames.minigame.hangman;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
@@ -189,8 +188,9 @@ public class MinigameHangman extends Minigame {
         boolean isParty = JsonHelper.getBoolean(json, "party");
 
         ArrayList<Character> guesses = new ArrayList<>();
-        for (JsonElement guess : JsonHelper.getJsonArray(json, "guesses", new JsonArray())) {
-            guesses.add((char) guess.getAsByte());
+        JsonArray guessesJson = JsonHelper.getJsonArray(json, "guesses", new JsonArray());
+        for (char guess : JsonHelper.jsonArrayToCharArray(guessesJson)) {
+            guesses.add(guess);
         }
 
         return new MinigameHangman(bot, id, isParty, lastActive, word, life, guesses);

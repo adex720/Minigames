@@ -391,7 +391,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         char[][] board = new char[3][3];
         JsonArray boardJson = JsonHelper.getJsonArray(json, "board");
         for (int column = 0; column < 3; column++) {
-            board[column] = JsonHelper.jsonArrayToArray(boardJson.get(column).getAsJsonArray());
+            board[column] = JsonHelper.jsonArrayToCharArray(boardJson.get(column).getAsJsonArray());
         }
 
         if (JsonHelper.getBoolean(json, "duel")) {
