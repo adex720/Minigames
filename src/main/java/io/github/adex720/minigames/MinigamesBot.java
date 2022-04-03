@@ -324,15 +324,19 @@ public class MinigamesBot {
     - counting variations (hex, binary, letters)
     - connect 4
 
-  TODO: commands to add
-    - quests
+   TODO: add boosters
+
+   TODO: add crates
+
+   TODO: rewards for finished minigames
 
    TODO: trivia
     (https://opentdb.com/api_config.php)
 
-   TODO: sharding
-
    TODO: tips for minigames
 
+   TODO: (After a long time)
+    - vote (after verification)
+    - sharding (at 2000 guilds)
 
 */
