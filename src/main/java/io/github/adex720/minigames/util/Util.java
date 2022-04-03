@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.util;
 
+import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,10 +40,19 @@ public class Util {
     public static String formatTime(int seconds) {
         int secondsDifference = seconds % 60;
         int minutes = seconds / 60;
+
+        if (minutes < 60) {
+            return minutes + "m" + secondsDifference + "s";
+        }
+
         int minutesDifference = minutes % 60;
         int hours = minutes / 60;
 
-        return hours + ":" + minutesDifference + ":" + secondsDifference;
+        return hours + "h" + minutesDifference + "m" + secondsDifference + "s";
+    }
+
+    public static String formatTime(Duration duration) {
+        return formatTime((int) duration.toSeconds());
     }
 
 }

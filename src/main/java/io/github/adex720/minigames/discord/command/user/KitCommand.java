@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.time.Duration;
@@ -88,7 +89,7 @@ public class KitCommand extends Command {
             OffsetDateTime current = event.getTimeCreated();
             if (ready != null) {
                 if (ready.isAfter(current)) {
-                    event.getHook().sendMessage("This kit is on cooldown for " + Duration.between(current, ready) + ".").queue();
+                    event.getHook().sendMessage("This kit is on cooldown for " + Util.formatTime(Duration.between(current, ready)) + ".").queue();
                     return true;
                 }
             }
@@ -106,7 +107,7 @@ public class KitCommand extends Command {
     }
 
     private void startCooldown(long userId, OffsetDateTime used) {
-        COOLDOWNS.put(userId, used);
+        COOLDOWNS.put(userId, used.plusHours(cooldownHours));
 
         bot.addTimerTask(() -> COOLDOWNS.remove(userId, used), cooldownMillis, false);
     }
