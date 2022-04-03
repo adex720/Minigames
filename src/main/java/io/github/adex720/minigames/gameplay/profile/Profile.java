@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.gameplay.profile.quest.Quest;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
@@ -105,8 +106,12 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         isInParty = false;
     }
 
-    public void addCoins(int amount) {
+    public void addCoins(int amount, boolean countForQuest) {
         coins += amount;
+
+        if (countForQuest) {
+            appendQuests(quest -> quest.coinsEarned(amount, this));
+        }
     }
 
     public int getCoins() {
@@ -170,5 +175,20 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         return embedBuilder.setFooter(user.getName(), user.getAvatarUrl())
                 .setTimestamp(new Date().toInstant()).build();
+    }
+
+    public void appendQuests(QuestUpdate... functions) {
+        ArrayList<Quest> quests = bot.getQuestManager().getQuests(userId);
+        if (quests == null) return;
+        for (Quest quest : quests) {
+            for (QuestUpdate questUpdate : functions) {
+                questUpdate.append(quest);
+            }
+        }
+    }
+
+    @FunctionalInterface
+    public interface QuestUpdate {
+        void append(Quest quest);
     }
 }

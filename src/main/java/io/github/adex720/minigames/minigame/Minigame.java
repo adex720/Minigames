@@ -43,15 +43,15 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
         bot.getReplayManager().addReplay(id, type);
 
-        appendQuest(commandInfo.profile(), id, won);
+        appendQuest(commandInfo.profile(), won);
         appendStats(commandInfo.profile(), won);
     }
 
-    public void appendQuest(Profile profile, long id, boolean won) {
-        bot.getQuestManager().getQuests(id).forEach(c -> c.minigamePlayed(this.type, profile));
-
+    public void appendQuest(Profile profile, boolean won) {
         if (won) {
-            bot.getQuestManager().getQuests(id).forEach(c -> c.minigameWon(this.type, profile));
+            profile.appendQuests(q -> q.minigamePlayed(this.type, profile), q -> q.minigameWon(this.type, profile));
+        } else {
+            profile.appendQuests(q -> q.minigamePlayed(this.type, profile));
         }
     }
 

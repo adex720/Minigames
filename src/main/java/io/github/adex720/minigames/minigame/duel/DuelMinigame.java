@@ -66,7 +66,7 @@ public abstract class DuelMinigame extends Minigame {
         super.finish(event, commandInfo, winState == FIRST_PLAYER_WON);
 
         Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
-        appendQuest(opponentProfile, opponentId, winState == SECOND_PLAYER_WON);
+        appendQuest(opponentProfile, winState == SECOND_PLAYER_WON);
         appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
     }
 }
