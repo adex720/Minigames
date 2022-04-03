@@ -47,7 +47,7 @@ public class KitCommand extends Command {
         @Override
         public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
             if (reason == 1) {
-                return "This kit can only be claimed on the support server.\n" + CommandInvite.INVITE_LINK;
+                return "This kit can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
             }
             if (reason == 2) {
                 return "You need to be on this server for 24 hours to claim this kit. This is to ensure people leaving after claiming the kit and then leaving.";
