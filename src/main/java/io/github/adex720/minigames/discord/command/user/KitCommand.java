@@ -33,7 +33,7 @@ public class KitCommand extends Command {
         @Override
         public int canUse(SlashCommandEvent event, CommandInfo ci) {
             if (event.getGuild().getIdLong() != CommandServer.SERVER_ID) {
-                return 0;
+                return 1;
             }
             if (event.getMember().hasTimeJoined()) {
                 if (event.getMember().getTimeJoined().isAfter(OffsetDateTime.now().minusDays(1))) {
