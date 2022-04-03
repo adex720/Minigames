@@ -17,7 +17,8 @@ public class CommandStats extends Command {
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        return false;
+        event.getHook().sendMessage("This command is unfinished").queue();
+        return true; // TODO: sends stats
     }
 
     @Override
