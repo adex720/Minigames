@@ -4,7 +4,6 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
-import io.github.adex720.minigames.discord.command.miscellaneous.CommandInvite;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.Util;
@@ -16,46 +15,50 @@ import java.util.HashMap;
 
 public class KitCommand extends Command {
 
-    public static final PermissionCheck ALWAYS = new PermissionCheck() {
-        @Override
-        public int canUse(SlashCommandEvent event, CommandInfo ci) {
-            return 0;
-        }
+    public static class Criterion {
 
-        @Override
-        public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
-            return "";
-        }
-    };
-
-    public static final PermissionCheck IN_SUPPORT_SERVER = new PermissionCheck() {
-
-        @Override
-        public int canUse(SlashCommandEvent event, CommandInfo ci) {
-            if (event.getGuild().getIdLong() != CommandServer.SERVER_ID) {
-                return 1;
+        public static final PermissionCheck ALWAYS = new PermissionCheck() {
+            @Override
+            public int canUse(SlashCommandEvent event, CommandInfo ci) {
+                return 0;
             }
-            if (event.getMember().hasTimeJoined()) {
-                if (event.getMember().getTimeJoined().isAfter(OffsetDateTime.now().minusDays(1))) {
-                    return 2;
+
+            @Override
+            public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
+                return "";
+            }
+        };
+
+        public static final PermissionCheck IN_SUPPORT_SERVER = new PermissionCheck() {
+
+            @Override
+            public int canUse(SlashCommandEvent event, CommandInfo ci) {
+                if (event.getGuild().getIdLong() != CommandServer.SERVER_ID) {
+                    return 1;
                 }
+                if (event.getMember().hasTimeJoined()) {
+                    if (event.getMember().getTimeJoined().isAfter(OffsetDateTime.now().minusDays(1))) {
+                        return 2;
+                    }
+                }
+
+                return 0;
             }
 
-            return 0;
-        }
+            @Override
+            public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
+                if (reason == 1) {
+                    return "This kit can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
+                }
+                if (reason == 2) {
+                    return "You need to be on this server for 24 hours to claim this kit. This is to ensure people leaving after claiming the kit and then leaving.";
+                }
 
-        @Override
-        public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
-            if (reason == 1) {
-                return "This kit can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
+                return "";
             }
-            if (reason == 2) {
-                return "You need to be on this server for 24 hours to claim this kit. This is to ensure people leaving after claiming the kit and then leaving.";
-            }
+        };
 
-            return "";
-        }
-    };
+    }
 
     private final int reward;
     private final int cooldownHours;
@@ -78,7 +81,7 @@ public class KitCommand extends Command {
     }
 
     public KitCommand(MinigamesBot bot, String name, int reward, int cooldownHours) {
-        this(bot, name, "Gives " + reward + " coins every " + cooldownHours + " hours.", reward, cooldownHours, ALWAYS);
+        this(bot, name, "Gives " + reward + " coins every " + cooldownHours + " hours.", reward, cooldownHours, Criterion.ALWAYS);
     }
 
     @Override

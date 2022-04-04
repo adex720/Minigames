@@ -24,37 +24,37 @@
     "on_leaderboard": false
   },
   {
-    "id": 3,
+    "id": 5,
     "name": "unscramble games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 4,
+    "id": 6,
     "name": "unscramble games won",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 3,
+    "id": 7,
     "name": "higher or lower games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 4,
+    "id": 8,
     "name": "higher or lower games won",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 3,
+    "id": 9,
     "name": "tic tac toe games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 4,
+    "id": 10,
     "name": "tic-tac-toe games won",
     "description": "",
     "on_leaderboard": false

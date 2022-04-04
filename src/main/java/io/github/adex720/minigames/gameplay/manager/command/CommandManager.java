@@ -62,13 +62,18 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandStats(bot));
         MAIN_COMMANDS.add(new CommandQuests(bot));
 
+        MAIN_COMMANDS.add(new CommandCrates(bot));
+        MAIN_COMMANDS.add(new CommandOpen(bot));
+        MAIN_COMMANDS.add(new CommandBoosters(bot));
+        MAIN_COMMANDS.add(new CommandUse(bot));
+
         MAIN_COMMANDS.add(new CommandLeaderboard(bot));
 
         MAIN_COMMANDS.add(new KitCommand(bot, "hourly", 1000, 1));
         MAIN_COMMANDS.add(new KitCommand(bot, "coiner", 4500, 4));
         MAIN_COMMANDS.add(new KitCommand(bot, "daily", 30000, 24));
         MAIN_COMMANDS.add(new KitCommand(bot, "weekly", 250000, 24 * 7));
-        MAIN_COMMANDS.add(new KitCommand(bot, "supporter", "An extra 15 000 coins for members of the support server", 15000, 24, KitCommand.IN_SUPPORT_SERVER));
+        MAIN_COMMANDS.add(new KitCommand(bot, "supporter", "An extra 15 000 coins for members of the support server", 15000, 24, KitCommand.Criterion.IN_SUPPORT_SERVER));
 
         MAIN_COMMANDS.add(parentCommandParty);
         SUBCOMMANDS.add(new CommandPartyCreate(bot));

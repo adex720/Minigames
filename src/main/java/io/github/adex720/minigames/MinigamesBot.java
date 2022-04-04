@@ -8,7 +8,6 @@ import io.github.adex720.minigames.discord.listener.ButtonListener;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.discord.listener.GuildJoinListener;
-import io.github.adex720.minigames.gameplay.manager.quest.QuestManager;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
@@ -19,6 +18,7 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
+import io.github.adex720.minigames.gameplay.manager.quest.QuestManager;
 import io.github.adex720.minigames.gameplay.manager.stat.LeaderboardManager;
 import io.github.adex720.minigames.gameplay.manager.stat.StatManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
@@ -40,12 +40,17 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Random;
 
 public class MinigamesBot {
 
     private final JDA jda;
 
     private final Logger logger;
+
+    private final Random random;
+
+    private final JsonObject emoteJson;
 
 
     private final CommandManager commandManager;
@@ -84,6 +89,8 @@ public class MinigamesBot {
         long startTime = System.currentTimeMillis();
         logger = LoggerFactory.getLogger(MinigamesBot.class);
 
+        random = new Random();
+
         saveDataManager = new BotDataManager(this, databaseConfig);
         resourceDataManager = new ResourceDataManager(this);
 
@@ -118,6 +125,8 @@ public class MinigamesBot {
 
         commandManager.initCommands(this);
 
+        emoteJson = getResourceJson("emotes").getAsJsonObject();
+
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
@@ -127,7 +136,6 @@ public class MinigamesBot {
         long botOnlineTime = System.currentTimeMillis();
 
         commandManager.registerCommands(jda);
-
 
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
@@ -237,6 +245,14 @@ public class MinigamesBot {
         return questList;
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
+    public long getEmoteId(String name) {
+        return JsonHelper.getLong(emoteJson, name);
+    }
+
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
         timerManager.add(task, delay, repeat);
     }
@@ -329,6 +345,12 @@ public class MinigamesBot {
    TODO: add crates
 
    TODO: rewards for finished minigames
+
+   TODO: /open all
+
+   TODO: guilds
+
+   TODO: global boosters
 
    TODO: trivia
     (https://opentdb.com/api_config.php)

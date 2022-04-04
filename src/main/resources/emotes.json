@@ -1,0 +1,17 @@
+{
+  "booster_common": 1,
+  "booster_uncommon": 1,
+  "booster_rare": 1,
+  "booster_epic": 1,
+  "booster_legendary": 1,
+  "booster_short_guild": 1,
+  "booster_long_guild": 1,
+  "booster_global": 1,
+  "crate_common": 1,
+  "crate_uncommon": 1,
+  "crate_rare": 1,
+  "crate_epic": 1,
+  "crate_legendary": 1,
+  "crate_vote": 1,
+  "crate_guild": 1
+}

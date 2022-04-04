@@ -1,0 +1,82 @@
+package io.github.adex720.minigames.gameplay.profile.booster;
+
+import io.github.adex720.minigames.MinigamesBot;
+
+public class BoosterList {
+
+    private final int[] boosters;
+
+    public BoosterList() {
+        boosters = new int[BoosterRarity.RARITIES_AMOUNT];
+    }
+
+    public void add(int id) {
+        boosters[id]++;
+    }
+
+    public void add(BoosterRarity type) {
+        add(type.id);
+    }
+
+    public void add(int id, int amount) {
+        boosters[id] += amount;
+    }
+
+    public void add(int id, BoosterRarity BoosterRarity) {
+        add(id, BoosterRarity.id);
+    }
+
+    public void subtract(int id) {
+        boosters[id]--;
+    }
+
+    public void subtract(BoosterRarity type) {
+        subtract(type.id);
+    }
+
+    public void subtract(int id, int amount) {
+        boosters[id] -= amount;
+    }
+
+    public void subtract(int id, BoosterRarity BoosterRarity) {
+        subtract(id, BoosterRarity.id);
+    }
+
+    public int amount(int id) {
+        return boosters[id];
+    }
+
+    public int amount(BoosterRarity BoosterRarity) {
+        return amount(BoosterRarity.id);
+    }
+
+    public String toString(MinigamesBot bot) {
+        if (isEmpty()) return "You don't have any boosters. You can get them from opening crates.";
+
+        StringBuilder boostersString = new StringBuilder();
+
+        boolean newLine = false;
+        for (int id = 0; id < boosters.length; id++) {
+            int amount = boosters[id];
+
+            if (amount == 0) continue;
+
+            if (newLine) boostersString.append('\n');
+            newLine = true;
+
+            BoosterRarity boosterRarity = BoosterRarity.get(id);
+            boostersString.append(amount).append(' ').append(boosterRarity.getEmoteName(bot))
+                    .append(" x").append(boosterRarity.multiplier).append(' ').append(boosterRarity.durationMinutes).append('m');
+        }
+
+        return boostersString.toString();
+    }
+
+    public boolean isEmpty() {
+        for (int booster : boosters) {
+            if (booster > 0) return false;
+        }
+        return true;
+    }
+
+}

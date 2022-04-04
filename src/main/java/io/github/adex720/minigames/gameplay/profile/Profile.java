@@ -5,6 +5,11 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.gameplay.profile.booster.Booster;
+import io.github.adex720.minigames.gameplay.profile.booster.BoosterList;
+import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
+import io.github.adex720.minigames.gameplay.profile.crate.CrateList;
+import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.gameplay.profile.quest.Quest;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -14,10 +19,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
@@ -35,6 +37,13 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final StatList statList;
 
+
+    private final CrateList crates;
+
+    private final BoosterList boosters;
+
+    private final ArrayList<Booster> activeBoosters;
+
     public Profile(MinigamesBot bot, long userId) {
         this.bot = bot;
         this.userId = userId;
@@ -45,6 +54,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         coins = 0;
         badges = new HashSet<>();
         statList = new StatList(bot);
+
+        crates = new CrateList();
+        boosters = new BoosterList();
+        activeBoosters = new ArrayList<>();
     }
 
     public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson) {
@@ -61,6 +74,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         if (questsJson != null) {
             bot.getQuestManager().addQuestsFromJson(userId, questsJson);
         }
+
+
+        crates = new CrateList(); // TODO: load these
+        boosters = new BoosterList();
+        activeBoosters = new ArrayList<>();
     }
 
     public static Profile create(MinigamesBot bot, long id) {
@@ -74,6 +92,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     @Override
     public JsonObject getAsJson() {
+        checkBoosterDurations();
+
         JsonObject json = new JsonObject();
 
         json.addProperty("id", userId);
@@ -116,12 +136,14 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         isInParty = false;
     }
 
-    public void addCoins(int amount, boolean countForQuest) {
-        coins += amount;
+    public void addCoins(int amount, boolean count) {
 
-        if (countForQuest) {
-            appendQuests(quest -> quest.coinsEarned(amount, this));
+        if (count) {
+            int finalAmount = (int) (amount * getBoosterMultiplier());
+
+            appendQuests(quest -> quest.coinsEarned(finalAmount, this));
         }
+        coins += amount;
     }
 
     public int getCoins() {
@@ -200,5 +222,118 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     @FunctionalInterface
     public interface QuestUpdate {
         void append(Quest quest);
+    }
+
+    public void addCrate(int type) {
+        crates.add(type);
+    }
+
+    public void addCrate(CrateType type) {
+        addCrate(type.id);
+    }
+
+    public boolean hasCrate(int crateType) {
+        return crates.amount(crateType) > 0;
+    }
+
+    public boolean hasCrate(CrateType crateType) {
+        return hasCrate(crateType.id);
+    }
+
+    /**
+     * @return message to send
+     */
+    public String openCrate(int type) {
+        return openCrate(CrateType.get(type));
+    }
+
+    /**
+     * @return message to send
+     */
+    public String openCrate(CrateType type) {
+        if (!hasCrate(type)) return "You don't have " + type.getNameWithArticle() + " crate!";
+
+        crates.subtract(type);
+
+        return type.applyRewardsAndGetMessage(bot, this);
+    }
+
+    public void addBooster(int rarity) {
+        boosters.add(rarity);
+    }
+
+    public void addBooster(BoosterRarity rarity) {
+        addBooster(rarity.id);
+    }
+
+    public boolean hasBooster(int rarity) {
+        checkBoosterDurations();
+        return boosters.amount(rarity) > 0;
+    }
+
+    public boolean hasBooster(BoosterRarity rarity) {
+        return hasBooster(rarity.id);
+    }
+
+    /**
+     * @return message to send
+     */
+    public String useBooster(int rarity) {
+        return useBooster(BoosterRarity.get(rarity));
+    }
+
+    /**
+     * @return message to send
+     */
+    public String useBooster(BoosterRarity rarity) {
+        if (!hasBooster(rarity)) return "You don't have " + rarity.getNameWithArticle() + "booster!";
+
+        if (rarity.isPersonal && hasActiveBooster(rarity)) {
+            return "You already have an active " + rarity.name + " booster!";
+        }
+
+        activeBoosters.add(rarity.createBooster());
+
+        return "You used " + rarity.getNameWithArticle() + " booster";
+    }
+
+    public boolean hasActiveBooster(int rarity) {
+        for (Booster booster : activeBoosters) {
+            if (booster.rarity.id == rarity) return true;
+        }
+
+        return false;
+    }
+
+    public boolean hasActiveBooster(BoosterRarity rarity) {
+        return hasActiveBooster(rarity.id);
+    }
+
+    public float getBoosterMultiplier() {
+        checkBoosterDurations();
+        float multiplier = 1f;
+
+        for (Booster booster : activeBoosters) {
+            multiplier *= booster.rarity.multiplier;
+        }
+
+        return multiplier;
+    }
+
+    public void checkBoosterDurations() {
+        long current = System.currentTimeMillis();
+        Iterator<Booster> iterator = activeBoosters.iterator();
+        while (iterator.hasNext()) {
+            Booster booster = iterator.next();
+            if (booster.expiration <= current) iterator.remove();
+        }
+    }
+
+    public String getBoosters(){
+        return boosters.toString(bot);
+    }
+
+    public String getCrates(){
+        return crates.toString(bot);
     }
 }
