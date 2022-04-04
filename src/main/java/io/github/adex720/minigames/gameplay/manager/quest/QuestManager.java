@@ -1,15 +1,18 @@
 package io.github.adex720.minigames.gameplay.manager.quest;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 import io.github.adex720.minigames.gameplay.profile.quest.Quest;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 public class QuestManager extends IdCompoundSavableManager<Quest> {
@@ -25,17 +28,49 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
 
     @Override
     public Quest fromJson(JsonObject json) {
-        return null;
+        return Quest.fromJson(bot.getQuestList(), json);
     }
 
+    public void addQuestsFromJson(long userId, JsonArray questsJson) {
+
+        ArrayList<Quest> questArrayList = QUESTS.computeIfAbsent(userId, k -> new ArrayList<>(5));  // Creating new ArrayList for quests if one doesn't exist
+
+        for (JsonElement questJson : questsJson) {
+            questArrayList.add(fromJson(questJson.getAsJsonObject()));
+        }
+    }
+
+    /**
+     * Returns null when quests aren't loaded
+     */
+    @Nullable
+    public JsonArray getQuestJson(long userId) {
+        ArrayList<Quest> quests = QUESTS.get(userId);
+
+        if (quests == null) return null;
+
+        JsonArray questsJson = new JsonArray();
+
+        quests.forEach(quest -> questsJson.add(quest.getAsJson()));
+
+        return questsJson;
+    }
+
+    /**
+     * Quests are saves on profiles.
+     * This method always returns an empty HashSet.
+     */
     @Override
     public Set<Quest> getValues() {
-        return null;
+        return new HashSet<>();
     }
 
+    /**
+     * Quests are saves on profiles.
+     * This method doesn't do anything.
+     */
     @Override
     public void load(JsonArray data) {
-
     }
 
     public ArrayList<Quest> getQuests(long id) {

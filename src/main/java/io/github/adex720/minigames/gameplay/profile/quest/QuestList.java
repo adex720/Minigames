@@ -191,7 +191,7 @@ public class QuestList {
     }
 
     public void addDifficulty(QuestDifficulty difficulty) {
-        DIFFICULTIES.put(difficulty.difficultyId, difficulty);
+        DIFFICULTIES.put(difficulty.id, difficulty);
         difficultiesAmount++;
     }
 
@@ -201,6 +201,14 @@ public class QuestList {
             quests.add(new Quest(TYPES.get(types[i]), DIFFICULTIES.get(difficulties[i])));
         }
         return quests;
+    }
+
+    public QuestType getType(int id){
+        return TYPES.get(id);
+    }
+
+    public QuestDifficulty getDifficulty(int id){
+        return DIFFICULTIES.get(id);
     }
 
 

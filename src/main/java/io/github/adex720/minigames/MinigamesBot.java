@@ -100,6 +100,9 @@ public class MinigamesBot {
         badgeManager = new BadgeManager(this);
         statManager = new StatManager(this);
 
+        questManager = new QuestManager(this);
+        questList = new QuestList(this);
+
         profileManager = new ProfileManager(this);
 
         partyManager = new PartyManager(this);
@@ -109,9 +112,6 @@ public class MinigamesBot {
 
         filePathManager = new FilePathManager(this);
         wordManager = new WordManager(this);
-
-        questManager = new QuestManager(this);
-        questList = new QuestList(this);
 
         timerManager = new TimerManager(this);
         leaderboardManager = new LeaderboardManager(this);

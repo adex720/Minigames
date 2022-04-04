@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.gameplay.profile;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
@@ -11,6 +12,7 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +47,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         statList = new StatList(bot);
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson) {
         this.bot = bot;
         this.userId = userId;
         this.created = crated;
@@ -55,6 +57,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         this.coins = coins;
         badges = new HashSet<>();
         statList = new StatList(bot, statsJson);
+
+        if (questsJson != null) {
+            bot.getQuestManager().addQuestsFromJson(userId, questsJson);
+        }
     }
 
     public static Profile create(MinigamesBot bot, long id) {
@@ -76,6 +82,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         json.addProperty("coins", coins);
         json.add("stats", statList.asJson());
 
+        json.add("quests", bot.getQuestManager().getQuestJson(userId));
+
         return json;
     }
 
@@ -86,7 +94,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         int coins = JsonHelper.getInt(json, "coins");
         JsonObject statsJson = JsonHelper.getJsonObject(json, "stats");
 
-        return new Profile(bot, id, created, coins, statsJson);
+        JsonArray questsJson = JsonHelper.getJsonArray(json, "quests", null);
+
+        return new Profile(bot, id, created, coins, statsJson, questsJson);
     }
 
     public boolean isInParty() {

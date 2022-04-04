@@ -5,11 +5,11 @@ public class QuestDifficulty {
     public final String name;
     public final int reward;
 
-    public final int difficultyId;
+    public final int id;
 
-    public QuestDifficulty(String name, int reward, int difficultyId) {
+    public QuestDifficulty(String name, int reward, int id) {
         this.name = name;
         this.reward = reward;
-        this.difficultyId = difficultyId;
+        this.id = id;
     }
 }

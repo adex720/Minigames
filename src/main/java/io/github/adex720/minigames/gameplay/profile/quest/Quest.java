@@ -6,6 +6,7 @@ import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
+import io.github.adex720.minigames.util.JsonHelper;
 
 public class Quest implements IdCompound, JsonSavable<Quest> {
 
@@ -19,21 +20,45 @@ public class Quest implements IdCompound, JsonSavable<Quest> {
         this.type = type;
         this.difficulty = difficulty;
         progress = 0;
-        goal = type.goals[difficulty.difficultyId];
+        goal = type.goals[difficulty.id];
+    }
+
+    private Quest(QuestList questList, int type, int difficulty, int progress) {
+        this.type = questList.getType(type);
+        this.difficulty = questList.getDifficulty(difficulty);
+        this.progress = progress;
+        goal = this.type.goals[difficulty];
     }
 
     public String getTextForMessage() {
         return type.textStart + " " + goal + " " + type.textEnd + ". Current progress: " + progress;
     }
 
+    /**
+     * Always returns -1, quests are saved on profiles and not as own json.
+     */
     @Override
     public Long getId() {
-        return null;
+        return -1L;
     }
 
     @Override
     public JsonObject getAsJson() {
-        return null;
+        JsonObject json = new JsonObject();
+
+        json.addProperty("type", this.type.id);
+        json.addProperty("difficulty", this.difficulty.id);
+        json.addProperty("progress", this.progress);
+
+        return json;
+    }
+
+    public static Quest fromJson(QuestList questList, JsonObject json) {
+        int type = JsonHelper.getInt(json, "type");
+        int difficulty = JsonHelper.getInt(json, "difficulty");
+        int progress = JsonHelper.getInt(json, "progress", 0);
+
+        return new Quest(questList, type, difficulty, progress);
     }
 
     public void checkForCompletion() {
