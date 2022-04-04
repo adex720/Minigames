@@ -20,13 +20,13 @@ public enum CrateType {
     public final String name;
     public final int id;
 
-    private final boolean canContainCoins;
+    public final boolean canContainCoins;
     @Nullable
-    private final int coins;
+    public final int coins;
 
-    private final boolean canContainBoosters;
+    public final boolean canContainBoosters;
     @Nullable
-    private final BoosterRarity boosterRarity;
+    public final BoosterRarity boosterRarity;
 
     CrateType(String name, int id, boolean canContainCoins, int coins, boolean canContainBoosters, BoosterRarity boosterRarity) {
         this.name = name;
@@ -64,6 +64,22 @@ public enum CrateType {
         } else {
             owner.addBooster(boosterRarity);
             return "You opened a **" + name + "** crate and got **" + this.boosterRarity + " booster**!";
+        }
+    }
+
+    public int applyRewardsAndReturnBoosterTypeOrCoinsNegative(MinigamesBot bot, Profile owner) {
+        boolean isRewardCoins;
+
+        if (!canContainCoins) isRewardCoins = false;
+        else if (!canContainBoosters) isRewardCoins = true;
+        else isRewardCoins = bot.getRandom().nextBoolean();
+
+        if (isRewardCoins) {
+            owner.addCoins(this.coins, true);
+            return -this.coins;
+        } else {
+            owner.addBooster(boosterRarity);
+            return boosterRarity.id;
         }
     }
 

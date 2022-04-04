@@ -258,12 +258,34 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return type.applyRewardsAndGetMessage(bot, this);
     }
 
+    /**
+     * Returns -1 if no crates
+     */
+    public int getFirstCrateRarityOnInventory() {
+        for (int i = 0; i < CrateType.TYPES_AMOUNT; i++) {
+            if (crates.amount(i) > 0) return i;
+        }
+
+        return -1;
+    }
+
     public void addBooster(int rarity) {
         boosters.add(rarity);
     }
 
+    public void addBoosters(int rarity, int amount) {
+        while (amount > 0) {
+            boosters.add(rarity);
+            amount--;
+        }
+    }
+
     public void addBooster(BoosterRarity rarity) {
         addBooster(rarity.id);
+    }
+
+    public void addBoosters(BoosterRarity rarity, int amount) {
+        addBoosters(rarity.id, amount);
     }
 
     public boolean hasBooster(int rarity) {
@@ -338,4 +360,21 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     public String getCrates() {
         return crates.toString(bot);
     }
+
+    public BoosterList getBoostersList() {
+        return boosters;
+    }
+
+    public CrateList getCrateList() {
+        return crates;
+    }
+
+    public int amountOfCrates() {
+        return crates.size();
+    }
+
+    public int amountOfCrates(int id) {
+        return crates.amount(id);
+    }
+
 }

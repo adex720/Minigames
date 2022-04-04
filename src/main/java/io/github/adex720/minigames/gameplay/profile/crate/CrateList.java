@@ -79,4 +79,16 @@ public class CrateList {
         return true;
     }
 
+    public int size() {
+        int size = 0;
+        for (int crate : crates) {
+            size += crate;
+        }
+        return size;
+    }
+
+    public int[] values (){
+        return crates;
+    }
+
 }
