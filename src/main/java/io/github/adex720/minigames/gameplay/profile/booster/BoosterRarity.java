@@ -52,7 +52,7 @@ public enum BoosterRarity {
         throw new IndexOutOfBoundsException("Tried to get booster with id " + id + " but only " + RARITIES_AMOUNT + " rarities exist!");
     }
 
-    public String getEmoteName(MinigamesBot bot){
-        return "<:booster_" + name + ":" + bot.getEmoteId(name) + ">";
+    public String getEmoteName(MinigamesBot bot) {
+        return "<:booster_" + name + ":" + bot.getEmoteId("booster_" + name) + ">";
     }
 }

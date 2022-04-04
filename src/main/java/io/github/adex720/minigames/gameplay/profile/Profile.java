@@ -286,18 +286,20 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
      * @return message to send
      */
     public String useBooster(BoosterRarity rarity) {
-        if (!hasBooster(rarity)) return "You don't have " + rarity.getNameWithArticle() + "booster!";
+        if (!hasBooster(rarity))
+            return "You don't have " + rarity.getEmoteName(bot) + " " + rarity.name + " booster!";
 
         if (rarity.isPersonal && hasActiveBooster(rarity)) {
-            return "You already have an active " + rarity.name + " booster!";
+            return "You already have an active " + rarity.getEmoteName(bot) + " " + rarity.name + " booster!";
         }
 
         activeBoosters.add(rarity.createBooster());
 
-        return "You used " + rarity.getNameWithArticle() + " booster";
+        return "You used " + rarity.getEmoteName(bot) + " " + rarity.name + " booster";
     }
 
     public boolean hasActiveBooster(int rarity) {
+        checkBoosterDurations();
         for (Booster booster : activeBoosters) {
             if (booster.rarity.id == rarity) return true;
         }
@@ -329,11 +331,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         }
     }
 
-    public String getBoosters(){
+    public String getBoosters() {
         return boosters.toString(bot);
     }
 
-    public String getCrates(){
+    public String getCrates() {
         return crates.toString(bot);
     }
 }

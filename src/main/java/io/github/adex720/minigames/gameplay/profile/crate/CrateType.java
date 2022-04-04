@@ -85,7 +85,7 @@ public enum CrateType {
     }
 
     public String getEmoteName(MinigamesBot bot) {
-        return "<:crate_" + name + ":" + bot.getEmoteId(name) + ">";
+        return "<:crate_" + name + ":" + bot.getEmoteId("crate_" + name) + ">";
     }
 
 }
