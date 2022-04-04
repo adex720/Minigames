@@ -57,6 +57,12 @@ public class CommandOpen extends Command {
                 }
 
                 int maxCount = ci.profile().amountOfCrates((int) type.getAsLong());
+
+                if (maxCount == 0){
+                    event.getHook().sendMessage("You don't have crates. You can get them from claiming kits or playing minigames.").queue();
+                    return true;
+                }
+
                 if (count > maxCount) {
                     event.getHook().sendMessage("You only have " + maxCount + " crates.").queue();
                     return true;
