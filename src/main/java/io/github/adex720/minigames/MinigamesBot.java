@@ -250,7 +250,7 @@ public class MinigamesBot {
     }
 
     public long getEmoteId(String name) {
-        return JsonHelper.getLong(emoteJson, name);
+        return JsonHelper.getLong(emoteJson, name, 1L);
     }
 
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
@@ -340,13 +340,7 @@ public class MinigamesBot {
     - counting variations (hex, binary, letters)
     - connect 4
 
-   TODO: add boosters
-
-   TODO: add crates
-
    TODO: rewards for finished minigames
-
-   TODO: /open all
 
    TODO: guilds
 
