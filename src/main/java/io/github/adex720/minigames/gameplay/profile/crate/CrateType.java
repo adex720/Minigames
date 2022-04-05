@@ -3,6 +3,7 @@ package io.github.adex720.minigames.gameplay.profile.crate;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
+import io.github.adex720.minigames.util.Pair;
 import org.jetbrains.annotations.Nullable;
 
 public enum CrateType {
@@ -52,11 +53,7 @@ public enum CrateType {
     }
 
     public String applyRewardsAndGetMessage(MinigamesBot bot, Profile owner) {
-        boolean isRewardCoins;
-
-        if (!canContainCoins) isRewardCoins = false;
-        else if (!canContainBoosters) isRewardCoins = true;
-        else isRewardCoins = bot.getRandom().nextBoolean();
+        boolean isRewardCoins = isRewardCoins(bot);
 
         if (isRewardCoins) {
             owner.addCoins(this.coins, true);
@@ -67,20 +64,22 @@ public enum CrateType {
         }
     }
 
-    public int applyRewardsAndReturnBoosterTypeOrCoinsNegative(MinigamesBot bot, Profile owner) {
-        boolean isRewardCoins;
-
-        if (!canContainCoins) isRewardCoins = false;
-        else if (!canContainBoosters) isRewardCoins = true;
-        else isRewardCoins = bot.getRandom().nextBoolean();
+    public Pair<Integer, Integer> applyRewardsAndReturnCounts(MinigamesBot bot, Profile owner) {
+        boolean isRewardCoins = isRewardCoins(bot);
 
         if (isRewardCoins) {
-            owner.addCoins(this.coins, true);
-            return -this.coins;
+            owner.addCoins(coins, true);
+            return new Pair<>(coins, 0);
         } else {
             owner.addBooster(boosterRarity);
-            return boosterRarity.id;
+            return new Pair<>(0, 1);
         }
+    }
+
+    public boolean isRewardCoins(MinigamesBot bot) {
+        if (!canContainCoins) return false;
+        if (!canContainBoosters) return true;
+        return bot.getRandom().nextBoolean();
     }
 
     public String getNameWithArticle() {

@@ -6,8 +6,8 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
-import io.github.adex720.minigames.gameplay.profile.crate.CrateList;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
+import io.github.adex720.minigames.util.Pair;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -27,169 +27,39 @@ public class CommandOpen extends Command {
         requiresProfile();
     }
 
+    public OptionMapping getType(SlashCommandEvent event) {
+        return event.getOption("type");
+    }
+
+    public OptionMapping getAmount(SlashCommandEvent event) {
+        return event.getOption("amount");
+    }
+
+    public int getTypeId(SlashCommandEvent event) {
+        OptionMapping type = getType(event);
+        if (type == null) return -1;
+        return (int) type.getAsLong();
+    }
+
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        OptionMapping type = event.getOption("type");
-        OptionMapping amount = event.getOption("amount");
-
+        OptionMapping type = getType(event);
+        OptionMapping amount = getAmount(event);
         if (type == null && amount == null) {
             event.getHook().sendMessage("Please input a type!").queue();
             return true;
         }
 
-        int typeId = -1;
-
+        int typeId = getTypeId(event);
         int count = 1;
         if (amount != null) {
-            String amountString = amount.getAsString();
-
-            try {
-                count = Integer.parseInt(amountString);
-
-                if (type == null) {
-                    event.getHook().sendMessage("You can't open a specific amount of crates while not having a rarity.").queue();
-                    return true;
-                }
-
-                if (count <= 0) {
-                    event.getHook().sendMessage("You need to open at least one crate.").queue();
-                    return true;
-                }
-
-                int maxCount = ci.profile().amountOfCrates((int) type.getAsLong());
-
-                if (maxCount == 0){
-                    event.getHook().sendMessage("You don't have crates. You can get them from claiming kits or playing minigames.").queue();
-                    return true;
-                }
-
-                if (count > maxCount) {
-                    event.getHook().sendMessage("You only have " + maxCount + " crates.").queue();
-                    return true;
-                }
-            } catch (NumberFormatException ignored) {
-                if (!amountString.equalsIgnoreCase("a")
-                        && !amountString.equalsIgnoreCase("all")
-                        && !amountString.equalsIgnoreCase("max")) {
-
-                    if (Util.isUserNormal(amountString)) {
-                        event.getHook().sendMessage(amountString + " is not a number or 'all'!").queue();
-                    } else {
-                        event.getHook().sendMessage("That is not a number!").queue();
-                    }
-                    return true;
-                }
-
-                if (type != null) {
-                    typeId = (int) type.getAsLong();
-                    count = ci.profile().amountOfCrates(typeId);
-
-                    if (count == 0) {
-                        event.getHook().sendMessage("You don't have any " + CrateType.get(typeId).name + " crates").queue();
-                        return true;
-                    }
-                } else {
-                    count = ci.profile().amountOfCrates();
-
-                    if (count == 0) {
-                        event.getHook().sendMessage("You don't have any crates").queue();
-                        return true;
-                    }
-                }
-            }
+            count = getOpeningCount(event, ci);
+            if (count < 0) return true;
         }
 
         User user = ci.author();
-        Profile profile = ci.profile();
 
-        String description;
-        if (count == 1) {
-            if (type == null) description = profile.openCrate(profile.getFirstCrateRarityOnInventory());
-            else description = profile.openCrate(typeId);
-        } else if (type == null) {
-            CrateList crateList = profile.getCrateList();
-
-            int coins = 0;
-            HashMap<Integer, Integer> boosters = new HashMap<>();
-
-            int[] crateAmounts = crateList.values();
-            for (int i = 0; i < CrateType.TYPES_AMOUNT; i++) {
-
-                int rarityAmount = crateAmounts[i];
-                if (rarityAmount == 0) continue;
-
-                CrateType crateType = CrateType.get(i);
-                while (rarityAmount > 0) {
-                    int returned = crateType.applyRewardsAndReturnBoosterTypeOrCoinsNegative(bot, profile);
-
-                    if (returned > 0) {
-                        if (!boosters.containsKey(i)) boosters.put(i, 1);
-                        else boosters.put(i, boosters.get(i) + 1);
-                    } else {
-                        coins -= returned;
-                    }
-
-                    rarityAmount--;
-                }
-            }
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            boolean newLine = false;
-            if (coins > 0) {
-                stringBuilder.append("- ").append(coins).append(" coins");
-                newLine = true;
-            }
-
-            for (int i = 0; i < BoosterRarity.RARITIES_AMOUNT; i++) {
-                if (!boosters.containsKey(i)) continue;
-
-                if (newLine) stringBuilder.append('\n');
-                newLine = true;
-
-                BoosterRarity boosterRarity = BoosterRarity.get(i);
-                stringBuilder.append("- ").append(boosters.get(i)).append("x ").append(boosterRarity.getEmoteName(bot))
-                        .append(' ').append(boosterRarity.name);
-            }
-
-            description = stringBuilder.toString();
-        } else {
-
-            CrateType crateType = CrateType.get(typeId);
-
-            if (!crateType.canContainBoosters) {
-                profile.addCoins(count * crateType.coins, true);
-                description = "- " + count * crateType.coins + " coins";
-            } else if (!crateType.canContainCoins) {
-                profile.addBoosters(typeId, count);
-                description = "- " + count + "x " + crateType.boosterRarity.getEmoteName(bot) + " "
-                        + crateType.boosterRarity.name + " boosters";
-            } else {
-                int coins = 0;
-                int boosters = 0;
-                for (int left = count; left > 0; left--) {
-                    int returned = crateType.applyRewardsAndReturnBoosterTypeOrCoinsNegative(bot, profile);
-
-                    if (returned > 0) {
-                        boosters++;
-                    } else {
-                        coins -= returned;
-                    }
-                }
-
-                if (coins > 0 && boosters > 0) {
-                    description = "- " + coins + " coins\n- " + boosters + "x " + crateType.boosterRarity.getEmoteName(bot) + " "
-                            + crateType.boosterRarity.name + " boosters";
-                } else if (coins > 0) {
-                    description = "- " + coins + " coins";
-                } else {
-                    description = "- " + boosters + "x " + crateType.boosterRarity.getEmoteName(bot) + " "
-                            + crateType.boosterRarity.name + " boosters";
-                }
-            }
-
-        }
-
+        String description = getDescription(ci.profile(), type, typeId, count);
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("OPEN CRATES")
                 .addField("Opened " + count + " crates", description, false)
@@ -198,6 +68,188 @@ public class CommandOpen extends Command {
                 .setTimestamp(new Date().toInstant())
                 .build()).queue();
         return true;
+    }
+
+    /**
+     * Returns -1 on invalid count
+     */
+    public int getOpeningCount(SlashCommandEvent event, CommandInfo ci) {
+        String amountString = getAmount(event).getAsString();
+        OptionMapping type = getType(event);
+
+        try {
+            int count = Integer.parseInt(amountString);
+
+            if (type == null) {
+                event.getHook().sendMessage("You can't open a specific amount of crates while not having a rarity.").queue();
+                return -1;
+            }
+
+            if (count <= 0) {
+                event.getHook().sendMessage("You need to open at least one crate.").queue();
+                return -1;
+            }
+
+            int maxCount = ci.profile().amountOfCrates((int) type.getAsLong());
+            if (maxCount == 0) {
+                event.getHook().sendMessage("You don't have crates. You can get them from claiming kits or playing minigames.").queue();
+                return -1;
+            }
+
+            if (count > maxCount) {
+                event.getHook().sendMessage("You only have " + maxCount + " crates.").queue();
+                return -1;
+            }
+
+            return count;
+        } catch (NumberFormatException ignored) {
+            if (!amountString.equalsIgnoreCase("a")
+                    && !amountString.equalsIgnoreCase("all")
+                    && !amountString.equalsIgnoreCase("max")) {
+
+                if (Util.isUserNormal(amountString)) {
+                    event.getHook().sendMessage(amountString + " is not a number or 'all'!").queue();
+                } else {
+                    event.getHook().sendMessage("That is not a number!").queue();
+                }
+                return -1;
+            }
+
+            if (type != null) {
+                int typeId = (int) type.getAsLong();
+                int count = ci.profile().amountOfCrates(typeId);
+
+                if (count == 0) {
+                    event.getHook().sendMessage("You don't have any " + CrateType.get(typeId).name + " crates").queue();
+                    return -1;
+                }
+
+                return count;
+            } else {
+                int count = ci.profile().amountOfCrates();
+
+                if (count == 0) {
+                    event.getHook().sendMessage("You don't have any crates").queue();
+                    return -1;
+                }
+                return count;
+            }
+        }
+    }
+
+    public String getDescription(Profile profile, OptionMapping type, int typeId, int count) {
+        if (count == 1) {
+            if (type == null) return profile.openCrate(profile.getFirstCrateRarityOnInventory());
+            else return profile.openCrate(typeId);
+
+        } else if (type == null) {
+            return openAll(profile);
+        } else {
+            return openAllFromRarity(CrateType.get(typeId), profile, count, typeId);
+        }
+    }
+
+    public String openAll(Profile profile) {
+        Pair<Integer, HashMap<Integer, Integer>> loot = getLoot(profile);
+
+        return lootToString(loot.first, loot.second);
+    }
+
+    public Pair<Integer, HashMap<Integer, Integer>> getLoot(Profile profile) {
+        int coins = 0;
+        HashMap<Integer, Integer> boosters = new HashMap<>();
+
+        int[] crateAmounts = profile.getCrateList().values();
+        for (int i = 0; i < CrateType.TYPES_AMOUNT; i++) {
+
+            int rarityAmount = crateAmounts[i];
+            if (rarityAmount == 0) continue;
+
+            CrateType crateType = CrateType.get(i);
+            while (rarityAmount > 0) {
+                Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(bot, profile);
+
+                if (rewards.second > 0) {
+                    if (!boosters.containsKey(i)) boosters.put(i, 1);
+                    else boosters.put(i, boosters.get(i) + 1);
+                } else {
+                    coins += rewards.first;
+                }
+
+                rarityAmount--;
+            }
+        }
+
+        return new Pair<>(coins, boosters);
+    }
+
+    public String lootToString(int coins, HashMap<Integer, Integer> boosters) {
+        StringBuilder lootString = new StringBuilder();
+        boolean newLine = false;
+        if (coins > 0) {
+            lootString.append("- ").append(coins).append(" coins");
+            newLine = true;
+        }
+
+        for (int i = 0; i < BoosterRarity.RARITIES_AMOUNT; i++) {
+            if (!boosters.containsKey(i)) continue;
+
+            if (newLine) lootString.append('\n');
+            newLine = true;
+
+            BoosterRarity boosterRarity = BoosterRarity.get(i);
+            lootString.append("- ").append(boosters.get(i)).append("x ").append(boosterRarity.getEmoteName(bot))
+                    .append(' ').append(boosterRarity.name);
+        }
+
+        return lootString.toString();
+    }
+
+    public String openAllFromRarity(CrateType crateType, Profile profile, int count, int typeId) {
+        if (!crateType.canContainBoosters) {
+            profile.addCoins(count * crateType.coins, true);
+            return "- " + count * crateType.coins + " coins";
+        }
+
+        if (!crateType.canContainCoins) {
+            profile.addBoosters(typeId, count);
+            return "- " + count + "x " + crateType.boosterRarity.getEmoteName(bot) + " "
+                    + crateType.boosterRarity.name + " boosters";
+        }
+
+        return openAllFromRarityContainingCoinsAndBoosters(crateType, profile, count);
+    }
+
+    public String openAllFromRarityContainingCoinsAndBoosters(CrateType crateType, Profile profile, int count) {
+        Pair<Integer, Integer> loot = getCrateLootFromRarity(crateType, profile, count);
+        int coins = loot.first;
+        int boosters = loot.second;
+
+        if (coins > 0 && boosters > 0) {
+            return "- " + coins + " coins\n- " + boosters + "x " + crateType.boosterRarity.getEmoteName(bot) + " "
+                    + crateType.boosterRarity.name + " boosters";
+        } else if (coins > 0) {
+            return "- " + coins + " coins";
+        } else {
+            return "- " + boosters + "x " + crateType.boosterRarity.getEmoteName(bot) + " "
+                    + crateType.boosterRarity.name + " boosters";
+        }
+    }
+
+    public Pair<Integer, Integer> getCrateLootFromRarity(CrateType crateType, Profile profile, int count) {
+        int coins = 0;
+        int boosters = 0;
+        for (int left = count; left > 0; left--) {
+            Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(bot, profile);
+
+            if (rewards.second > 0) {
+                boosters++;
+            } else {
+                coins += rewards.first;
+            }
+        }
+
+        return new Pair<>(coins, boosters);
     }
 
     @Override
