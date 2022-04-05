@@ -66,6 +66,8 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandOpen(bot));
         MAIN_COMMANDS.add(new CommandBoosters(bot));
         MAIN_COMMANDS.add(new CommandUse(bot));
+        MAIN_COMMANDS.add(new CommandCooldowns(bot));
+        MAIN_COMMANDS.add(new CommandBalance(bot));
 
         MAIN_COMMANDS.add(new CommandLeaderboard(bot));
 

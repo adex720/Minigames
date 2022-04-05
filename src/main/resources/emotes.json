@@ -7,11 +7,15 @@
   "booster_short_guild": 1,
   "booster_long_guild": 1,
   "booster_global": 1,
+
   "crate_common": 1,
   "crate_uncommon": 1,
   "crate_rare": 1,
   "crate_epic": 1,
   "crate_legendary": 1,
   "crate_vote": 1,
-  "crate_guild": 1
+  "crate_guild": 1,
+
+  "kit_ready": 1,
+  "kit_loading": 1
 }

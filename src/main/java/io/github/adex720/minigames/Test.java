@@ -8,9 +8,10 @@ public class Test {
 
     public static void main(String[] args) throws IOException {
 
-        for (int i = 0; i < 16; i++){
-            System.out.println(QuestManager.shuffle(i));
-        }
+        int i = 1;
+        int j = i++;
+        System.out.println(j);
+        System.out.println(i);
 
         /*Scanner reader = new Scanner(new File("src/main/resources/words/raw.txt"));
 

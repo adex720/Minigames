@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.discord.command.user.KitCommand;
 import io.github.adex720.minigames.gameplay.profile.booster.Booster;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterList;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
@@ -19,6 +20,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 public class Profile implements IdCompound, JsonSavable<Profile> {
@@ -375,6 +377,27 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public int amountOfCrates(int id) {
         return crates.amount(id);
+    }
+
+
+    public String getKitCooldown(int kitId, OffsetDateTime current) {
+        KitCommand command = bot.getKitCooldownManager().getKitCommand(kitId);
+        return command.getCooldownFull(userId, current);
+    }
+
+    public String getKitCooldowns() {
+        OffsetDateTime current = OffsetDateTime.now();
+        StringBuilder cooldowns = new StringBuilder();
+
+        boolean newLine = false;
+        for (int i = 0; i < KitCommand.KITS_COUNT; i++) {
+            if (newLine) cooldowns.append('\n');
+            newLine = true;
+
+            cooldowns.append(getKitCooldown(i, current));
+        }
+
+        return cooldowns.toString();
     }
 
 }

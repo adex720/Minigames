@@ -53,6 +53,6 @@ public enum BoosterRarity {
     }
 
     public String getEmoteName(MinigamesBot bot) {
-        return "<:booster_" + name + ":" + bot.getEmoteId("booster_" + name) + ">";
+        return bot.getEmote("booster_" + name);
     }
 }

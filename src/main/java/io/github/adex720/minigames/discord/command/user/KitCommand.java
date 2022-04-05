@@ -15,6 +15,105 @@ import java.util.HashMap;
 
 public class KitCommand extends Command {
 
+    public final int kitId;
+    public static int KITS_COUNT = 0;
+
+    private final int reward;
+    private final int cooldownHours;
+    private final int cooldownMillis;
+
+    private final HashMap<Long, OffsetDateTime> COOLDOWNS;
+
+    private final PermissionCheck permissionCheck;
+
+    public KitCommand(MinigamesBot bot, String name, String description, int reward, int cooldownHours, PermissionCheck permissionCheck) {
+        super(bot, name, description, CommandCategory.USER);
+        requiresProfile();
+        COOLDOWNS = new HashMap<>();
+
+        this.kitId = KITS_COUNT++;
+        bot.getKitCooldownManager().addKit(this);
+
+        this.reward = reward;
+        this.cooldownHours = cooldownHours;
+        cooldownMillis = cooldownHours * 60 * 60 * 1000;
+
+        this.permissionCheck = permissionCheck;
+    }
+
+    public KitCommand(MinigamesBot bot, String name, int reward, int cooldownHours) {
+        this(bot, name, "Gives " + reward + " coins every " + cooldownHours + " hours.", reward, cooldownHours, Criterion.ALWAYS);
+    }
+
+    @Override
+    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+        int canClaim = canClaim(event, ci);
+        if (canClaim == 0) {
+            OffsetDateTime ready = COOLDOWNS.get(ci.authorId());
+            OffsetDateTime current = event.getTimeCreated();
+            if (ready != null) {
+                if (ready.isAfter(current)) {
+                    event.getHook().sendMessage("This kit is on cooldown for " + getCooldown(ready, current) + ".").queue();
+                    return true;
+                }
+            }
+
+            Profile profile = ci.profile();
+            profile.addCoins(reward, true);
+            startCooldown(ci.authorId(), current);
+            event.getHook().sendMessage("You claimed your " + name + " kit. You received " + reward + " coins.").queue();
+
+            profile.appendQuests(quest -> quest.kitClaimed(name, profile));
+        } else {
+            event.getHook().sendMessage(permissionCheck.getFailMessage(event, ci, canClaim)).queue();
+        }
+        return true;
+    }
+
+    public String getCooldown(OffsetDateTime ready, OffsetDateTime current) {
+        return Util.formatTime(Duration.between(current, ready));
+    }
+
+    public String getCooldownFull(long userId, OffsetDateTime current) {
+        OffsetDateTime ready = COOLDOWNS.get(userId);
+        if (ready != null) {
+            if (ready.isAfter(current)) {
+                return bot.getEmote("kit_loading") + " **" + name + "**: " + getCooldown(ready, current);
+            }
+        }
+
+        return bot.getEmote("kit_ready") + " " + name + ": Ready";
+    }
+
+    private void startCooldown(long userId, OffsetDateTime used) {
+        COOLDOWNS.put(userId, used.plusHours(cooldownHours));
+
+        bot.addTimerTask(() -> COOLDOWNS.remove(userId, used), cooldownMillis, false);
+    }
+
+    public interface PermissionCheck {
+        /**
+         * Returns 0 if kit can be used.
+         * Positive return values are used to indicate reply message.
+         */
+        int canUse(SlashCommandEvent event, CommandInfo ci);
+
+        String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason);
+    }
+
+    /**
+     * Returns 0 if kit can be used.
+     * Positive return values are used to indicate reply message.
+     */
+    public int canClaim(SlashCommandEvent event, CommandInfo ci) {
+        return permissionCheck.canUse(event, ci);
+    }
+
+    public String getDefaultCooldown() {
+        return cooldownHours + " hours";
+    }
+
+
     public static class Criterion {
 
         public static final PermissionCheck ALWAYS = new PermissionCheck() {
@@ -58,82 +157,5 @@ public class KitCommand extends Command {
             }
         };
 
-    }
-
-    private final int reward;
-    private final int cooldownHours;
-    private final int cooldownMillis;
-
-    private final HashMap<Long, OffsetDateTime> COOLDOWNS;
-
-    private final PermissionCheck permissionCheck;
-
-    public KitCommand(MinigamesBot bot, String name, String description, int reward, int cooldownHours, PermissionCheck permissionCheck) {
-        super(bot, name, description, CommandCategory.USER);
-        requiresProfile();
-        COOLDOWNS = new HashMap<>();
-
-        this.reward = reward;
-        this.cooldownHours = cooldownHours;
-        cooldownMillis = cooldownHours * 60 * 60 * 1000;
-
-        this.permissionCheck = permissionCheck;
-    }
-
-    public KitCommand(MinigamesBot bot, String name, int reward, int cooldownHours) {
-        this(bot, name, "Gives " + reward + " coins every " + cooldownHours + " hours.", reward, cooldownHours, Criterion.ALWAYS);
-    }
-
-    @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
-        int canClaim = canClaim(event, ci);
-        if (canClaim == 0) {
-            OffsetDateTime ready = COOLDOWNS.get(ci.authorId());
-            OffsetDateTime current = event.getTimeCreated();
-            if (ready != null) {
-                if (ready.isAfter(current)) {
-                    event.getHook().sendMessage("This kit is on cooldown for " + Util.formatTime(Duration.between(current, ready)) + ".").queue();
-                    return true;
-                }
-            }
-
-            Profile profile = ci.profile();
-            profile.addCoins(reward, true);
-            startCooldown(ci.authorId(), current);
-            event.getHook().sendMessage("You claimed your " + name + " kit. You received " + reward + " coins.").queue();
-
-            profile.appendQuests(quest -> quest.kitClaimed(name, profile));
-        } else {
-            event.getHook().sendMessage(permissionCheck.getFailMessage(event, ci, canClaim)).queue();
-        }
-        return true;
-    }
-
-    private void startCooldown(long userId, OffsetDateTime used) {
-        COOLDOWNS.put(userId, used.plusHours(cooldownHours));
-
-        bot.addTimerTask(() -> COOLDOWNS.remove(userId, used), cooldownMillis, false);
-    }
-
-    public interface PermissionCheck {
-        /**
-         * Returns 0 if kit can be used.
-         * Positive return values are used to indicate reply message.
-         */
-        int canUse(SlashCommandEvent event, CommandInfo ci);
-
-        String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason);
-    }
-
-    /**
-     * Returns 0 if kit can be used.
-     * Positive return values are used to indicate reply message.
-     */
-    public int canClaim(SlashCommandEvent event, CommandInfo ci) {
-        return permissionCheck.canUse(event, ci);
-    }
-
-    public String getDefaultCooldown() {
-        return cooldownHours + " hours";
     }
 }

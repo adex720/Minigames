@@ -13,6 +13,7 @@ import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
+import io.github.adex720.minigames.gameplay.manager.kit.KitCooldownManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
@@ -85,6 +86,8 @@ public class MinigamesBot {
     private final TimerManager timerManager;
     private final LeaderboardManager leaderboardManager;
 
+    private final KitCooldownManager kitCooldownManager;
+
     public MinigamesBot(String token, JsonObject databaseConfig, long developerId) throws LoginException, InterruptedException, FileNotFoundException {
         long startTime = System.currentTimeMillis();
         logger = LoggerFactory.getLogger(MinigamesBot.class);
@@ -122,6 +125,8 @@ public class MinigamesBot {
 
         timerManager = new TimerManager(this);
         leaderboardManager = new LeaderboardManager(this);
+
+        kitCooldownManager = new KitCooldownManager(this);
 
         commandManager.initCommands(this);
 
@@ -249,8 +254,16 @@ public class MinigamesBot {
         return random;
     }
 
+    public KitCooldownManager getKitCooldownManager() {
+        return kitCooldownManager;
+    }
+
     public long getEmoteId(String name) {
         return JsonHelper.getLong(emoteJson, name, 1L);
+    }
+
+    public String getEmote(String name){
+        return "<:" + name + ":" + getEmoteId(name) + ">";
     }
 
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
