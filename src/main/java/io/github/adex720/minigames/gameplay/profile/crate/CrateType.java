@@ -11,10 +11,10 @@ public enum CrateType {
     COMMON("common", 0, 150),
     UNCOMMON("uncommon", 1, 200, null),
     RARE("rare", 2, 350, null),
-    EPIC("name", 3, 500, null),
-    LEGENDARY("name", 4, null),
-    VOTE("name", 5, null),
-    GUILD("name", 6, 1000, null);
+    EPIC("epic", 3, 500, null),
+    LEGENDARY("legendary", 4, null),
+    VOTE("vote", 5, null),
+    GUILD("guild", 6, 1000, null);
 
     public static final int TYPES_AMOUNT = 7;
 
