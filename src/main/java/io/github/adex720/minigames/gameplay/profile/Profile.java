@@ -21,7 +21,10 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
@@ -62,7 +65,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         activeBoosters = new ArrayList<>();
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject boostersJson) {
         this.bot = bot;
         this.userId = userId;
         this.created = crated;
@@ -79,7 +82,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
 
         crates = new CrateList(); // TODO: load these
-        boosters = new BoosterList();
+        boosters = BoosterList.fromJson(boostersJson);
         activeBoosters = new ArrayList<>();
     }
 
@@ -106,6 +109,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         json.add("quests", bot.getQuestManager().getQuestJson(userId));
 
+        json.add("boosters", boosters.asJson());
+
         return json;
     }
 
@@ -118,7 +123,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray questsJson = JsonHelper.getJsonArray(json, "quests", null);
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson);
+        JsonObject boostersJson = JsonHelper.getJsonObject(json, "boosters");
+
+        return new Profile(bot, id, created, coins, statsJson, questsJson, boostersJson);
     }
 
     public boolean isInParty() {
@@ -348,11 +355,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public void checkBoosterDurations() {
         long current = System.currentTimeMillis();
-        Iterator<Booster> iterator = activeBoosters.iterator();
-        while (iterator.hasNext()) {
-            Booster booster = iterator.next();
-            if (booster.expiration <= current) iterator.remove();
-        }
+        activeBoosters.removeIf(booster -> booster.expiration <= current);
     }
 
     public String getBoosters() {

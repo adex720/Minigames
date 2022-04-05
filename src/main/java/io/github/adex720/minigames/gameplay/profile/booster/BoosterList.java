@@ -1,6 +1,10 @@
 package io.github.adex720.minigames.gameplay.profile.booster;
 
+import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.util.JsonHelper;
+
+import java.util.Arrays;
 
 public class BoosterList {
 
@@ -8,6 +12,31 @@ public class BoosterList {
 
     public BoosterList() {
         boosters = new int[BoosterRarity.RARITIES_AMOUNT];
+        Arrays.fill(boosters, 0);
+    }
+
+    public JsonObject asJson() {
+        JsonObject json = new JsonObject();
+
+        for (int i = 0; i < boosters.length; i++) {
+            int count = boosters[i];
+
+            if (count > 0) json.addProperty(Integer.toString(i), count);
+        }
+
+        return json;
+    }
+
+    public static BoosterList fromJson(JsonObject json) {
+        BoosterList boosterList = new BoosterList();
+
+        for (int i = 0; i < boosterList.boosters.length; i++) {
+            String key = Integer.toString(i);
+
+            if (json.has(key)) boosterList.boosters[i] = JsonHelper.getInt(json, key);
+        }
+
+        return boosterList;
     }
 
     public void add(int id) {
