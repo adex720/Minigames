@@ -6,6 +6,8 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
+import io.github.adex720.minigames.util.Pair;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
@@ -15,10 +17,15 @@ import java.util.HashMap;
 
 public class KitCommand extends Command {
 
+    public static final int NO_COINS = 0;
+    public static final int NO_CRATE = -1;
+
     public final int kitId;
     public static int KITS_COUNT = 0;
 
-    private final int reward;
+    private final int rewardCoins; // 0 if none
+    private final int crateId; // -1 if none
+
     private final int cooldownHours;
     private final int cooldownMillis;
 
@@ -26,7 +33,10 @@ public class KitCommand extends Command {
 
     private final PermissionCheck permissionCheck;
 
-    public KitCommand(MinigamesBot bot, String name, String description, int reward, int cooldownHours, PermissionCheck permissionCheck) {
+    /**
+     * A kit can't give both coins and crates
+     */
+    public KitCommand(MinigamesBot bot, String name, String description, int coins, int crate, int cooldownHours, PermissionCheck permissionCheck) {
         super(bot, name, description, CommandCategory.USER);
         requiresProfile();
         COOLDOWNS = new HashMap<>();
@@ -34,15 +44,25 @@ public class KitCommand extends Command {
         this.kitId = KITS_COUNT++;
         bot.getKitCooldownManager().addKit(this);
 
-        this.reward = reward;
+        this.rewardCoins = coins;
+        this.crateId = crate;
         this.cooldownHours = cooldownHours;
         cooldownMillis = cooldownHours * 60 * 60 * 1000;
 
         this.permissionCheck = permissionCheck;
     }
 
-    public KitCommand(MinigamesBot bot, String name, int reward, int cooldownHours) {
-        this(bot, name, "Gives " + reward + " coins every " + cooldownHours + " hours.", reward, cooldownHours, Criterion.ALWAYS);
+    public KitCommand(MinigamesBot bot, String name, int coins, int crate, int cooldownHours) {
+        this(bot, name, getDescription(coins, crate, cooldownHours), coins, crate, cooldownHours, Criterion.ALWAYS);
+    }
+
+    public static String getDescription(int coins, int crate, int cooldownHours) {
+        if (coins > 0) {
+            return "Gives " + coins + " coins every " + cooldownHours + " hours.";
+        }
+
+        CrateType crateType = CrateType.get(crate);
+        return "Gives " + crateType.getNameWithArticle() + " crate every " + cooldownHours + " hours.";
     }
 
     @Override
@@ -59,15 +79,34 @@ public class KitCommand extends Command {
             }
 
             Profile profile = ci.profile();
-            profile.addCoins(reward, true);
+            addReward(profile);
+
             startCooldown(ci.authorId(), current);
-            event.getHook().sendMessage("You claimed your " + name + " booster. You received " + reward + " coins.").queue();
+            event.getHook().sendMessage("You claimed your " + name + " booster. You received " + rewardCoins + " coins.").queue();
 
             profile.appendQuests(quest -> quest.kitClaimed(name, profile));
         } else {
             event.getHook().sendMessage(permissionCheck.getFailMessage(event, ci, canClaim)).queue();
         }
         return true;
+    }
+
+    public Pair<Integer, Integer> addRewardAndCooldown(Profile profile, OffsetDateTime time) {
+        startCooldown(profile.getId(), time);
+        return addReward(profile);
+    }
+
+    /**
+     * Doesn't start cooldown
+     */
+    public Pair<Integer, Integer> addReward(Profile profile) {
+        if (rewardCoins > 0) {
+            profile.addCoins(rewardCoins, true);
+        } else {
+            profile.addCrate(crateId);
+        }
+
+        return new Pair<>(rewardCoins, crateId);
     }
 
     public String getCooldown(OffsetDateTime ready, OffsetDateTime current) {
@@ -83,6 +122,12 @@ public class KitCommand extends Command {
         }
 
         return bot.getEmote("kit_ready") + " " + name + ": Ready";
+    }
+
+    public boolean isOnCooldown(long userId, OffsetDateTime time) {
+        if (!COOLDOWNS.containsKey(userId)) return false;
+
+        return COOLDOWNS.get(userId).isAfter(time);
     }
 
     private void startCooldown(long userId, OffsetDateTime used) {

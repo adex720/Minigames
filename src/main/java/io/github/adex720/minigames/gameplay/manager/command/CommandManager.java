@@ -13,13 +13,11 @@ import io.github.adex720.minigames.discord.command.miscellaneous.*;
 import io.github.adex720.minigames.discord.command.party.*;
 import io.github.adex720.minigames.discord.command.user.*;
 import io.github.adex720.minigames.discord.command.user.booster.CommandBoosters;
-import io.github.adex720.minigames.discord.command.user.crate.CommandOpen;
 import io.github.adex720.minigames.discord.command.user.booster.CommandUse;
-import io.github.adex720.minigames.discord.command.user.crate.CommandCrates;
-import io.github.adex720.minigames.discord.command.user.crate.KitCommand;
-import io.github.adex720.minigames.discord.command.user.crate.CommandCooldowns;
+import io.github.adex720.minigames.discord.command.user.crate.*;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.gameplay.manager.Manager;
+import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
@@ -73,15 +71,16 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandBoosters(bot));
         MAIN_COMMANDS.add(new CommandUse(bot));
         MAIN_COMMANDS.add(new CommandCooldowns(bot));
+        MAIN_COMMANDS.add(new CommandClaim(bot));
         MAIN_COMMANDS.add(new CommandBalance(bot));
 
         MAIN_COMMANDS.add(new CommandLeaderboard(bot));
 
-        MAIN_COMMANDS.add(new KitCommand(bot, "hourly", 1000, 1));
-        MAIN_COMMANDS.add(new KitCommand(bot, "coiner", 4500, 4));
-        MAIN_COMMANDS.add(new KitCommand(bot, "daily", 30000, 24));
-        MAIN_COMMANDS.add(new KitCommand(bot, "weekly", 250000, 24 * 7));
-        MAIN_COMMANDS.add(new KitCommand(bot, "supporter", "An extra 15 000 coins for members of the support server", 15000, 24, KitCommand.Criterion.IN_SUPPORT_SERVER));
+        MAIN_COMMANDS.add(new KitCommand(bot, "hourly", KitCommand.NO_COINS, CrateType.UNCOMMON.id, 1));
+        MAIN_COMMANDS.add(new KitCommand(bot, "coiner", 5000, KitCommand.NO_CRATE, 4));
+        MAIN_COMMANDS.add(new KitCommand(bot, "daily", 30000, KitCommand.NO_CRATE, 24));
+        MAIN_COMMANDS.add(new KitCommand(bot, "weekly", KitCommand.NO_COINS, CrateType.LEGENDARY.id, 24 * 7));
+        MAIN_COMMANDS.add(new KitCommand(bot, "supporter", "An extra 15 000 coins for members of the support server", 15000, KitCommand.NO_CRATE, 24, KitCommand.Criterion.IN_SUPPORT_SERVER));
 
         MAIN_COMMANDS.add(parentCommandParty);
         SUBCOMMANDS.add(new CommandPartyCreate(bot));

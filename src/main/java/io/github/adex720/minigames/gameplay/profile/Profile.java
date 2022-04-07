@@ -123,7 +123,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray questsJson = JsonHelper.getJsonArray(json, "quests", null);
 
-        JsonObject boostersJson = JsonHelper.getJsonObject(json, "boosters");
+        JsonObject boostersJson = JsonHelper.getJsonObject(json, "boosters", new JsonObject());
 
         return new Profile(bot, id, created, coins, statsJson, questsJson, boostersJson);
     }

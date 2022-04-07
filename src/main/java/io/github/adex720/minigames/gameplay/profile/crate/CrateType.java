@@ -9,12 +9,12 @@ import org.jetbrains.annotations.Nullable;
 public enum CrateType {
 
     COMMON("common", 0, 150),
-    UNCOMMON("uncommon", 1, 200, null),
-    RARE("rare", 2, 350, null),
-    EPIC("epic", 3, 500, null),
-    LEGENDARY("legendary", 4, null),
-    VOTE("vote", 5, null),
-    GUILD("guild", 6, 1000, null);
+    UNCOMMON("uncommon", 1, 200, BoosterRarity.UNCOMMON),
+    RARE("rare", 2, 350, BoosterRarity.RARE),
+    EPIC("epic", 3, 500, BoosterRarity.EPIC),
+    LEGENDARY("legendary", 4, BoosterRarity.LEGENDARY),
+    VOTE("vote", 5, BoosterRarity.EPIC),
+    GUILD("guild", 6, 1000, BoosterRarity.LEGENDARY);
 
     public static final int TYPES_AMOUNT = 7;
 
@@ -22,14 +22,13 @@ public enum CrateType {
     public final int id;
 
     public final boolean canContainCoins;
-    @Nullable
-    public final int coins;
+    public final int coins; // 0 if none
 
     public final boolean canContainBoosters;
     @Nullable
     public final BoosterRarity boosterRarity;
 
-    CrateType(String name, int id, boolean canContainCoins, int coins, boolean canContainBoosters, BoosterRarity boosterRarity) {
+    CrateType(String name, int id, boolean canContainCoins, int coins, boolean canContainBoosters, @Nullable BoosterRarity boosterRarity) {
         this.name = name;
         this.id = id;
 

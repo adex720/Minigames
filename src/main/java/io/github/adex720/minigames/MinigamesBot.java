@@ -347,11 +347,11 @@ public class MinigamesBot {
 }
 
 /*
-   TODO: minigames to add
-    - wordle
-    - counting
-    - counting variations (hex, binary, letters)
-    - connect 4
+    TODO: minigames to add
+     - wordle
+     - counting
+     - counting variations (hex, binary, letters)
+     - connect 4
 
    TODO: rewards for finished minigames
 

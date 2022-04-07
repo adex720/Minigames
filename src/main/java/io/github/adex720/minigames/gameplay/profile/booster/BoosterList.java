@@ -28,6 +28,8 @@ public class BoosterList {
     }
 
     public static BoosterList fromJson(JsonObject json) {
+        if (json.size() == 0) return new BoosterList();
+
         BoosterList boosterList = new BoosterList();
 
         for (int i = 0; i < boosterList.boosters.length; i++) {

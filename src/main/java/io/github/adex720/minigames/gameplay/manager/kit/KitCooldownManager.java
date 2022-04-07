@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.user.crate.KitCommand;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class KitCooldownManager extends Manager {
 
@@ -21,5 +22,9 @@ public class KitCooldownManager extends Manager {
 
     public KitCommand getKitCommand(int id) {
         return KIT_COMMANDS.get(id);
+    }
+
+    public ArrayList<KitCommand> getKits() {
+        return KIT_COMMANDS;
     }
 }
