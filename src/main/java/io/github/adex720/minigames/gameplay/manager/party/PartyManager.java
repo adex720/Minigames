@@ -52,7 +52,7 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
     }
 
     public void createParty(long id) {
-        Party party = new Party(bot,id);
+        Party party = new Party(bot, id);
         party.onCreate();
         PARTIES.put(id, party);
     }
@@ -72,6 +72,13 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
 
     public boolean isPartyOwner(long id) {
         return PARTIES.containsKey(id);
+    }
+
+    public boolean isInParty(long id) {
+        for (Party party : PARTIES.values()) {
+            if (party.isInParty(id)) return true;
+        }
+        return false;
     }
 
     @Nullable

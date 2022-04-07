@@ -54,6 +54,18 @@ public class Party implements JsonSavable<Party>, IdCompound {
         return members.size() + 1;
     }
 
+    public int sizeWithInvites() {
+        return size() + invites.size();
+    }
+
+    public boolean isFull() {
+        return size() >= MAX_SIZE;
+    }
+
+    public boolean isFullWithInvites() {
+        return sizeWithInvites() >= MAX_SIZE;
+    }
+
     public boolean removeMember(long memberId) {
         return members.remove(memberId);
     }
@@ -98,7 +110,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
      * @return the first element of Set#toArray() is called from the list of non owner members.
      */
     public long getMemberId() {
-       return (long) members.toArray()[0];
+        return (long) members.toArray()[0];
     }
 
     public void active() {
