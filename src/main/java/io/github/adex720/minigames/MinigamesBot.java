@@ -26,6 +26,7 @@ import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -147,9 +148,7 @@ public class MinigamesBot {
 
         leaderboardManager.start();
 
-        addTimerTask(this::save, 1000 * 60 * 5, true);
-        addTimerTask(this::clearInactive, 1000 * 60 * 5, true);
-        addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true);
+        startTimers();
     }
 
     public static void main(String[] args) {
@@ -176,6 +175,15 @@ public class MinigamesBot {
                 System.out.println("Unknown error happened while setting up: " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
             }
         }
+    }
+
+    private void startTimers() {
+        addTimerTask(this::clearInactive, 1000 * 60 * 5, true); // Delete inactive parties and minigames
+        addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true); // Clear cached resource json files
+
+        addTimerTask(questManager::unloadQuests, Util.MILLISECONDS_IN_DAY, Util.getMillisecondsUntilUtcMidnight());
+
+        addTimerTask(this::save, 1000 * 60 * 5, true); // save data
     }
 
     public JDA getJda() {
@@ -262,12 +270,16 @@ public class MinigamesBot {
         return JsonHelper.getLong(emoteJson, name, 1L);
     }
 
-    public String getEmote(String name){
+    public String getEmote(String name) {
         return "<:" + name + ":" + getEmoteId(name) + ">";
     }
 
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
         timerManager.add(task, delay, repeat);
+    }
+
+    public void addTimerTask(TimerManager.Task task, int delay, int firstDelay) {
+        timerManager.add(task, delay, firstDelay);
     }
 
 

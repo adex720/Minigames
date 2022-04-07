@@ -21,6 +21,10 @@ public class TimerManager extends Manager {
         TIMERS.add(new TimerObject(task, delay, repeat));
     }
 
+    public void add(Task task, int delay, int firstDelay) {
+        TIMERS.add(new TimerObject(task, delay, firstDelay));
+    }
+
     public void stop() {
         TIMERS.forEach(TimerObject::cancel);
     }
@@ -29,14 +33,26 @@ public class TimerManager extends Manager {
 
         private final Timer timer;
         private final Task task;
+        private final int firstDelay;
         private final int delay;
         private final boolean repeat;
 
         private TimerObject(Task task, int delay, boolean repeat) {
             timer = new Timer();
             this.task = task;
+            this.firstDelay = delay;
             this.delay = delay;
             this.repeat = repeat;
+
+            start();
+        }
+
+        private TimerObject(Task task, int delay, int firstDelay) {
+            timer = new Timer();
+            this.task = task;
+            this.firstDelay = firstDelay;
+            this.delay = delay;
+            this.repeat = true;
 
             start();
         }
@@ -48,14 +64,14 @@ public class TimerManager extends Manager {
                     public void run() {
                         task.run();
                     }
-                }, delay, delay);
+                }, firstDelay, delay);
             } else {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         task.run();
                     }
-                }, delay);
+                }, delay); // it doesn't matter which of them is used, both have the same value when this is reached
             }
         }
 

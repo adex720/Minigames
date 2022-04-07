@@ -204,4 +204,9 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
         return difficulties;
     }
 
+    public void unloadQuests() {
+        QUESTS.clear();
+        bot.getLogger().info("Unloaded quests!");
+    }
+
 }

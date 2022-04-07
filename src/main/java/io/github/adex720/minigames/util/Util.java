@@ -9,6 +9,9 @@ public class Util {
     public static final int MINIGAMES_COLOR = 0x3D6bf4;
     public static final long MINIGAMES_BOT_ID = 814109421118554134L;
 
+
+    public static final int MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
+
     public static void schedule(Task task, long delay) {
         new Timer().schedule(new TimerTask() {
             @Override
@@ -48,6 +51,10 @@ public class Util {
 
     public static String formatTime(Duration duration) {
         return formatTime((int) duration.toSeconds());
+    }
+
+    public static int getMillisecondsUntilUtcMidnight() {
+        return MILLISECONDS_IN_DAY - (int) (System.currentTimeMillis() % MILLISECONDS_IN_DAY);
     }
 
 }
