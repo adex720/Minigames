@@ -12,6 +12,7 @@ import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateList;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.gameplay.profile.quest.Quest;
+import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
@@ -420,6 +421,32 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         }
 
         return cooldowns.toString();
+    }
+
+    public MessageEmbed getStatsMessage(User user) {
+        return new EmbedBuilder()
+                .setTitle(user.getAsTag())
+                .addField("Stats", getStats(), false)
+                .setColor(Util.getColor(userId))
+                .setFooter(user.getName(), user.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build();
+    }
+
+    public String getStats() {
+        StringBuilder statsString = new StringBuilder();
+        boolean newLine = false;
+        for (Stat stat : bot.getStatManager().getLeaderboardStats()) {
+            int value = statList.getValue(stat.id());
+            if (value == 0) continue;
+
+            if (newLine) statsString.append('\n');
+            newLine = true;
+
+            statsString.append(stat.name()).append(" - ").append(value);
+        }
+
+        return statsString.toString();
     }
 
 }

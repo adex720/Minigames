@@ -71,4 +71,8 @@ public class StatList {
         return json;
     }
 
+    public int getAmount() {
+        return statsById.size();
+    }
+
 }
