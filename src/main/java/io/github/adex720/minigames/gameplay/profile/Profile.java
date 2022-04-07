@@ -65,7 +65,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         activeBoosters = new ArrayList<>();
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject boostersJson) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson) {
         this.bot = bot;
         this.userId = userId;
         this.created = crated;
@@ -81,9 +81,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         }
 
 
-        crates = new CrateList(); // TODO: load these
+        crates = CrateList.fromJson(cratesJson);
         boosters = BoosterList.fromJson(boostersJson);
-        activeBoosters = new ArrayList<>();
+        activeBoosters = new ArrayList<>(); // TODO: load these
     }
 
     public static Profile create(MinigamesBot bot, long id) {
@@ -109,6 +109,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         json.add("quests", bot.getQuestManager().getQuestJson(userId));
 
+        json.add("crates", crates.asJson());
         json.add("boosters", boosters.asJson());
 
         return json;
@@ -123,9 +124,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray questsJson = JsonHelper.getJsonArray(json, "quests", null);
 
+        JsonObject cratesJson = JsonHelper.getJsonObject(json, "crates", new JsonObject());
         JsonObject boostersJson = JsonHelper.getJsonObject(json, "boosters", new JsonObject());
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson, boostersJson);
+        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson);
     }
 
     public boolean isInParty() {
