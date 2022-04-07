@@ -56,11 +56,11 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
     public void appendStats(Profile profile, boolean won) {
-        profile.increaseStat(type.getUserFriendlyName() + " games played");
+        profile.increaseStat(type.getNameWithSpaces() + " games played");
         profile.increaseStat("minigames played");
 
         if (won) {
-            profile.increaseStat(type.getUserFriendlyName() + " games won");
+            profile.increaseStat(type.getNameWithSpaces() + " games won");
             profile.increaseStat("minigames won");
         }
     }

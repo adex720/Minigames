@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -157,7 +158,13 @@ public class Party implements JsonSavable<Party>, IdCompound {
             stringBuilder.append("\n**The party is full.");
         }
 
-        // TODO: show current minigame
+        Minigame minigame = bot.getMinigameManager().getMinigame(getId());
+
+        if (minigame == null) {
+            stringBuilder.append("\nThis party doesn't currently play a minigame.");
+        } else {
+            stringBuilder.append("\nThis party is playing ").append(minigame.getType().getNameWithSpaces()).append('.');
+        }
 
         return new EmbedBuilder()
                 .setTitle("PARTY INFO")

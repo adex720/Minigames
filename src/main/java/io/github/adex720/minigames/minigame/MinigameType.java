@@ -71,7 +71,10 @@ public abstract class MinigameType<M extends Minigame> {
 
     public abstract String getReplyForInvalidStartState();
 
-    public String getUserFriendlyName() {
+    /**
+     * Returns the name with dashes being replaced by spaces.
+     * */
+    public String getNameWithSpaces() {
         return name.replaceAll("-", " ");
     }
 }
