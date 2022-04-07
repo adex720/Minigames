@@ -5,8 +5,11 @@ import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
+
+import java.util.Random;
 
 public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
@@ -37,14 +40,16 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     public void finish(SlashCommandEvent event, CommandInfo commandInfo, boolean won) {
         bot.getMinigameManager().deleteMinigame(id);
+        Profile profile = commandInfo.profile();
 
-        event.getHook().sendMessage("Press this button to play again")
+        String rewards = addRewards(profile, won);
+
+        event.getHook().sendMessage(rewards)
                 .addActionRow(Button.primary("play-again", "Play again")).queue();
-
         bot.getReplayManager().addReplay(id, type);
 
-        appendQuest(commandInfo.profile(), won);
-        appendStats(commandInfo.profile(), won);
+        appendQuest(profile, won);
+        appendStats(profile, won);
     }
 
     public void appendQuest(Profile profile, boolean won) {
@@ -53,6 +58,23 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         } else {
             profile.appendQuests(q -> q.minigamePlayed(this.type, profile));
         }
+    }
+
+    public String addRewards(Profile profile, boolean won) {
+        int coins = 50;
+        if (won) {
+            Random random = bot.getRandom();
+            if (random.nextInt(3) == 0) {
+                CrateType reward = random.nextBoolean() ? CrateType.COMMON : CrateType.UNCOMMON;
+                profile.addCrate(reward);
+                return "You received " + reward.getNameWithArticle() + " crate!";
+            }
+
+            coins = random.nextInt(100, 250);
+        }
+
+        profile.addCoins(coins, true);
+        return "You received " + coins + " coins!";
     }
 
     public void appendStats(Profile profile, boolean won) {
