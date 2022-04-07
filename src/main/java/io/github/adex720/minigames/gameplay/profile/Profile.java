@@ -170,8 +170,12 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
             int finalAmount = (int) (amount * getBoosterMultiplier());
 
             appendQuests(quest -> quest.coinsEarned(finalAmount, this));
+            statList.increaseStat("coins_earned", finalAmount);
+            coins += finalAmount;
+
+        } else {
+            coins += amount;
         }
-        coins += amount;
     }
 
     public int getCoins() {
