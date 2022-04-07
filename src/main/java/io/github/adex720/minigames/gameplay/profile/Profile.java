@@ -310,6 +310,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
      * @return message to send
      */
     public String useBooster(int rarity) {
+        appendQuests(q -> q.boosterUsed(this));
         return useBooster(BoosterRarity.get(rarity));
     }
 
