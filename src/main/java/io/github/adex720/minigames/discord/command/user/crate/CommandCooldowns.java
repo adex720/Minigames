@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.discord.command.user;
+package io.github.adex720.minigames.discord.command.user.crate;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
@@ -24,7 +24,7 @@ public class CommandCooldowns extends Command {
         event.getHook().sendMessageEmbeds(
                 new EmbedBuilder()
                         .setTitle("COOLDOWNS")
-                        .addField("Hint", "You can claim all of your kits with `/claim`\nYou can claim one kit with its own command.\nExample: `/daily`.", true)
+                        .addField("Hint", "You can claim all of your kits with `/claim`\nYou can claim one booster with its own command.\nExample: `/daily`.", true)
                         .addField("Kits", ci.profile().getKitCooldowns(), true)
                         .setColor(Util.getColor(user.getIdLong()))
                         .setFooter(user.getName(), user.getAvatarUrl())

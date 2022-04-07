@@ -1,7 +1,7 @@
 package io.github.adex720.minigames.gameplay.manager.kit;
 
 import io.github.adex720.minigames.MinigamesBot;
-import io.github.adex720.minigames.discord.command.user.KitCommand;
+import io.github.adex720.minigames.discord.command.user.crate.KitCommand;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 
 import java.util.ArrayList;

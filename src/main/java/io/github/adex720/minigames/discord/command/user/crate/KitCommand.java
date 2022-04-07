@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.discord.command.user;
+package io.github.adex720.minigames.discord.command.user.crate;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
@@ -53,7 +53,7 @@ public class KitCommand extends Command {
             OffsetDateTime current = event.getTimeCreated();
             if (ready != null) {
                 if (ready.isAfter(current)) {
-                    event.getHook().sendMessage("This kit is on cooldown for " + getCooldown(ready, current) + ".").queue();
+                    event.getHook().sendMessage("This booster is on cooldown for " + getCooldown(ready, current) + ".").queue();
                     return true;
                 }
             }
@@ -61,7 +61,7 @@ public class KitCommand extends Command {
             Profile profile = ci.profile();
             profile.addCoins(reward, true);
             startCooldown(ci.authorId(), current);
-            event.getHook().sendMessage("You claimed your " + name + " kit. You received " + reward + " coins.").queue();
+            event.getHook().sendMessage("You claimed your " + name + " booster. You received " + reward + " coins.").queue();
 
             profile.appendQuests(quest -> quest.kitClaimed(name, profile));
         } else {
@@ -93,7 +93,7 @@ public class KitCommand extends Command {
 
     public interface PermissionCheck {
         /**
-         * Returns 0 if kit can be used.
+         * Returns 0 if booster can be used.
          * Positive return values are used to indicate reply message.
          */
         int canUse(SlashCommandEvent event, CommandInfo ci);
@@ -102,7 +102,7 @@ public class KitCommand extends Command {
     }
 
     /**
-     * Returns 0 if kit can be used.
+     * Returns 0 if booster can be used.
      * Positive return values are used to indicate reply message.
      */
     public int canClaim(SlashCommandEvent event, CommandInfo ci) {
@@ -147,10 +147,10 @@ public class KitCommand extends Command {
             @Override
             public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
                 if (reason == 1) {
-                    return "This kit can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
+                    return "This booster can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
                 }
                 if (reason == 2) {
-                    return "You need to be on this server for 24 hours to claim this kit. This is to ensure people leaving after claiming the kit and then leaving.";
+                    return "You need to be on this server for 24 hours to claim this booster. This is to ensure people leaving after claiming the booster and then leaving.";
                 }
 
                 return "";

@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.discord.command.user;
+package io.github.adex720.minigames.discord.command.user.booster;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
-import io.github.adex720.minigames.discord.command.user.KitCommand;
+import io.github.adex720.minigames.discord.command.user.crate.KitCommand;
 import io.github.adex720.minigames.gameplay.profile.booster.Booster;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterList;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
