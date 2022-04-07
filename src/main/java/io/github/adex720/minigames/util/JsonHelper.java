@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
+import java.util.ArrayList;
+
 public class JsonHelper {
 
     public static int getInt(JsonObject json, String key) {
@@ -171,6 +173,18 @@ public class JsonHelper {
         }
 
         return jsonArray;
+    }
+
+    public static JsonArray ArrayListToJsonArray(ArrayList<Integer> arrayList) {
+        JsonArray json = new JsonArray();
+        arrayList.forEach(json::add);
+        return json;
+    }
+
+    public static ArrayList<Integer> JsonArrayToArrayList(JsonArray json) {
+        ArrayList<Integer> arrayList = new ArrayList<>(json.size());
+        json.forEach(number -> arrayList.add(number.getAsInt()));
+        return arrayList;
     }
 
 }

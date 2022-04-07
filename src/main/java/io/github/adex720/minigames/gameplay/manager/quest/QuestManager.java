@@ -77,6 +77,10 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
         return QUESTS.get(id);
     }
 
+    public boolean hasLoadedQuests(long id) {
+        return QUESTS.containsKey(id);
+    }
+
     public ArrayList<Quest> getQuestsOrGenerate(long id) {
         ArrayList<Quest> quests = QUESTS.get(id);
         if (quests != null) return quests;

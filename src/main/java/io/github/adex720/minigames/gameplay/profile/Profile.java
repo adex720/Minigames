@@ -65,7 +65,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         activeBoosters = new ArrayList<>();
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson, JsonArray activeBoostersJson) {
         this.bot = bot;
         this.userId = userId;
         this.created = crated;
@@ -83,7 +83,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         crates = CrateList.fromJson(cratesJson);
         boosters = BoosterList.fromJson(boostersJson);
-        activeBoosters = new ArrayList<>(); // TODO: load these
+        activeBoosters = new ArrayList<>(activeBoostersJson.size());
+        activeBoostersJson.forEach(b -> activeBoosters.add(Booster.fromJson(b)));
+        checkBoosterDurations();
     }
 
     public static Profile create(MinigamesBot bot, long id) {
@@ -107,10 +109,13 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         json.addProperty("coins", coins);
         json.add("stats", statList.asJson());
 
-        json.add("quests", bot.getQuestManager().getQuestJson(userId));
+        if (bot.getQuestManager().hasLoadedQuests(userId))
+            json.add("quests", bot.getQuestManager().getQuestJson(userId));
 
-        json.add("crates", crates.asJson());
-        json.add("boosters", boosters.asJson());
+        checkBoosterDurations();
+        if (!crates.isEmpty()) json.add("crates", crates.asJson());
+        if (!boosters.isEmpty()) json.add("boosters", boosters.asJson());
+        if (!activeBoosters.isEmpty()) json.add("active-boosters", getActiveBoostersJson());
 
         return json;
     }
@@ -126,8 +131,19 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonObject cratesJson = JsonHelper.getJsonObject(json, "crates", new JsonObject());
         JsonObject boostersJson = JsonHelper.getJsonObject(json, "boosters", new JsonObject());
+        JsonArray activeBoostersJson = JsonHelper.getJsonArray(json, "active-boosters", new JsonArray());
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson);
+        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson);
+    }
+
+    private JsonArray getActiveBoostersJson() {
+        JsonArray json = new JsonArray();
+
+        for (Booster booster : activeBoosters) {
+            json.add(booster.getAsJson());
+        }
+
+        return json;
     }
 
     public boolean isInParty() {
