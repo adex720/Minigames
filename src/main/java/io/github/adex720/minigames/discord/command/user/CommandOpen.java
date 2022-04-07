@@ -249,6 +249,7 @@ public class CommandOpen extends Command {
             }
         }
 
+        profile.appendQuests(quest -> quest.crateOpened(crateType, profile));
         return new Pair<>(coins, boosters);
     }
 

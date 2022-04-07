@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -86,7 +87,7 @@ public class Quest implements IdCompound, JsonSavable<Quest> {
         append(this.type.coinsEarned(amount, profile));
     }
 
-    public void crateOpened(Object rarity, Profile profile) {
+    public void crateOpened(CrateType rarity, Profile profile) {
         append(this.type.crateOpened(rarity, profile));
     }
 

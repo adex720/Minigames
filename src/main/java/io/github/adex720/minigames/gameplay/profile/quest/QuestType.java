@@ -1,6 +1,7 @@
 package io.github.adex720.minigames.gameplay.profile.quest;
 
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 
@@ -92,7 +93,7 @@ public abstract class QuestType {
     public static QuestType openCrates(int id, String name, String textStart, String textEnd, String hint, int[] goals) {
         return new QuestType(id, name, textStart, textEnd, hint, goals) {
             @Override
-            public int crateOpened(Object rarity, Profile profile) {
+            public int crateOpened(CrateType rarity, Profile profile) {
                 return 1;
             }
         };
@@ -101,8 +102,8 @@ public abstract class QuestType {
     public static QuestType openCrates(int id, String name, String textStart, String textEnd, String hint, int[] goals, String crate) {
         return new QuestType(id, name, textStart, textEnd, hint, goals) {
             @Override
-            public int crateOpened(Object rarity, Profile profile) {
-                return rarity.equals(crate) ? 1 : 0;
+            public int crateOpened(CrateType rarity, Profile profile) {
+                return rarity.name.equals(crate) ? 1 : 0;
             }
         };
     }
@@ -154,7 +155,7 @@ public abstract class QuestType {
         return 0;
     }
 
-    public int crateOpened(Object rarity, Profile profile) { // TODO: use crate rarity
+    public int crateOpened(CrateType rarity, Profile profile) {
         return 0;
     }
 
