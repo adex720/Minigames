@@ -58,5 +58,11 @@
     "name": "tic-tac-toe games won",
     "description": "",
     "on_leaderboard": false
+  },
+  {
+    "id": 11,
+    "name": "coins earned",
+    "description": "",
+    "on_leaderboard": true
   }
 ]

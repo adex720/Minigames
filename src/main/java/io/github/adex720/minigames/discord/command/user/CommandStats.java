@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 public class CommandStats extends Command {
 
     public CommandStats(MinigamesBot bot) {
-        super(bot, "stat", "Shows the stats of a user.", CommandCategory.USER);
+        super(bot, "stats", "Shows the stats of a user.", CommandCategory.USER);
         requiresProfile();
     }
 

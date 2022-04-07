@@ -30,7 +30,7 @@ public class StatList {
         statsById = new HashMap<>();
 
         for (Stat stat : bot.getStatManager().getAll()) {
-            Value<Integer> value = new Value<>(JsonHelper.getInt(json, Integer.toString(stat.id())));
+            Value<Integer> value = new Value<>(JsonHelper.getInt(json, Integer.toString(stat.id()), 0));
 
             statsByName.put(stat.name(), value);
             statsById.put(stat.id(), value);
