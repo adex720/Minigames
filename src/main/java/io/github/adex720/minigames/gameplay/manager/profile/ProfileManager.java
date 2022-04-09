@@ -94,6 +94,7 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
 
     void unban(long userId) {
         Profile profile = PROFILES.remove(-userId);
+        if (profile == null) return;
         profile.unban();
         PROFILES.put(userId, profile);
     }

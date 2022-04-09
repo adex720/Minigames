@@ -20,7 +20,7 @@ public class DevCommandBan extends DevCommand {
 
         long id;
         try {
-            id = Integer.parseInt(args[1]);
+            id = Long.parseLong(args[1]);
         } catch (Exception e) {
             event.getChannel().sendMessage(args[1] + " is not an user id!").queue();
             return true;
