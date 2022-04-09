@@ -365,8 +365,6 @@ public class MinigamesBot {
      - counting variations (hex, binary, letters)
      - connect 4
 
-   TODO: rewards for finished minigames
-
    TODO: guilds
 
    TODO: global boosters
