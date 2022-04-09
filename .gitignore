@@ -3,6 +3,6 @@
 /out
 /build
 
-config.json
+src/main/resources/excel
 
-/savedata
+config.json

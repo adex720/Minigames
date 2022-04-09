@@ -10,7 +10,7 @@ public class Test {
 
     public static void main(String[] args) throws IOException {
 
-        String[] paths = {a("common"), a("uncommon"), a("rare"), a("epic"), a("legendary"), a("common_guild"), a("rare_guild"), a("legendary_guild"), a("global")};
+        String[] paths = {a("common"), a("uncommon"), a("rare"), a("epic"), a("legendary"), a("guild"), a("vote")};
 
         for (String path : paths) {
             File file = new File(path);
@@ -27,7 +27,10 @@ public class Test {
                 for (int y = 0; y < height; y++) {
                     int rgb = image.getRGB(x, y);
 
-                    if ((rgb & 0xff) >= 250 && ((rgb >> 8) & 0xff) >= 250 && ((rgb >> 16) & 0xff) >= 250) {
+                    if ((rgb & 0xff) >= 250 && ((rgb >> 8) & 0xff) >= 250 && ((rgb >> 16) & 0xff) >= 250
+                            || 2 * y - 317 > x
+                            || -2 * y + 525 < x
+                            || -0.07f * y + 213 < x) {
                         graphics.setColor(transparent);
                     } else {
                         graphics.setColor(new Color(rgb));
@@ -63,7 +66,7 @@ public class Test {
     }
 
     private static String a(String name) {
-        return "src/main/resources/textures/emotes/boosters/booster_" + name + ".png";
+        return "src/main/resources/textures/emotes/crates/crate_" + name + ".png";
     }
 
 }
