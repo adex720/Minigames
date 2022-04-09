@@ -10,7 +10,8 @@ public enum BoosterRarity {
     EPIC("epic", 3, 15, 2.25f, true),
     LEGENDARY("legendary", 4, 20, 2.5f, true),
     GUILD_SHORT("common guild", 5, 15, 2f, false),
-    GUILD_LONG("rare guild", 6, 30, 2f, false),
+    GUILD_MEDIUM("rare guild", 6, 30, 2f, false),
+    GUILD_LONG("legendary guild", 6, 30, 2.5f, false),
     GLOBAL("global", 7, 30, 2f, false);
 
     public static final int RARITIES_AMOUNT = 8;
@@ -38,6 +39,10 @@ public enum BoosterRarity {
         };
     }
 
+    public String getKeyName(){
+        return name.replace(" ", "_");
+    }
+
     public Booster createBooster() {
         return new Booster(this, System.currentTimeMillis() + durationMinutes * 60000L);
     }
@@ -53,6 +58,6 @@ public enum BoosterRarity {
     }
 
     public String getEmoteName(MinigamesBot bot) {
-        return bot.getEmote("booster_" + name);
+        return bot.getEmote("booster_" + getKeyName());
     }
 }
