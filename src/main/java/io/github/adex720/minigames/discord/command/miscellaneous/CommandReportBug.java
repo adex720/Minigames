@@ -12,5 +12,6 @@ public class CommandReportBug extends SimpleEmbedReplyCommand {
         super(bot, "report-bug", "Sends a link to the bot suggestions on GitHub.",
                 "Report bugs [here](" + GITHUB_LINK + ")!",
                 "SUGGEST", "ALWAYS check first if the bug is already reported!", CommandCategory.MISCELLANEOUS);
+        requiresProfile();
     }
 }

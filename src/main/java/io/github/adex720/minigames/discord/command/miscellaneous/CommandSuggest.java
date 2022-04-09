@@ -12,5 +12,6 @@ public class CommandSuggest extends SimpleEmbedReplyCommand {
         super(bot, "suggest", "Sends a link to the bot suggestions on GitHub.",
                 "Leave your suggestion [here](" + GITHUB_LINK + ")!",
                 "SUGGESTION", "ALWAYS check first if the thing you are suggesting is already suggested!", CommandCategory.MISCELLANEOUS);
+        requiresProfile();
     }
 }

@@ -10,6 +10,7 @@ public class CommandQuit extends Command {
 
     public CommandQuit(MinigamesBot bot) {
         super(bot, "quit", "Quits your current minigame.", CommandCategory.MINIGAME);
+        requiresProfile();
     }
 
     @Override

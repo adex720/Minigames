@@ -13,5 +13,6 @@ public class CommandServer extends SimpleEmbedReplyCommand {
         super(bot, "server", "Invites you to the support server.",
                 "Join the support server by pressing [this link](" + SERVER_LINK + ").",
                 "SUPPORT SERVER", "Do you want to join the support server?", CommandCategory.MISCELLANEOUS);
+        requiresProfile();
     }
 }

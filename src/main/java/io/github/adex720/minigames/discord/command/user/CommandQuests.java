@@ -15,6 +15,7 @@ public class CommandQuests extends Command {
 
     public CommandQuests(MinigamesBot bot) {
         super(bot, "quests", "Checks your quests", CommandCategory.USER);
+        requiresProfile();
     }
 
     @Override

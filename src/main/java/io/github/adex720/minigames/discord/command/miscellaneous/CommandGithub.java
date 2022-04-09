@@ -12,5 +12,6 @@ public class CommandGithub extends SimpleEmbedReplyCommand {
         super(bot, "github", "Sends a link to the bot source.",
                 "Find the source code in [here](" + GITHUB_LINK + ").",
                 "GITHUB", "Do you want to view the bot source code?", CommandCategory.MISCELLANEOUS);
+        requiresProfile();
     }
 }

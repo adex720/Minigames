@@ -19,6 +19,7 @@ public class CommandTip extends Command {
 
     public CommandTip(MinigamesBot bot) {
         super(bot, "tip", "Shows tips about a minigame.", CommandCategory.MINIGAME);
+        requiresProfile();
     }
 
     @Override
