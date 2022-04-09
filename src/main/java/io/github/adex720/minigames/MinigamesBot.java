@@ -374,8 +374,6 @@ public class MinigamesBot {
    TODO: trivia
     (https://opentdb.com/api_config.php)
 
-   TODO: tips for minigames
-
    TODO: (After a long time)
     - vote (after verification)
     - sharding (at 2000 guilds)
