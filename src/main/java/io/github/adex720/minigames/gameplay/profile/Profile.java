@@ -1,6 +1,7 @@
 package io.github.adex720.minigames.gameplay.profile;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
@@ -33,6 +34,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final long userId;
     private final long created;
+    private boolean banned;
 
     private boolean isInParty;
     private long partyId;
@@ -54,6 +56,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         this.bot = bot;
         this.userId = userId;
         created = System.currentTimeMillis();
+        this.banned = false;
+
         isInParty = false;
         partyId = userId;
 
@@ -66,10 +70,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         activeBoosters = new ArrayList<>();
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson, JsonArray activeBoostersJson) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson, JsonArray activeBoostersJson, JsonArray statusesJson) {
         this.bot = bot;
         this.userId = userId;
         this.created = crated;
+        banned = false;
         isInParty = false;
         partyId = userId;
 
@@ -81,12 +86,20 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
             bot.getQuestManager().addQuestsFromJson(userId, questsJson);
         }
 
-
         crates = CrateList.fromJson(cratesJson);
         boosters = BoosterList.fromJson(boostersJson);
         activeBoosters = new ArrayList<>(activeBoostersJson.size());
         activeBoostersJson.forEach(b -> activeBoosters.add(Booster.fromJson(b)));
         checkBoosterDurations();
+
+        for (JsonElement status : statusesJson) {
+            switch (status.getAsString()) {
+                case "banned" -> {
+                    banned = true;
+                    bot.getBanManager().ban(userId);
+                }
+            }
+        }
     }
 
     public static Profile create(MinigamesBot bot, long id) {
@@ -118,6 +131,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         if (!boosters.isEmpty()) json.add("boosters", boosters.asJson());
         if (!activeBoosters.isEmpty()) json.add("active-boosters", getActiveBoostersJson());
 
+        JsonArray statusesJson = getStatusesJson();
+        if (!statusesJson.isEmpty()) json.add("statuses", statusesJson);
+
         return json;
     }
 
@@ -134,7 +150,17 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         JsonObject boostersJson = JsonHelper.getJsonObject(json, "boosters", new JsonObject());
         JsonArray activeBoostersJson = JsonHelper.getJsonArray(json, "active-boosters", new JsonArray());
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson);
+        JsonArray statusesJson = JsonHelper.getJsonArray(json, "statuses", new JsonArray());
+
+        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson);
+    }
+
+    private JsonArray getStatusesJson() {
+        JsonArray json = new JsonArray();
+
+        if (banned) json.add("banned");
+
+        return json;
     }
 
     private JsonArray getActiveBoostersJson() {
@@ -451,6 +477,18 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         }
 
         return statsString.toString();
+    }
+
+    public void ban() {
+        banned = true;
+    }
+
+    public void unban() {
+        banned = false;
+    }
+
+    public boolean isBanned() {
+        return banned;
     }
 
 }

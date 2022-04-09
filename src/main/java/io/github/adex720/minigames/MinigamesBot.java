@@ -18,6 +18,7 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
+import io.github.adex720.minigames.gameplay.manager.profile.BanManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
 import io.github.adex720.minigames.gameplay.manager.quest.QuestManager;
 import io.github.adex720.minigames.gameplay.manager.stat.LeaderboardManager;
@@ -68,6 +69,7 @@ public class MinigamesBot {
     private final BadgeManager badgeManager;
     private final StatManager statManager;
 
+    private final BanManager banManager;
     private final ProfileManager profileManager;
 
     private final PartyManager partyManager;
@@ -114,6 +116,7 @@ public class MinigamesBot {
         questManager = new QuestManager(this);
         questList = new QuestList(this);
 
+        banManager = new BanManager(this);
         profileManager = new ProfileManager(this);
 
         partyManager = new PartyManager(this);
@@ -216,6 +219,10 @@ public class MinigamesBot {
 
     public GuildJoinListener getGuildJoinListener() {
         return guildJoinListener;
+    }
+
+    public BanManager getBanManager() {
+        return banManager;
     }
 
     public ProfileManager getProfileManager() {

@@ -84,4 +84,16 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
             addProfile(fromJson((JsonObject) json));
         }
     }
+
+    void ban(long userId) {
+        Profile profile = PROFILES.remove(userId);
+        profile.ban();
+        PROFILES.put(-profile.getId(), profile); // Profiles are saved, but unbound.
+    }
+
+    void unban(long userId) {
+        Profile profile = PROFILES.remove(-userId);
+        profile.unban();
+        PROFILES.put(userId, profile);
+    }
 }
