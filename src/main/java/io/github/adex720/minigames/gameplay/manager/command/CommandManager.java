@@ -114,6 +114,9 @@ public class CommandManager extends Manager {
         devCommandListener.addCommand(new DevCommandReloadCommands(bot));
 
         devCommandListener.addCommand(new DevCommandUpdateLeaderboards(bot));
+
+        devCommandListener.addCommand(new DevCommandBan(bot));
+        devCommandListener.addCommand(new DevCommandUnban(bot));
     }
 
     public void addCommand(Command command) {

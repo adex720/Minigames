@@ -87,6 +87,7 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
 
     void ban(long userId) {
         Profile profile = PROFILES.remove(userId);
+        if (profile == null) return; // Prevents given id of creating a profile
         profile.ban();
         PROFILES.put(-profile.getId(), profile); // Profiles are saved, but unbound.
     }
