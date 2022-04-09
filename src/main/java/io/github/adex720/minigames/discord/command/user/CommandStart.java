@@ -19,6 +19,8 @@ public class CommandStart extends Command {
             return true;
         }
 
+        if (bot.getBanManager().isBanned(ci.authorId())) return true;
+
         bot.getProfileManager().createProfile(ci.authorId());
         event.getHook().sendMessage("You now have a profile. View your profile with `/profile`. View list of commands with `/help`.").queue();
 
