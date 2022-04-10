@@ -175,15 +175,60 @@ public class JsonHelper {
         return jsonArray;
     }
 
-    public static JsonArray ArrayListToJsonArray(ArrayList<Integer> arrayList) {
+    public static String[] jsonArrayToStringArray(JsonArray jsonArray) {
+        int size = jsonArray.size();
+        String[] array = new String[size];
+
+        for (int i = 0; i < size; i++) {
+            array[i] = jsonArray.get(i).getAsString();
+        }
+
+        return array;
+    }
+
+    public static JsonArray arrayToJsonArray(String[] array) {
+        JsonArray jsonArray = new JsonArray();
+
+        for (String s : array) {
+            jsonArray.add(s);
+        }
+
+        return jsonArray;
+    }
+
+    public static JsonArray ArrayListIntToJsonArray(ArrayList<Integer> arrayList) {
         JsonArray json = new JsonArray();
         arrayList.forEach(json::add);
         return json;
     }
 
-    public static ArrayList<Integer> JsonArrayToArrayList(JsonArray json) {
+    public static ArrayList<Integer> JsonArrayToIntArrayList(JsonArray json) {
         ArrayList<Integer> arrayList = new ArrayList<>(json.size());
         json.forEach(number -> arrayList.add(number.getAsInt()));
+        return arrayList;
+    }
+
+    public static JsonArray ArrayListStringToJsonArray(ArrayList<String> arrayList) {
+        JsonArray json = new JsonArray();
+        arrayList.forEach(json::add);
+        return json;
+    }
+
+    public static ArrayList<String> JsonArrayToStringArrayList(JsonArray json) {
+        ArrayList<String> arrayList = new ArrayList<>(json.size());
+        json.forEach(number -> arrayList.add(number.getAsString()));
+        return arrayList;
+    }
+
+    public static JsonArray ArrayListCharToJsonArray(ArrayList<Character> arrayList) {
+        JsonArray json = new JsonArray();
+        arrayList.forEach(json::add);
+        return json;
+    }
+
+    public static ArrayList<Character> JsonArrayToCharArrayList(JsonArray json) {
+        ArrayList<Character> arrayList = new ArrayList<>(json.size());
+        json.forEach(number -> arrayList.add(number.getAsCharacter()));
         return arrayList;
     }
 

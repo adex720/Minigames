@@ -12,6 +12,8 @@ import io.github.adex720.minigames.minigame.tictactoe.MinigameTicTacToe;
 import io.github.adex720.minigames.minigame.tictactoe.MinigameTypeTicTacToe;
 import io.github.adex720.minigames.minigame.unscramble.MinigameTypeUnscramble;
 import io.github.adex720.minigames.minigame.unscramble.MinigameUnscramble;
+import io.github.adex720.minigames.minigame.wordle.MinigameTypeWordle;
+import io.github.adex720.minigames.minigame.wordle.MinigameWordle;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -24,6 +26,7 @@ public class MinigameTypeManager extends Manager {
     public MinigameType<MinigameUnscramble> UNSCRAMBLE;
     public MinigameType<MinigameHigherLower> HIGHER_OR_LOWER;
     public MinigameType<MinigameTicTacToe> TIC_TAC_TOE;
+    public MinigameType<MinigameWordle> WORDLE;
 
     public MinigameTypeManager(MinigamesBot bot) {
         super(bot, "minigame-type-manager");
@@ -44,6 +47,9 @@ public class MinigameTypeManager extends Manager {
 
         TIC_TAC_TOE = new MinigameTypeTicTacToe(bot, this);
         initCommand(TIC_TAC_TOE);
+
+        WORDLE = new MinigameTypeWordle(bot, this);
+        initCommand(WORDLE);
     }
 
     private void initCommand(MinigameType<?> minigameType) {
@@ -59,6 +65,7 @@ public class MinigameTypeManager extends Manager {
             case "unscramble" -> UNSCRAMBLE;
             case "higher-lower" -> HIGHER_OR_LOWER;
             case "tic-tac-toe" -> TIC_TAC_TOE;
+            case "wordle" -> WORDLE;
             default -> throw new IllegalStateException("Unexpected minigame type: " + name);
         };
     }

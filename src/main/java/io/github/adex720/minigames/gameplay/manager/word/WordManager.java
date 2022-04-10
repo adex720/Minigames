@@ -19,7 +19,7 @@ public class WordManager extends Manager {
     private final ArrayList<String> COMMON_WORDLES; // length: 5, 10k most common
     private final int COMMON_WORDLES_AMOUNT;
 
-    private final ArrayList<String> LEGTH_OF_5; //length: 5,
+    private final ArrayList<String> LENGTH_OF_5; //length: 5,
     //private final int LENGTH_OF_5_AMOUNT;
 
     public WordManager(MinigamesBot bot) throws FileNotFoundException {
@@ -27,14 +27,14 @@ public class WordManager extends Manager {
         HANGMAN_WORDS = new ArrayList<>();
         UNSCRAMBLE_WORDS = new ArrayList<>();
         COMMON_WORDLES = new ArrayList<>();
-        LEGTH_OF_5 = new ArrayList<>();
+        LENGTH_OF_5 = new ArrayList<>();
 
         loadWords();
 
         HANGMAN_WORDS_AMOUNT = HANGMAN_WORDS.size();
         UNSCRAMBLE_WORDS_AMOUNT = UNSCRAMBLE_WORDS.size();
         COMMON_WORDLES_AMOUNT = COMMON_WORDLES.size();
-        //LENGTH_OF_5_AMOUNT = LEGTH_OF_5.size();
+        //LENGTH_OF_5_AMOUNT = LENGTH_OF_5.size();
     }
 
     private void loadWords() throws FileNotFoundException {
@@ -50,9 +50,9 @@ public class WordManager extends Manager {
             int length = word.length();
             if (length >= 4) {
                 HANGMAN_WORDS.add(word);
-                if (isValidWordForWordleWord(word)) {
+                if (length == 5) {
                     COMMON_WORDLES.add(word);
-                } else if(length >= 6){
+                } else if (length >= 6) {
                     UNSCRAMBLE_WORDS.add(word);
                 }
             }
@@ -64,7 +64,7 @@ public class WordManager extends Manager {
         Scanner reader = new Scanner(bot.getFilePathManager().getWordFile("length5.txt"));
 
         while (reader.hasNext()) {
-            LEGTH_OF_5.add(reader.nextLine());
+            LENGTH_OF_5.add(reader.nextLine());
         }
     }
 
@@ -81,10 +81,10 @@ public class WordManager extends Manager {
     }
 
     public boolean isValidWordForWordle(String word) {
-        return LEGTH_OF_5.contains(word);
+        return LENGTH_OF_5.contains(word);
     }
 
-    public static boolean isValidWordForWordleWord(String word) {
+    public static boolean does5LetterWordContainSameLetterMultipleTimes(String word) {
         if (word.length() != 5) return false;
 
         char[] content = new char[4];
@@ -93,7 +93,7 @@ public class WordManager extends Manager {
             char current = word.charAt(i);
 
             for (int i2 = 0; i2 < i; i2++) {
-                if (word.charAt(i2) == current) return false; // Word contains same letter twice
+                if (content[i2] == current) return false; // Word contains same letter twice
             }
 
             if (i == 4) return true;
@@ -101,7 +101,6 @@ public class WordManager extends Manager {
         }
 
         return true; // unreachable
-
     }
 
 

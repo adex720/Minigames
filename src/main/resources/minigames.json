@@ -1,7 +1,7 @@
 {
   "hangman": {
     "description": "Hangman is a classic game originally played with paper and pencil. A word is chosen and the guessers get to know its length. The guessers proceed to guessing letters. If the word contains at least one of the letter places of all of that letter are revealed. If the word does not contain the guessed letter a picture of hang is drawn to be closer to finished. If the picture gets finished the game is lost. If the guesser thinks he/she knows the word he can also guess the word but if it's wrong a the picture is being continued on.",
-    "tips": "- Start by guessing the most common letters. (e, t, a, o, i, n)\n- Guess letters that you think would be in a word with the known letters.\n- Only guess the word as word when you are sure. You don't lose anything from guessing only letters.",
+    "tips": "- Start by guessing the most common letters. (e, t, a, o, i, n)\n- Guess letters that you think would be in a word with the known letters.\n- Only guess as word when you are sure. You don't lose anything from guessing only letters.",
     "color": "000000"
   },
   "unscramble": {
@@ -17,6 +17,11 @@
   "tic-tac-toe": {
     "description": "Tic Tac toe is a two player minigame. This bot has a simple AI for it. On their turn, each player puts one mark on the board on an empty spot. The winner is the player who first gets 3 marks in a horizontal, vertical or diagonal line. If the board gets full with neither of the players having a winning line, the game ends as draw.",
     "tips": "- Try to place your marks on places they are on multiple possible winning rows.\n- To win you must have 2 lines having 2 of your own marks while the last spot being empty.\n- The best place to put your first mark is in corner.\n- If a player plays optimistically it is impossible for them to lose, were they first or second.",
+    "color": "000000"
+  },
+  "wordle": {
+    "description": "Wordle is a online word guessing game originally made by Josh Wardle. The player guesses a 5 letters long word and is told if the letter a) is at the correct position, b) is in the word but at wrong position or c) is not in the word.",
+    "tips": "- Aim guessing the most common letters.\n- Don't guess letters you know don't exist on the word.\nDon't repeat letters on places you know they aren't.\n- You don't need to include letters whose position you know on your guesses.",
     "color": "000000"
   }
 }

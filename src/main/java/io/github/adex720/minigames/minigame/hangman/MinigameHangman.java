@@ -187,11 +187,8 @@ public class MinigameHangman extends Minigame {
         long lastActive = JsonHelper.getLong(json, "active");
         boolean isParty = JsonHelper.getBoolean(json, "party");
 
-        ArrayList<Character> guesses = new ArrayList<>();
         JsonArray guessesJson = JsonHelper.getJsonArray(json, "guesses", new JsonArray());
-        for (char guess : JsonHelper.jsonArrayToCharArray(guessesJson)) {
-            guesses.add(guess);
-        }
+        ArrayList<Character> guesses = JsonHelper.JsonArrayToCharArrayList(guessesJson);
 
         return new MinigameHangman(bot, id, isParty, lastActive, word, life, guesses);
     }
@@ -213,6 +210,5 @@ public class MinigameHangman extends Minigame {
     public static String getWord(WordManager wordManager) {
         return wordManager.getWordForHangman();
     }
-
 
 }

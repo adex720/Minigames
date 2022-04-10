@@ -46,7 +46,11 @@ public class StatList {
     }
 
     public void increaseStat(String stat) {
-        statsByName.get(stat).value++; // TODO: investigate error: "Cannot read field "value" because "<local2>" is null"
+        try {
+            statsByName.get(stat).value++;
+        } catch (Exception e) {
+            System.out.println(stat + ": " + e.getMessage());
+        }
     }
 
     public void increaseStat(String stat, int amount) {
