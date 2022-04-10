@@ -98,4 +98,8 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         profile.unban();
         PROFILES.put(userId, profile);
     }
+
+    public int getProfilesAmount(){
+        return PROFILES.size();
+    }
 }
