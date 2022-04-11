@@ -18,6 +18,8 @@ public class ButtonListener extends ListenerAdapter {
     public void onButtonClick(@NotNull ButtonClickEvent event) {
         CommandInfo commandInfo = CommandInfo.create(event, bot);
 
-        bot.getReplayManager().onButtonPress(event, commandInfo);
+        if(bot.getBanManager().isBanned(commandInfo.authorId())) return; // Banned users shouldn't be able to use buttons
+
+        bot.getReplayManager().onButtonPress(event, commandInfo); // For replay button after finishing a minigame
     }
 }
