@@ -373,8 +373,6 @@ public class MinigamesBot {
      - counting variations (hex, binary, letters)
      - connect 4
 
-     TODO: /party help --
-
     TODO: /settings --
      - Claim-quests
 

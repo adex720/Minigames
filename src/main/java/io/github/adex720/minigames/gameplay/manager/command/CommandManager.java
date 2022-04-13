@@ -122,6 +122,7 @@ public class CommandManager extends Manager {
         devCommandListener.addCommand(new DevCommandReloadData(bot));
 
         devCommandListener.addCommand(new DevCommandShutdown(bot));
+        devCommandListener.addCommand(new DevCommandTerminate(bot));
 
         devCommandListener.addCommand(new DevCommandReloadCommands(bot));
 
