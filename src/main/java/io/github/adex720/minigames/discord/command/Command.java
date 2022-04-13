@@ -30,6 +30,9 @@ public abstract class Command {
         this.commandData = createCommandData();
     }
 
+    /**
+     * @return true if the execution was successful
+     * */
     public boolean onRun(SlashCommandEvent event, CommandInfo ci) {
             if (requiresProfile) {
             if (!ci.hasProfile()) {
@@ -40,6 +43,9 @@ public abstract class Command {
         return execute(event, ci);
     }
 
+    /**
+     * @return true if the execution was successful
+     * */
     public abstract boolean execute(SlashCommandEvent event, CommandInfo ci);
 
 

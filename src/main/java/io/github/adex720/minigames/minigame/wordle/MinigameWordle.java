@@ -18,13 +18,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+// Don't lie, you've heard about wordle
 public class MinigameWordle extends Minigame {
 
     public static final int SQUARE_SIZE = 100;
     public static final int HOLE_SIZE = 10;
 
     public static final int CURVING = 10;
-    public static final int CURVING_X_2 = CURVING * 2;
+    public static final int CURVING_DOUBLED = CURVING * 2;
     public static final int SQUARE_SIZE_WITHOUT_CURVING = SQUARE_SIZE - CURVING - CURVING;
 
     public static final int IMAGE_WIDTH = 5 * SQUARE_SIZE + 6 * HOLE_SIZE;
@@ -92,7 +93,7 @@ public class MinigameWordle extends Minigame {
         }
 
         if (!bot.getWordManager().isValidWordForWordle(guess)) {
-            event.getHook().sendMessage("That is not a valid English word. If you think it is make sure it's written correct. If it really is you can suggest it on the support server.").queue();
+            event.getHook().sendMessage("That is not a valid English word. If you think it is, make sure it's written correct. If it is written correct you can suggest it to be added on the support server.").queue();
             return;
         }
 
@@ -106,40 +107,51 @@ public class MinigameWordle extends Minigame {
         sendImage(event, guess + "was not the word. You ran out of guesses. The word was " + word + ".");
     }
 
+    /**
+     * Sends the progress image attached to the given message.
+     */
     public void sendImage(SlashCommandEvent event, String message) throws IOException {
         File image = new File("wordle.png");
         ImageIO.write(getImage(), "png", image);
         event.getHook().sendMessage(message).addFile(image).queue();
     }
 
+    /**
+     * @return Background color for the letter on the given position
+     */
     public Color getLetterColor(char letter, int letterPos, String guess) {
         int lettersOnWord = getLetterAmount(letter); // amount of guessed letter on game word;
+        int lettersOnGuess = getLetterAmount(letter, guess); // amount of guessed letter on guess;
 
         if (lettersOnWord == 0) return LETTER_NON_PRESENT;
 
         if (word.charAt(letterPos) == letter) return LETTER_CORRECT;
 
-        if (lettersOnWord == 1) {
+        if (lettersOnWord == 1 && lettersOnGuess == 1) {
             return LETTER_WRONG_POSITION;
         }
 
-        int lettersOnGuess = getLetterAmount(letter, guess); // amount of guessed letter on guess;
 
         if (lettersOnGuess <= lettersOnWord)
             return LETTER_WRONG_POSITION; // guess has the letter more times than the word -> all of that letter are yellow
 
-        int foundOnWord = 0;
+
+        int onWordAtWrongPlace = 0;
         int lettersBeforeOnGuess = 0;
-        for (int i = 0; i < letterPos; i++) {
-            if (guess.charAt(i) == letter) lettersBeforeOnGuess++;
-            if (word.charAt(i) == letter) foundOnWord++;
+        for (int i = 0; i < 5; i++) {
+            if (word.charAt(i) == letter && !(guess.charAt(i) == letter)) onWordAtWrongPlace++;
+
+            else if (guess.charAt(i) == letter && !(word.charAt(i) == letter) && i < letterPos) lettersBeforeOnGuess++;
         }
 
         // Example: word is 'crate'. Guess is 'never'.
-        if (foundOnWord <= lettersBeforeOnGuess) return LETTER_NON_PRESENT; // This is reached on the second 'e'.
+        if (onWordAtWrongPlace <= lettersBeforeOnGuess) return LETTER_NON_PRESENT; // This is reached on the second 'e'.
         return LETTER_WRONG_POSITION; // This is reached on the first 'e'.
     }
 
+    /**
+     * @return amount of the given letter on the guessing word.
+     */
     public int getLetterAmount(char letter) {
         int amount = 0;
         for (int i = 0; i < 5; i++) {
@@ -148,6 +160,9 @@ public class MinigameWordle extends Minigame {
         return amount;
     }
 
+    /**
+     * @return amount of the given letter on {@param guess}.
+     */
     public int getLetterAmount(char letter, String guess) {
         int amount = 0;
         for (int i = 0; i < 5; i++) {
@@ -197,10 +212,13 @@ public class MinigameWordle extends Minigame {
         return new MinigameWordle(bot, id, isParty, lastActive, word, guesses);
     }
 
+    /**
+     * @return the image containing guesses words with color background hints.
+     */
     public BufferedImage getImage() {
         BufferedImage image = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics graphics = image.getGraphics();
-        graphics.setFont(new Font("Serif", Font.PLAIN, 100));
+        graphics.setFont(new Font("Monospaced", Font.PLAIN, 100));
 
         int guessesCount = guesses.size();
 
@@ -240,12 +258,19 @@ public class MinigameWordle extends Minigame {
         g.fillRect(curvingXSecond, curvingYFirst, CURVING, SQUARE_SIZE_WITHOUT_CURVING); // right part
 
         // draw circular edges
-        g.fillArc(x, y, CURVING_X_2, CURVING_X_2, 90, 90); // top left
-        g.fillArc(curvingXInside, y, CURVING_X_2, CURVING_X_2, 0, 90); // top right
-        g.fillArc(curvingXInside, curvingYInside, CURVING_X_2, CURVING_X_2, 270, 90); // bottom right
-        g.fillArc(x, curvingYInside, CURVING_X_2, CURVING_X_2, 180, 90); // bottom left
+        g.fillArc(x, y, CURVING_DOUBLED, CURVING_DOUBLED, 90, 90); // top left
+        g.fillArc(curvingXInside, y, CURVING_DOUBLED, CURVING_DOUBLED, 0, 90); // top right
+        g.fillArc(curvingXInside, curvingYInside, CURVING_DOUBLED, CURVING_DOUBLED, 270, 90); // bottom right
+        g.fillArc(x, curvingYInside, CURVING_DOUBLED, CURVING_DOUBLED, 180, 90); // bottom left
     }
 
+    /**
+     * Draws the letter on the specific location.
+     *
+     * @param letterId id of the letter on the word
+     * @param wordId   id of the word starting from first guess
+     * @param color    background color
+     */
     private void drawLetter(Graphics g, int letterId, int wordId, Color color, char letter) {
         drawBase(g, letterId, wordId, color);
         g.setColor(LETTER_COLOR);
@@ -255,11 +280,14 @@ public class MinigameWordle extends Minigame {
 
         int letterWidth = g.getFontMetrics().charWidth(letter);
 
-        int startX = squareX + (letterWidth /*+ SQUARE_SIZE*/) / 2;
+        int startX = squareX + (SQUARE_SIZE - letterWidth) / 2;
         int startY = squareY + LETTER_LIFT;
         g.drawString(Character.toString(letter), startX, startY);
     }
 
+    /**
+     * Draws the word on the given height with correct background colors.
+     */
     private void drawWord(Graphics graphics, int wordId, String word) {
         for (int i = 0; i < 5; i++) {
             char letter = word.charAt(i);
@@ -267,6 +295,9 @@ public class MinigameWordle extends Minigame {
         }
     }
 
+    /**
+     * Fills the row on given height with gray background tiles.
+     */
     private void fillEmptyRow(Graphics graphics, int rowId) {
         for (int i = 0; i < 5; i++) {
             drawBase(graphics, i, rowId, LETTER_NON_PRESENT);

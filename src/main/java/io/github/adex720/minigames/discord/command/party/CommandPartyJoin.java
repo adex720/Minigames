@@ -31,7 +31,7 @@ public class CommandPartyJoin extends Subcommand {
         Party party = bot.getPartyManager().getParty(partyId);
 
         if (party == null) {
-            Profile checkedProfile = bot.getProfileManager().getProfile(partyId);
+            Profile checkedProfile = bot.getProfileManager().getProfile(partyId); // Get party if selected user is not party owner
             if (checkedProfile != null) {
                 if (checkedProfile.isInParty()) {
                     party = bot.getPartyManager().getParty(checkedProfile.getPartyId());
@@ -41,7 +41,7 @@ public class CommandPartyJoin extends Subcommand {
                     return true;
                 }
             } else {
-                event.getHook().sendMessage("The user is not in a party").queue();
+                event.getHook().sendMessage("The user is not in a party").queue(); // Selected user doesn't have a profile
                 return true;
             }
 
@@ -54,6 +54,9 @@ public class CommandPartyJoin extends Subcommand {
                     return true;
                 }
             }
+        } else {
+            event.getHook().sendMessage("The party you tried to join is full!").queue();
+            return true;
         }
 
         party.addMember(authorId);

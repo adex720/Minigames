@@ -4,6 +4,9 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
 
+/**
+ * A {@link MinigameType} that must be played as a duel.
+ * */
 public abstract class DuelMinigameType<M extends DuelMinigame> extends MinigameType<M> {
 
     protected final boolean hasAI;

@@ -19,6 +19,7 @@ public class CommandUptime extends Command {
         super(bot, "uptime", "Shows bot uptime and system details.", CommandCategory.MISCELLANEOUS);
     }
 
+    // These methods are called from the bot init progress.
     public void botOnline(long time) {
         online = time;
     }
@@ -32,15 +33,16 @@ public class CommandUptime extends Command {
         long current = System.currentTimeMillis();
         long uptimeProgram = current - started;
         long uptimeBot = current - online;
-        String uptimeProgramFormatted = Util.formatTime((int) (uptimeProgram / 1000));
+
+        String uptimeProgramFormatted = Util.formatTime((int) (uptimeProgram / 1000)); // Formatting time values
         String uptimeBotFormatted = Util.formatTime((int) (uptimeBot / 1000));
 
 
         Runtime runtime = Runtime.getRuntime();
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-        String freeMemory = decimalFormat.format(runtime.freeMemory() / 1048576f);
-        String maxMemory = decimalFormat.format(runtime.maxMemory() / 1048576f);
+        String freeMemory = decimalFormat.format(runtime.freeMemory() / 1048576f); // Getting and formatting runtime values
+        String maxMemory = decimalFormat.format(runtime.maxMemory() / 1048576f); // 1 byte = 1048576 megabyte
         int processors = runtime.availableProcessors();
 
         event.getHook().sendMessageEmbeds(new EmbedBuilder()

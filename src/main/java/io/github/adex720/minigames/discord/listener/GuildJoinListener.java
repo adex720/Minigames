@@ -11,6 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This Listener listens for {@link GuildJoinEvent}.
+ * The only job this listener has is to send a greeting message when the bot joins a new server.
+ * */
 public class GuildJoinListener extends ListenerAdapter {
 
     private final MinigamesBot bot;

@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Manages words used for minigames.
+ */
 public class WordManager extends Manager {
 
     private final ArrayList<String> HANGMAN_WORDS; // length: 4+, 10k most common
@@ -42,6 +45,9 @@ public class WordManager extends Manager {
         loadLength5();
     }
 
+    /**
+     * Loads all words from common.txt
+     * */
     private void loadCommonWords() throws FileNotFoundException {
         Scanner reader = new Scanner(bot.getFilePathManager().getWordFile("common.txt"));
 
@@ -60,6 +66,9 @@ public class WordManager extends Manager {
         }
     }
 
+    /**
+     * Loads all words from length5.txt
+     * */
     private void loadLength5() throws FileNotFoundException {
         Scanner reader = new Scanner(bot.getFilePathManager().getWordFile("length5.txt"));
 

@@ -38,7 +38,7 @@ public class CommandProfile extends Command {
             user = ci.author();
         }
 
-        event.getHook().sendMessageEmbeds(profile.getEmbed(user, bot)).queue();
+        event.getHook().sendMessageEmbeds(profile.getProfileEmbed(user, bot)).queue();
         return true;
     }
 

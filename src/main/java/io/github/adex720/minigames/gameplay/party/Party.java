@@ -16,7 +16,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-
+/**
+ * Party is a group of users who can play minigames together.
+ * If a party finished a minigame everyone in it receives rewards.
+ */
 public class Party implements JsonSavable<Party>, IdCompound {
 
     public static final int MAX_SIZE = 10;
@@ -108,7 +111,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
     }
 
     /**
-     * @return the first element of Set#toArray() is called from the list of non owner members.
+     * @return the first element of {@link Set#toArray()} is called from the list of non owner members.
      */
     public long getMemberId() {
         return (long) members.toArray()[0];
@@ -148,6 +151,9 @@ public class Party implements JsonSavable<Party>, IdCompound {
         bot.getProfileManager().getProfile(owner).partyJoined(owner);
     }
 
+    /**
+     * @return The embed message on /party info
+     * */
     public MessageEmbed getInfo(User user) {
         StringBuilder stringBuilder = new StringBuilder()
                 .append("**Size: ")
@@ -161,9 +167,9 @@ public class Party implements JsonSavable<Party>, IdCompound {
         Minigame minigame = bot.getMinigameManager().getMinigame(getId());
 
         if (minigame == null) {
-            stringBuilder.append("\nThis party doesn't currently play a minigame.");
+            stringBuilder.append("\nThis party isn't currently playing a minigame.");
         } else {
-            stringBuilder.append("\nThis party is playing ").append(minigame.getType().getNameWithSpaces()).append('.');
+            stringBuilder.append("\nThis party is currently playing ").append(minigame.getType().getNameWithSpaces()).append('.');
         }
 
         return new EmbedBuilder()
@@ -175,6 +181,9 @@ public class Party implements JsonSavable<Party>, IdCompound {
                 .build();
     }
 
+    /**
+     * @return The embed message on /party members
+     * */
     public MessageEmbed getMembers(User user) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -215,7 +224,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Party owner: " + owner + ", members: " + size();
     }
 
     @Override

@@ -7,6 +7,10 @@ import com.google.gson.JsonObject;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This object has a list of objects can be converted into a {@link JsonArray} containing each element as {@link JsonObject}
+ * The objects can be loaded from JsonObject.
+ * */
 public interface JsonConvertible<T extends JsonSavable<T>> {
 
     T fromJson(JsonObject json);

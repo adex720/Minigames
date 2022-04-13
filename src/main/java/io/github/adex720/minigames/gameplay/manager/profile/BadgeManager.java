@@ -13,6 +13,9 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/**
+ * Manages {@link Badge}
+ * */
 public class BadgeManager extends Manager {
 
     private final SortedMap<Integer, Badge> BADGES;

@@ -18,10 +18,10 @@ public class CommandPing extends Command {
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         event.getHook().sendMessage("Ping :ping_pong:!").queue(action -> {
-            OffsetDateTime start = event.getInteraction().getTimeCreated();
-            OffsetDateTime end = action.getTimeCreated();
+            OffsetDateTime start = event.getInteraction().getTimeCreated(); // Getting timestamp for when slash command was used on Discord
+            OffsetDateTime end = action.getTimeCreated(); // Getting timestamp for when bot sent first message
             long ping = start.until(end, ChronoUnit.MILLIS);
-            action.editMessage("Ping: " + ping + "ms | Websocket: " + event.getJDA().getGatewayPing() + "ms :ping_pong:").queue();
+            action.editMessage("Ping: " + ping + "ms | Websocket: " + event.getJDA().getGatewayPing() + "ms :ping_pong:").queue(); // Editing message to include ping
         });
 
         return true;

@@ -6,7 +6,7 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-public class CommandStart extends Command {
+public class  CommandStart extends Command {
 
     public CommandStart(MinigamesBot bot) {
         super(bot, "start", "Creates a profile for you.", CommandCategory.USER);

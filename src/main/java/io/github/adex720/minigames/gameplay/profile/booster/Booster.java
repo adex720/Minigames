@@ -5,6 +5,9 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.util.JsonHelper;
 
+/**
+ * A booster gives temporary multiplier to the amount of coins player receives from certain actions.
+ * */
 public class Booster implements JsonSavable<Booster> {
 
     public final BoosterRarity rarity;

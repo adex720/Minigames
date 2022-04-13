@@ -9,6 +9,11 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
+/**
+ * This class is used to access various variables throughout the execution of an interaction.
+ * The values use  {@link CommandInfo.CalculableValue} interface to only calculate values once required.
+ * Most of the methods also check if the value is already calculated and uses it if it is.
+ */
 public class CommandInfo {
     private Party calculatedParty;
 
@@ -18,6 +23,8 @@ public class CommandInfo {
 
     private final CalculableValue<User> author;
     private User calculatedAuthor;
+
+    private Minigame calculatedMinigame;
 
     private final MinigamesBot bot;
 
@@ -30,10 +37,11 @@ public class CommandInfo {
         calculatedParty = null;
         calculatedProfile = null;
         calculatedAuthor = null;
+        calculatedMinigame = null;
     }
 
     public static CommandInfo create(SlashCommandEvent event, MinigamesBot bot) {
-        Member member = event.getMember();
+        Member member = event.getMember(); // member is null when command is from dms. (Commands from dms are ignored)
         return new CommandInfo(
                 () -> bot.getProfileManager().hasProfile(member.getIdLong()),
                 () -> bot.getProfileManager().getProfile(member.getIdLong()),
@@ -81,7 +89,10 @@ public class CommandInfo {
     }
 
     public Minigame minigame() {
-        return bot.getMinigameManager().getMinigame(gameId());
+        if (calculatedMinigame == null) {
+            calculatedMinigame = bot.getMinigameManager().getMinigame(gameId());
+        }
+        return calculatedMinigame;
     }
 
     public User author() {

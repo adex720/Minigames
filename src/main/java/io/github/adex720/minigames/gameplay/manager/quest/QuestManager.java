@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
-import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
+import io.github.adex720.minigames.gameplay.manager.SavableManager;
 import io.github.adex720.minigames.gameplay.profile.quest.Quest;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -15,7 +15,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class QuestManager extends IdCompoundSavableManager<Quest> {
+/**
+ * Manages {@link Quest}s
+ */
+public class QuestManager extends SavableManager<Quest> {
 
     public static final int MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
 
@@ -58,19 +61,12 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
 
     /**
      * Quests are saves on profiles.
-     * This method always returns an empty HashSet.
+     *
+     * @return an empty HashSet.
      */
     @Override
     public Set<Quest> getValues() {
         return new HashSet<>();
-    }
-
-    /**
-     * Quests are saves on profiles.
-     * This method doesn't do anything.
-     */
-    @Override
-    public void load(JsonArray data) {
     }
 
     public ArrayList<Quest> getQuests(long id) {
@@ -112,6 +108,11 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
         return new MessageEmbed.Field(title, questsString.toString(), false);
     }
 
+    /**
+     * Generates quests for the given userId.
+     * The quests loop in a group of 16 different combinations.
+     * The quests depend on current day and the last 4 bits of the user id.
+     */
     public ArrayList<Quest> generateQuests(long userId) {
         int specifier = (int) (userId & 0xF);
 
@@ -139,7 +140,7 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
 
         int[] types = new int[5];
 
-        types[0] = shuffle(code);
+        types[0] = shuffle(code); // Generating a quest type for each quest slot.
         types[1] = shuffle((code ^ 0xF) & 0xF);
         types[2] = (types[0] ^ 0xF) & 0xF;
         types[3] = shuffle(types[0]);
@@ -169,6 +170,9 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
         return quests;
     }
 
+    /**
+     * Shuffles 4 bits to make quests less repetitive
+     */
     public static int shuffle(int original) {
         int first = (original & 0x8) >> 3;
         int second = (original & 0x4) >> 2;
@@ -178,6 +182,13 @@ public class QuestManager extends IdCompoundSavableManager<Quest> {
         return (first ^ third) << 3 | (third) << 2 | (fourth) << 1 | (second ^ fourth);
     }
 
+    /**
+     * Creates an array containing the quest difficulties.
+     *
+     * @param tripleDifficulty should there be 3 quests from the same difficulty.
+     * @param baseDifficulty   which difficulty has 1 or 3 quests.
+     * @return quests difficulty ids on rising order.
+     */
     public static int[] getDifficultiesArray(boolean tripleDifficulty, int baseDifficulty) {
         int[] difficulties = new int[5];
 

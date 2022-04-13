@@ -26,17 +26,21 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * This class contains all commands the bot has.
+ */
 public class CommandManager extends Manager {
-
-    private static final boolean SHOULD_RELOAD_COMMANDS = true;
 
     public final ArrayList<Command> MAIN_COMMANDS;
     public final ArrayList<Command> SUBCOMMANDS;
 
+    // Parent commands must be declared as their own variables,
+    // so they can be given as parameters for subcommands.
     public final CommandParty parentCommandParty;
     public final CommandPlay parentCommandPlay;
 
-
+    // Some commands must be declared as their own variables,
+    // because they need to be accessed elsewhere
     public final CommandUptime commandUptime;
 
     public CommandManager(MinigamesBot bot) {
@@ -50,6 +54,9 @@ public class CommandManager extends Manager {
         commandUptime = new CommandUptime(bot);
     }
 
+    /**
+     * Initializes each command expect minigame specific subcommands
+     */
     public void initCommands(MinigamesBot bot) {
         MAIN_COMMANDS.add(new CommandHelp(bot));
         MAIN_COMMANDS.add(new CommandInvite(bot));
@@ -104,6 +111,9 @@ public class CommandManager extends Manager {
         initDevCommands(bot);
     }
 
+    /**
+     * Registers each dev command.
+     */
     private void initDevCommands(MinigamesBot bot) {
         DevCommandListener devCommandListener = bot.getDevCommandListener();
 
@@ -128,19 +138,20 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(subcommand);
     }
 
+    /**
+     * Registers each command to Discord.
+     */
     public void registerCommands(JDA jda) {
         for (Command command : SUBCOMMANDS) {
-            ((Subcommand) command).registerSubcommand();
+            ((Subcommand) command).registerSubcommand(); // Add subcommands
         }
-        if (SHOULD_RELOAD_COMMANDS) {
 
-            Set<CommandData> commandData = new HashSet<>();
-            MAIN_COMMANDS.forEach(command -> commandData.add(command.commandData));
+        Set<CommandData> commandData = new HashSet<>();
+        MAIN_COMMANDS.forEach(command -> commandData.add(command.commandData));
 
-            jda.updateCommands().addCommands(commandData).queue();
+        jda.updateCommands().addCommands(commandData).queue();
 
-            bot.getLogger().info("Registered all commands");
-        }
+        bot.getLogger().info("Registered all commands");
     }
 
     public CommandCategory[] getCategories() {
@@ -151,6 +162,10 @@ public class CommandManager extends Manager {
         return CommandCategory.valueOf(name.toUpperCase(Locale.ROOT));
     }
 
+    /**
+     * Returns an {@link ArrayList} containing each slash command including subcommands.
+     * The commands are on the order registered but subcommands are last.
+     * */
     public ArrayList<Command> getCommands(CommandCategory category) {
         ArrayList<Command> commands = new ArrayList<>();
         for (Command command : MAIN_COMMANDS) {
@@ -167,6 +182,9 @@ public class CommandManager extends Manager {
         return commands;
     }
 
+    /**
+     * @return Amount off all slash commands including subcommands.
+     * */
     public int getCommandAmount(CommandCategory category) {
         int amount = 0;
         for (Command command : MAIN_COMMANDS) {

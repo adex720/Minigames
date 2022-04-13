@@ -12,6 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
+/**
+ * Loads resource Json files.
+ * File contents are also cached
+ * */
 public class ResourceDataManager extends DataManager {
 
     private final HashMap<String, JsonElement> CACHED_JSON;

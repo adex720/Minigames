@@ -14,6 +14,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * See <a href="file:src/main/resources/stats.json">/resources/stopWords.txt</a> if you don't know how Hangman works.
+ */
 public class MinigameHangman extends Minigame {
 
     private final String word;
@@ -58,77 +61,75 @@ public class MinigameHangman extends Minigame {
             char guessLetter = guess.charAt(0);
 
             if (guessLetter >= 'A' && guessLetter <= 'Z') {
-                guessLetter += 0x20;
+                guessLetter += 0x20; // Make guess lower case
             }
 
-            if (guessLetter < 'a' || guessLetter > 'z') {
+            if (guessLetter < 'a' || guessLetter > 'z') { // guess was not a letter
                 event.getHook().sendMessage("You should only guess English letters!").queue();
                 return;
             }
 
-            if (!guesses.contains(guessLetter)) {
-
-                int size = guesses.size();
-                if (size == 0) {
-                    guesses.add(guessLetter);
-                } else {
-                    for (int i = 0; i <= size; i++) {
-                        if (i == size) {
-                            guesses.add(guessLetter);
-                            break;
-                        }
-
-                        if (guesses.get(i) > guessLetter) {
-                            guesses.add(i, guessLetter);
-                            break;
-                        }
-                    }
-                }
-
-
-                if (word.contains(guessLetter + "")) {
-
-                    StringBuilder wordBuilder = new StringBuilder();
-                    int length = word.length();
-
-                    boolean lettersLeft = false;
-
-                    for (int i = 0; i < length; i++) {
-                        char current = word.charAt(i);
-                        if (guesses.contains(current)) {
-                            wordBuilder.append(current);
-                        } else {
-                            wordBuilder.append("\\_");
-                            lettersLeft = true;
-                        }
-
-                    }
-
-                    if (lettersLeft) {
-                        wordGuessed = wordBuilder.toString();
-                        event.getHook().sendMessage("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
-                        return;
-                    }
-
-                    event.getHook().sendMessage("Good job! The word was " + word + ". You had " + life + " tries left!").queue();
-                    finish(event, ci, true);
-
-                } else {
-                    life--;
-                    if (life == 0) {
-                        event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
-                        finish(event, ci, false);
-                        return;
-                    }
-
-                    event.getHook().sendMessage("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
-                }
-
-
-            } else {
+            if (guesses.contains(guessLetter)) {
                 event.getHook().sendMessage("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+                return;
             }
 
+            int size = guesses.size();
+            if (size == 0) {
+                guesses.add(guessLetter);
+            } else {
+                for (int i = 0; i <= size; i++) { // Add guessed letter to guesses at alphabetical order
+                    if (i == size) {
+                        guesses.add(guessLetter);
+                        break;
+                    }
+
+                    if (guesses.get(i) > guessLetter) {
+                        guesses.add(i, guessLetter);
+                        break;
+                    }
+                }
+            }
+
+
+            if (word.contains(guessLetter + "")) {
+
+                StringBuilder wordBuilder = new StringBuilder();
+                int length = word.length();
+
+                boolean lettersLeft = false;
+
+                for (int i = 0; i < length; i++) { // Update known word to match new guessed letter
+                    char current = word.charAt(i);
+                    if (guesses.contains(current)) {
+                        wordBuilder.append(current);
+                    } else {
+                        wordBuilder.append("\\_");
+                        lettersLeft = true;
+                    }
+
+                }
+
+                if (lettersLeft) {
+                    wordGuessed = wordBuilder.toString();
+                    event.getHook().sendMessage("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+                    return;
+                }
+
+                event.getHook().sendMessage("Good job! The word was " + word + ". You had " + life + " tries left!").queue();
+                finish(event, ci, true);
+
+            } else {
+                life--;
+                if (life == 0) {
+                    event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
+                    finish(event, ci, false);
+                    return;
+                }
+
+                event.getHook().sendMessage("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+
+            }
         } else {
             if (word.equals(guess.toLowerCase(Locale.ROOT))) {
                 event.getHook().sendMessage("Good Job! " + guess + " was the word! You had " + life + " health left.").queue();
@@ -193,6 +194,9 @@ public class MinigameHangman extends Minigame {
         return new MinigameHangman(bot, id, isParty, lastActive, word, life, guesses);
     }
 
+    /**
+     * @return Guessed letters on a new line. If no guesses are made yet the String will be empty.
+     * */
     public String getGuesses() {
         if (guesses.isEmpty()) return "";
 

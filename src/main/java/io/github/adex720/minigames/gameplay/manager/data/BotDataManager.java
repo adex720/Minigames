@@ -13,6 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
+/**
+ * Saves and loads data as {@link JsonElement}.
+ * */
 public class BotDataManager extends DataManager {
 
     private final String databaseUri;

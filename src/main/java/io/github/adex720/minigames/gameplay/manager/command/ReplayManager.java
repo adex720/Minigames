@@ -11,6 +11,11 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 
 import java.util.HashMap;
 
+/**
+ * Manages minigame replay feature.
+ * After finishing a minigame, a new minigame of same type can be started
+ * by pressing the replay button during the next minute.
+ * */
 public class ReplayManager extends Manager {
 
     private final HashMap<Long, MinigameType<? extends Minigame>> WAITING;

@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * Manages {@link Party}ies.
+ * */
 public class PartyManager extends IdCompoundSavableManager<Party> {
 
     private final HashMap<Long, Party> PARTIES;
@@ -34,6 +37,9 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
         return new HashSet<>(PARTIES.values());
     }
 
+    /**
+     * Clear unused parties to save memory.
+     * */
     public void clearInactiveParties() {
         long time = System.currentTimeMillis() - 1000 * 60 * 30;
         int amount = 0;

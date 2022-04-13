@@ -6,6 +6,9 @@ import io.github.adex720.minigames.util.JsonHelper;
 
 import java.util.Arrays;
 
+/**
+ * List all boosters one player has in inventory.
+ * */
 public class BoosterList {
 
     private final int[] boosters;

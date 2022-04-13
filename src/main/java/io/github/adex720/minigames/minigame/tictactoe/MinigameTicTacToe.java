@@ -61,8 +61,11 @@ public class MinigameTicTacToe extends DuelMinigame {
         this.isFirstPlayersTurn = isFirstPlayersTurn;
     }
 
+    /**
+     * Fills the board 2d array with given board
+     */
     private void fillBoard(char[][] board) {
-        for (int x = 0; x < 3; x++) {
+        for (short x = 0; x < 3; x++) {
             System.arraycopy(board[x], 0, this.board[x], 0, 3);
         }
     }
@@ -103,27 +106,36 @@ public class MinigameTicTacToe extends DuelMinigame {
         return minigame;
     }
 
+    /**
+     * Fills the board 2d array with spaces.
+     */
     private void fillBoard() {
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
+        for (short x = 0; x < 3; x++) {
+            for (short y = 0; y < 3; y++) {
                 board[x][y] = ' ';
             }
         }
     }
 
-    public static int compact(int x, int y) {
-        return (x << 2) | y;
+    /**
+     * Since the x and y positions only require 2 bits to be stored each,
+     * The are stored on the same variable.
+     * <p>
+     * This method converts x and y values to one short.
+     */
+    public static short compact(short x, short y) {
+        return (short) ((x << 2) | y);
     }
 
-    public static int getXFromCompacted(int compacted) {
-        return (compacted >> 2) & 0x3;
+    public static short getXFromCompacted(short compacted) {
+        return (short) ((compacted >> 2) & 0x3);
     }
 
-    public static String getPositionName(int position) {
+    public static String getPositionName(short position) {
         return getPositionName(getXFromCompacted(position), getYFromCompacted(position));
     }
 
-    public static String getPositionName(int x, int y) {
+    public static String getPositionName(short x, short y) {
         if (x != 1) {
             if (y != 1) {
                 return getColumnName(x) + " " + getRowName(y);
@@ -139,11 +151,11 @@ public class MinigameTicTacToe extends DuelMinigame {
         }
     }
 
-    public static int getYFromCompacted(int compacted) {
-        return compacted & 0x3;
+    public static short getYFromCompacted(short compacted) {
+        return (short) (compacted & 0x3);
     }
 
-    public static String getColumnName(int x) {
+    public static String getColumnName(short x) {
         return switch (x) {
             case 0 -> "left";
             case 1 -> "middle";
@@ -152,7 +164,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         };
     }
 
-    public static String getRowName(int y) {
+    public static String getRowName(short y) {
         return switch (y) {
             case 0 -> "top";
             case 1 -> "middle";
@@ -179,10 +191,10 @@ public class MinigameTicTacToe extends DuelMinigame {
             return;
         }
 
-        int x = (int) event.getOption("column").getAsLong();
-        int y = (int) event.getOption("row").getAsLong();
+        short x = (short) event.getOption("column").getAsLong();
+        short y = (short) event.getOption("row").getAsLong();
 
-        if (!isFree(x, y)) {
+        if (isOccupied(x, y)) {
             event.getHook().sendMessageEmbeds(getEmbedWithField("Can't set mark", "That position is already in use.")).queue();
             return;
         }
@@ -215,7 +227,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         finish(event, ci, winner);
     }
 
-    public void place(int x, int y, boolean firstPlayer) {
+    public void place(short x, short y, boolean firstPlayer) {
         board[x][y] = firstPlayer ? 'x' : 'o';
     }
 
@@ -223,11 +235,11 @@ public class MinigameTicTacToe extends DuelMinigame {
      * @return 0 if there's no winner,
      * 1 if first player is the winner,
      * 2 if second player is the winner and
-     * 3 if te game is draw.
+     * 3 if the game is draw.
      */
     public int getWinner() {
-        for (int line = ROW_TOP; line <= DIAGONAL_RIGHT_TOP; line++) {
-            int score = getLineScore(line);
+        for (short line = ROW_TOP; line <= DIAGONAL_RIGHT_TOP; line++) {
+            short score = getLineScore(line);
             if (score == 3) return FIRST_PLAYER_WON;
             if (score == -3) return SECOND_PLAYER_WON;
         }
@@ -235,13 +247,13 @@ public class MinigameTicTacToe extends DuelMinigame {
         return doesBoardHaveEmptySpots() ? 0 : DRAW;
     }
 
-    public boolean isFree(int x, int y) {
-        return board[x][y] == ' ';
+    public boolean isOccupied(short x, short y) {
+        return board[x][y] != ' ';
     }
 
     public boolean doesBoardHaveEmptySpots() {
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
+        for (short x = 0; x < 3; x++) {
+            for (short y = 0; y < 3; y++) {
                 if (board[x][y] == ' ') return true;
             }
         }
@@ -261,13 +273,23 @@ public class MinigameTicTacToe extends DuelMinigame {
                 .setTimestamp(new Date().toInstant());
     }
 
+    /**
+     * Returns the board with horizontal lines between the rows
+     * */
     public String getBoard() {
-        return "|" + getMark(0, 0) + "|" + getMark(1, 0) + "|" + getMark(2, 0) + "|\n" +
-                "|" + getMark(0, 1) + "|" + getMark(1, 1) + "|" + getMark(2, 1) + "|\n" +
-                "|" + getMark(0, 2) + "|" + getMark(1, 2) + "|" + getMark(2, 2) + "|";
+        short zero = 0;
+        short one = 1;
+        short two = 2;
+
+        return "|" + getMark(zero, zero) + "|" + getMark(one, zero) + "|" + getMark(two, zero) + "|\n" +
+                "|" + getMark(zero, one) + "|" + getMark(one, one) + "|" + getMark(two, one) + "|\n" +
+                "|" + getMark(zero, two) + "|" + getMark(one, two) + "|" + getMark(two, two) + "|";
     }
 
-    public String getMark(int x, int y) {
+    /**
+     * @return 'X', 'O' or ' '
+     */
+    public String getMark(short x, short y) {
         char mark = board[x][y];
         if (mark == ' ') return " ";
         if (mark == 'x') return "X";
@@ -278,8 +300,8 @@ public class MinigameTicTacToe extends DuelMinigame {
      * @param line the line to check.
      * @return the amount of marks the first player has on the row with the amount of marks of the second players reduced from it.
      */
-    public int getLineScore(int line) {
-        int score = 0;
+    public short getLineScore(int line) {
+        short score = 0;
         for (char mark : getLine(line)) {
             if (mark == 'x') score++;
             else if (mark == 'o') score--;
@@ -287,57 +309,65 @@ public class MinigameTicTacToe extends DuelMinigame {
         return score;
     }
 
-    public int getFirstFreeOnLine(int line) {
+    /**
+     * @return returns a compacted short containing the position of the first free tile on the given line.
+     * If the line has no free spaces this returns -1.
+     */
+    public short getFirstFreeOnLine(int line) {
+        short zero = 0;
+        short one = 1;
+        short two = 2;
+
         if (board[0][0] == ' ') {
             if (line == ROW_TOP || line == COLUMN_LEFT || line == DIAGONAL_LEFT_TOP) {
-                return compact(0, 0);
+                return compact(zero, zero);
             }
         }
         if (board[1][0] == ' ') {
             if (line == ROW_TOP || line == COLUMN_MIDDLE) {
-                return compact(1, 0);
+                return compact(one, zero);
             }
 
         }
         if (board[2][0] == ' ') {
             if (line == ROW_TOP || line == COLUMN_RIGHT || line == DIAGONAL_RIGHT_TOP) {
-                return compact(2, 0);
+                return compact(two, zero);
             }
 
         }
         if (board[0][1] == ' ') {
             if (line == ROW_MIDDLE || line == COLUMN_LEFT) {
-                return compact(0, 1);
+                return compact(zero, one);
             }
 
         }
         if (board[1][1] == ' ') {
             if (line == ROW_MIDDLE || line == COLUMN_MIDDLE || line == DIAGONAL_LEFT_TOP || line == DIAGONAL_RIGHT_TOP) {
-                return compact(1, 1);
+                return compact(one, one);
             }
 
         }
         if (board[2][1] == ' ') {
             if (line == ROW_MIDDLE || line == COLUMN_RIGHT) {
-                return compact(2, 1);
+                return compact(two, one);
             }
 
         }
         if (board[0][2] == ' ') {
             if (line == ROW_BOTTOM || line == COLUMN_LEFT || line == DIAGONAL_RIGHT_TOP) {
-                return compact(0, 2);
+                return compact(zero, two);
             }
 
         }
         if (board[1][2] == ' ') {
             if (line == ROW_BOTTOM || line == COLUMN_MIDDLE) {
-                return compact(1, 2);
+                return compact(one, two);
             }
 
         }
         if (board[2][2] == ' ') {
             if (line == ROW_BOTTOM || line == COLUMN_RIGHT || line == DIAGONAL_LEFT_TOP) {
-                return compact(2, 2);
+                return compact(two, two);
             }
         }
 
@@ -390,7 +420,7 @@ public class MinigameTicTacToe extends DuelMinigame {
 
         char[][] board = new char[3][3];
         JsonArray boardJson = JsonHelper.getJsonArray(json, "board");
-        for (int column = 0; column < 3; column++) {
+        for (short column = 0; column < 3; column++) {
             board[column] = JsonHelper.jsonArrayToCharArray(boardJson.get(column).getAsJsonArray());
         }
 

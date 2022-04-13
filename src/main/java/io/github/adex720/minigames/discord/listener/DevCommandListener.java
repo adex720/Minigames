@@ -10,6 +10,12 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * Listens to different types of management commands.
+ * The dev commands can only be run be te developer.
+ * <p>
+ * Examples of dev commands are saving data, updating leaderboards and shutting the bot down.
+ */
 public class DevCommandListener extends ListenerAdapter {
 
     private final Set<DevCommand> COMMANDS;
@@ -18,6 +24,9 @@ public class DevCommandListener extends ListenerAdapter {
     private final MinigamesBot bot;
     private final long developerId;
 
+    /**
+     * Only user with the {@param developerId} can run these commands.
+     */
     public DevCommandListener(MinigamesBot bot, long developerId, String prefix) {
         this.bot = bot;
         this.developerId = developerId;
@@ -38,16 +47,19 @@ public class DevCommandListener extends ListenerAdapter {
 
         for (DevCommand command : COMMANDS) {
             if (command.name.equals(commandName)) {
-                if (command.onRun(event)) {
-                    bot.getLogger().info("Used developer command " + command.name);
-                    return;
+                if (command.onRun(event)) { // execute command
+                    bot.getLogger().info("Used developer command " + command.name); // Log usage of command
                 } else {
-                    bot.getLogger().error("Failed to run dev command " + command.name);
+                    bot.getLogger().error("Failed to run dev command " + command.name); // Log failure
                 }
+                return;
             }
         }
     }
 
+    /**
+     * @param command Command to add on Dev commands list.
+     * */
     public void addCommand(DevCommand command) {
         COMMANDS.add(command);
     }

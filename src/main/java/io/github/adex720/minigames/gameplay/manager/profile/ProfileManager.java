@@ -11,6 +11,9 @@ import io.github.adex720.minigames.util.Util;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Manages {@link Profile}s.
+ */
 public class ProfileManager extends IdCompoundSavableManager<Profile> {
 
     private final HashMap<Long, Profile> PROFILES;
@@ -57,6 +60,13 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         PROFILES.remove(id);
     }
 
+    /**
+     * Generates a verification code to prevent accidental profile deletions.
+     * The code expires after 10 seconds.
+     *
+     * @param id Id of the user whose profile is getting deleted
+     * @return The verification code
+     */
     public String generateDeletionCode(long id) {
         char[] letters = new char[5];
 

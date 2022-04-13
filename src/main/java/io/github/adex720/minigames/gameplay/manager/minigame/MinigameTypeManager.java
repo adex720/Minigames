@@ -18,6 +18,9 @@ import io.github.adex720.minigames.minigame.wordle.MinigameWordle;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Contains each minigame type.
+ * */
 public class MinigameTypeManager extends Manager {
 
     private final ArrayList<String> types;
@@ -52,6 +55,9 @@ public class MinigameTypeManager extends Manager {
         initCommand(WORDLE);
     }
 
+    /**
+     * Adds required slash commands for the minigame.
+     * */
     private void initCommand(MinigameType<?> minigameType) {
         minigameType.initCommand();
         minigameType.createPlayCommand();
@@ -59,6 +65,9 @@ public class MinigameTypeManager extends Manager {
         types.add(minigameType.name);
     }
 
+    /**
+     * Gets minigame type from its String name.
+     * */
     public MinigameType<? extends Minigame> getType(String name) {
         return switch (name.toLowerCase(Locale.ROOT)) { // simply faster
             case "hangman" -> HANGMAN;
@@ -66,10 +75,13 @@ public class MinigameTypeManager extends Manager {
             case "higher-lower" -> HIGHER_OR_LOWER;
             case "tic-tac-toe" -> TIC_TAC_TOE;
             case "wordle" -> WORDLE;
-            default -> throw new IllegalStateException("Unexpected minigame type: " + name);
+            default -> throw new IllegalStateException("Invalid minigame type: " + name);
         };
     }
 
+    /**
+     * Returns an {@link ArrayList} containg the name of each minigame type.
+     * */
     public ArrayList<String> getTypes() {
         return types;
     }

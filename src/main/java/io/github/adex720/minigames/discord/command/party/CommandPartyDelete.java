@@ -18,7 +18,7 @@ public class CommandPartyDelete extends Subcommand {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
 
         if (!ci.isInParty()) {
-            event.getHook().sendMessage("You don't have a party!").queue();
+            event.getHook().sendMessage("You aren't in a party!").queue();
             return true;
         }
 

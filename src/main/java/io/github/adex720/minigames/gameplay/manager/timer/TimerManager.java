@@ -8,6 +8,10 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Manages Timers.
+ * All managed timers can be canceled with {@link TimerManager#stop()}.
+ * */
 public class TimerManager extends Manager {
 
     private final Set<TimerObject> TIMERS;

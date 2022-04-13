@@ -33,18 +33,19 @@ public class CommandClaim extends Command {
 
         int claimed = 0;
         int coins = 0;
-        HashMap<Integer, Integer> boosters = new HashMap<>();
+        HashMap<Integer, Integer> crates = new HashMap<>(); // Crate HashMap for received crates
         for (KitCommand command : bot.getKitCooldownManager().getKits()) {
             if (command.isOnCooldown(userId, time)) continue;
 
             claimed++;
-            Pair<Integer, Integer> rewards = command.addRewardAndCooldown(profile, time);
+            Pair<Integer, Integer> rewards = command.addRewardAndCooldown(event, profile, time); // First is received coins and right crates
 
-            if (rewards.first > 0) {
+            if (rewards.first > 0) { // Opening one crate never gives both coins and crates
                 coins += rewards.first;
             } else {
-                if (!boosters.containsKey(rewards.second)) boosters.put(rewards.second, 1);
-                else boosters.put(rewards.second, boosters.get(rewards.second) + 1);
+                if (!crates.containsKey(rewards.second))
+                    crates.put(rewards.second, 1); // Add crate rarity to HashMap if it's not present
+                else crates.put(rewards.second, crates.get(rewards.second) + 1);
             }
         }
 
@@ -53,22 +54,23 @@ public class CommandClaim extends Command {
             return true;
         }
 
-        StringBuilder description = new StringBuilder();
+        StringBuilder description = new StringBuilder(); // Rewards are saved. Proceeding to building message
 
         if (coins > 0) {
             description.append("You earned ").append(coins).append(" coins!");
 
-            if (!boosters.isEmpty()) description.append('\n');
+            if (!crates.isEmpty()) description.append('\n');
         }
 
-        if (!boosters.isEmpty()) {
+        if (!crates.isEmpty()) {
             description.append("You earned ");
             boolean comma = false;
             int total = 0;
-            for (int type = 0; type < CrateType.TYPES_AMOUNT; type++) {
-                if (!boosters.containsKey(type)) continue;
+            for (int type = 0; type < CrateType.TYPES_AMOUNT; type++) { // Looping through each crate rarity.
+                // EntrySet of the HashMap is not used as it is not on the correct order
+                if (!crates.containsKey(type)) continue; // skipping rarity if no crates were received from it
 
-                int count = boosters.get(type);
+                int count = crates.get(type);
                 total += count;
                 BoosterRarity boosterRarity = BoosterRarity.get(type);
                 while (count > 0) {

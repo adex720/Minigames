@@ -13,60 +13,72 @@
   },
   {
     "id": 3,
+    "name": "party minigames played",
+    "description": "Amount of party minigames played.",
+    "on_leaderboard": true
+  },
+  {
+    "id": 4,
+    "name": "party minigames won",
+    "description": "",
+    "on_leaderboard": true
+  },
+  {
+    "id": 5,
     "name": "hangman games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 4,
+    "id": 6,
     "name": "hangman games won",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 5,
+    "id": 7,
     "name": "unscramble games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 6,
+    "id": 8,
     "name": "unscramble games won",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 7,
+    "id": 9,
     "name": "higher or lower games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 8,
+    "id": 10,
     "name": "higher or lower games won",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 9,
+    "id": 11,
     "name": "tic tac toe games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 10,
+    "id": 12,
     "name": "tic-tac-toe games won",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 11,
+    "id": 13,
     "name": "wordle games played",
     "description": "",
     "on_leaderboard": false
   },
   {
-    "id": 12,
+    "id": 14,
     "name": "wordle games won",
     "description": "",
     "on_leaderboard": false

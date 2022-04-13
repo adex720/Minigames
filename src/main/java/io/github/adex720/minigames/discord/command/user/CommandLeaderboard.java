@@ -34,7 +34,7 @@ public class CommandLeaderboard extends Command {
         int page = 1;
         OptionMapping pageOptionMapping = event.getOption("page");
         if (pageOptionMapping != null) {
-            page = (int) pageOptionMapping.getAsLong();
+            page = (int) pageOptionMapping.getAsLong(); // get page from argument
 
             if (page <= 0) {
                 event.getHook().sendMessage("Page must be at least 1!").queue();
@@ -45,20 +45,39 @@ public class CommandLeaderboard extends Command {
         TreeSet<Profile> leaderboard = bot.getStatManager().getLeaderboard(categoryId);
         int amount = leaderboard.size();
 
-        int max = 1 + (amount - 1) / PER_PAGE;
+        int max = 1 + (amount - 1) / PER_PAGE; // TODO: Move this inside previous if statement once more profiles exist
         if (page > max) {
             event.getHook().sendMessage("Page is outside leaderboard. Last page is " + page + ".").queue();
             return true;
         }
 
-        int first = (page - 1) * PER_PAGE;
+        int first = (page - 1) * PER_PAGE; // Calculate ranks of first and last profile on the page
         int last = page * PER_PAGE - 1;
 
         if (page == max) {
-            last = amount - 1;
+            last = amount - 1; // Make page end at last entry if page is the last page.
         }
 
         String categoryName = bot.getStatManager().get(categoryId).name();
+        String ranks = getRanks(leaderboard, first, last, categoryId, categoryName); // Get page as String
+
+        int userScore = ci.profile().getStatValue(categoryId); // Get authors' score
+        User author = ci.author();
+        event.getHook().sendMessageEmbeds(new EmbedBuilder()
+                .setTitle("LEADERBOARD")
+                .addField(categoryName + " (Your score: " + userScore + ")", ranks, false)
+                .setColor(Util.getColor(ci.authorId()))
+                .setFooter(author.getName(), author.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build()).queue();
+        return true;
+    }
+
+    /**
+     * @return Entries on given leaderboard from ranks {@param first} to {@param last} (both included).
+     * The entries count rank, username and score.
+     * */
+    public String getRanks(TreeSet<Profile> leaderboard, int first, int last, int categoryId, String categoryName) {
         StringBuilder leaderboardStringBuilder = new StringBuilder();
         int index = 0;
         for (Profile profile : leaderboard) {
@@ -74,16 +93,7 @@ public class CommandLeaderboard extends Command {
             index++;
         }
 
-        int userScore = ci.profile().getStatValue(categoryId);
-        User author = ci.author();
-        event.getHook().sendMessageEmbeds(new EmbedBuilder()
-                .setTitle("LEADERBOARD")
-                .addField(categoryName + " (Your score: " + userScore + ")", leaderboardStringBuilder.toString(), false)
-                .setColor(Util.getColor(ci.authorId()))
-                .setFooter(author.getName(), author.getAvatarUrl())
-                .setTimestamp(new Date().toInstant())
-                .build()).queue();
-        return true;
+        return leaderboardStringBuilder.toString();
     }
 
     @Override

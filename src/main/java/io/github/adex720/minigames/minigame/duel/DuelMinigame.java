@@ -11,7 +11,12 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class DuelMinigame extends Minigame {
+/**
+ * A duel minigame can only be played with a party of 2 players.
+ * The players play against each others.
+ * Some duel minigames can be played against AI.
+ * */
+public abstract class DuelMinigame extends Minigame { //TODO: add locked party status
 
     public static final int FIRST_PLAYER_WON = 1;
     public static final int SECOND_PLAYER_WON = 2;
@@ -39,7 +44,7 @@ public abstract class DuelMinigame extends Minigame {
     public void makeAIMove() {
         if (type instanceof DuelMinigameType<? extends DuelMinigame> duelMinigameType) {
             assert duelMinigameType.ai != null;
-            duelMinigameType.ai.makeMove(this);
+            duelMinigameType.ai.makeMove(bot.getRandom(), this);
         }
     }
 
@@ -66,7 +71,7 @@ public abstract class DuelMinigame extends Minigame {
         super.finish(event, commandInfo, winState == FIRST_PLAYER_WON);
 
         Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
-        appendQuest(opponentProfile, winState == SECOND_PLAYER_WON);
+        appendQuest(event, opponentProfile, winState == SECOND_PLAYER_WON);
         appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
     }
 }

@@ -3,6 +3,9 @@ package io.github.adex720.minigames.gameplay.profile.stat;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.util.JsonHelper;
 
+/**
+ * Most of the stats are only shown on /stats but few appear on leaderboards.
+ * */
 public record Stat(int id, String name, String description, boolean onLeaderboard) {
 
     public static Stat fromJson(JsonObject json) {

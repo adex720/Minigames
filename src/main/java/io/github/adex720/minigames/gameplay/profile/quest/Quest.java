@@ -1,15 +1,25 @@
 package io.github.adex720.minigames.gameplay.profile.quest;
 
 import com.google.gson.JsonObject;
-import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import io.github.adex720.minigames.util.JsonHelper;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-public class Quest implements IdCompound, JsonSavable<Quest> {
+/**
+ * Each player has own daily quests.
+ * The quests reset at UTC midnight and are started by using /quests for first time the day.
+ * <p>
+ * Quests have 16 different {@link QuestType}s.
+ * Player can't have more than one quest of each type at once.
+ * <p>
+ * Quests have 3 different {@link QuestDifficulty}s.
+ * Player always has at least one quest of each difficulty.
+ */
+public class Quest implements JsonSavable<Quest> {
 
     private final QuestType type;
     private final QuestDifficulty difficulty;
@@ -35,14 +45,6 @@ public class Quest implements IdCompound, JsonSavable<Quest> {
         return type.textStart + " " + goal + " " + type.textEnd + ". Current progress: " + progress;
     }
 
-    /**
-     * Always returns -1, quests are saved on profiles and not as own json.
-     */
-    @Override
-    public Long getId() {
-        return -1L;
-    }
-
     @Override
     public JsonObject getAsJson() {
         JsonObject json = new JsonObject();
@@ -62,41 +64,57 @@ public class Quest implements IdCompound, JsonSavable<Quest> {
         return new Quest(questList, type, difficulty, progress);
     }
 
-    public void checkForCompletion() {
-        if (progress < goal) return;
+    public boolean checkForCompletion(SlashCommandEvent event, Profile profile) {
+        if (progress < goal) return false;
 
-        // TODO: give rewards
+        applyRewards(event, profile);
+        event.getHook().sendMessage("You completed your " + difficulty.name + " quest!").queue();
+        return true;
     }
 
-    public void append(int amount) {
+    public void applyRewards(SlashCommandEvent event, Profile profile) {
+        int coins = difficulty.rewardCoins;
+        int crateType = difficulty.rewardCrateId;
+
+        profile.addCoins(coins, true, event);
+        profile.addCrate(crateType);
+    }
+
+    public void append(SlashCommandEvent event, Profile profile, int amount) {
+        if (isCompleted()) return;
+
         if (amount > 0) {
             progress += amount;
-            checkForCompletion();
+            if (checkForCompletion(event, profile)) {
+                progress = goal;
+
+                // TODO: check if all quests are completed
+            }
         }
     }
 
-    public void minigamePlayed(MinigameType<? extends Minigame> type, Profile profile) {
-        append(this.type.minigamePlayed(type, profile));
+    public void minigamePlayed(SlashCommandEvent event, MinigameType<? extends Minigame> type, Profile profile) {
+        append(event, profile, this.type.minigamePlayed(type, profile));
     }
 
-    public void minigameWon(MinigameType<? extends Minigame> type, Profile profile) {
-        append(this.type.minigameWon(type, profile));
+    public void minigameWon(SlashCommandEvent event, MinigameType<? extends Minigame> type, Profile profile) {
+        append(event, profile, this.type.minigameWon(type, profile));
     }
 
-    public void coinsEarned(int amount, Profile profile) {
-        append(this.type.coinsEarned(amount, profile));
+    public void coinsEarned(SlashCommandEvent event, int amount, Profile profile) {
+        append(event, profile, this.type.coinsEarned(amount, profile));
     }
 
-    public void crateOpened(CrateType rarity, Profile profile) {
-        append(this.type.crateOpened(rarity, profile));
+    public void crateOpened(SlashCommandEvent event, CrateType rarity, Profile profile) {
+        append(event, profile, this.type.crateOpened(rarity, profile));
     }
 
-    public void boosterUsed(Profile profile) {
-        append(this.type.boosterUsed(profile));
+    public void boosterUsed(SlashCommandEvent event, Profile profile) {
+        append(event, profile, this.type.boosterUsed(profile));
     }
 
-    public void kitClaimed(String kit, Profile profile) {
-        append(this.type.kitClaimed(kit, profile));
+    public void kitClaimed(SlashCommandEvent event, String kit, Profile profile) {
+        append(event, profile, this.type.kitClaimed(kit, profile));
     }
 
     public boolean isCompleted() {

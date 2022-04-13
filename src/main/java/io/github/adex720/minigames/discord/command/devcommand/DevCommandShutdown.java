@@ -15,5 +15,7 @@ public class DevCommandShutdown extends DevCommand {
         event.getChannel().sendMessage("Saved all data. Shutting down!").queue();
         bot.stop();
         return true;
+        // A shutdown can take multiple minutes because each timer with a low delay isn't stored to be stopped.
+        // The disconnection from Discord starts right after saving all data.
     }
 }

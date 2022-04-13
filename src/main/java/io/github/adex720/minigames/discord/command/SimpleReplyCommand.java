@@ -3,6 +3,9 @@ package io.github.adex720.minigames.discord.command;
 import io.github.adex720.minigames.MinigamesBot;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
+/**
+ * A command which contains the same message (excluding date and author data) each time.
+ * */
 public abstract class SimpleReplyCommand extends Command {
 
     protected final String reply;

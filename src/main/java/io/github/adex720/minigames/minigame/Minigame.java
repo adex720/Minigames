@@ -19,7 +19,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     public final long id;
     public final boolean isParty;
 
-    protected long lastActive;
+    protected long lastActive; // used to find inactive parties
 
     public Minigame(MinigamesBot bot, MinigameType<? extends Minigame> type, long id, boolean isParty, long lastActive) {
         this.bot = bot;
@@ -42,38 +42,38 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
 
-        String rewards = addRewards(profile, won);
+        String rewards = addRewards(event, profile, won);
 
         event.getHook().sendMessage(rewards)
-                .addActionRow(Button.primary("play-again", "Play again")).queue();
+                .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
         bot.getReplayManager().addReplay(id, type);
 
-        appendQuest(profile, won);
+        appendQuest(event, profile, won); // Update quests and stats
         appendStats(profile, won);
     }
 
-    public void appendQuest(Profile profile, boolean won) {
+    public void appendQuest(SlashCommandEvent event, Profile profile, boolean won) {
         if (won) {
-            profile.appendQuests(q -> q.minigamePlayed(this.type, profile), q -> q.minigameWon(this.type, profile));
+            profile.appendQuests(q -> q.minigamePlayed(event, this.type, profile), q -> q.minigameWon(event, this.type, profile));
         } else {
-            profile.appendQuests(q -> q.minigamePlayed(this.type, profile));
+            profile.appendQuests(q -> q.minigamePlayed(event, this.type, profile));
         }
     }
 
-    public String addRewards(Profile profile, boolean won) {
-        int coins = 50;
+    public String addRewards(SlashCommandEvent event, Profile profile, boolean won) {
+        int coins = 50; // 50 coins for lost minigame
         if (won) {
             Random random = bot.getRandom();
-            if (random.nextInt(3) == 0) {
+            if (random.nextInt(3) == 0) { // If won there's a 33% chance to get a crate.
                 CrateType reward = random.nextBoolean() ? CrateType.COMMON : CrateType.UNCOMMON;
                 profile.addCrate(reward);
                 return "You received " + reward.getNameWithArticle() + " crate!";
             }
 
-            coins = random.nextInt(100, 250);
+            coins = random.nextInt(100, 250); // 100-250 coins for won minigame
         }
 
-        profile.addCoins(coins, true);
+        profile.addCoins(coins, true, event);
         return "You received " + coins + " coins!";
     }
 
@@ -91,6 +91,10 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         bot.getMinigameManager().deleteMinigame(id);
     }
 
+    /**
+     * Deletes the minigame.
+     * @return message to send, defaults at an empty String.
+     * */
     public String quit() {
         delete();
         return "";

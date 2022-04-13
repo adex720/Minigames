@@ -4,6 +4,9 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.util.JsonHelper;
 
+/**
+ * Lists all unopened crates a player has.
+ * */
 public class CrateList {
 
     private final int[] crates;

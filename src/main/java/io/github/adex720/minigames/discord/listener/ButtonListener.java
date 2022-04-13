@@ -16,7 +16,7 @@ public class ButtonListener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(@NotNull ButtonClickEvent event) {
-        CommandInfo commandInfo = CommandInfo.create(event, bot);
+        CommandInfo commandInfo = CommandInfo.create(event, bot); // Create command info
 
         if(bot.getBanManager().isBanned(commandInfo.authorId())) return; // Banned users shouldn't be able to use buttons
 

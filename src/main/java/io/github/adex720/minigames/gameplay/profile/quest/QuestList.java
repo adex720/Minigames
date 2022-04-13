@@ -185,9 +185,10 @@ public class QuestList {
     public void addDifficulty(JsonObject difficultyJson) {
         int id = JsonHelper.getInt(difficultyJson, "id");
         String name = JsonHelper.getString(difficultyJson, "name");
-        int reward = JsonHelper.getInt(difficultyJson, "reward");
+        int rewardCoins = JsonHelper.getInt(difficultyJson, "coins");
+        int rewardCrateId = JsonHelper.getInt(difficultyJson, "crate");
 
-        addDifficulty(new QuestDifficulty(name, reward, id));
+        addDifficulty(new QuestDifficulty(name, rewardCoins, rewardCrateId, id));
     }
 
     public void addDifficulty(QuestDifficulty difficulty) {
@@ -203,11 +204,11 @@ public class QuestList {
         return quests;
     }
 
-    public QuestType getType(int id){
+    public QuestType getType(int id) {
         return TYPES.get(id);
     }
 
-    public QuestDifficulty getDifficulty(int id){
+    public QuestDifficulty getDifficulty(int id) {
         return DIFFICULTIES.get(id);
     }
 

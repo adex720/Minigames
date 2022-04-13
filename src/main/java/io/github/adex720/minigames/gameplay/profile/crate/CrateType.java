@@ -4,8 +4,13 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.util.Pair;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A crate can contain coins, boosters all both.
+ * If the crate can contain both it randomly picks one each time opened.
+ * */
 public enum CrateType {
 
     COMMON("common", 0, 150),
@@ -26,7 +31,7 @@ public enum CrateType {
 
     public final boolean canContainBoosters;
     @Nullable
-    public final BoosterRarity boosterRarity;
+    public final BoosterRarity boosterRarity; // -1 if none
 
     CrateType(String name, int id, boolean canContainCoins, int coins, boolean canContainBoosters, @Nullable BoosterRarity boosterRarity) {
         this.name = name;
@@ -51,11 +56,11 @@ public enum CrateType {
         this(name, id, true, coins, true, boosterRarity);
     }
 
-    public String applyRewardsAndGetMessage(MinigamesBot bot, Profile owner) {
+    public String applyRewardsAndGetMessage(SlashCommandEvent event, MinigamesBot bot, Profile owner) {
         boolean isRewardCoins = isRewardCoins(bot);
 
         if (isRewardCoins) {
-            owner.addCoins(this.coins, true);
+            owner.addCoins(this.coins, true, event);
             return "You opened a **" + name + "** crate and got **" + this.coins + " coins**!";
         } else {
             owner.addBooster(boosterRarity);
@@ -63,11 +68,11 @@ public enum CrateType {
         }
     }
 
-    public Pair<Integer, Integer> applyRewardsAndReturnCounts(MinigamesBot bot, Profile owner) {
+    public Pair<Integer, Integer> applyRewardsAndReturnCounts(SlashCommandEvent event, MinigamesBot bot, Profile owner) {
         boolean isRewardCoins = isRewardCoins(bot);
 
         if (isRewardCoins) {
-            owner.addCoins(coins, true);
+            owner.addCoins(coins, true, event);
             return new Pair<>(coins, 0);
         } else {
             owner.addBooster(boosterRarity);

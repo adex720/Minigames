@@ -21,7 +21,7 @@ public class CommandUse extends Command {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         int id = (int) event.getOption("type").getAsLong();
 
-        event.getHook().sendMessage(ci.profile().useBooster(id)).queue();
+        event.getHook().sendMessage(ci.profile().useBooster(event, id)).queue();
         return true;
     }
 

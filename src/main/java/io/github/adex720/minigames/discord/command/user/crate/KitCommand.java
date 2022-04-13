@@ -69,7 +69,7 @@ public class KitCommand extends Command {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         int canClaim = canClaim(event, ci);
         if (canClaim == 0) {
-            OffsetDateTime ready = COOLDOWNS.get(ci.authorId());
+            OffsetDateTime ready = COOLDOWNS.get(ci.authorId()); // Getting times
             OffsetDateTime current = event.getTimeCreated();
             if (ready != null) {
                 if (ready.isAfter(current)) {
@@ -79,29 +79,29 @@ public class KitCommand extends Command {
             }
 
             Profile profile = ci.profile();
-            addReward(profile);
+            addReward(event, profile);
 
             startCooldown(ci.authorId(), current);
             event.getHook().sendMessage("You claimed your " + name + " booster. You received " + rewardCoins + " coins.").queue();
 
-            profile.appendQuests(quest -> quest.kitClaimed(name, profile));
+            profile.appendQuests(quest -> quest.kitClaimed(event, name, profile));
         } else {
             event.getHook().sendMessage(permissionCheck.getFailMessage(event, ci, canClaim)).queue();
         }
         return true;
     }
 
-    public Pair<Integer, Integer> addRewardAndCooldown(Profile profile, OffsetDateTime time) {
+    public Pair<Integer, Integer> addRewardAndCooldown(SlashCommandEvent event, Profile profile, OffsetDateTime time) {
         startCooldown(profile.getId(), time);
-        return addReward(profile);
+        return addReward(event, profile);
     }
 
     /**
      * Doesn't start cooldown
      */
-    public Pair<Integer, Integer> addReward(Profile profile) {
+    public Pair<Integer, Integer> addReward(SlashCommandEvent event, Profile profile) {
         if (rewardCoins > 0) {
-            profile.addCoins(rewardCoins, true);
+            profile.addCoins(rewardCoins, true, event);
         } else {
             profile.addCrate(crateId);
         }
@@ -138,11 +138,15 @@ public class KitCommand extends Command {
 
     public interface PermissionCheck {
         /**
-         * Returns 0 if booster can be used.
-         * Positive return values are used to indicate reply message.
+         * @return 0 if booster can be used.
+         * Different positive return values are used to indicate reply message.
          */
         int canUse(SlashCommandEvent event, CommandInfo ci);
 
+        /**
+         * @param reason reply message id specified by {@link KitCommand.PermissionCheck#canUse(SlashCommandEvent, CommandInfo)}
+         * @return a specific fail message reasoning why the kit can't be claimed.
+         */
         String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason);
     }
 
@@ -178,15 +182,18 @@ public class KitCommand extends Command {
             @Override
             public int canUse(SlashCommandEvent event, CommandInfo ci) {
                 if (event.getGuild().getIdLong() != CommandServer.SERVER_ID) {
+                    // Wrong server
                     return 1;
                 }
                 if (event.getMember().hasTimeJoined()) {
                     if (event.getMember().getTimeJoined().isAfter(OffsetDateTime.now().minusDays(1))) {
+                        // User has been on the server for less than 24 hours.
+                        // This is checked so people wouldn't just join the server, claim the kit and leave right after.
                         return 2;
                     }
                 }
 
-                return 0;
+                return 0; // kit can be claimed
             }
 
             @Override
@@ -198,7 +205,7 @@ public class KitCommand extends Command {
                     return "You need to be on this server for 24 hours to claim this booster. This is to ensure people leaving after claiming the booster and then leaving.";
                 }
 
-                return "";
+                return ""; // never reached
             }
         };
 

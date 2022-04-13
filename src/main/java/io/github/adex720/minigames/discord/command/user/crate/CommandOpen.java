@@ -59,7 +59,7 @@ public class CommandOpen extends Command {
 
         User user = ci.author();
 
-        String description = getDescription(ci.profile(), type, typeId, count);
+        String description = getDescription(event, ci.profile(), type, typeId, count);
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("OPEN CRATES")
                 .addField("Opened " + count + " crates", description, false)
@@ -71,7 +71,7 @@ public class CommandOpen extends Command {
     }
 
     /**
-     * Returns -1 on invalid count
+     * @return Amount of crates to open regarding the given argument. Returns -1 on invalid count or circumstances.
      */
     public int getOpeningCount(SlashCommandEvent event, CommandInfo ci) {
         String amountString = getAmount(event).getAsString();
@@ -103,7 +103,7 @@ public class CommandOpen extends Command {
 
             return count;
         } catch (NumberFormatException ignored) {
-            if (!amountString.equalsIgnoreCase("a")
+            if (!amountString.equalsIgnoreCase("a") // Checking for 'all'
                     && !amountString.equalsIgnoreCase("all")
                     && !amountString.equalsIgnoreCase("max")) {
 
@@ -137,37 +137,46 @@ public class CommandOpen extends Command {
         }
     }
 
-    public String getDescription(Profile profile, OptionMapping type, int typeId, int count) {
+    /**
+     * Creates description for given circumstance
+     */
+    public String getDescription(SlashCommandEvent event, Profile profile, OptionMapping type, int typeId, int count) {
         if (count == 1) {
-            if (type == null) return profile.openCrate(profile.getFirstCrateRarityOnInventory());
-            else return profile.openCrate(typeId);
+            if (type == null) return profile.openCrate(event, profile.getFirstCrateRarityOnInventory());
+            else return profile.openCrate(event, typeId);
 
         } else if (type == null) {
-            return openAll(profile);
+            return openAll(event,profile);
         } else {
-            return openAllFromRarity(CrateType.get(typeId), profile, count, typeId);
+            return openAllFromRarity(event, CrateType.get(typeId), profile, count, typeId);
         }
     }
 
-    public String openAll(Profile profile) {
-        Pair<Integer, HashMap<Integer, Integer>> loot = getLoot(profile);
+    /**
+     * Opens all crates the user has
+     */
+    public String openAll(SlashCommandEvent event, Profile profile) {
+        Pair<Integer, HashMap<Integer, Integer>> loot = getLoot(event,profile);
 
         return lootToString(loot.first, loot.second);
     }
 
-    public Pair<Integer, HashMap<Integer, Integer>> getLoot(Profile profile) {
+    /**
+     * @return The loot the given user gets from opening all crates. The structure is like: Pair<Coins, HashMap<BoosterTypeId, Amount>>
+     */
+    public Pair<Integer, HashMap<Integer, Integer>> getLoot(SlashCommandEvent event, Profile profile) {
         int coins = 0;
         HashMap<Integer, Integer> boosters = new HashMap<>();
 
         int[] crateAmounts = profile.getCrateList().values();
-        for (int i = 0; i < CrateType.TYPES_AMOUNT; i++) {
+        for (int i = 0; i < CrateType.TYPES_AMOUNT; i++) { // Looping each crate type
 
             int rarityAmount = crateAmounts[i];
             if (rarityAmount == 0) continue;
 
             CrateType crateType = CrateType.get(i);
-            while (rarityAmount > 0) {
-                Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(bot, profile);
+            while (rarityAmount > 0) { // Looping each crate of the type
+                Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(event,bot, profile);
 
                 if (rewards.second > 0) {
                     if (!boosters.containsKey(i)) boosters.put(i, 1);
@@ -183,6 +192,9 @@ public class CommandOpen extends Command {
         return new Pair<>(coins, boosters);
     }
 
+    /**
+     * @return list of coins and boosters as String
+     */
     public String lootToString(int coins, HashMap<Integer, Integer> boosters) {
         StringBuilder lootString = new StringBuilder();
         boolean newLine = false;
@@ -205,9 +217,12 @@ public class CommandOpen extends Command {
         return lootString.toString();
     }
 
-    public String openAllFromRarity(CrateType crateType, Profile profile, int count, int typeId) {
+    /**
+     * Applies rewards and returns them as String. If the crate can contain both coins and booster this method uses {@link CommandOpen#openAllFromRarityContainingCoinsAndBoosters(SlashCommandEvent, CrateType, Profile, int)}
+     */
+    public String openAllFromRarity(SlashCommandEvent event, CrateType crateType, Profile profile, int count, int typeId) {
         if (!crateType.canContainBoosters) {
-            profile.addCoins(count * crateType.coins, true);
+            profile.addCoins(count * crateType.coins, true, event);
             return "- " + count * crateType.coins + " coins";
         }
 
@@ -217,11 +232,15 @@ public class CommandOpen extends Command {
                     + crateType.boosterRarity.name + " boosters";
         }
 
-        return openAllFromRarityContainingCoinsAndBoosters(crateType, profile, count);
+        return openAllFromRarityContainingCoinsAndBoosters(event, crateType, profile, count);
     }
 
-    public String openAllFromRarityContainingCoinsAndBoosters(CrateType crateType, Profile profile, int count) {
-        Pair<Integer, Integer> loot = getCrateLootFromRarity(crateType, profile, count);
+    /**
+     * Applies rewards and returns them as String.
+     * For optimization reason only call this when the crate can contain both cains and boosters.
+     */
+    public String openAllFromRarityContainingCoinsAndBoosters(SlashCommandEvent event, CrateType crateType, Profile profile, int count) {
+        Pair<Integer, Integer> loot = getCrateLootFromRarity(event, crateType, profile, count);
         int coins = loot.first;
         int boosters = loot.second;
 
@@ -236,11 +255,17 @@ public class CommandOpen extends Command {
         }
     }
 
-    public Pair<Integer, Integer> getCrateLootFromRarity(CrateType crateType, Profile profile, int count) {
+    /**
+     * @return A {@link Pair} containing the rewards of one crate opened from the {@param crateType}.
+     * The left is coins and right is the id of the booster.
+     * Since one crate only gives coins or boosters one of the values is always set to its default value.
+     * For coins it's 0 and for booster id -1.
+     */
+    public Pair<Integer, Integer> getCrateLootFromRarity(SlashCommandEvent event, CrateType crateType, Profile profile, int count) {
         int coins = 0;
         int boosters = 0;
         for (int left = count; left > 0; left--) {
-            Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(bot, profile);
+            Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(event,bot, profile);
 
             if (rewards.second > 0) {
                 boosters++;
@@ -249,7 +274,7 @@ public class CommandOpen extends Command {
             }
         }
 
-        profile.appendQuests(quest -> quest.crateOpened(crateType, profile));
+        profile.appendQuests(quest -> quest.crateOpened(event, crateType, profile));
         return new Pair<>(coins, boosters);
     }
 

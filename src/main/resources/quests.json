@@ -3,17 +3,20 @@
     {
       "id": 0,
       "name": "easy",
-      "reward": 200
+      "coins": 1000,
+      "crate": 1
     },
     {
       "id": 1,
       "name": "normal",
-      "reward": 350
+      "coins": 2000,
+      "crate": 2
     },
     {
       "id": 2,
       "name": "hard",
-      "reward": 500
+      "coins": 3000,
+      "crate": 3
     }
   ],
   "types": [

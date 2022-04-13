@@ -2,6 +2,11 @@ package io.github.adex720.minigames.minigame.duel;
 
 import io.github.adex720.minigames.MinigamesBot;
 
+import java.util.Random;
+
+/**
+ * An AI to play {@link DuelMinigame}
+ * */
 public abstract class MinigameAI<M extends DuelMinigame> {
 
     protected final MinigamesBot bot;
@@ -10,5 +15,5 @@ public abstract class MinigameAI<M extends DuelMinigame> {
         this.bot = bot;
     }
 
-    public abstract void makeMove(DuelMinigame minigame);
+    public abstract void makeMove(Random random, DuelMinigame minigame);
 }

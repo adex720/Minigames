@@ -8,6 +8,9 @@ import io.github.adex720.minigames.util.Value;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages stats for one user.
+ * */
 public class StatList {
 
     private final HashMap<String, Value<Integer>> statsByName;
@@ -69,7 +72,9 @@ public class StatList {
         JsonObject json = new JsonObject();
 
         for (Map.Entry<Integer, Value<Integer>> entry : statsById.entrySet()) {
-            json.addProperty(Integer.toString(entry.getKey()), entry.getValue().value);
+            int value = entry.getValue().value;
+            if (value == 0) continue;
+            json.addProperty(Integer.toString(entry.getKey()), value);
         }
 
         return json;

@@ -3,6 +3,9 @@ package io.github.adex720.minigames.discord.command.devcommand;
 import io.github.adex720.minigames.MinigamesBot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+/**
+ * Updates each leaderboard.
+ * */
 public class DevCommandUpdateLeaderboards extends DevCommand{
 
     public DevCommandUpdateLeaderboards(MinigamesBot bot) {

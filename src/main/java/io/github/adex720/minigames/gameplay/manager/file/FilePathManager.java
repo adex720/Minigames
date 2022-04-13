@@ -5,6 +5,9 @@ import io.github.adex720.minigames.gameplay.manager.Manager;
 
 import java.io.File;
 
+/**
+ * Returns te path to given file name.
+ * */
 public class FilePathManager extends Manager {
 
     public FilePathManager(MinigamesBot bot) {

@@ -2,6 +2,9 @@ package io.github.adex720.minigames.gameplay.manager.stat;
 
 import io.github.adex720.minigames.MinigamesBot;
 
+/**
+ * Manages leaderboards
+ * */
 public class LeaderboardManager extends Thread {
 
     public static final long minimalCooldown = 1000 * 10;

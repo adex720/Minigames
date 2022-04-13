@@ -1,12 +1,17 @@
 [
   {
     "id": 1,
-    "name": "alpha",
-    "emoji": ":a:"
+    "name": "pre-alpha",
+    "emoji": "<:pre-alpha:963129216185020416>"
   },
   {
-    "id": 1,
+    "id": 2,
+    "name": "alpha",
+    "emoji": "<:alpha:963129216390541332>"
+  },
+  {
+    "id": 3,
     "name": "beta",
-    "emoji": ":b:"
+    "emoji": "<:beta:963129216457670716>"
   }
 ]

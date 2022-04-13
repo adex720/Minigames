@@ -20,6 +20,7 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
@@ -28,6 +29,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Profile stores most of the data a player has.
+ * The class also contains many useful methods.
+ * */
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final MinigamesBot bot;
@@ -177,6 +182,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return isInParty;
     }
 
+    /**
+     * Returns the id of the party the user is in.
+     * If the user is not in a party this value is either the id of the previous party or the id of the user.
+     * If it is not certain if the user is in a party {@link Profile#isInParty()} should be checked.
+     * */
     public long getPartyId() {
         return partyId;
     }
@@ -190,12 +200,15 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         isInParty = false;
     }
 
-    public void addCoins(int amount, boolean count) {
+    /**
+     * @param event must be non-null if {@param count} is true. If count is false event is ignored
+     */
+    public void addCoins(int amount, boolean count, SlashCommandEvent event) {
 
         if (count) {
             int finalAmount = (int) (amount * getBoosterMultiplier());
 
-            appendQuests(quest -> quest.coinsEarned(finalAmount, this));
+            appendQuests(quest -> quest.coinsEarned(event, finalAmount, this));
             statList.increaseStat("coins earned", finalAmount);
             coins += finalAmount;
 
@@ -208,6 +221,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return coins;
     }
 
+    /**
+     * Adds the badge with the given id.
+     * Badges are only visual and give no benefit.
+     * */
     public void addBadge(int id) {
         badges.add(id);
     }
@@ -236,7 +253,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         statList.increaseStat(stat, amount);
     }
 
-    public MessageEmbed getEmbed(User user, MinigamesBot bot) {
+    /**
+     * @return embed message containing information about profile
+     * */
+    public MessageEmbed getProfileEmbed(User user, MinigamesBot bot) {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("PROFILE")
                 .setColor(Util.getColor(userId));
@@ -267,6 +287,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
                 .setTimestamp(new Date().toInstant()).build();
     }
 
+    /**
+     * Applies the given function to each quest
+     * */
     public void appendQuests(QuestUpdate... functions) {
         ArrayList<Quest> quests = bot.getQuestManager().getQuests(userId);
         if (quests == null) return;
@@ -301,19 +324,19 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     /**
      * @return message to send
      */
-    public String openCrate(int type) {
-        return openCrate(CrateType.get(type));
+    public String openCrate(SlashCommandEvent event, int type) {
+        return openCrate(event, CrateType.get(type));
     }
 
     /**
      * @return message to send
      */
-    public String openCrate(CrateType type) {
+    public String openCrate(SlashCommandEvent event, CrateType type) {
         if (!hasCrate(type)) return "You don't have " + type.getNameWithArticle() + " crate!";
 
         crates.subtract(type);
 
-        return type.applyRewardsAndGetMessage(bot, this);
+        return type.applyRewardsAndGetMessage(event, bot, this);
     }
 
     /**
@@ -356,15 +379,15 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     }
 
     /**
-     * @return message to send
+     * @return message to send.
      */
-    public String useBooster(int rarity) {
-        appendQuests(q -> q.boosterUsed(this));
+    public String useBooster(SlashCommandEvent event, int rarity) {
+        appendQuests(q -> q.boosterUsed(event, this));
         return useBooster(BoosterRarity.get(rarity));
     }
 
     /**
-     * @return message to send
+     * @return message to send.
      */
     public String useBooster(BoosterRarity rarity) {
         if (!hasBooster(rarity))
@@ -403,6 +426,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return multiplier;
     }
 
+    /**
+     * Removes expired boosters.
+     * */
     public void checkBoosterDurations() {
         long current = System.currentTimeMillis();
         activeBoosters.removeIf(booster -> booster.expiration <= current);
@@ -453,6 +479,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return cooldowns.toString();
     }
 
+    /**
+     * @return embed message containing stats of the player.
+     * */
     public MessageEmbed getStatsMessage(User user) {
         return new EmbedBuilder()
                 .setTitle(user.getAsTag())
@@ -463,6 +492,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
                 .build();
     }
 
+    /**
+     * @return list of each stat the player has a value greater than 0 in.
+     * */
     public String getStats() {
         StringBuilder statsString = new StringBuilder();
         boolean newLine = false;

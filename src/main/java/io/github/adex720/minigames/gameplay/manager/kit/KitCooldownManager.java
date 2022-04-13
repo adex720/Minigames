@@ -7,6 +7,9 @@ import io.github.adex720.minigames.gameplay.manager.Manager;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Manages kits.
+ * */
 public class KitCooldownManager extends Manager {
 
     public KitCooldownManager(MinigamesBot bot) {

@@ -184,7 +184,9 @@ public class MinigamesBot {
         addTimerTask(this::clearInactive, 1000 * 60 * 5, true); // Delete inactive parties and minigames
         addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true); // Clear cached resource json files
 
-        addTimerTask(questManager::unloadQuests, Util.MILLISECONDS_IN_DAY, Util.getMillisecondsUntilUtcMidnight());
+        addTimerTask(questManager::unloadQuests, Util.MILLISECONDS_IN_DAY, Util.getMillisecondsUntilUtcMidnight()); // Unload all quests at UTC midnight
+
+        addTimerTask(leaderboardManager::run, 1000 * 60 * 5, true); // Update leaderboards
 
         addTimerTask(this::save, 1000 * 60 * 5, true); // save data
     }
@@ -367,20 +369,29 @@ public class MinigamesBot {
 
 /*
     TODO: minigames to add
-     - wordle
      - counting
      - counting variations (hex, binary, letters)
      - connect 4
 
-   TODO: guilds
+     TODO: /party help --
 
-   TODO: global boosters
+    TODO: /settings --
+     - Claim-quests
 
-   TODO: trivia
-    (https://opentdb.com/api_config.php)
+    TODO: badges --
 
-   TODO: (After a long time)
-    - vote (after verification)
-    - sharding (at 2000 guilds)
+    TODO: /wordle wordlist
+    TODO: /wordle letters
+
+    TODO: guilds
+
+    TODO: global boosters
+
+    TODO: trivia
+     (https://opentdb.com/api_config.php)
+
+    TODO: (After a long time)
+     - vote (after verification)
+     - sharding (at 2000 guilds)
 
 */

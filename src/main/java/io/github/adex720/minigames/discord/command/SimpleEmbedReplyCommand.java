@@ -11,6 +11,9 @@ import java.awt.*;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * A command which contains the same embed (excluding date and author data) each time.
+ * */
 public abstract class SimpleEmbedReplyCommand extends Command {
 
     protected final String reply;
@@ -20,7 +23,7 @@ public abstract class SimpleEmbedReplyCommand extends Command {
     @Nullable
     private final Color color;
 
-    public SimpleEmbedReplyCommand(MinigamesBot bot, String name, String description, String reply, String title, String header, Color color, CommandCategory category) {
+    public SimpleEmbedReplyCommand(MinigamesBot bot, String name, String description, String reply, String title, String header, @Nullable Color color, CommandCategory category) {
         super(bot, name, description, category);
         this.reply = reply;
         this.title = title;

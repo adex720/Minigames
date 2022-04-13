@@ -3,6 +3,9 @@ package io.github.adex720.minigames.discord.command.devcommand;
 import io.github.adex720.minigames.MinigamesBot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+/**
+ * Removes a ban from a user.
+ */
 public class DevCommandUnban extends DevCommand {
 
     public DevCommandUnban(MinigamesBot bot) {
@@ -26,7 +29,10 @@ public class DevCommandUnban extends DevCommand {
             return true;
         }
 
-        bot.getBanManager().unban(id);
+        if (bot.getBanManager().unban(id)) {
+            event.getChannel().sendMessage("That user is not banned").queue();
+            return true;
+        }
         event.getChannel().sendMessage("Unbanned <@!" + id + ">!").queue();
         return true;
     }

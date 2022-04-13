@@ -13,6 +13,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
+/**
+ * Stores information common with each of the minigames of same type.
+ * */
 public abstract class MinigameType<M extends Minigame> {
 
     protected final MinigamesBot bot;
@@ -57,6 +60,9 @@ public abstract class MinigameType<M extends Minigame> {
         bot.getCommandManager().parentCommandPlay.createSubcommand(this);
     }
 
+    /**
+     * @return Each command required to interact with the minigame
+     * */
     public abstract Set<Subcommand> getSubcommands();
 
     public void initCommand() {
@@ -65,10 +71,16 @@ public abstract class MinigameType<M extends Minigame> {
         //bot.getCommandManager().addCommand(command);
     }
 
+    /**
+     * @return the parent command for interacting with the minigame.
+     * */
     public MinigameCommand getCommand() {
         return command;
     }
 
+    /**
+     * If the initialization of minigame ends this will be sent as reason.
+     * */
     public abstract String getReplyForInvalidStartState();
 
     /**

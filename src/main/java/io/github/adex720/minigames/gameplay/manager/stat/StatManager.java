@@ -77,9 +77,8 @@ public class StatManager extends Manager {
         LEADERBOARDS.put(statId, leaderboard);
     }
 
-    @SuppressWarnings("unchecked")
-    public TreeSet<Profile> getLeaderboard(int statId){
-        return (TreeSet<Profile>) LEADERBOARDS.get(statId).clone();
+    public TreeSet<Profile> getLeaderboard(int statId) {
+        return LEADERBOARDS.get(statId);
     }
 
 }

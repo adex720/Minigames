@@ -6,7 +6,10 @@ import com.google.gson.JsonElement;
 import java.util.HashMap;
 import java.util.Set;
 
-public interface MapAndJsonConvertible<T extends JsonSavable<T> & IdCompound> extends JsonConvertible<T>{
+/**
+ * This object has a {@link HashMap} containing objects than can be saved as {@link com.google.gson.JsonObject}
+ */
+public interface MapAndJsonConvertible<T extends JsonSavable<T> & IdCompound> extends JsonConvertible<T> {
 
 
     default HashMap<Long, T> mapFromJson(JsonArray jsonArray) {

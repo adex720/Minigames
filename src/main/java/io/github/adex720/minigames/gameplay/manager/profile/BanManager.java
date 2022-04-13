@@ -16,22 +16,26 @@ public class BanManager extends Manager {
         BANS = new HashSet<>();
     }
 
-    public void ban(long id){
+    public void ban(long id) {
         BANS.add(id);
 
         bot.getProfileManager().ban(id);
     }
 
-    public void unban(long id){
-        BANS.remove(id);
-
-        bot.getProfileManager().unban(id);
+    /**
+     * @return true if the user was banned.
+     * */
+    public boolean unban(long id) {
+        if (BANS.remove(id)) {
+            bot.getProfileManager().unban(id);
+            return true;
+        }
+        return false;
     }
 
-    public boolean isBanned(long id){
+    public boolean isBanned(long id) {
         return BANS.contains(id);
     }
-
 
 
 }

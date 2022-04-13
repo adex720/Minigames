@@ -7,6 +7,19 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 
+/**
+ * Provides many useful methods to interact with {@link JsonObject} and {@link JsonArray}.
+ * Examples are:
+ * <ul>
+ *   <li>- Getting a specific type value from {@link JsonObject}.</li>
+ *   <li>- Getting a specific type value from {@link JsonObject} with a default value if no value is present.</li>
+ *   <li>- Getting a specific type value from {@link JsonObject} and throwing a custom error if no value is present.</li>
+ *   <li>- Converting an Array to {@link JsonArray}.</li>
+ *   <li>- Converting a {@link JsonArray} to an Array.</li>
+ *   <li>- Converting an {@link ArrayList} to {@link JsonArray}.</li>
+ *   <li>- Converting a {@link JsonArray} to an {@link ArrayList}.</li>
+ * </ul>
+ */
 public class JsonHelper {
 
     public static int getInt(JsonObject json, String key) {
