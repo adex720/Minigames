@@ -167,7 +167,7 @@ public class CommandManager extends Manager {
     /**
      * Returns an {@link ArrayList} containing each slash command including subcommands.
      * The commands are on the order registered but subcommands are last.
-     * */
+     */
     public ArrayList<Command> getCommands(CommandCategory category) {
         ArrayList<Command> commands = new ArrayList<>();
         for (Command command : MAIN_COMMANDS) {
@@ -186,7 +186,7 @@ public class CommandManager extends Manager {
 
     /**
      * @return Amount off all slash commands including subcommands.
-     * */
+     */
     public int getCommandAmount(CommandCategory category) {
         int amount = 0;
         for (Command command : MAIN_COMMANDS) {
@@ -202,4 +202,19 @@ public class CommandManager extends Manager {
 
         return amount;
     }
+
+    public int getCommandAmount() {
+        return MAIN_COMMANDS.size();
+    }
+
+    public int getAllCommandAmount() {
+        int usableCommands = 0;
+
+        for (Command command : MAIN_COMMANDS) {
+            if (!command.isParentCommand()) usableCommands++;
+        }
+
+        return usableCommands + SUBCOMMANDS.size();
+    }
+
 }

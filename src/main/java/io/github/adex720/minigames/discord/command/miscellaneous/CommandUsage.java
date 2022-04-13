@@ -16,7 +16,12 @@ public class CommandUsage extends Command {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         int profiles = bot.getProfileManager().getProfilesAmount();
         int servers = (int) bot.getJda().getGuildCache().size();
-        event.getHook().sendMessage("-" + profiles + " users have profile!\n-On " + servers + " servers!").queue();
+        event.getHook().sendMessage(String.format("""
+                -%s users have profile!
+                -On %s servers!"
+                -%s commands!
+                -%s total commands!
+                """, profiles, servers, bot.getCommandManager().getCommandAmount(), bot.getCommandManager().getAllCommandAmount())).queue();
         return true;
     }
 }
