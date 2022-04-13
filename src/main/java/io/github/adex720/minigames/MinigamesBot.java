@@ -383,6 +383,8 @@ public class MinigamesBot {
     TODO: /wordle wordlist
     TODO: /wordle letters
 
+    TODO: use resourceManager to load resources
+
     TODO: guilds
 
     TODO: global boosters

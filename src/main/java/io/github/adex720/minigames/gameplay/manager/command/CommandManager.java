@@ -102,6 +102,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyPrivate(bot));
         SUBCOMMANDS.add(new CommandPartyPublic(bot));
         SUBCOMMANDS.add(new CommandPartyTransfer(bot));
+        SUBCOMMANDS.add(new CommandPartyHelp(bot));
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(new CommandMinigameInfo(bot));

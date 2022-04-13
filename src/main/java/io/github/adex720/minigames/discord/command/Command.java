@@ -65,7 +65,7 @@ public abstract class Command {
         return name;
     }
 
-    public String getWholeName() {
+    public String getFullName() {
         return name;
     }
 
