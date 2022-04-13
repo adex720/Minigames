@@ -70,7 +70,7 @@ public class CommandHelp extends Command {
 
         for (int i = first; i <= last; i++) {
             Command command = commands.get(i); // Add entries on selected page
-            embedBuilder.addField(command.name, "**Description:** " + command.description, true);
+            embedBuilder.addField("**" + command.getFullName() + "**", "**Description:** " + command.description, true);
         }
 
         event.getHook().sendMessageEmbeds(embedBuilder
