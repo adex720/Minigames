@@ -259,7 +259,7 @@ public class CommandOpen extends Command {
      * @return A {@link Pair} containing the rewards of one crate opened from the {@param crateType}.
      * The left is coins and right is the id of the booster.
      * Since one crate only gives coins or boosters one of the values is always set to its default value.
-     * For coins it's 0 and for booster id -1.
+     * For coins, it's 0 and for booster id -1.
      */
     public Pair<Integer, Integer> getCrateLootFromRarity(SlashCommandEvent event, CrateType crateType, Profile profile, int count) {
         int coins = 0;

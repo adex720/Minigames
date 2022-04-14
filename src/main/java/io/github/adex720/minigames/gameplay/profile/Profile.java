@@ -13,6 +13,8 @@ import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateList;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.gameplay.profile.quest.Quest;
+import io.github.adex720.minigames.gameplay.profile.settings.PlayerSettings;
+import io.github.adex720.minigames.gameplay.profile.settings.Setting;
 import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -32,7 +34,7 @@ import java.util.Set;
 /**
  * Profile stores most of the data a player has.
  * The class also contains many useful methods.
- * */
+ */
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final MinigamesBot bot;
@@ -57,6 +59,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final ArrayList<Booster> activeBoosters;
 
+
+    private final PlayerSettings playerSettings;
+
     public Profile(MinigamesBot bot, long userId) {
         this.bot = bot;
         this.userId = userId;
@@ -73,9 +78,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         crates = new CrateList();
         boosters = new BoosterList();
         activeBoosters = new ArrayList<>();
+
+        playerSettings = new PlayerSettings(userId);
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson, JsonArray activeBoostersJson, JsonArray statusesJson) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson, JsonArray activeBoostersJson, JsonArray statusesJson, JsonArray settingsJson) {
         this.bot = bot;
         this.userId = userId;
         this.created = crated;
@@ -96,6 +103,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         activeBoosters = new ArrayList<>(activeBoostersJson.size());
         activeBoostersJson.forEach(b -> activeBoosters.add(Booster.fromJson(b)));
         checkBoosterDurations();
+
+        playerSettings = PlayerSettings.fromJson(bot, settingsJson, userId);
 
         for (JsonElement status : statusesJson) {
             switch (status.getAsString()) {
@@ -139,6 +148,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         JsonArray statusesJson = getStatusesJson();
         if (!statusesJson.isEmpty()) json.add("statuses", statusesJson);
 
+        JsonArray settingsJson = playerSettings.getAsJsonArray();
+        if (!settingsJson.isEmpty()) json.add("settings", settingsJson);
+
         return json;
     }
 
@@ -157,7 +169,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray statusesJson = JsonHelper.getJsonArray(json, "statuses", new JsonArray());
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson);
+        JsonArray settingsJson = JsonHelper.getJsonArray(json, "settings", new JsonArray());
+
+        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson);
     }
 
     private JsonArray getStatusesJson() {
@@ -186,7 +200,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
      * Returns the id of the party the user is in.
      * If the user is not in a party this value is either the id of the previous party or the id of the user.
      * If it is not certain if the user is in a party {@link Profile#isInParty()} should be checked.
-     * */
+     */
     public long getPartyId() {
         return partyId;
     }
@@ -224,7 +238,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     /**
      * Adds the badge with the given id.
      * Badges are only visual and give no benefit.
-     * */
+     */
     public void addBadge(int id) {
         badges.add(id);
     }
@@ -255,7 +269,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * @return embed message containing information about profile
-     * */
+     */
     public MessageEmbed getProfileEmbed(User user, MinigamesBot bot) {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("PROFILE")
@@ -289,7 +303,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * Applies the given function to each quest
-     * */
+     */
     public void appendQuests(QuestUpdate... functions) {
         ArrayList<Quest> quests = bot.getQuestManager().getQuests(userId);
         if (quests == null) return;
@@ -428,7 +442,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * Removes expired boosters.
-     * */
+     */
     public void checkBoosterDurations() {
         long current = System.currentTimeMillis();
         activeBoosters.removeIf(booster -> booster.expiration <= current);
@@ -481,7 +495,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * @return embed message containing stats of the player.
-     * */
+     */
     public MessageEmbed getStatsMessage(User user) {
         return new EmbedBuilder()
                 .setTitle(user.getAsTag())
@@ -494,7 +508,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * @return list of each stat the player has a value greater than 0 in.
-     * */
+     */
     public String getStats() {
         StringBuilder statsString = new StringBuilder();
         boolean newLine = false;
@@ -521,6 +535,40 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public boolean isBanned() {
         return banned;
+    }
+
+    public boolean getSetting(Setting setting) {
+        return playerSettings.getValue(setting);
+    }
+
+    public boolean getSetting(String setting) {
+        return getSetting(bot.getSettingsList().get(setting));
+    }
+
+    public boolean getSetting(int setting) {
+        return getSetting(bot.getSettingsList().get(setting));
+    }
+
+    public void setSetting(Setting setting, boolean value) {
+        playerSettings.set(setting, value);
+    }
+
+    /**
+     * @return {@link Setting}
+     * */
+    public Setting setSetting(String settingName, boolean value) {
+        Setting setting = bot.getSettingsList().get(settingName);
+        setSetting(setting, value);
+        return setting;
+    }
+
+    /**
+     * @return {@link Setting}
+     * */
+    public Setting setSetting(int settingId, boolean value) {
+        Setting setting = bot.getSettingsList().get(settingId);
+        setSetting(setting, value);
+        return setting;
     }
 
 }

@@ -26,6 +26,7 @@ import io.github.adex720.minigames.gameplay.manager.stat.StatManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
+import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.JDA;
@@ -91,6 +92,8 @@ public class MinigamesBot {
 
     private final KitCooldownManager kitCooldownManager;
 
+    private final SettingsList settingsList;
+
     public MinigamesBot(String token, JsonObject databaseConfig, long developerId) throws LoginException, InterruptedException, FileNotFoundException {
         long startTime = System.currentTimeMillis();
         logger = LoggerFactory.getLogger(MinigamesBot.class);
@@ -99,6 +102,8 @@ public class MinigamesBot {
 
         saveDataManager = new BotDataManager(this, databaseConfig);
         resourceDataManager = new ResourceDataManager(this);
+
+        settingsList = new SettingsList();
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
@@ -131,6 +136,8 @@ public class MinigamesBot {
         leaderboardManager = new LeaderboardManager(this);
 
         kitCooldownManager = new KitCooldownManager(this);
+        settingsList.init(this);
+
 
         commandManager.initCommands(this);
 
@@ -273,6 +280,10 @@ public class MinigamesBot {
 
     public KitCooldownManager getKitCooldownManager() {
         return kitCooldownManager;
+    }
+
+    public SettingsList getSettingsList() {
+        return settingsList;
     }
 
     public long getEmoteId(String name) {

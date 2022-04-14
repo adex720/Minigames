@@ -57,6 +57,10 @@ public abstract class Command {
         return false;
     }
 
+    public boolean isParentCommand() {
+        return false;
+    }
+
     protected void requiresProfile() {
         requiresProfile = true;
     }

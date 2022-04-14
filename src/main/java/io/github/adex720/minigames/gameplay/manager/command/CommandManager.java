@@ -43,6 +43,8 @@ public class CommandManager extends Manager {
     // because they need to be accessed elsewhere
     public final CommandUptime commandUptime;
 
+    public final CommandSettings commandSettings;
+
     public CommandManager(MinigamesBot bot) {
         super(bot, "command_manager");
         MAIN_COMMANDS = new ArrayList<>();
@@ -52,6 +54,7 @@ public class CommandManager extends Manager {
         parentCommandPlay = new CommandPlay(bot);
 
         commandUptime = new CommandUptime(bot);
+        commandSettings = new CommandSettings(bot);
     }
 
     /**
@@ -73,6 +76,8 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandDelete(bot));
         MAIN_COMMANDS.add(new CommandStats(bot));
         MAIN_COMMANDS.add(new CommandQuests(bot));
+
+        MAIN_COMMANDS.add(commandSettings);
 
         MAIN_COMMANDS.add(new CommandCrates(bot));
         MAIN_COMMANDS.add(new CommandOpen(bot));

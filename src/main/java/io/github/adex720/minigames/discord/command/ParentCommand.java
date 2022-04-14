@@ -51,4 +51,9 @@ public abstract class ParentCommand extends Command {
     public boolean shouldBeInHelp(CommandCategory category) {
         return false;
     }
+
+    @Override
+    public final boolean isParentCommand() {
+        return true;
+    }
 }
