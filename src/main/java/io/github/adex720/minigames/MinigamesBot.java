@@ -342,23 +342,16 @@ public class MinigamesBot {
             }
 
             JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
-            JsonObject java = new JsonObject();
-            JsonObject json = new JsonObject();
-            JsonObject total = new JsonObject();
 
             for (JsonElement jsonElement : jsonArray) {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
 
                 switch (jsonObject.get("language").getAsString()) {
-                    case "Java" -> java = jsonObject;
-                    case "JSON" -> json = jsonObject;
-                    case "Total" -> total = jsonObject;
+                    case "Java" -> linesOfCodeJava = jsonObject.get("lines").getAsInt();
+                    case "JSON" -> linesOfCodeJson = jsonObject.get("lines").getAsInt();
+                    case "Total" -> linesOfCodeTotal = jsonObject.get("lines").getAsInt();
                 }
             }
-
-            linesOfCodeJava = java.get("lines").getAsInt();
-            linesOfCodeJson = json.get("lines").getAsInt();
-            linesOfCodeTotal = total.get("lines").getAsInt();
 
             logger.info("Loaded amount of lines of code!");
         } catch (Exception e) {
