@@ -11,6 +11,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
+/**
+ * Sends an embed message including basic information when pinged.
+ * Only counts messages where the mention is the only thing.
+ * */
 public class SelfMentionListener extends ListenerAdapter {
 
     private final MinigamesBot bot;
@@ -48,6 +52,7 @@ public class SelfMentionListener extends ListenerAdapter {
                 .setTitle("MINIGAMES")
                 .setColor(Util.MINIGAMES_COLOR)
                 .addField("Thank you for playing me", """
+                        - You can interact with me by using slash commands.
                         - Use `/help` for list of commands.
                         - Use `/start` to create a profile.
                         - Use `/usage` for information about the bot.
