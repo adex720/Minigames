@@ -31,6 +31,10 @@ public class CommandClaim extends Command {
         long userId = user.getIdLong();
         Profile profile = ci.profile();
 
+        if (profile.getSetting(bot.getSettingsList().CLAIM_QUESTS)) { // Claim new quests if setting is enabled
+            bot.getQuestManager().generateQuestsIfNotGenerated(userId);
+        }
+
         int claimed = 0;
         int coins = 0;
         HashMap<Integer, Integer> crates = new HashMap<>(); // Crate HashMap for received crates

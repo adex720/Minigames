@@ -87,7 +87,6 @@ public class QuestManager extends SavableManager<Quest> {
 
     // Generates quests if they are not yet generated
     public MessageEmbed.Field getProgress(long id) {
-
         ArrayList<Quest> quests = getQuestsOrGenerate(id);
 
         int finished = (int) quests.stream().filter(Quest::isCompleted).count();
@@ -106,6 +105,16 @@ public class QuestManager extends SavableManager<Quest> {
         }
 
         return new MessageEmbed.Field(title, questsString.toString(), false);
+    }
+
+    /**
+     * Generates new quests for the given userId.
+     * If quests for the user are already generated, nothing is done
+     */
+    public void generateQuestsIfNotGenerated(long userId){
+        if (QUESTS.containsKey(userId)) return; // Already generated
+
+        generateQuests(userId);
     }
 
     /**
