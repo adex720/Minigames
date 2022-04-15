@@ -1,21 +1,18 @@
 package io.github.adex720.minigames.gameplay.manager.data;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.DataManager;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
  * Loads resource Json files.
  * File contents are also cached
- * */
+ */
 public class ResourceDataManager extends DataManager {
 
     private final HashMap<String, JsonElement> CACHED_JSON;
@@ -30,16 +27,11 @@ public class ResourceDataManager extends DataManager {
         JsonElement cached = CACHED_JSON.get(name);
         if (cached != null) return cached;
 
-        String path = "src/main/resources/" + name + ".json";
+        String path = name + ".json";
 
-        JsonElement json;
-        try {
-            Reader reader = Files.newBufferedReader(Paths.get(path));
-            json = gson.fromJson(reader, JsonElement.class);
-        } catch (IOException e) {
-            bot.getLogger().error(e.getMessage());
-            return new JsonObject();
-        }
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+        Reader reader = new InputStreamReader(inputStream);
+        JsonElement json = gson.fromJson(reader, JsonElement.class);
 
         CACHED_JSON.put(name, json);
 
@@ -52,7 +44,7 @@ public class ResourceDataManager extends DataManager {
         return false;
     }
 
-    public void clearCache(){
+    public void clearCache() {
         CACHED_JSON.clear();
         bot.getLogger().info("Cleared resource json cache");
     }
