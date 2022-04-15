@@ -1,10 +1,7 @@
 package io.github.adex720.minigames;
 
 import com.google.gson.*;
-import io.github.adex720.minigames.discord.listener.ButtonListener;
-import io.github.adex720.minigames.discord.listener.CommandListener;
-import io.github.adex720.minigames.discord.listener.DevCommandListener;
-import io.github.adex720.minigames.discord.listener.GuildJoinListener;
+import io.github.adex720.minigames.discord.listener.*;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
@@ -68,6 +65,7 @@ public class MinigamesBot {
     private final ReplayManager replayManager;
 
     private final GuildJoinListener guildJoinListener;
+    private final SelfMentionListener selfMentionListener;
 
     private final BadgeManager badgeManager;
     private final StatManager statManager;
@@ -121,6 +119,7 @@ public class MinigamesBot {
         replayManager = new ReplayManager(this);
 
         guildJoinListener = new GuildJoinListener(this);
+        selfMentionListener = new SelfMentionListener(this);
 
         badgeManager = new BadgeManager(this);
         statManager = new StatManager(this);
@@ -153,12 +152,14 @@ public class MinigamesBot {
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
-                .addEventListeners(commandListener, buttonListener, devCommandListener, guildJoinListener)
+                .addEventListeners(commandListener, buttonListener, devCommandListener, guildJoinListener, selfMentionListener)
                 .build()
                 .awaitReady();
         long botOnlineTime = System.currentTimeMillis();
 
         commandManager.registerCommands(jda);
+
+        selfMentionListener.init();
 
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
@@ -237,6 +238,10 @@ public class MinigamesBot {
 
     public GuildJoinListener getGuildJoinListener() {
         return guildJoinListener;
+    }
+
+    public SelfMentionListener getSelfMentionListener() {
+        return selfMentionListener;
     }
 
     public BanManager getBanManager() {
