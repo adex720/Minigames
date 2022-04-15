@@ -442,8 +442,6 @@ public class MinigamesBot {
      - counting variations (hex, binary, letters)
      - connect 4
 
-    TODO: use resourceManager to load resources
-
     TODO: guilds
 
     TODO: global boosters
