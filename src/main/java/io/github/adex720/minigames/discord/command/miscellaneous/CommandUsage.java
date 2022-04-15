@@ -18,7 +18,7 @@ public class CommandUsage extends Command {
         int servers = (int) bot.getJda().getGuildCache().size();
         event.getHook().sendMessage(String.format("""
                 -%s users have profile!
-                -On %s servers!"
+                -On %s servers!
                 -%s commands!
                 -%s total commands!
                 -%s lines of code!
