@@ -384,9 +384,6 @@ public class MinigamesBot {
      - counting variations (hex, binary, letters)
      - connect 4
 
-    TODO: /wordle wordlist
-    TODO: /wordle letters
-
     TODO: use resourceManager to load resources
 
     TODO: guilds

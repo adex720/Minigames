@@ -47,7 +47,7 @@ public class WordManager extends Manager {
 
     /**
      * Loads all words from common.txt
-     * */
+     */
     private void loadCommonWords() throws FileNotFoundException {
         Scanner reader = new Scanner(bot.getFilePathManager().getWordFile("common.txt"));
 
@@ -68,7 +68,7 @@ public class WordManager extends Manager {
 
     /**
      * Loads all words from length5.txt
-     * */
+     */
     private void loadLength5() throws FileNotFoundException {
         Scanner reader = new Scanner(bot.getFilePathManager().getWordFile("length5.txt"));
 
@@ -112,5 +112,8 @@ public class WordManager extends Manager {
         return true; // unreachable
     }
 
+    public ArrayList<String> getLengthOf5() {
+        return LENGTH_OF_5;
+    }
 
 }
