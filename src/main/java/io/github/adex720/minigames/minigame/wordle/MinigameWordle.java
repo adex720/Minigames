@@ -207,7 +207,7 @@ public class MinigameWordle extends Minigame {
         boolean isParty = JsonHelper.getBoolean(json, "party");
 
         JsonArray guessesJson = JsonHelper.getJsonArray(json, "guesses", new JsonArray());
-        ArrayList<String> guesses = JsonHelper.JsonArrayToStringArrayList(guessesJson);
+        ArrayList<String> guesses = JsonHelper.jsonArrayToStringArrayList(guessesJson);
 
         return new MinigameWordle(bot, id, isParty, lastActive, word, guesses);
     }

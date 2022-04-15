@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Provides many useful methods to interact with {@link JsonObject} and {@link JsonArray}.
@@ -209,39 +211,51 @@ public class JsonHelper {
         return jsonArray;
     }
 
-    public static JsonArray ArrayListIntToJsonArray(ArrayList<Integer> arrayList) {
+    public static JsonArray arrayListIntToJsonArray(ArrayList<Integer> arrayList) {
         JsonArray json = new JsonArray();
         arrayList.forEach(json::add);
         return json;
     }
 
-    public static ArrayList<Integer> JsonArrayToIntArrayList(JsonArray json) {
+    public static ArrayList<Integer> jsonArrayToIntArrayList(JsonArray json) {
         ArrayList<Integer> arrayList = new ArrayList<>(json.size());
         json.forEach(number -> arrayList.add(number.getAsInt()));
         return arrayList;
     }
 
-    public static JsonArray ArrayListStringToJsonArray(ArrayList<String> arrayList) {
+    public static JsonArray arrayListStringToJsonArray(ArrayList<String> arrayList) {
         JsonArray json = new JsonArray();
         arrayList.forEach(json::add);
         return json;
     }
 
-    public static ArrayList<String> JsonArrayToStringArrayList(JsonArray json) {
+    public static ArrayList<String> jsonArrayToStringArrayList(JsonArray json) {
         ArrayList<String> arrayList = new ArrayList<>(json.size());
         json.forEach(number -> arrayList.add(number.getAsString()));
         return arrayList;
     }
 
-    public static JsonArray ArrayListCharToJsonArray(ArrayList<Character> arrayList) {
+    public static JsonArray arrayListCharToJsonArray(ArrayList<Character> arrayList) {
         JsonArray json = new JsonArray();
         arrayList.forEach(json::add);
         return json;
     }
 
-    public static ArrayList<Character> JsonArrayToCharArrayList(JsonArray json) {
+    public static ArrayList<Character> jsonArrayToCharArrayList(JsonArray json) {
         ArrayList<Character> arrayList = new ArrayList<>(json.size());
         json.forEach(number -> arrayList.add(number.getAsCharacter()));
+        return arrayList;
+    }
+
+    public static JsonArray setIntToJsonArray(Set<Integer> set) {
+        JsonArray json = new JsonArray();
+        set.forEach(json::add);
+        return json;
+    }
+
+    public static HashSet<Integer> jsonArrayToIntHashSet(JsonArray json) {
+        HashSet<Integer> arrayList = new HashSet<>(json.size());
+        json.forEach(number -> arrayList.add(number.getAsInt()));
         return arrayList;
     }
 

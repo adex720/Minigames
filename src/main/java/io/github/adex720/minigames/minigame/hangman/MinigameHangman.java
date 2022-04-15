@@ -189,7 +189,7 @@ public class MinigameHangman extends Minigame {
         boolean isParty = JsonHelper.getBoolean(json, "party");
 
         JsonArray guessesJson = JsonHelper.getJsonArray(json, "guesses", new JsonArray());
-        ArrayList<Character> guesses = JsonHelper.JsonArrayToCharArrayList(guessesJson);
+        ArrayList<Character> guesses = JsonHelper.jsonArrayToCharArrayList(guessesJson);
 
         return new MinigameHangman(bot, id, isParty, lastActive, word, life, guesses);
     }

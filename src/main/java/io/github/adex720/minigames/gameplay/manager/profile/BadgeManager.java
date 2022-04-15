@@ -6,25 +6,25 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.gameplay.profile.Badge;
+import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.JsonHelper;
 
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Manages {@link Badge}
- * */
+ */
 public class BadgeManager extends Manager {
 
     private final SortedMap<Integer, Badge> BADGES;
+    private final HashMap<String, Badge> BADGES_BY_NAME;
     private int BADGES_AMOUNT;
 
     public BadgeManager(MinigamesBot bot) {
         super(bot, "badge-manager");
 
         BADGES = new TreeMap<>((o1, o2) -> o2 - o1);
+        BADGES_BY_NAME = new HashMap<>();
         loadBadges();
     }
 
@@ -46,6 +46,7 @@ public class BadgeManager extends Manager {
 
     public void registerBadge(Badge badge) {
         BADGES.put(badge.id(), badge);
+        BADGES_BY_NAME.put(badge.name(), badge);
         BADGES_AMOUNT++;
     }
 
@@ -69,5 +70,24 @@ public class BadgeManager extends Manager {
             }
         }
         return badges;
+    }
+
+    /**
+     * @param name name of badge
+     */
+    public Badge getBadge(String name) {
+        return BADGES_BY_NAME.get(name);
+    }
+
+    public void addBadge(Badge badge, Profile profile) {
+        profile.addBadge(badge.id());
+    }
+
+    public void addBadge(Badge badge, int userId) {
+        addBadge(badge, bot.getProfileManager().getProfile(userId));
+    }
+
+    public void addBadgeForEveryone(Badge badge) {
+        bot.getProfileManager().getValues().forEach(profile -> addBadge(badge, profile));
     }
 }

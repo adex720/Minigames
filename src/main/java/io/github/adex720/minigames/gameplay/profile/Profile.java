@@ -83,7 +83,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         playerSettings = new PlayerSettings(userId);
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins, JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson, JsonArray activeBoostersJson, JsonArray statusesJson, JsonArray settingsJson) {
+    public Profile(MinigamesBot bot, long userId, long crated, int coins,
+                   JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson,
+                   JsonArray activeBoostersJson, JsonArray statusesJson, JsonArray settingsJson, JsonArray badgesJson) {
         this.bot = bot;
         this.userId = userId;
         this.created = crated;
@@ -92,7 +94,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         partyId = userId;
 
         this.coins = coins;
-        badges = new HashSet<>();
+        badges = JsonHelper.jsonArrayToIntHashSet(badgesJson);
         statList = new StatList(bot, statsJson);
 
         if (questsJson != null) {
@@ -152,6 +154,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         JsonArray settingsJson = playerSettings.getAsJsonArray();
         if (!settingsJson.isEmpty()) json.add("settings", settingsJson);
 
+        if (!badges.isEmpty()) json.add("badges", JsonHelper.setIntToJsonArray(badges));
+
         return json;
     }
 
@@ -172,7 +176,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray settingsJson = JsonHelper.getJsonArray(json, "settings", new JsonArray());
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson);
+        JsonArray badgesJson = JsonHelper.getJsonArray(json, "badges", new JsonArray());
+
+        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson, badgesJson);
     }
 
     private JsonArray getStatusesJson() {
@@ -278,15 +284,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         StringBuilder text = new StringBuilder();
 
-        ArrayList<Badge> badges = bot.getBadgeManager().getBadges(this.badges);
-        if (!badges.isEmpty()) {
-            StringBuilder badgesText = new StringBuilder();
-
-            badges.forEach((badge -> badgesText.append(' ').append(badge)));
-
-            text.append(badgesText);
-        }
-
+        text.append(getBadgesString()); // Add badges
 
         text.append("Coins: ").append(coins);
         if (isInParty) {
@@ -300,6 +298,22 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         return embedBuilder.setFooter(user.getName(), user.getAvatarUrl())
                 .setTimestamp(new Date().toInstant()).build();
+    }
+
+    /**
+     * @return String containing all badges as emotes. A new line is included if any badges exists.
+     */
+    public String getBadgesString() {
+        ArrayList<Badge> badges = bot.getBadgeManager().getBadges(this.badges);
+        if (!badges.isEmpty()) {
+            StringBuilder badgesText = new StringBuilder();
+
+            badges.forEach((badge -> badgesText.append(' ').append(badge.getEmoji())));
+
+            return badgesText.append('\n').toString();
+        }
+
+        return "";
     }
 
     /**
