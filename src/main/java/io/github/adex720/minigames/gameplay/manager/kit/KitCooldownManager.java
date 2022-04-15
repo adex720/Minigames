@@ -5,11 +5,10 @@ import io.github.adex720.minigames.discord.command.user.crate.KitCommand;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Manages kits.
- * */
+ */
 public class KitCooldownManager extends Manager {
 
     public KitCooldownManager(MinigamesBot bot) {
@@ -29,5 +28,12 @@ public class KitCooldownManager extends Manager {
 
     public ArrayList<KitCommand> getKits() {
         return KIT_COMMANDS;
+    }
+
+    /**
+     * Clears the cooldown of each kit from the given user
+     * */
+    public void clearCooldowns(long userId) {
+        KIT_COMMANDS.forEach(k -> k.clearCooldown(userId));
     }
 }

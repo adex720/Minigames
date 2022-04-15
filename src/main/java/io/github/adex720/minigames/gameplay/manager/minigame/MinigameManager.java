@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * Manages active minigames.
- * */
+ */
 public class MinigameManager extends IdCompoundSavableManager<Minigame> {
 
     private final HashMap<Long, Minigame> MINIGAMES;
@@ -50,8 +50,13 @@ public class MinigameManager extends IdCompoundSavableManager<Minigame> {
         return MINIGAMES.containsKey(id);
     }
 
-    public void deleteMinigame(long id) {
-        MINIGAMES.remove(id);
+    /**
+     * Deletes the minigame associated with the given id
+     *
+     * @return true if a minigame was removed
+     */
+    public Minigame deleteMinigame(long id) {
+        return MINIGAMES.remove(id);
     }
 
     @Override

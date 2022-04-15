@@ -136,6 +136,10 @@ public class KitCommand extends Command {
         bot.addTimerTask(() -> COOLDOWNS.remove(userId, used), cooldownMillis, false);
     }
 
+    public void clearCooldown(long userId) {
+        COOLDOWNS.remove(userId);
+    }
+
     public interface PermissionCheck {
         /**
          * @return 0 if booster can be used.

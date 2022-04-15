@@ -233,4 +233,8 @@ public class QuestManager extends SavableManager<Quest> {
         bot.getLogger().info("Unloaded quests!");
     }
 
+    public void removeQuests(long id){
+        QUESTS.remove(id);
+    }
+
 }

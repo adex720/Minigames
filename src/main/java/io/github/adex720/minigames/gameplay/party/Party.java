@@ -146,6 +146,10 @@ public class Party implements JsonSavable<Party>, IdCompound {
         return invites.contains(id);
     }
 
+    public void clearInvites() {
+        invites.clear();
+    }
+
     public void updatePartyId() {
         members.forEach(id -> bot.getProfileManager().getProfile(id).partyJoined(owner));
         bot.getProfileManager().getProfile(owner).partyJoined(owner);
@@ -153,7 +157,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     /**
      * @return The embed message on /party info
-     * */
+     */
     public MessageEmbed getInfo(User user) {
         StringBuilder stringBuilder = new StringBuilder()
                 .append("**Size: ")
@@ -183,7 +187,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     /**
      * @return The embed message on /party members
-     * */
+     */
     public MessageEmbed getMembers(User user) {
 
         StringBuilder stringBuilder = new StringBuilder();

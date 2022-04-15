@@ -25,7 +25,7 @@ public class CommandDelete extends Command {
             String code = option.getAsString();
 
             if (bot.getProfileManager().doesDeletionCodeMatch(id, code)) {
-                bot.getProfileManager().deleteProfile(id);
+                bot.getProfileManager().deleteProfile(event, id);
                 event.getHook().sendMessage("You deleted your profile. This action can't be undone").queue();
                 return true;
             }

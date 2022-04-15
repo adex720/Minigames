@@ -7,6 +7,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.Util;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -56,8 +57,11 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         PROFILES.put(profile.getId(), profile);
     }
 
-    public void deleteProfile(long id) {
-        PROFILES.remove(id);
+    /**
+     * @param event event to reply minigame results.
+     */
+    public void deleteProfile(SlashCommandEvent event, long id) {
+        PROFILES.remove(id).onDelete(event);
     }
 
     /**
@@ -109,7 +113,7 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         PROFILES.put(userId, profile);
     }
 
-    public int getProfilesAmount(){
+    public int getProfilesAmount() {
         return PROFILES.size();
     }
 }

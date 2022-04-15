@@ -7,6 +7,8 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.discord.command.user.crate.KitCommand;
+import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
+import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.booster.Booster;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterList;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
@@ -17,6 +19,7 @@ import io.github.adex720.minigames.gameplay.profile.settings.PlayerSettings;
 import io.github.adex720.minigames.gameplay.profile.settings.Setting;
 import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
+import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -49,12 +52,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     private int coins;
 
     private final Set<Integer> badges;
-
     private final StatList statList;
 
 
     private final CrateList crates;
-
     private final BoosterList boosters;
 
     private final ArrayList<Booster> activeBoosters;
@@ -555,7 +556,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * @return {@link Setting}
-     * */
+     */
     public Setting setSetting(String settingName, boolean value) {
         Setting setting = bot.getSettingsList().get(settingName);
         setSetting(setting, value);
@@ -564,11 +565,41 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * @return {@link Setting}
-     * */
+     */
     public Setting setSetting(int settingId, boolean value) {
         Setting setting = bot.getSettingsList().get(settingId);
         setSetting(setting, value);
         return setting;
+    }
+
+    public void onDelete(SlashCommandEvent event) {
+        bot.getQuestManager().removeQuests(userId);
+        bot.getKitCooldownManager().clearCooldowns(userId);
+
+        MinigameManager minigameManager = bot.getMinigameManager();
+        if (isInParty) {
+            Party party = bot.getPartyManager().getParty(partyId);
+
+            if (party.getOwnerId() == userId) {
+                // Delete party and its minigame
+                Minigame minigame = minigameManager.getMinigame(partyId);
+                if (minigame != null) {
+                    // This also removes it from the list.
+                    // The result of the minigame is sent so other people from the party will see it.
+                    event.getHook().sendMessage(minigame.quit()).queue();
+                }
+
+                party.clearInvites();
+                party.onDelete();
+                bot.getPartyManager().removeParty(partyId);
+            } else {
+                party.onMemberLeave(userId); // Remove user from party
+                party.removeMember(userId);
+            }
+
+        } else {
+            bot.getMinigameManager().deleteMinigame(userId); // If you delete your profile you don't need to see the results
+        }
     }
 
 }
