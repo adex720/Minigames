@@ -21,7 +21,8 @@ public class CommandUsage extends Command {
                 -On %s servers!"
                 -%s commands!
                 -%s total commands!
-                """, profiles, servers, bot.getCommandManager().getCommandAmount(), bot.getCommandManager().getAllCommandAmount())).queue();
+                -%s lines of code!
+                """, profiles, servers, bot.getCommandManager().getCommandAmount(), bot.getCommandManager().getAllCommandAmount(), bot.getLinesOfCodeTotal())).queue();
         return true;
     }
 }

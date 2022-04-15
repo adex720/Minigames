@@ -1,9 +1,6 @@
 package io.github.adex720.minigames;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import io.github.adex720.minigames.discord.listener.ButtonListener;
 import io.github.adex720.minigames.discord.listener.CommandListener;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
@@ -36,11 +33,16 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.security.auth.login.LoginException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -93,6 +95,11 @@ public class MinigamesBot {
     private final KitCooldownManager kitCooldownManager;
 
     private final SettingsList settingsList;
+
+
+    private int linesOfCodeTotal;
+    private int linesOfCodeJava;
+    private int linesOfCodeJson;
 
     public MinigamesBot(String token, JsonObject databaseConfig, long developerId) throws LoginException, InterruptedException, FileNotFoundException {
         long startTime = System.currentTimeMillis();
@@ -159,6 +166,8 @@ public class MinigamesBot {
         leaderboardManager.start();
 
         startTimers();
+
+        calculateLinesOfCode();
     }
 
     public static void main(String[] args) {
@@ -294,12 +303,68 @@ public class MinigamesBot {
         return "<:" + name + ":" + getEmoteId(name) + ">";
     }
 
+    public int getLinesOfCodeTotal() {
+        return linesOfCodeTotal;
+    }
+
+    public int getLinesOfCodeJava() {
+        return linesOfCodeJava;
+    }
+
+    public int getLinesOfCodeJson() {
+        return linesOfCodeJson;
+    }
+
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
         timerManager.add(task, delay, repeat);
     }
 
     public void addTimerTask(TimerManager.Task task, int delay, int firstDelay) {
         timerManager.add(task, delay, firstDelay);
+    }
+
+
+    private void calculateLinesOfCode() {
+        String request = "https://api.codetabs.com/v1/loc?github=adex720/Minigames&ignored=words";
+
+        try {
+            URL url = new URL(request);
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+            InputStream ins = connection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(ins);
+            BufferedReader in = new BufferedReader(isr);
+            String inputLine;
+
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                stringBuilder.append(inputLine);
+            }
+
+            JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
+            JsonObject java = new JsonObject();
+            JsonObject json = new JsonObject();
+            JsonObject total = new JsonObject();
+
+            for (JsonElement jsonElement : jsonArray) {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+                switch (jsonObject.get("language").getAsString()) {
+                    case "Java" -> java = jsonObject;
+                    case "JSON" -> json = jsonObject;
+                    case "Total" -> total = jsonObject;
+                }
+            }
+
+            linesOfCodeJava = java.get("lines").getAsInt();
+            linesOfCodeJson = json.get("lines").getAsInt();
+            linesOfCodeTotal = total.get("lines").getAsInt();
+
+            logger.info("Loaded amount of lines of code!");
+        } catch (Exception e) {
+            logger.error("Failed to get amount of lines of code!" + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+
+        }
     }
 
 
