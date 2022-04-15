@@ -384,9 +384,6 @@ public class MinigamesBot {
      - counting variations (hex, binary, letters)
      - connect 4
 
-    TODO: /settings --
-     - Claim-quests
-
     TODO: badges --
 
     TODO: /wordle wordlist
