@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -56,6 +57,7 @@ public class MinigameHangman extends Minigame {
     public void guess(SlashCommandEvent event, CommandInfo ci) {
         active();
         String guess = event.getOption("guess").getAsString();
+        Replyable replyable = Replyable.from(event);
 
         if (guess.length() == 1) {
             char guessLetter = guess.charAt(0);
@@ -65,12 +67,12 @@ public class MinigameHangman extends Minigame {
             }
 
             if (guessLetter < 'a' || guessLetter > 'z') { // guess was not a letter
-                event.getHook().sendMessage("You should only guess English letters!").queue();
+               replyable.reply("You should only guess English letters!");
                 return;
             }
 
             if (guesses.contains(guessLetter)) {
-                event.getHook().sendMessage("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+               replyable.reply("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
                 return;
             }
 
@@ -112,42 +114,42 @@ public class MinigameHangman extends Minigame {
 
                 if (lettersLeft) {
                     wordGuessed = wordBuilder.toString();
-                    event.getHook().sendMessage("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+                   replyable.reply("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
                     return;
                 }
 
-                event.getHook().sendMessage("Good job! The word was " + word + ". You had " + life + " tries left!").queue();
-                finish(event, ci, true);
+               replyable.reply("Good job! The word was " + word + ". You had " + life + " tries left!");
+                finish(replyable, ci, true);
 
             } else {
                 life--;
                 if (life == 0) {
-                    event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
-                    finish(event, ci, false);
+                   replyable.reply("You ran out of life. The word was " + word + ".");
+                    finish(replyable, ci, false);
                     return;
                 }
 
-                event.getHook().sendMessage("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+               replyable.reply("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
 
             }
         } else {
             if (word.equals(guess.toLowerCase(Locale.ROOT))) {
-                event.getHook().sendMessage("Good Job! " + guess + " was the word! You had " + life + " health left.").queue();
-                finish(event, ci, true);
+               replyable.reply("Good Job! " + guess + " was the word! You had " + life + " health left.");
+                finish(replyable, ci, true);
                 return;
             }
 
             life--;
             if (life == 0) {
-                event.getHook().sendMessage("You ran out of life. The word was " + word + ".").queue();
-                finish(event, ci, false);
+               replyable.reply("You ran out of life. The word was " + word + ".");
+                finish(replyable, ci, false);
                 return;
             }
 
             if (Util.isUserNormal(guess)) {
-                event.getHook().sendMessage(guess + " was not the word. You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+               replyable.reply(guess + " was not the word. You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
             } else {
-                event.getHook().sendMessage("That was not the word! You have " + life + " health left. The word is: " + wordGuessed + getGuesses()).queue();
+               replyable.reply("That was not the word! You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
             }
         }
     }

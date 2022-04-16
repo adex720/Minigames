@@ -21,6 +21,7 @@ import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -222,14 +223,14 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     }
 
     /**
-     * @param event must be non-null if {@param count} is true. If count is false event is ignored
+     * @param replyable must be non-null if {@param count} is true. If count is false event is ignored
      */
-    public void addCoins(int amount, boolean count, SlashCommandEvent event) {
+    public void addCoins(int amount, boolean count, Replyable replyable) {
 
         if (count) {
             int finalAmount = (int) (amount * getBoosterMultiplier());
 
-            appendQuests(quest -> quest.coinsEarned(event, finalAmount, this));
+            appendQuests(quest -> quest.coinsEarned(replyable, finalAmount, this));
             statList.increaseStat("coins earned", finalAmount);
             coins += finalAmount;
 
@@ -353,19 +354,19 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     /**
      * @return message to send
      */
-    public String openCrate(SlashCommandEvent event, int type) {
-        return openCrate(event, CrateType.get(type));
+    public String openCrate(Replyable replyable, int type) {
+        return openCrate(replyable, CrateType.get(type));
     }
 
     /**
      * @return message to send
      */
-    public String openCrate(SlashCommandEvent event, CrateType type) {
+    public String openCrate(Replyable replyable, CrateType type) {
         if (!hasCrate(type)) return "You don't have " + type.getNameWithArticle() + " crate!";
 
         crates.subtract(type);
 
-        return type.applyRewardsAndGetMessage(event, bot, this);
+        return type.applyRewardsAndGetMessage(replyable, bot, this);
     }
 
     /**
@@ -410,8 +411,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     /**
      * @return message to send.
      */
-    public String useBooster(SlashCommandEvent event, int rarity) {
-        appendQuests(q -> q.boosterUsed(event, this));
+    public String useBooster(Replyable replyable, int rarity) {
+        appendQuests(q -> q.boosterUsed(replyable, this));
         return useBooster(BoosterRarity.get(rarity));
     }
 

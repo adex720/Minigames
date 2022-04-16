@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.util.Pair;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.util.Replyable;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -19,7 +19,8 @@ public enum CrateType {
     EPIC("epic", 3, 500, BoosterRarity.EPIC),
     LEGENDARY("legendary", 4, BoosterRarity.LEGENDARY),
     VOTE("vote", 5, BoosterRarity.EPIC),
-    GUILD("guild", 6, 1000, BoosterRarity.LEGENDARY);
+    GUILD("guild", 6, 1000, BoosterRarity.LEGENDARY),
+    COIN("coin", 7, 5000);
 
     public static final int TYPES_AMOUNT = 7;
 
@@ -56,11 +57,11 @@ public enum CrateType {
         this(name, id, true, coins, true, boosterRarity);
     }
 
-    public String applyRewardsAndGetMessage(SlashCommandEvent event, MinigamesBot bot, Profile owner) {
+    public String applyRewardsAndGetMessage(Replyable replyable, MinigamesBot bot, Profile owner) {
         boolean isRewardCoins = isRewardCoins(bot);
 
         if (isRewardCoins) {
-            owner.addCoins(this.coins, true, event);
+            owner.addCoins(this.coins, true, replyable);
             return "You opened a **" + name + "** crate and got **" + this.coins + " coins**!";
         } else {
             owner.addBooster(boosterRarity);
@@ -68,11 +69,11 @@ public enum CrateType {
         }
     }
 
-    public Pair<Integer, Integer> applyRewardsAndReturnCounts(SlashCommandEvent event, MinigamesBot bot, Profile owner) {
+    public Pair<Integer, Integer> applyRewardsAndReturnCounts(Replyable replyable, MinigamesBot bot, Profile owner) {
         boolean isRewardCoins = isRewardCoins(bot);
 
         if (isRewardCoins) {
-            owner.addCoins(coins, true, event);
+            owner.addCoins(coins, true, replyable);
             return new Pair<>(coins, 0);
         } else {
             owner.addBooster(boosterRarity);

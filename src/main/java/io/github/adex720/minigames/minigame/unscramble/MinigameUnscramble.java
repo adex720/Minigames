@@ -6,6 +6,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -77,10 +78,11 @@ public class MinigameUnscramble extends Minigame {
     public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
         active();
         String guess = event.getOption("word").getAsString();
+        Replyable replyable = Replyable.from(event);
 
         if (guess.equals(word)) {
-            event.getHook().sendMessage("Good job! " + word + " was the word.").queue();
-            finish(event, commandInfo, true);
+            replyable.reply("Good job! " + word + " was the word.");
+            finish(replyable, commandInfo, true);
             return;
         }
 
@@ -89,21 +91,21 @@ public class MinigameUnscramble extends Minigame {
         if (life > 0) {
             updateKnowWord();
             if (Util.isUserNormal(guess)) {
-                event.getHook().sendMessage(guess + " was not the word. You have " + life + " guesses left. The word is " + wordKnown).queue();
+                replyable.reply(guess + " was not the word. You have " + life + " guesses left. The word is " + wordKnown);
             } else {
-                event.getHook().sendMessage("That was not the word. The word is " + wordKnown).queue();
+                replyable.reply("That was not the word. The word is " + wordKnown);
             }
 
             return;
         }
 
         if (Util.isUserNormal(guess)) {
-            event.getHook().sendMessage(guess + " was not the word. You ran out of life. The word was " + word + ".").queue();
+            replyable.reply(guess + " was not the word. You ran out of life. The word was " + word + ".");
         } else {
-            event.getHook().sendMessage("That was not the word. You ran out of life. The word was " + word + ".").queue();
+            replyable.reply("That was not the word. You ran out of life. The word was " + word + ".");
         }
 
-        finish(event, commandInfo, false);
+        finish(replyable, commandInfo, false);
     }
 
     @Override

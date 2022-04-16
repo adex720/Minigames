@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -90,23 +91,24 @@ public class MinigameWordle extends Minigame {
 
     public void guess(SlashCommandEvent event, CommandInfo ci) throws IOException {
         active();
+        Replyable replyable = Replyable.from(event);
 
         String guess = event.getOption("word").getAsString().toLowerCase(Locale.ROOT);
 
         if (guess.length() != 5) {
-            event.getHook().sendMessage("Word must be 5 letters long!").queue();
+            replyable.reply("Word must be 5 letters long!");
             return;
         }
 
         if (guess.equals(word)) {
             guesses.add(guess);
             sendImage(event, "Good job! " + guess + " was the word");
-            finish(event, ci, true);
+            finish(replyable, ci, true);
             return;
         }
 
         if (!bot.getWordManager().isValidWordForWordle(guess)) {
-            event.getHook().sendMessage("That is not a valid English word. If you think it is, make sure it's written correct. If it is written correct you can suggest it to be added on the support server.").queue();
+            replyable.reply("That is not a valid English word. If you think it is, make sure it's written correct. If it is written correct you can suggest it to be added on the support server.");
             return;
         }
 

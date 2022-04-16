@@ -6,7 +6,7 @@ import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.util.Random;
@@ -38,29 +38,39 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return type;
     }
 
-    public void finish(SlashCommandEvent event, CommandInfo commandInfo, boolean won) {
+    public void finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
 
-        String rewards = addRewards(event, profile, won);
-
-        event.getHook().sendMessage(rewards)
-                .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
-        bot.getReplayManager().addReplay(id, type);
-
-        appendQuest(event, profile, won); // Update quests and stats
-        appendStats(profile, won);
-    }
-
-    public void appendQuest(SlashCommandEvent event, Profile profile, boolean won) {
-        if (won) {
-            profile.appendQuests(q -> q.minigamePlayed(event, this.type, profile), q -> q.minigameWon(event, this.type, profile));
+        if (isEveryoneOnSameTeam() && profile.isInParty()) {
+            for (long userId : commandInfo.party().getMembersWithOwner()) {
+                finishForUser(replyable, bot.getProfileManager().getProfile(userId), won);
+            }
         } else {
-            profile.appendQuests(q -> q.minigamePlayed(event, this.type, profile));
+            finishForUser(replyable, profile, won);
         }
     }
 
-    public String addRewards(SlashCommandEvent event, Profile profile, boolean won) {
+    public void finishForUser(Replyable replyable, Profile profile, boolean won) {
+        String rewards = addRewards(replyable, profile, won);
+
+        replyable.getWebhookMessageAction(rewards)
+                .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
+        bot.getReplayManager().addReplay(id, type);
+
+        appendQuest(replyable, profile, won); // Update quests and stats
+        appendStats(profile, won);
+    }
+
+    public void appendQuest(Replyable replyable, Profile profile, boolean won) {
+        if (won) {
+            profile.appendQuests(q -> q.minigamePlayed(replyable, this.type, profile), q -> q.minigameWon(replyable, this.type, profile));
+        } else {
+            profile.appendQuests(q -> q.minigamePlayed(replyable, this.type, profile));
+        }
+    }
+
+    public String addRewards(Replyable replyable, Profile profile, boolean won) {
         int coins = 50; // 50 coins for lost minigame
         if (won) {
             Random random = bot.getRandom();
@@ -73,7 +83,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             coins = random.nextInt(100, 250); // 100-250 coins for won minigame
         }
 
-        profile.addCoins(coins, true, event);
+        profile.addCoins(coins, true, replyable);
         return "You received " + coins + " coins!";
     }
 
@@ -93,8 +103,9 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     /**
      * Deletes the minigame.
+     *
      * @return message to send, defaults at an empty String.
-     * */
+     */
     public String quit() {
         delete();
         return "";
@@ -106,6 +117,10 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     public boolean isInactive(long limit) {
         return lastActive <= limit;
+    }
+
+    protected boolean isEveryoneOnSameTeam() {
+        return true;
     }
 
 }

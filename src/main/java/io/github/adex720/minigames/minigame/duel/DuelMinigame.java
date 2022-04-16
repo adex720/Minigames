@@ -5,9 +5,9 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -67,11 +67,17 @@ public abstract class DuelMinigame extends Minigame { //TODO: add locked party s
         return getEmbedBase().build();
     }
 
-    public void finish(SlashCommandEvent event, CommandInfo commandInfo, int winState) {
-        super.finish(event, commandInfo, winState == FIRST_PLAYER_WON);
+
+    public void finish(Replyable replyable, CommandInfo commandInfo, int winState) {
+        super.finish(replyable, commandInfo, winState == FIRST_PLAYER_WON);
 
         Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
-        appendQuest(event, opponentProfile, winState == SECOND_PLAYER_WON);
+        appendQuest(replyable, opponentProfile, winState == SECOND_PLAYER_WON);
         appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
+    }
+
+    @Override
+    protected boolean isEveryoneOnSameTeam(){
+        return false;
     }
 }

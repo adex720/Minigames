@@ -8,6 +8,7 @@ import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.Pair;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
@@ -67,41 +68,43 @@ public class KitCommand extends Command {
 
     @Override
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+        Replyable replyable = Replyable.from(event);
+
         int canClaim = canClaim(event, ci);
         if (canClaim == 0) {
             OffsetDateTime ready = COOLDOWNS.get(ci.authorId()); // Getting times
             OffsetDateTime current = event.getTimeCreated();
             if (ready != null) {
                 if (ready.isAfter(current)) {
-                    event.getHook().sendMessage("This booster is on cooldown for " + getCooldown(ready, current) + ".").queue();
+                    replyable.reply("This booster is on cooldown for " + getCooldown(ready, current) + ".");
                     return true;
                 }
             }
 
             Profile profile = ci.profile();
-            addReward(event, profile);
+            addReward(replyable, profile);
 
             startCooldown(ci.authorId(), current);
-            event.getHook().sendMessage("You claimed your " + name + " booster. You received " + rewardCoins + " coins.").queue();
+            replyable.reply("You claimed your " + name + " booster. You received " + rewardCoins + " coins.");
 
-            profile.appendQuests(quest -> quest.kitClaimed(event, name, profile));
+            profile.appendQuests(quest -> quest.kitClaimed(replyable, name, profile));
         } else {
-            event.getHook().sendMessage(permissionCheck.getFailMessage(event, ci, canClaim)).queue();
+            replyable.reply(permissionCheck.getFailMessage(event, ci, canClaim));
         }
         return true;
     }
 
     public Pair<Integer, Integer> addRewardAndCooldown(SlashCommandEvent event, Profile profile, OffsetDateTime time) {
         startCooldown(profile.getId(), time);
-        return addReward(event, profile);
+        return addReward(Replyable.from(event), profile);
     }
 
     /**
      * Doesn't start cooldown
      */
-    public Pair<Integer, Integer> addReward(SlashCommandEvent event, Profile profile) {
+    public Pair<Integer, Integer> addReward(Replyable replyable, Profile profile) {
         if (rewardCoins > 0) {
-            profile.addCoins(rewardCoins, true, event);
+            profile.addCoins(rewardCoins, true, replyable);
         } else {
             profile.addCrate(crateId);
         }

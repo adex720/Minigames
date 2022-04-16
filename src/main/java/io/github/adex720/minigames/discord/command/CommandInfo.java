@@ -4,10 +4,12 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class is used to access various variables throughout the execution of an interaction.
@@ -15,46 +17,51 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
  * Most of the methods also check if the value is already calculated and uses it if it is.
  */
 public class CommandInfo {
+
+    @Nullable
     private Party calculatedParty;
 
     private final CalculableValue<Boolean> hasProfile;
     private final CalculableValue<Profile> profile;
+    @Nullable
     private Profile calculatedProfile;
 
-    private final CalculableValue<User> author;
-    private User calculatedAuthor;
+    private final User author;
 
+    @Nullable
     private Minigame calculatedMinigame;
+
+    private final MessageChannel channel;
 
     private final MinigamesBot bot;
 
-    public CommandInfo(CalculableValue<Boolean> hasProfile, CalculableValue<Profile> profile, CalculableValue<User> author, MinigamesBot bot) {
-        this.hasProfile = hasProfile;
-        this.profile = profile;
+    public CommandInfo(MessageChannel channel, User author, MinigamesBot bot) {
+        this.hasProfile = () -> bot.getProfileManager().hasProfile(author.getIdLong());
+        this.profile = () -> bot.getProfileManager().getProfile(author.getIdLong());
         this.author = author;
+        this.channel = channel;
         this.bot = bot;
 
         calculatedParty = null;
         calculatedProfile = null;
-        calculatedAuthor = null;
         calculatedMinigame = null;
     }
 
     public static CommandInfo create(SlashCommandEvent event, MinigamesBot bot) {
-        Member member = event.getMember(); // member is null when command is from dms. (Commands from dms are ignored)
-        return new CommandInfo(
-                () -> bot.getProfileManager().hasProfile(member.getIdLong()),
-                () -> bot.getProfileManager().getProfile(member.getIdLong()),
-                member::getUser, bot);
+        User user = event.getUser();
+        return new CommandInfo(event.getChannel(), user, bot);
     }
 
     public static CommandInfo create(ButtonClickEvent event, MinigamesBot bot) {
-        Member member = event.getMember();
-        return new CommandInfo(
-                () -> bot.getProfileManager().hasProfile(member.getIdLong()),
-                () -> bot.getProfileManager().getProfile(member.getIdLong()),
-                member::getUser, bot);
+        User user = event.getUser();
+        return new CommandInfo(event.getChannel(), user, bot);
     }
+
+    public static CommandInfo create(MessageReceivedEvent event, MinigamesBot bot) {
+        User user = event.getAuthor();
+        return new CommandInfo(event.getChannel(), user, bot);
+    }
+
 
     public boolean isInParty() {
         return profile().isInParty();
@@ -96,28 +103,27 @@ public class CommandInfo {
     }
 
     public User author() {
-        if (calculatedAuthor == null) {
-            calculatedAuthor = author.calculate();
-        }
-        return calculatedAuthor;
+        return author;
     }
 
     public long authorId() {
-        if (calculatedAuthor == null) {
-            calculatedAuthor = author.calculate();
-        }
-        return calculatedAuthor.getIdLong();
+        return author.getIdLong();
     }
 
     public String getAuthorTag() {
-        if (calculatedAuthor == null) {
-            calculatedAuthor = author.calculate();
-        }
-        return calculatedAuthor.getAsTag();
+        return author.getAsTag();
     }
 
     public String authorMention() {
-        return "<@!" + author.calculate().getId() + ">";
+        return "<@!" + author.getId() + ">";
+    }
+
+    public MessageChannel channel(){
+        return channel;
+    }
+
+    public long channelId(){
+        return channel.getIdLong();
     }
 
     public MinigamesBot bot() {

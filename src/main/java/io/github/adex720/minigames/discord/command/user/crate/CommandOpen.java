@@ -8,6 +8,7 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.Pair;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -58,8 +59,9 @@ public class CommandOpen extends Command {
         }
 
         User user = ci.author();
+        Replyable replyable = Replyable.from(event);
 
-        String description = getDescription(event, ci.profile(), type, typeId, count);
+        String description = getDescription(replyable, ci.profile(), type, typeId, count);
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("OPEN CRATES")
                 .addField("Opened " + count + " crates", description, false)
@@ -140,23 +142,23 @@ public class CommandOpen extends Command {
     /**
      * Creates description for given circumstance
      */
-    public String getDescription(SlashCommandEvent event, Profile profile, OptionMapping type, int typeId, int count) {
+    public String getDescription(Replyable replyable, Profile profile, OptionMapping type, int typeId, int count) {
         if (count == 1) {
-            if (type == null) return profile.openCrate(event, profile.getFirstCrateRarityOnInventory());
-            else return profile.openCrate(event, typeId);
+            if (type == null) return profile.openCrate(replyable, profile.getFirstCrateRarityOnInventory());
+            else return profile.openCrate(replyable, typeId);
 
         } else if (type == null) {
-            return openAll(event,profile);
+            return openAll(replyable, profile);
         } else {
-            return openAllFromRarity(event, CrateType.get(typeId), profile, count, typeId);
+            return openAllFromRarity(replyable, CrateType.get(typeId), profile, count, typeId);
         }
     }
 
     /**
      * Opens all crates the user has
      */
-    public String openAll(SlashCommandEvent event, Profile profile) {
-        Pair<Integer, HashMap<Integer, Integer>> loot = getLoot(event,profile);
+    public String openAll(Replyable replyable, Profile profile) {
+        Pair<Integer, HashMap<Integer, Integer>> loot = getLoot(replyable, profile);
 
         return lootToString(loot.first, loot.second);
     }
@@ -164,7 +166,7 @@ public class CommandOpen extends Command {
     /**
      * @return The loot the given user gets from opening all crates. The structure is like: Pair<Coins, HashMap<BoosterTypeId, Amount>>
      */
-    public Pair<Integer, HashMap<Integer, Integer>> getLoot(SlashCommandEvent event, Profile profile) {
+    public Pair<Integer, HashMap<Integer, Integer>> getLoot(Replyable replyable, Profile profile) {
         int coins = 0;
         HashMap<Integer, Integer> boosters = new HashMap<>();
 
@@ -176,7 +178,7 @@ public class CommandOpen extends Command {
 
             CrateType crateType = CrateType.get(i);
             while (rarityAmount > 0) { // Looping each crate of the type
-                Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(event,bot, profile);
+                Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(replyable, bot, profile);
 
                 if (rewards.second > 0) {
                     if (!boosters.containsKey(i)) boosters.put(i, 1);
@@ -218,11 +220,11 @@ public class CommandOpen extends Command {
     }
 
     /**
-     * Applies rewards and returns them as String. If the crate can contain both coins and booster this method uses {@link CommandOpen#openAllFromRarityContainingCoinsAndBoosters(SlashCommandEvent, CrateType, Profile, int)}
+     * Applies rewards and returns them as String. If the crate can contain both coins and booster this method uses {@link CommandOpen#openAllFromRarityContainingCoinsAndBoosters(Replyable, CrateType, Profile, int)}
      */
-    public String openAllFromRarity(SlashCommandEvent event, CrateType crateType, Profile profile, int count, int typeId) {
+    public String openAllFromRarity(Replyable replyable, CrateType crateType, Profile profile, int count, int typeId) {
         if (!crateType.canContainBoosters) {
-            profile.addCoins(count * crateType.coins, true, event);
+            profile.addCoins(count * crateType.coins, true, replyable);
             return "- " + count * crateType.coins + " coins";
         }
 
@@ -232,15 +234,15 @@ public class CommandOpen extends Command {
                     + crateType.boosterRarity.name + " boosters";
         }
 
-        return openAllFromRarityContainingCoinsAndBoosters(event, crateType, profile, count);
+        return openAllFromRarityContainingCoinsAndBoosters(replyable, crateType, profile, count);
     }
 
     /**
      * Applies rewards and returns them as String.
      * For optimization reason only call this when the crate can contain both cains and boosters.
      */
-    public String openAllFromRarityContainingCoinsAndBoosters(SlashCommandEvent event, CrateType crateType, Profile profile, int count) {
-        Pair<Integer, Integer> loot = getCrateLootFromRarity(event, crateType, profile, count);
+    public String openAllFromRarityContainingCoinsAndBoosters(Replyable replyable, CrateType crateType, Profile profile, int count) {
+        Pair<Integer, Integer> loot = getCrateLootFromRarity(replyable, crateType, profile, count);
         int coins = loot.first;
         int boosters = loot.second;
 
@@ -261,11 +263,11 @@ public class CommandOpen extends Command {
      * Since one crate only gives coins or boosters one of the values is always set to its default value.
      * For coins, it's 0 and for booster id -1.
      */
-    public Pair<Integer, Integer> getCrateLootFromRarity(SlashCommandEvent event, CrateType crateType, Profile profile, int count) {
+    public Pair<Integer, Integer> getCrateLootFromRarity(Replyable replyable, CrateType crateType, Profile profile, int count) {
         int coins = 0;
         int boosters = 0;
         for (int left = count; left > 0; left--) {
-            Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(event,bot, profile);
+            Pair<Integer, Integer> rewards = crateType.applyRewardsAndReturnCounts(replyable, bot, profile);
 
             if (rewards.second > 0) {
                 boosters++;
@@ -274,7 +276,7 @@ public class CommandOpen extends Command {
             }
         }
 
-        profile.appendQuests(quest -> quest.crateOpened(event, crateType, profile));
+        profile.appendQuests(quest -> quest.crateOpened(replyable, crateType, profile));
         return new Pair<>(coins, boosters);
     }
 

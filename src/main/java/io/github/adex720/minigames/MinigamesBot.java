@@ -66,6 +66,7 @@ public class MinigamesBot {
 
     private final GuildJoinListener guildJoinListener;
     private final SelfMentionListener selfMentionListener;
+    private final CountingListener countingListener;
 
     private final BadgeManager badgeManager;
     private final StatManager statManager;
@@ -120,6 +121,7 @@ public class MinigamesBot {
 
         guildJoinListener = new GuildJoinListener(this);
         selfMentionListener = new SelfMentionListener(this);
+        countingListener = new CountingListener(this);
 
         badgeManager = new BadgeManager(this);
         statManager = new StatManager(this);
@@ -152,7 +154,7 @@ public class MinigamesBot {
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
-                .addEventListeners(commandListener, buttonListener, devCommandListener, guildJoinListener, selfMentionListener)
+                .addEventListeners(commandListener, buttonListener, devCommandListener, guildJoinListener, selfMentionListener, countingListener)
                 .build()
                 .awaitReady();
         long botOnlineTime = System.currentTimeMillis();
@@ -244,6 +246,10 @@ public class MinigamesBot {
         return selfMentionListener;
     }
 
+    public CountingListener getCountingListener() {
+        return countingListener;
+    }
+
     public BanManager getBanManager() {
         return banManager;
     }
@@ -329,7 +335,7 @@ public class MinigamesBot {
     }
 
 
-    private void calculateLinesOfCode() {
+    public void calculateLinesOfCode() {
         String request = "https://api.codetabs.com/v1/loc?github=adex720/Minigames&ignored=words";
 
         try {
@@ -450,6 +456,8 @@ public class MinigamesBot {
     TODO: guilds
 
     TODO: global boosters
+
+    TODO: /rules <minigame>
 
     TODO: trivia
      (https://opentdb.com/api_config.php)

@@ -23,5 +23,10 @@
     "description": "Wordle is a online word guessing game originally made by Josh Wardle. The player guesses a 5 letters long word and is told if the letter a) is at the correct position, b) is in the word but at wrong position or c) is not in the word.",
     "tips": "- Aim guessing the most common letters.\n- Don't guess letters you know don't exist on the word.\nDon't repeat letters on places you know they aren't.\n- You don't need to include letters whose position you know on your guesses.",
     "color": "000000"
+  },
+  "counting": {
+    "description": "Counting is a minigame where you aim to count to as high as possible. The game ends when something else than the next number is presented. (Don't worry, only messages on the channel the game is started are counted.) The same user isn't allowed to count twice in a row.",
+    "tips": "- While having a set order for players to count is the most efficient way to play, having no order is probably more fun.\n- Try playing with both your friends and people you don't know.",
+    "color": "000000"
   }
 }

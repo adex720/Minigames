@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * Stores information common with each of the minigames of same type.
- * */
+ */
 public abstract class MinigameType<M extends Minigame> {
 
     protected final MinigamesBot bot;
@@ -62,7 +62,7 @@ public abstract class MinigameType<M extends Minigame> {
 
     /**
      * @return Each command required to interact with the minigame
-     * */
+     */
     public abstract Set<Subcommand> getSubcommands();
 
     public void initCommand() {
@@ -73,19 +73,27 @@ public abstract class MinigameType<M extends Minigame> {
 
     /**
      * @return the parent command for interacting with the minigame.
-     * */
+     */
     public MinigameCommand getCommand() {
         return command;
     }
 
+    public boolean canStart(CommandInfo commandInfo) {
+        if (!requiresParty) return true; // no requirements
+
+        if (!commandInfo.isInParty()) return false; // not in party while but it's required
+
+        return commandInfo.party().size() >= minPartySize;
+    }
+
     /**
      * If the initialization of minigame ends this will be sent as reason.
-     * */
+     */
     public abstract String getReplyForInvalidStartState();
 
     /**
      * Returns the name with dashes being replaced by spaces.
-     * */
+     */
     public String getNameWithSpaces() {
         return name.replaceAll("-", " ");
     }

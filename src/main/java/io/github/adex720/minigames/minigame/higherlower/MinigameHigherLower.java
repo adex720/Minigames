@@ -5,6 +5,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
@@ -23,10 +24,10 @@ public class MinigameHigherLower extends Minigame {
 
     /**
      * @param number number to guess
-     * @param min smallest potential answer
-     * @param max largest potential answer
-     * @param life guesses left
-     * */
+     * @param min    smallest potential answer
+     * @param max    largest potential answer
+     * @param life   guesses left
+     */
     public MinigameHigherLower(MinigamesBot bot, long id, boolean isParty, long lastActive, int number, int min, int max, int life) {
         super(bot, bot.getMinigameTypeManager().HIGHER_OR_LOWER, id, isParty, lastActive);
         this.number = number;
@@ -59,32 +60,33 @@ public class MinigameHigherLower extends Minigame {
     public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
         active();
         int guess = (int) event.getOption("number").getAsDouble();
+        Replyable replyable = Replyable.from(event);
 
         if (guess == number) {
-            event.getHook().sendMessage("Good job! " + number + " was the number!").queue();
-            finish(event, commandInfo, true);
+            replyable.reply("Good job! " + number + " was the number!");
+            finish(replyable, commandInfo, true);
             return;
         }
 
         if (guess > max || guess < min) { // No harm being friendly
-            event.getHook().sendMessage("That number is outside the range! The range is " + min + "-" + max + ".").queue();
+            replyable.reply("That number is outside the range! The range is " + min + "-" + max + ".");
             return;
         }
 
         life--;
         if (life == 0) {
-            event.getHook().sendMessage("Wrong number. You ran out of tries. The number was " + number + ".").queue();
-            finish(event, commandInfo, false);
+            replyable.reply("Wrong number. You ran out of tries. The number was " + number + ".");
+            finish(replyable, commandInfo, false);
             return;
         }
 
         String guessWithProperForm = life == 1 ? " guess" : " guesses";
         if (guess > number) { // Send new range
             max = guess - 1;
-            event.getHook().sendMessage(guess + " was too high. You have " + life + guessWithProperForm + " left. The range is " + min + "-" + max + ".").queue();
+            replyable.reply(guess + " was too high. You have " + life + guessWithProperForm + " left. The range is " + min + "-" + max + ".");
         } else {
             min = guess + 1;
-            event.getHook().sendMessage(guess + " was too low. You have " + life + guessWithProperForm + " left The range is " + min + "-" + max + ".").queue();
+            replyable.reply(guess + " was too low. You have " + life + guessWithProperForm + " left The range is " + min + "-" + max + ".");
         }
 
     }

@@ -7,7 +7,6 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.party.Party;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 public class CommandPartyTransfer extends Subcommand {

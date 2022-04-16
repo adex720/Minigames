@@ -1,7 +1,6 @@
 package io.github.adex720.minigames.gameplay.manager;
 
 import io.github.adex720.minigames.MinigamesBot;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * This class manages something.

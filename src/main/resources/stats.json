@@ -84,6 +84,18 @@
     "on_leaderboard": false
   },
   {
+    "id": 15,
+    "name": "counting games played",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 16,
+    "name": "numbers counted",
+    "description": "",
+    "on_leaderboard": true
+  },
+  {
     "id": 101,
     "name": "coins earned",
     "description": "",

@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 
 /**
  * Saves and loads data as {@link JsonElement}.

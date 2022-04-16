@@ -32,6 +32,10 @@ public class CommandPlay extends ParentCommand {
 
         @Override
         public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+            if (!this.minigame.canStart(ci)) {
+                event.getHook().sendMessage(this.minigame.getReplyForInvalidStartState()).queue();
+            }
+
             if (ci.hasMinigame()) {
                 event.getHook().sendMessage(ci.minigame().quit()).queue();
             }

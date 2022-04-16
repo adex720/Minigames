@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.duel.DuelMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -175,19 +176,20 @@ public class MinigameTicTacToe extends DuelMinigame {
 
     public void set(SlashCommandEvent event, CommandInfo ci) {
         long setter = ci.authorId();
+        Replyable replyable = Replyable.from(event);
 
         if (setter == id) {
             if (!isFirstPlayersTurn) {
-                event.getHook().sendMessage("It is not your turn!").queue();
+                replyable.reply("It is not your turn!");
                 return;
             }
         } else if (setter == opponentId) {
             if (isFirstPlayersTurn) {
-                event.getHook().sendMessage("It is not your turn!").queue();
+                replyable.reply("It is not your turn!");
                 return;
             }
         } else {
-            event.getHook().sendMessage("You are not part of this game.").queue();
+            replyable.reply("You are not part of this game.");
             return;
         }
 
@@ -195,7 +197,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         short y = (short) event.getOption("row").getAsLong();
 
         if (isOccupied(x, y)) {
-            event.getHook().sendMessageEmbeds(getEmbedWithField("Can't set mark", "That position is already in use.")).queue();
+            replyable.reply(getEmbedWithField("Can't set mark", "That position is already in use."));
             return;
         }
 
@@ -210,21 +212,21 @@ public class MinigameTicTacToe extends DuelMinigame {
         }
 
         if (winner == 0) {
-            event.getHook().sendMessageEmbeds(getEmbedWithField("Set your mark",
+            replyable.reply(getEmbedWithField("Set your mark",
                     "You set your mark in " + getPositionName(x, y) + "."
-                            + (isParty ? "" : "\nAI set its mark on " + lastAIMove))).queue();
+                            + (isParty ? "" : "\nAI set its mark on " + lastAIMove)));
             return;
         }
 
         if (winner == 3) {
-            event.getHook().sendMessageEmbeds(getEmbedWithField("The game ended in a draw", "The board is full yet neither of the players has won.")).queue();
-            finish(event, ci, winner);
+            replyable.reply(getEmbedWithField("The game ended in a draw", "The board is full yet neither of the players has won."));
+            finish(replyable, ci, winner);
             return;
         }
 
         String winnerMention = "<@!" + (winner == FIRST_PLAYER_WON ? id : opponentId) + ">";
-        event.getHook().sendMessageEmbeds(getEmbedWithField("The game ended", winnerMention + " won the game!")).queue();
-        finish(event, ci, winner);
+        replyable.reply(getEmbedWithField("The game ended", winnerMention + " won the game!"));
+        finish(replyable, ci, winner);
     }
 
     public void place(short x, short y, boolean firstPlayer) {
@@ -275,7 +277,7 @@ public class MinigameTicTacToe extends DuelMinigame {
 
     /**
      * Returns the board with horizontal lines between the rows
-     * */
+     */
     public String getBoard() {
         short zero = 0;
         short one = 1;

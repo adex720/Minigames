@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -21,7 +22,7 @@ public class CommandUse extends Command {
     public boolean execute(SlashCommandEvent event, CommandInfo ci) {
         int id = (int) event.getOption("type").getAsLong();
 
-        event.getHook().sendMessage(ci.profile().useBooster(event, id)).queue();
+        event.getHook().sendMessage(ci.profile().useBooster(Replyable.from(event), id)).queue();
         return true;
     }
 

@@ -4,6 +4,8 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
+import io.github.adex720.minigames.minigame.counting.MinigameCounting;
+import io.github.adex720.minigames.minigame.counting.MinigameTypeCounting;
 import io.github.adex720.minigames.minigame.hangman.MinigameHangman;
 import io.github.adex720.minigames.minigame.hangman.MinigameTypeHangman;
 import io.github.adex720.minigames.minigame.higherlower.MinigameHigherLower;
@@ -30,6 +32,7 @@ public class MinigameTypeManager extends Manager {
     public MinigameType<MinigameHigherLower> HIGHER_OR_LOWER;
     public MinigameType<MinigameTicTacToe> TIC_TAC_TOE;
     public MinigameType<MinigameWordle> WORDLE;
+    public MinigameType<MinigameCounting> COUNTING;
 
     public MinigameTypeManager(MinigamesBot bot) {
         super(bot, "minigame-type-manager");
@@ -53,6 +56,9 @@ public class MinigameTypeManager extends Manager {
 
         WORDLE = new MinigameTypeWordle(bot, this);
         initCommand(WORDLE);
+
+        COUNTING = new MinigameTypeCounting(bot, this);
+        initCommand(COUNTING);
     }
 
     /**
@@ -75,6 +81,7 @@ public class MinigameTypeManager extends Manager {
             case "higher-lower" -> HIGHER_OR_LOWER;
             case "tic-tac-toe" -> TIC_TAC_TOE;
             case "wordle" -> WORDLE;
+            case "counting" -> COUNTING;
             default -> throw new IllegalStateException("Invalid minigame type: " + name);
         };
     }

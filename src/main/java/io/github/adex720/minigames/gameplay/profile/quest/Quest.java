@@ -7,7 +7,7 @@ import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import io.github.adex720.minigames.util.JsonHelper;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.util.Replyable;
 
 /**
  * Each player has own daily quests.
@@ -64,28 +64,28 @@ public class Quest implements JsonSavable<Quest> {
         return new Quest(questList, type, difficulty, progress);
     }
 
-    public boolean checkForCompletion(SlashCommandEvent event, Profile profile) {
+    public boolean checkForCompletion(Replyable replyable, Profile profile) {
         if (progress < goal) return false;
 
-        applyRewards(event, profile);
-        event.getHook().sendMessage("You completed your " + difficulty.name + " quest!").queue();
+        applyRewards(replyable, profile);
+        replyable.reply("You completed your " + difficulty.name + " quest!");
         return true;
     }
 
-    public void applyRewards(SlashCommandEvent event, Profile profile) {
+    public void applyRewards(Replyable replyable, Profile profile) {
         int coins = difficulty.rewardCoins;
         int crateType = difficulty.rewardCrateId;
 
-        profile.addCoins(coins, true, event);
+        profile.addCoins(coins, true, replyable);
         profile.addCrate(crateType);
     }
 
-    public void append(SlashCommandEvent event, Profile profile, int amount) {
+    public void append(Replyable replyable, Profile profile, int amount) {
         if (isCompleted()) return;
 
         if (amount > 0) {
             progress += amount;
-            if (checkForCompletion(event, profile)) {
+            if (checkForCompletion(replyable, profile)) {
                 progress = goal;
 
                 // TODO: check if all quests are completed
@@ -93,28 +93,28 @@ public class Quest implements JsonSavable<Quest> {
         }
     }
 
-    public void minigamePlayed(SlashCommandEvent event, MinigameType<? extends Minigame> type, Profile profile) {
-        append(event, profile, this.type.minigamePlayed(type, profile));
+    public void minigamePlayed(Replyable replyable, MinigameType<? extends Minigame> type, Profile profile) {
+        append(replyable, profile, this.type.minigamePlayed(type, profile));
     }
 
-    public void minigameWon(SlashCommandEvent event, MinigameType<? extends Minigame> type, Profile profile) {
-        append(event, profile, this.type.minigameWon(type, profile));
+    public void minigameWon(Replyable replyable, MinigameType<? extends Minigame> type, Profile profile) {
+        append(replyable, profile, this.type.minigameWon(type, profile));
     }
 
-    public void coinsEarned(SlashCommandEvent event, int amount, Profile profile) {
-        append(event, profile, this.type.coinsEarned(amount, profile));
+    public void coinsEarned(Replyable replyable, int amount, Profile profile) {
+        append(replyable, profile, this.type.coinsEarned(amount, profile));
     }
 
-    public void crateOpened(SlashCommandEvent event, CrateType rarity, Profile profile) {
-        append(event, profile, this.type.crateOpened(rarity, profile));
+    public void crateOpened(Replyable replyable, CrateType rarity, Profile profile) {
+        append(replyable, profile, this.type.crateOpened(rarity, profile));
     }
 
-    public void boosterUsed(SlashCommandEvent event, Profile profile) {
-        append(event, profile, this.type.boosterUsed(profile));
+    public void boosterUsed(Replyable replyable, Profile profile) {
+        append(replyable, profile, this.type.boosterUsed(profile));
     }
 
-    public void kitClaimed(SlashCommandEvent event, String kit, Profile profile) {
-        append(event, profile, this.type.kitClaimed(kit, profile));
+    public void kitClaimed(Replyable replyable, String kit, Profile profile) {
+        append(replyable, profile, this.type.kitClaimed(kit, profile));
     }
 
     public boolean isCompleted() {

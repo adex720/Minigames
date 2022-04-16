@@ -34,6 +34,9 @@ public class SelfMentionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (!event.isFromGuild()) return;
+        if (event.getAuthor().isBot()) return;
+
         String content = event.getMessage().getContentRaw();
         if (!content.startsWith("<@")) return;
 
