@@ -54,30 +54,30 @@ public class StatList {
         return statsById.get(stat).value;
     }
 
-    public void increaseStat(Stat stat) {
+    public int increaseStat(Stat stat) {
         statsByName.get(stat.name()).value++;
-        statsById.get(stat.id()).value++;
+        return statsById.get(stat.id()).value++;
     }
 
-    public void increaseStat(Stat stat, int amount) {
+    public int increaseStat(Stat stat, int amount) {
         statsByName.get(stat.name()).value += amount;
-        statsById.get(stat.id()).value += amount;
+        return statsById.get(stat.id()).value += amount;
     }
 
-    public void increaseStat(String stat) {
-        increaseStat(bot.getStatManager().get(stat));
+    public int increaseStat(String stat) {
+        return increaseStat(bot.getStatManager().get(stat));
     }
 
-    public void increaseStat(String stat, int amount) {
-        increaseStat(bot.getStatManager().get(stat), amount);
+    public int increaseStat(String stat, int amount) {
+        return increaseStat(bot.getStatManager().get(stat), amount);
     }
 
-    public void increaseStat(int stat) {
-        increaseStat(bot.getStatManager().get(stat));
+    public int increaseStat(int stat) {
+        return increaseStat(bot.getStatManager().get(stat));
     }
 
-    public void increaseStat(int stat, int amount) {
-        increaseStat(bot.getStatManager().get(stat), amount);
+    public int increaseStat(int stat, int amount) {
+        return increaseStat(bot.getStatManager().get(stat), amount);
     }
 
     public void setValue(Stat stat, int value) {

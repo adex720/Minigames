@@ -88,7 +88,9 @@ public class Quest implements JsonSavable<Quest> {
             if (checkForCompletion(replyable, profile)) {
                 progress = goal;
 
-                // TODO: check if all quests are completed
+                if (profile.amountOfUnfinishedQuests() == 0) {
+                    profile.dailyQuestsCompleted(replyable);
+                }
             }
         }
     }

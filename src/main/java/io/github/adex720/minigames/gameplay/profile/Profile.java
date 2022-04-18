@@ -259,6 +259,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return statList.getValue(name);
     }
 
+    public int getStatValue(Stat stat) {
+        return statList.getValue(stat.id());
+    }
+
     public void setStatValue(int id, int value) {
         statList.setValue(id, value);
     }
@@ -267,20 +271,28 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         statList.setValue(name, value);
     }
 
-    public void increaseStat(String stat) {
-        statList.increaseStat(stat);
+    public int increaseStat(String stat) {
+        return statList.increaseStat(stat);
     }
 
-    public void increaseStat(String stat, int amount) {
-        statList.increaseStat(stat, amount);
+    public int increaseStat(Stat stat) {
+        return statList.increaseStat(stat);
     }
 
-    public void increaseStat(int stat) {
-        statList.increaseStat(stat);
+    public int increaseStat(String stat, int amount) {
+        return statList.increaseStat(stat, amount);
     }
 
-    public void increaseStat(int stat, int amount) {
-        statList.increaseStat(stat, amount);
+    public int increaseStat(int stat) {
+        return statList.increaseStat(stat);
+    }
+
+    public int increaseStat(int stat, int amount) {
+        return statList.increaseStat(stat, amount);
+    }
+
+    public int increaseStat(Stat stat, int amount) {
+        return statList.increaseStat(stat, amount);
     }
 
     /**
@@ -337,6 +349,32 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
             }
         }
     }
+
+    public int amountOfUnfinishedQuests() {
+        int amount = 0;
+        for (Quest quest : bot.getQuestManager().generateQuests(userId)) {
+            if (!quest.isCompleted()) amount++;
+        }
+        return amount;
+    }
+
+    /**
+     * Applies the rewards, increases stats and sends a message.
+     * */
+    public void dailyQuestsCompleted(Replyable replyable) {
+        addCrate(CrateType.LEGENDARY);
+
+        Stat current = bot.getStatManager().get("current daily quest streak");
+        Stat highest = bot.getStatManager().get("highest daily quest streak");
+        int streak = increaseStat(current);
+        if (getStatValue(current) > getStatValue(highest)) {
+            increaseStat(highest);
+        }
+
+        replyable.reply("You finished all of your quests today! You received a legendary crate." +
+                "\nYour current streak of completing all quests is " + streak + ".");
+    }
+
 
     @FunctionalInterface
     public interface QuestUpdate {

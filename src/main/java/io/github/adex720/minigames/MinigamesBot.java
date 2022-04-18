@@ -449,8 +449,6 @@ public class MinigamesBot {
 
 /*
     TODO: minigames to add
-     - counting
-     - counting variations (hex, binary, letters)
      - connect 4
 
     TODO: guilds

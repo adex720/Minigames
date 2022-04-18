@@ -106,5 +106,17 @@
     "name": "coins earned",
     "description": "",
     "on_leaderboard": true
+  },
+  {
+    "id": 110,
+    "name": "current daily quest streak",
+    "description": "Current streak of each quest being completed",
+    "on_leaderboard": false
+  },
+  {
+    "id": 111,
+    "name": "highest daily quest streak",
+    "description": "Highest streak of completing each quest daily",
+    "on_leaderboard": true
   }
 ]
