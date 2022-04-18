@@ -64,6 +64,7 @@ public class CommandInfo {
 
 
     public boolean isInParty() {
+        if (calculatedParty != null) return true;
         return profile().isInParty();
     }
 

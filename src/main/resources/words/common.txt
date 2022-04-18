@@ -2924,7 +2924,7 @@ new
 newly
 news
 newspaper
-next
+nextUpperCase
 nice
 nicely
 nicer

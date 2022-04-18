@@ -54,9 +54,11 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     public void finishForUser(Replyable replyable, Profile profile, boolean won) {
         String rewards = addRewards(replyable, profile, won);
 
-        replyable.getWebhookMessageAction(rewards)
-                .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
-        bot.getReplayManager().addReplay(id, type);
+        if (replyable.isWebhookBased()) {
+            replyable.getWebhookMessageAction(rewards)
+                    .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
+            bot.getReplayManager().addReplay(id, type);
+        }
 
         appendQuest(replyable, profile, won); // Update quests and stats
         appendStats(profile, won);

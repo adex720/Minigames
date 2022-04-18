@@ -9,6 +9,8 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager
 import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.HashSet;
 import java.util.Set;

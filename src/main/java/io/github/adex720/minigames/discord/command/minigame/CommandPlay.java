@@ -8,6 +8,8 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 public class CommandPlay extends ParentCommand {
 
@@ -21,13 +23,34 @@ public class CommandPlay extends ParentCommand {
         addSubcommand(subcommand);
     }
 
+    public void createSubcommand(MinigameType<? extends Minigame> type, OptionData... optionData) {
+        Subcommand subcommand = new SubcommandPlay(type, optionData);
+        addSubcommand(subcommand);
+    }
+
     public class SubcommandPlay extends Subcommand {
 
         private final MinigameType<? extends Minigame> minigame;
 
+        private final OptionData[] optionData;
+
         protected SubcommandPlay(MinigameType<? extends Minigame> minigame) {
             super(CommandPlay.this.bot, CommandPlay.this, minigame.name, "Starts a game of " + minigame.name + ".", CommandCategory.MINIGAME);
             this.minigame = minigame;
+
+            this.optionData = new OptionData[0];
+        }
+
+        protected SubcommandPlay(MinigameType<? extends Minigame> minigame, OptionData[] optionData) {
+            super(CommandPlay.this.bot, CommandPlay.this, minigame.name, "Starts a game of " + minigame.name + ".", CommandCategory.MINIGAME);
+            this.minigame = minigame;
+
+            this.optionData = optionData;
+        }
+
+        @Override
+        protected SubcommandData getSubcommandData() {
+            return super.getSubcommandData().addOptions(optionData);
         }
 
         @Override

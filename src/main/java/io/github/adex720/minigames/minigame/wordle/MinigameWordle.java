@@ -474,7 +474,7 @@ public class MinigameWordle extends Minigame {
     /**
      * Returns an int array with length of 2.
      * This first entry is x location and second is y.
-     * The distance from any side to the same side on the next key is 75 pixels.
+     * The distance from any side to the same side on the nextUpperCase key is 75 pixels.
      * Returns {-1, -1} on invalid key.
      */
     public int[] getKeyboardPosition(char key) {
