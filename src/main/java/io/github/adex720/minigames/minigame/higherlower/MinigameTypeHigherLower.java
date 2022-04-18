@@ -36,11 +36,7 @@ public class MinigameTypeHigherLower extends MinigameType<MinigameHigherLower> {
 
     @Override
     public Set<Subcommand> getSubcommands() {
-        Set<Subcommand> subcommands = new HashSet<>();
-
-        subcommands.add(new CommandHigherLowerGuess(bot, typeManager));
-
-        return subcommands;
+        return Set.of(new CommandHigherLowerGuess(bot, typeManager));
     }
 
     @Override

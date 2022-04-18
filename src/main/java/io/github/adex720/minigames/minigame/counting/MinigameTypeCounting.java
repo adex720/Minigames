@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
+import io.github.adex720.minigames.discord.command.minigame.CommandCountingCount;
+import io.github.adex720.minigames.discord.command.minigame.CommandCountingLastCounter;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.party.PartyMinigameType;
 import io.github.adex720.minigames.util.Util;
@@ -54,7 +56,9 @@ public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
      */
     @Override
     public Set<Subcommand> getSubcommands() {
-        return Set.of();
+        return Set.of(
+                new CommandCountingCount(bot, typeManager),
+                new CommandCountingLastCounter(bot, typeManager));
     }
 
     @Override

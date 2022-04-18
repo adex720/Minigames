@@ -10,7 +10,6 @@ import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
@@ -36,11 +35,7 @@ public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
 
     @Override
     public Set<Subcommand> getSubcommands() {
-        Set<Subcommand> subcommands = new HashSet<>();
-
-        subcommands.add(new CommandUnscrambleSolve(bot, typeManager));
-
-        return subcommands;
+        return Set.of(new CommandUnscrambleSolve(bot, typeManager));
     }
 
     @Override

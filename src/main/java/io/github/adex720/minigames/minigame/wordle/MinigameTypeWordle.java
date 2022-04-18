@@ -12,7 +12,6 @@ import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class MinigameTypeWordle extends MinigameType<MinigameWordle> {
@@ -38,13 +37,10 @@ public class MinigameTypeWordle extends MinigameType<MinigameWordle> {
 
     @Override
     public Set<Subcommand> getSubcommands() {
-        Set<Subcommand> subcommands = new HashSet<>();
-
-        subcommands.add(new CommandWordleGuess(bot, typeManager));
-        subcommands.add(new CommandWordleLetters(bot, typeManager));
-        subcommands.add(new CommandWordleWordlist(bot, typeManager));
-
-        return subcommands;
+        return Set.of(
+                new CommandWordleGuess(bot, typeManager),
+                new CommandWordleLetters(bot, typeManager),
+                new CommandWordleWordlist(bot, typeManager));
     }
 
     @Override

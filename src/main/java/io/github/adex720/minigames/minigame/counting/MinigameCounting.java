@@ -228,6 +228,10 @@ public class MinigameCounting extends PartyMinigame {
         return modeId;
     }
 
+    public long getLastCounter() {
+        return lastUser;
+    }
+
     public void onCorrectNumber(MessageReceivedEvent event, CommandInfo commandInfo) {
         event.getMessage().addReaction(CORRECT_NUMBER_EMOTE).queue();
         count++;

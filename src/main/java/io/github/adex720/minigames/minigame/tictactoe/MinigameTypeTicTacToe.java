@@ -36,10 +36,6 @@ public class MinigameTypeTicTacToe extends DuelMinigameType<MinigameTicTacToe> {
 
     @Override
     public Set<Subcommand> getSubcommands() {
-        Set<Subcommand> subcommands = new HashSet<>();
-
-        subcommands.add(new CommandTicTacToeSet(bot, typeManager));
-
-        return subcommands;
+        return Set.of(new CommandTicTacToeSet(bot, typeManager));
     }
 }
