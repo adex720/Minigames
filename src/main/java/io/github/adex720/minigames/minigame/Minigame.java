@@ -40,7 +40,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
     public String finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
-        if (type.hasExtraArgumentsForReplay()){
+        if (type.hasExtraArgumentsForReplay()) {
             type.saveState(id, getState());
         }
 
@@ -61,7 +61,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             if (replyable.isWebhookBased()) {
                 replyable.getWebhookMessageAction(rewards)
                         .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
-                bot.getReplayManager().addReplay(id, type);
+                addReplay();
             } else {
                 replyable.reply(rewards);
             }
@@ -71,6 +71,14 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         appendStats(profile, won);
 
         return rewards;
+    }
+
+    public void addReplay() {
+        bot.getReplayManager().addReplay(id, type);
+
+        if (type.hasExtraArgumentsForReplay()) {
+            type.saveState(id, getState());
+        }
     }
 
     public String finishForParty(Replyable replyable, Party party, boolean won) {
@@ -145,8 +153,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     /**
      * Returns the state this minigame is in.
      * Most minigames don't have a state so default value of 1 is used.
-     * */
-    public int getState(){
+     */
+    public int getState() {
         return 1;
     }
 
