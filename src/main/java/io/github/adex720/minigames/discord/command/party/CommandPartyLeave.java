@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.party.Party;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class CommandPartyLeave extends Subcommand {
@@ -32,6 +33,7 @@ public class CommandPartyLeave extends Subcommand {
 
         party.removeMember(userId);
         party.onMemberLeave(userId);
+        party.clearLock(Replyable.from(event));
 
         ci.profile().partyLeft();
 

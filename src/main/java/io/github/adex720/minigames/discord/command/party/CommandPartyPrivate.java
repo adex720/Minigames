@@ -29,6 +29,11 @@ public class CommandPartyPrivate extends Subcommand {
             return true;
         }
 
+        if (party.isLocked()){
+            event.getHook().sendMessage("The party status is currently locked from new members because of its current minigame.").queue();
+            return true;
+        }
+
         party.makePrivate();
         event.getHook().sendMessage("You changed the party to private. You now need to invite people for them to be able to join.").queue();
 

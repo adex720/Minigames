@@ -37,6 +37,11 @@ public class CommandPartyKick extends Subcommand {
             return true;
         }
 
+        if (party.isLocked()) {
+            event.getHook().sendMessage("The current minigame prevents people from getting kicked!").queue();
+            return true;
+        }
+
         if (!party.isInParty(kickId)) {
             event.getHook().sendMessage("The user you tried to kick isn't in your party.").queue();
             return true;

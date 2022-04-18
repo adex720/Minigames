@@ -29,6 +29,11 @@ public class CommandPartyPublic extends Subcommand {
             return true;
         }
 
+        if (party.isLocked()){
+            event.getHook().sendMessage("The party can't be made public because of its current minigame.").queue();
+            return true;
+        }
+
         party.makePublic();
         event.getHook().sendMessage("You changed the party to public. Everyone can now join the party.").queue();
 

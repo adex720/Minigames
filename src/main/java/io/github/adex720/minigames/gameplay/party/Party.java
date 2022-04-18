@@ -7,6 +7,7 @@ import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -31,6 +32,8 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     private final Set<Long> invites;
     private boolean isPublic;
+
+    private boolean isLocked;
 
     private long lastActive;
 
@@ -130,14 +133,45 @@ public class Party implements JsonSavable<Party>, IdCompound {
     }
 
     public void makePublic() {
+        if (isLocked) return;
         isPublic = true;
     }
 
     public void makePrivate() {
+        if (isLocked) return;
         isPublic = false;
     }
 
+    /**
+     * Locked party can't receive new members even from invites.
+     * The locked status breaks if someone leaves the party.
+     */
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void lock() {
+        isLocked = true;
+        clearInvites();
+    }
+
+    public void clearLock(Replyable replyable) {
+        if (!isLocked) return;
+
+        isLocked = false;
+        Minigame minigame = bot.getMinigameManager().getMinigame(getId());
+
+        if (minigame == null) return;
+        if (!minigame.requiresLockedParty()) return;
+
+        minigame.delete();
+        replyable.reply("Your party no longer meets the requirements of the current minigame. The minigame was deleted.");
+    }
+
     public void invite(long id) {
+        if (isLocked) return;
+
         invites.add(id);
         Util.schedule(() -> invites.remove(id), 60000);
     }
@@ -166,6 +200,14 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
         if (size() >= MAX_SIZE) {
             stringBuilder.append("\n**The party is full.");
+        }
+
+        if (isLocked){
+            stringBuilder.append("\nThe party is **locked**.");
+        } else if (isPublic){
+            stringBuilder.append("\nThe party is **public**.");
+        } else {
+            stringBuilder.append("\nThe party is **private**.");
         }
 
         Minigame minigame = bot.getMinigameManager().getMinigame(getId());
@@ -278,16 +320,12 @@ public class Party implements JsonSavable<Party>, IdCompound {
     }
 
     public void onMemberJoin(long member) {
-
     }
 
     public void onMemberLeave(long member) {
-
     }
 
     public void onMemberKicked(long member) {
-
     }
-
 
 }

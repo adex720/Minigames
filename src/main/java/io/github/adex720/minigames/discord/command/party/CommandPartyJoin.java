@@ -6,6 +6,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.minigame.Minigame;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -46,15 +47,18 @@ public class CommandPartyJoin extends Subcommand {
 
         }
 
-        if (party.size() < Party.MAX_SIZE) {
-            if (!party.isPublic()) {
-                if (!party.isInvited(authorId)) {
-                    event.reply("This party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
-                    return true;
-                }
-            }
-        } else {
+        if (party.isLocked()) {
+            event.getHook().sendMessage("You can't join the party because of its ongoing minigame").queue();
+            return true;
+        }
+
+        if (party.size() == Party.MAX_SIZE) {
             event.getHook().sendMessage("The party you tried to join is full!").queue();
+            return true;
+        }
+
+        if (party.isPublic() || party.isInvited(authorId)) {
+            event.reply("This party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
             return true;
         }
 
@@ -63,8 +67,10 @@ public class CommandPartyJoin extends Subcommand {
 
         ci.profile().partyJoined(partyId);
 
-        event.getHook().sendMessage("You successfully joined the party.").queue();
+        Minigame activeMinigame = ci.minigame();
+        if (activeMinigame != null) activeMinigame.delete();
 
+        event.getHook().sendMessage("You successfully joined the party.").queue();
         return true;
     }
 

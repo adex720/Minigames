@@ -162,4 +162,9 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return 1;
     }
 
+
+    public boolean requiresLockedParty(){
+        return false;
+    }
+
 }

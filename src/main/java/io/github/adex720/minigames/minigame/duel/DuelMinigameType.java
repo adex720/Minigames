@@ -1,12 +1,13 @@
 package io.github.adex720.minigames.minigame.duel;
 
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
 
 /**
  * A {@link MinigameType} that must be played as a duel.
- * */
+ */
 public abstract class DuelMinigameType<M extends DuelMinigame> extends MinigameType<M> {
 
     protected final boolean hasAI;
@@ -24,4 +25,10 @@ public abstract class DuelMinigameType<M extends DuelMinigame> extends MinigameT
                 "This minigame can only be played on a party with size of 2.";
     }
 
+    @Override
+    public boolean canStart(CommandInfo commandInfo) {
+        if (commandInfo.isInParty()) return commandInfo.party().size() == 2;
+
+        return hasAI;
+    }
 }

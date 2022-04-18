@@ -38,6 +38,10 @@ public class CommandPartyInvite extends Subcommand {
             return true;
         }
 
+        if (party.isLocked()){
+            event.getHook().sendMessage("The party is currently playing a minigame which doesn't allow new users to join the party.").queue();
+        }
+
         if (party.isFull()) {
             event.getHook().sendMessage("You can't invite people to your party because it's full!").queue();
             return true;
