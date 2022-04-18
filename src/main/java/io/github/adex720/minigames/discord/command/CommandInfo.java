@@ -93,6 +93,7 @@ public class CommandInfo {
     }
 
     public boolean hasMinigame() {
+        if (calculatedMinigame != null) return true;
         return bot.getMinigameManager().hasMinigame(gameId());
     }
 

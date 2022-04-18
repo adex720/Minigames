@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 public class ReplayManager extends Manager {
 
-    private final HashMap<Long, MinigameType<? extends Minigame>> WAITING;
+    private final HashMap<Long, MinigameType<? extends Minigame>> WAITING; // stores each minigame.
 
     public ReplayManager(MinigamesBot bot) {
         super(bot, "replay-manager");

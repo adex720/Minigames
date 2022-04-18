@@ -6,17 +6,22 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.party.PartyMinigameType;
+import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
 
+    private final HashMap<Long, Integer> REPLAY_MODES; // Stores counting mode for replay buttons
+
     public MinigameTypeCounting(MinigamesBot bot, MinigameTypeManager typeManager) {
-        super(bot, typeManager, "counting", 2);
+        super(bot, typeManager, "counting", 2); //TODO: change to 3
+        REPLAY_MODES = new HashMap<>();
     }
 
     @Override
@@ -26,7 +31,7 @@ public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
 
     @Override
     public MinigameCounting create(ButtonClickEvent event, CommandInfo ci) {
-        return MinigameCounting.start(event, ci);
+        return MinigameCounting.start(event, ci, getState(ci.gameId()));
     }
 
     @Override
@@ -50,5 +55,26 @@ public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
     @Override
     public Set<Subcommand> getSubcommands() {
         return Set.of();
+    }
+
+    @Override
+    public int getState(long gameId) {
+        return REPLAY_MODES.getOrDefault(gameId, getDefaultState());
+    }
+
+    @Override
+    public boolean hasExtraArgumentsForReplay() {
+        return true;
+    }
+
+    @Override
+    public int getDefaultState() {
+        return MinigameCounting.MODE_BASE_10_ID;
+    }
+
+    @Override
+    public void saveState(long gameId, int state) {
+        REPLAY_MODES.put(gameId, state);
+        Util.schedule(() -> REPLAY_MODES.remove(gameId, state), 60000);
     }
 }

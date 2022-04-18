@@ -97,4 +97,32 @@ public abstract class MinigameType<M extends Minigame> {
     public String getNameWithSpaces() {
         return name.replaceAll("-", " ");
     }
+
+    /**
+     * @return id of the state the game should be started with.
+     */
+    public int getState(long gameId) {
+        return getDefaultState();
+    }
+
+    /**
+     * @return if arguments need to be saved for this type of minigame.
+     */
+    public boolean hasExtraArgumentsForReplay() {
+        return false;
+    }
+
+    /**
+     * @return id of the default state for this minigame.
+     */
+    public int getDefaultState() {
+        return 1;
+    }
+
+    /**
+     * Saves the state for one minute if a state exists.
+     * Since only few minigames use states, each type doesn't have a map for them.
+     */
+    public void saveState(long gameId, int state) {
+    }
 }

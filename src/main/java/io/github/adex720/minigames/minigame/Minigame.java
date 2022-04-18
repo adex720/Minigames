@@ -40,6 +40,10 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
     public String finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
+        if (type.hasExtraArgumentsForReplay()){
+            type.saveState(id, getState());
+        }
+
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
 
@@ -136,6 +140,14 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     protected boolean isEveryoneOnSameTeam() {
         return true;
+    }
+
+    /**
+     * Returns the state this minigame is in.
+     * Most minigames don't have a state so default value of 1 is used.
+     * */
+    public int getState(){
+        return 1;
     }
 
 }

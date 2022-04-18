@@ -114,8 +114,8 @@ public class MinigameCounting extends PartyMinigame {
         return minigame;
     }
 
-    public static MinigameCounting start(ButtonClickEvent event, CommandInfo ci) {
-        MinigameCounting minigame = new MinigameCounting(ci, MODE_BASE_10_ID); // TODO: save mode
+    public static MinigameCounting start(ButtonClickEvent event, CommandInfo ci, int modeId) {
+        MinigameCounting minigame = new MinigameCounting(ci, modeId); // TODO: save mode
 
         event.getHook().sendMessage("You started a new counting minigame.").queue();
 
@@ -221,6 +221,11 @@ public class MinigameCounting extends PartyMinigame {
             case MODE_LETTERS_ID -> MODE_LETTERS.getValue(next);
             default -> "";
         };
+    }
+
+    @Override
+    public int getState() {
+        return modeId;
     }
 
     public void onCorrectNumber(MessageReceivedEvent event, CommandInfo commandInfo) {
