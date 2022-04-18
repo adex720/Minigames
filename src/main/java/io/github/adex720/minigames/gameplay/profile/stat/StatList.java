@@ -10,13 +10,17 @@ import java.util.Map;
 
 /**
  * Manages stats for one user.
- * */
+ */
 public class StatList {
+
+    private final MinigamesBot bot;
 
     private final HashMap<String, Value<Integer>> statsByName;
     private final HashMap<Integer, Value<Integer>> statsById;
 
     public StatList(MinigamesBot bot) {
+        this.bot = bot;
+
         statsByName = new HashMap<>();
         statsById = new HashMap<>();
 
@@ -29,6 +33,8 @@ public class StatList {
     }
 
     public StatList(MinigamesBot bot, JsonObject json) {
+        this.bot = bot;
+
         statsByName = new HashMap<>();
         statsById = new HashMap<>();
 
@@ -48,24 +54,43 @@ public class StatList {
         return statsById.get(stat).value;
     }
 
+    public void increaseStat(Stat stat) {
+        statsByName.get(stat.name()).value++;
+        statsById.get(stat.id()).value++;
+    }
+
+    public void increaseStat(Stat stat, int amount) {
+        statsByName.get(stat.name()).value += amount;
+        statsById.get(stat.id()).value += amount;
+    }
+
     public void increaseStat(String stat) {
-        try {
-            statsByName.get(stat).value++;
-        } catch (Exception e) {
-            System.out.println(stat + ": " + e.getMessage());
-        }
+        increaseStat(bot.getStatManager().get(stat));
     }
 
     public void increaseStat(String stat, int amount) {
-        statsByName.get(stat).value += amount;
+        increaseStat(bot.getStatManager().get(stat), amount);
     }
 
     public void increaseStat(int stat) {
-        statsById.get(stat).value++;
+        increaseStat(bot.getStatManager().get(stat));
     }
 
     public void increaseStat(int stat, int amount) {
-        statsById.get(stat).value += amount;
+        increaseStat(bot.getStatManager().get(stat), amount);
+    }
+
+    public void setValue(Stat stat, int value) {
+        statsByName.get(stat.name()).value = value;
+        statsById.get(stat.id()).value = value;
+    }
+
+    public void setValue(int stat, int value) {
+        setValue(bot.getStatManager().get(stat), value);
+    }
+
+    public void setValue(String stat, int value) {
+        setValue(bot.getStatManager().get(stat), value);
     }
 
     public JsonObject asJson() {
@@ -83,5 +108,4 @@ public class StatList {
     public int getAmount() {
         return statsById.size();
     }
-
 }

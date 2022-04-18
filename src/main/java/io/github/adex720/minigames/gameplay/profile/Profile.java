@@ -259,6 +259,14 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return statList.getValue(name);
     }
 
+    public void setStatValue(int id, int value) {
+        statList.setValue(id, value);
+    }
+
+    public void setStatValue(String name, int value) {
+        statList.setValue(name, value);
+    }
+
     public void increaseStat(String stat) {
         statList.increaseStat(stat);
     }

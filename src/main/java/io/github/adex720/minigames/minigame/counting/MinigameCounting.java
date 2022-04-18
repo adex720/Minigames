@@ -115,7 +115,7 @@ public class MinigameCounting extends PartyMinigame {
     }
 
     public static MinigameCounting start(ButtonClickEvent event, CommandInfo ci, int modeId) {
-        MinigameCounting minigame = new MinigameCounting(ci, modeId); // TODO: save mode
+        MinigameCounting minigame = new MinigameCounting(ci, modeId);
 
         event.getHook().sendMessage("You started a new counting minigame.").queue();
 
@@ -180,7 +180,6 @@ public class MinigameCounting extends PartyMinigame {
             onTooLongWait(replyable, commandInfo);
         }
     } //TODO: /counting count
-    //TODO: stat for highest count
 
     /**
      * This needs to be called before {@link io.github.adex720.minigames.minigame.Minigame#active()}.
@@ -265,6 +264,16 @@ public class MinigameCounting extends PartyMinigame {
 
         profile.addCoins(coins, true, replyable);
         return "You received " + coins + " coins!";
+    }
+
+    @Override
+    public void appendStats(Profile profile, boolean won) {
+        super.appendStats(profile, won);
+
+        int previousHighestCount = profile.getStatValue("highest count");
+        if (count > previousHighestCount) {
+            profile.setStatValue("highest count", count);
+        }
     }
 
     @Override
