@@ -138,6 +138,10 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return "";
     }
 
+    /**
+     * Updates the stored value when the minigame was played.
+     * Calling this on each interaction is important so the minigame doesn't get deleted as inactive.
+     * */
     public void active() {
         lastActive = System.currentTimeMillis();
     }

@@ -7,6 +7,11 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageAction;
 
+/**
+ * A class serving as a way to use multiple types of Discord events
+ * as one parameter while keeping replying to it easy.
+ * Methods for getting a {@link MessageAction} or {@link WebhookMessageAction} are also supported.
+ */
 public class Replyable {
 
     private final boolean isWebhookBased;
@@ -103,6 +108,6 @@ public class Replyable {
         };
     }
 
-    public static final Replyable IGNORE_ALL = new Replyable(false);
+    public static final Replyable IGNORE_ALL = new Replyable(false); // Doesn't send any messages. Trying to get the actions return null.
 
 }

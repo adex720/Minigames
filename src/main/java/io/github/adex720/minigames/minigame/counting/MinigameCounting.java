@@ -159,17 +159,18 @@ public class MinigameCounting extends PartyMinigame {
 
         if (messageContent.isEmpty()) return;
 
-        long current = event.getMessage().getTimeCreated().toInstant().toEpochMilli();
+        long current = event.getMessage().getTimeCreated().toInstant().toEpochMilli(); // Getting unix time for event creation
         boolean tooLate = isReplyTooLate(current); // Needs to be called before active()
 
         active();
         long authorId = event.getAuthor().getIdLong();
-        String numberString = messageContent.split(" ")[0];
+        String numberString = messageContent.split(" ")[0]; // Get everything before the first space. This way '5 sheep' is counted as '5'.
         int status = getStatus(numberString, authorId, tooLate);
 
         CommandInfo commandInfo = CommandInfo.create(event, bot);
         Replyable replyable = Replyable.from(event);
-        if (status == CORRECT_NUMBER) {
+
+        if (status == CORRECT_NUMBER) { // Call correct method depending on the state
             onCorrectNumber(event, commandInfo);
         } else if (status == WRONG_NUMBER) {
             onWrongNumber(replyable, commandInfo);
