@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * The players play against each others.
  * Some duel minigames can be played against AI.
  * */
-public abstract class DuelMinigame extends Minigame { //TODO: add locked party status
+public abstract class DuelMinigame extends Minigame {
 
     public static final int FIRST_PLAYER_WON = 1;
     public static final int SECOND_PLAYER_WON = 2;
