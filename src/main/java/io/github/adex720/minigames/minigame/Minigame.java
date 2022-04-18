@@ -4,6 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.Replyable;
@@ -38,32 +39,42 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return type;
     }
 
-    public void finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
+    public String finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
 
         if (isEveryoneOnSameTeam() && profile.isInParty()) {
-            for (long userId : commandInfo.party().getMembersWithOwner()) {
-                finishForUser(replyable, bot.getProfileManager().getProfile(userId), won);
-            }
+            return finishForParty(replyable, commandInfo.party(), won);
         } else {
-            finishForUser(replyable, profile, won);
+            return finishForUser(replyable, profile, won, true);
         }
     }
 
-    public void finishForUser(Replyable replyable, Profile profile, boolean won) {
+    public String finishForUser(Replyable replyable, Profile profile, boolean won, boolean shouldReply) {
         String rewards = addRewards(replyable, profile, won);
 
-        if (replyable.isWebhookBased()) {
-            replyable.getWebhookMessageAction(rewards)
-                    .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
-            bot.getReplayManager().addReplay(id, type);
-        } else {
-            replyable.reply(rewards);
+        if (shouldReply) {
+            if (replyable.isWebhookBased()) {
+                replyable.getWebhookMessageAction(rewards)
+                        .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
+                bot.getReplayManager().addReplay(id, type);
+            } else {
+                replyable.reply(rewards);
+            }
         }
 
         appendQuest(replyable, profile, won); // Update quests and stats
         appendStats(profile, won);
+
+        return rewards;
+    }
+
+    public String finishForParty(Replyable replyable, Party party, boolean won) {
+        for (long userId : party.getMembersWithOwner()) {
+            finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, false);
+        }
+
+        return "You received rewards for the ended minigame";
     }
 
     public void appendQuest(Replyable replyable, Profile profile, boolean won) {

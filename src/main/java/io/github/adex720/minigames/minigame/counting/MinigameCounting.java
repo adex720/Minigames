@@ -16,12 +16,13 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.Locale;
 import java.util.Random;
 
-public class MinigameCounting extends PartyMinigame { //TODO: make minigame end on too much waiting
+public class MinigameCounting extends PartyMinigame {
 
     public static final int CORRECT_NUMBER = 1;
     public static final int WRONG_NUMBER = 2;
     public static final int SAME_USER = 3;
     public static final int IGNORE = 4;
+    public static final int TOO_LATE = 5;
 
     public static final Mode MODE_BASE_10 = new Mode() {
         @Override
@@ -48,7 +49,7 @@ public class MinigameCounting extends PartyMinigame { //TODO: make minigame end 
         @Override
         public String getValue(int value) {
             StringBuilder letters = new StringBuilder();
-            String hexavigesimal = Integer.toString(value, 26); // get on format like hexadecimal but continuing P (16th letter)
+            String hexavigesimal = Integer.toString(value, 26); // get on format like hexadecimal but continuing until P (16th letter)
 
             for (int i = 0; i < hexavigesimal.length(); i++) {
                 char c = hexavigesimal.charAt(i);
@@ -71,6 +72,7 @@ public class MinigameCounting extends PartyMinigame { //TODO: make minigame end 
 
 
     public static final String CORRECT_NUMBER_EMOTE = "\u2705";
+    public static final long TIME_TO_GUESS = 8000;
 
     private final long channelId;
 
@@ -157,30 +159,45 @@ public class MinigameCounting extends PartyMinigame { //TODO: make minigame end 
 
         if (messageContent.isEmpty()) return;
 
+        long current = event.getMessage().getTimeCreated().toInstant().toEpochMilli();
+        boolean tooLate = isReplyTooLate(current); // Needs to be called before active()
+
         active();
         long authorId = event.getAuthor().getIdLong();
         String numberString = messageContent.split(" ")[0];
-        int status = getStatus(numberString, authorId);
+        int status = getStatus(numberString, authorId, tooLate);
 
         CommandInfo commandInfo = CommandInfo.create(event, bot);
+        Replyable replyable = Replyable.from(event);
         if (status == CORRECT_NUMBER) {
             onCorrectNumber(event, commandInfo);
         } else if (status == WRONG_NUMBER) {
-            Replyable replyable = Replyable.from(event);
             onWrongNumber(replyable, commandInfo);
         } else if (status == SAME_USER) {
-            Replyable replyable = Replyable.from(event);
             onUserRepeat(replyable, commandInfo);
+        } else if (status == TOO_LATE) {
+            onTooLongWait(replyable, commandInfo);
         }
+    } //TODO: /counting count
+    //TODO: stat for highest count
+
+    /**
+     * This needs to be called before {@link io.github.adex720.minigames.minigame.Minigame#active()}.
+     */
+    public boolean isReplyTooLate(long time) {
+        return time - lastActive > TIME_TO_GUESS;
     }
 
-    public int getStatus(String number, long userId) {
+    public int getStatus(String number, long userId, boolean tooLate) {
         if (userId == lastUser) return SAME_USER;
 
         String correct = getNext();
 
-        if (correct.equals(number.toLowerCase(Locale.ROOT))) return CORRECT_NUMBER;
-        return WRONG_NUMBER;
+        if (!correct.equals(number.toLowerCase(Locale.ROOT))) return WRONG_NUMBER;
+
+        if (tooLate) return TOO_LATE;
+
+        return CORRECT_NUMBER;
     }
 
     public String getCurrent() {
@@ -223,6 +240,11 @@ public class MinigameCounting extends PartyMinigame { //TODO: make minigame end 
         replyable.reply(commandInfo.authorMention() + " counted twice on row! You reached " + getCurrent() + ".");
     }
 
+    public void onTooLongWait(Replyable replyable, CommandInfo commandInfo) {
+        finish(replyable, commandInfo, false);
+        replyable.reply("It took over 8 seconds for you to count! The game ended and you received some rewards.");
+    }
+
     @Override
     public String addRewards(Replyable replyable, Profile profile, boolean won) {
 
@@ -242,7 +264,8 @@ public class MinigameCounting extends PartyMinigame { //TODO: make minigame end 
     @Override
     public String quit() {
         super.quit();
-        return "You quit your counting game. You reached " + count + ".";
+        String rewards = finishForParty(Replyable.IGNORE_ALL, bot.getPartyManager().getParty(id), false);
+        return "You quit your counting game. You reached " + count + ". " + rewards;
     }
 
     public abstract static class Mode {

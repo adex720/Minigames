@@ -103,4 +103,6 @@ public class Replyable {
         };
     }
 
+    public static final Replyable IGNORE_ALL = new Replyable(false);
+
 }
