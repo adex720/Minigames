@@ -110,6 +110,7 @@ public class MinigamesBot {
         resourceDataManager = new ResourceDataManager(this);
 
         settingsList = new SettingsList();
+        settingsList.init(this);
 
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
@@ -144,7 +145,6 @@ public class MinigamesBot {
         leaderboardManager = new LeaderboardManager(this);
 
         kitCooldownManager = new KitCooldownManager(this);
-        settingsList.init(this);
 
 
         commandManager.initCommands(this);

@@ -8,7 +8,7 @@ public record Setting(String name, String description, int id, boolean defaultVa
 
     public void init(MinigamesBot bot) {
         bot.getSettingsList().add(this);
-        bot.getCommandManager().commandSettings.addSetting(this);
+        //bot.getCommandManager().commandSettings.addSetting(this);
     }
 
     @Override

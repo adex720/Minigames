@@ -67,6 +67,7 @@ public class Quest implements JsonSavable<Quest> {
     public boolean checkForCompletion(Replyable replyable, Profile profile) {
         if (progress < goal) return false;
 
+
         applyRewards(replyable, profile);
         replyable.reply("You completed your " + difficulty.name + " quest!");
         return true;
@@ -81,41 +82,46 @@ public class Quest implements JsonSavable<Quest> {
     }
 
     public void append(Replyable replyable, Profile profile, int amount) {
-        if (isCompleted()) return;
+        if (amount == 0) return;
+        //if (isCompleted()) return; // Checked earlier
 
-        if (amount > 0) {
-            progress += amount;
-            if (checkForCompletion(replyable, profile)) {
-                progress = goal;
+        progress += amount;
+        if (checkForCompletion(replyable, profile)) {
+            progress = goal;
 
-                if (profile.amountOfUnfinishedQuests() == 0) {
-                    profile.dailyQuestsCompleted(replyable);
-                }
+            if (profile.amountOfUnfinishedQuests() == 0) {
+                profile.dailyQuestsCompleted(replyable);
             }
         }
     }
 
     public void minigamePlayed(Replyable replyable, MinigameType<? extends Minigame> type, Profile profile) {
+        if (isCompleted()) return;
         append(replyable, profile, this.type.minigamePlayed(type, profile));
     }
 
     public void minigameWon(Replyable replyable, MinigameType<? extends Minigame> type, Profile profile) {
+        if (isCompleted()) return;
         append(replyable, profile, this.type.minigameWon(type, profile));
     }
 
     public void coinsEarned(Replyable replyable, int amount, Profile profile) {
+        if (isCompleted()) return;
         append(replyable, profile, this.type.coinsEarned(amount, profile));
     }
 
     public void crateOpened(Replyable replyable, CrateType rarity, Profile profile) {
+        if (isCompleted()) return;
         append(replyable, profile, this.type.crateOpened(rarity, profile));
     }
 
     public void boosterUsed(Replyable replyable, Profile profile) {
+        if (isCompleted()) return;
         append(replyable, profile, this.type.boosterUsed(profile));
     }
 
     public void kitClaimed(Replyable replyable, String kit, Profile profile) {
+        if (isCompleted()) return;
         append(replyable, profile, this.type.kitClaimed(kit, profile));
     }
 

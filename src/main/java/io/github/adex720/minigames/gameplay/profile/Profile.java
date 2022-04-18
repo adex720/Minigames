@@ -223,17 +223,18 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     }
 
     /**
-     * @param replyable must be non-null if {@param count} is true. If count is false event is ignored
+     * @param count should the amount be affected by current multiplier and counted towards quests and stats.
+     * @param replyable       must be non-null if {@param count} is true. If countForQuests is false event is ignored.
      */
     public void addCoins(int amount, boolean count, Replyable replyable) {
 
         if (count) {
             int finalAmount = (int) (amount * getBoosterMultiplier());
 
-            appendQuests(quest -> quest.coinsEarned(replyable, finalAmount, this));
             statList.increaseStat("coins earned", finalAmount);
             coins += finalAmount;
 
+            appendQuests(quest -> quest.coinsEarned(replyable, finalAmount, this));
         } else {
             coins += amount;
         }
@@ -352,7 +353,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public int amountOfUnfinishedQuests() {
         int amount = 0;
-        for (Quest quest : bot.getQuestManager().generateQuests(userId)) {
+        for (Quest quest : bot.getQuestManager().getQuests(userId)) {
             if (!quest.isCompleted()) amount++;
         }
         return amount;
@@ -360,7 +361,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     /**
      * Applies the rewards, increases stats and sends a message.
-     * */
+     */
     public void dailyQuestsCompleted(Replyable replyable) {
         addCrate(CrateType.LEGENDARY);
 

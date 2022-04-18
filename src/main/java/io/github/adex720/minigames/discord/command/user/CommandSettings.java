@@ -21,13 +21,11 @@ import java.util.Date;
 
 public class CommandSettings extends Command {
 
-    private final ArrayList<Setting> settings;
+    private ArrayList<Setting> settings;
 
     public CommandSettings(MinigamesBot bot) {
         super(bot, "settings", "Changes your personal settings", CommandCategory.USER);
         requiresProfile();
-
-        settings = new ArrayList<>();
     }
 
     @Override
@@ -75,14 +73,11 @@ public class CommandSettings extends Command {
         return "Set " + setting.name() + " to " + value + "!";
     }
 
-    public void addSetting(Setting setting) {
-        settings.add(setting);
-    }
-
     @Override
     protected CommandData createCommandData() {
         OptionData settings = new OptionData(OptionType.INTEGER, "setting", "Setting to change", false);
 
+        this.settings = new ArrayList<>();
         for (Setting setting : bot.getSettingsList().getAll()) {
             settings.addChoice(setting.name(), setting.id());
             this.settings.add(setting);
