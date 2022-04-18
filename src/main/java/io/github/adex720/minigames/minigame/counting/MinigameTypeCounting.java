@@ -22,7 +22,7 @@ public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
     private final HashMap<Long, Integer> REPLAY_MODES; // Stores counting mode for replay buttons
 
     public MinigameTypeCounting(MinigamesBot bot, MinigameTypeManager typeManager) {
-        super(bot, typeManager, "counting", 2); //TODO: change to 3
+        super(bot, typeManager, "counting", 3);
         REPLAY_MODES = new HashMap<>();
     }
 

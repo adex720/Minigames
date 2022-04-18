@@ -179,7 +179,7 @@ public class MinigameCounting extends PartyMinigame {
         } else if (status == TOO_LATE) {
             onTooLongWait(replyable, commandInfo);
         }
-    } //TODO: /counting count
+    }
 
     /**
      * This needs to be called before {@link io.github.adex720.minigames.minigame.Minigame#active()}.
