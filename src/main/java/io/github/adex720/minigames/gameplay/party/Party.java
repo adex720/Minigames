@@ -12,6 +12,7 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -156,7 +157,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
         clearInvites();
     }
 
-    public void clearLock(Replyable replyable) {
+    public void clearLock(@Nullable Replyable replyable) {
         if (!isLocked) return;
 
         isLocked = false;
@@ -165,11 +166,13 @@ public class Party implements JsonSavable<Party>, IdCompound {
         if (minigame == null) return;
         if (!minigame.requiresLockedParty()) return;
 
-        minigame.delete();
+        minigame.delete(replyable);
+        if (replyable == null) return;
         replyable.reply("Your party no longer meets the requirements of the current minigame. The minigame was deleted.");
     }
 
     public void invite(long id) {
+        active();
         if (isLocked) return;
 
         invites.add(id);
@@ -193,6 +196,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
      * @return The embed message on /party info
      */
     public MessageEmbed getInfo(User user) {
+        active();
         StringBuilder stringBuilder = new StringBuilder()
                 .append("**Size: ")
                 .append(size())
@@ -202,9 +206,9 @@ public class Party implements JsonSavable<Party>, IdCompound {
             stringBuilder.append("\n**The party is full.");
         }
 
-        if (isLocked){
+        if (isLocked) {
             stringBuilder.append("\nThe party is **locked**.");
-        } else if (isPublic){
+        } else if (isPublic) {
             stringBuilder.append("\nThe party is **public**.");
         } else {
             stringBuilder.append("\nThe party is **private**.");
@@ -231,7 +235,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
      * @return The embed message on /party members
      */
     public MessageEmbed getMembers(User user) {
-
+        active();
         StringBuilder stringBuilder = new StringBuilder();
 
         if (!members.isEmpty()) {
@@ -258,7 +262,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     @Override
     public int hashCode() {
-        return (int) owner;
+        return Integer.hashCode((int) owner);
     }
 
     @Override
@@ -313,13 +317,17 @@ public class Party implements JsonSavable<Party>, IdCompound {
     public void onDelete() {
         bot.getProfileManager().getProfile(owner).partyLeft();
         members.forEach(id -> bot.getProfileManager().getProfile(id).partyLeft());
+
+        bot.getMinigameManager().deleteMinigame(getId());
     }
 
     public void onTransfer(long oldOwner) {
         updatePartyId();
+        active();
     }
 
     public void onMemberJoin(long member) {
+        active();
     }
 
     public void onMemberLeave(long member) {

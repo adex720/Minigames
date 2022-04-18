@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.minigame.Minigame;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 
@@ -22,7 +23,7 @@ public class CommandQuit extends Command {
             return true;
         }
 
-        event.getHook().sendMessage(ci.minigame().quit()) // Finish message
+        event.getHook().sendMessage(ci.minigame().quit(Replyable.from(event))) // Finish message
                 .addActionRow(Button.primary("play-again", "Start again")) // Add button
                 .queue();
 

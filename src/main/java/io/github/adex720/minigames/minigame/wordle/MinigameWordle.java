@@ -90,7 +90,7 @@ public class MinigameWordle extends Minigame {
     }
 
     public void guess(SlashCommandEvent event, CommandInfo ci) throws IOException {
-        active();
+        active(ci);
         Replyable replyable = Replyable.from(event);
 
         String guess = event.getOption("word").getAsString().toLowerCase(Locale.ROOT);
@@ -188,8 +188,8 @@ public class MinigameWordle extends Minigame {
 
 
     @Override
-    public String quit() {
-        super.quit();
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
         return "You quit your previous wordle game. The word was " + word + " and you had " + (GUESSES_AT_START - guesses.size()) + " guesses left.";
     }
 

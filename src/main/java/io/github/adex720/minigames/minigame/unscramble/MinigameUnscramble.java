@@ -10,6 +10,7 @@ import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -76,7 +77,7 @@ public class MinigameUnscramble extends Minigame {
     }
 
     public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
-        active();
+        active(commandInfo);
         String guess = event.getOption("word").getAsString();
         Replyable replyable = Replyable.from(event);
 
@@ -109,8 +110,8 @@ public class MinigameUnscramble extends Minigame {
     }
 
     @Override
-    public String quit() {
-        super.quit();
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
         return "You quit your previous game of unscramble. The word was " + word + " and you had " + life + " health left.";
     }
 

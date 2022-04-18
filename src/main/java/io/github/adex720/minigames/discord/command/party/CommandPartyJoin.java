@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -68,7 +69,7 @@ public class CommandPartyJoin extends Subcommand {
         ci.profile().partyJoined(partyId);
 
         Minigame activeMinigame = ci.minigame();
-        if (activeMinigame != null) activeMinigame.delete();
+        if (activeMinigame != null) activeMinigame.delete(Replyable.from(event));
 
         event.getHook().sendMessage("You successfully joined the party.").queue();
         return true;

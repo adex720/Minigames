@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Random;
@@ -162,7 +163,7 @@ public class MinigameCounting extends PartyMinigame {
         long current = event.getMessage().getTimeCreated().toInstant().toEpochMilli(); // Getting unix time for event creation
         boolean tooLate = isReplyTooLate(current); // Needs to be called before active()
 
-        active();
+        active(null);
         long authorId = event.getAuthor().getIdLong();
         String numberString = messageContent.split(" ")[0]; // Get everything before the first space. This way '5 sheep' is counted as '5'.
         int status = getStatus(numberString, authorId, tooLate);
@@ -281,8 +282,8 @@ public class MinigameCounting extends PartyMinigame {
     }
 
     @Override
-    public String quit() {
-        super.quit();
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
         String rewards = finishForParty(Replyable.IGNORE_ALL, bot.getPartyManager().getParty(id), false);
         return "You quit your counting game. You reached " + count + ". " + rewards;
     }

@@ -11,6 +11,7 @@ import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -55,7 +56,7 @@ public class MinigameHangman extends Minigame {
     }
 
     public void guess(SlashCommandEvent event, CommandInfo ci) {
-        active();
+        active(ci);
         String guess = event.getOption("guess").getAsString();
         Replyable replyable = Replyable.from(event);
 
@@ -155,8 +156,8 @@ public class MinigameHangman extends Minigame {
     }
 
     @Override
-    public String quit() {
-        super.quit();
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
         return "You quit your previous game of hangman. The word was " + word + " and you had " + life + " health left.";
     }
 

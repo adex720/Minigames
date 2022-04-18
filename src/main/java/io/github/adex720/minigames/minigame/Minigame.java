@@ -9,6 +9,7 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.interactions.components.Button;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -28,6 +29,10 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         this.id = id;
         this.isParty = isParty;
         this.lastActive = lastActive;
+
+        if (requiresLockedParty() && isParty) {
+            bot.getPartyManager().getParty(id).lock();
+        }
     }
 
     @Override
@@ -124,26 +129,43 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         }
     }
 
-    public void delete() {
+    public void delete(@Nullable Replyable replyable) {
         bot.getMinigameManager().deleteMinigame(id);
+
+        if (requiresLockedParty() && isParty) {
+            bot.getPartyManager().getParty(id).clearLock(replyable);
+        }
     }
 
     /**
      * Deletes the minigame.
      *
+     * @param replyable Replyable to use to inform about party status chances. Can be null
      * @return message to send, defaults at an empty String.
      */
-    public String quit() {
-        delete();
+    public String quit(@Nullable Replyable replyable) {
+        delete(replyable);
         return "";
     }
 
     /**
      * Updates the stored value when the minigame was played.
      * Calling this on each interaction is important so the minigame doesn't get deleted as inactive.
-     * */
-    public void active() {
+     *
+     * @param commandInfo commandInfo to calculate party with.
+     *                    If the commandInfo is not created or easily accessible,
+     *                    just insert null, and it'll be calculated if needed
+     */
+    public void active(@Nullable CommandInfo commandInfo) {
         lastActive = System.currentTimeMillis();
+
+        if (isParty) {
+            Party party;
+            if (commandInfo != null) party = commandInfo.party();
+            else party = bot.getPartyManager().getParty(id);
+
+            party.active();
+        }
     }
 
     public boolean isInactive(long limit) {
@@ -163,7 +185,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
 
-    public boolean requiresLockedParty(){
+    public boolean requiresLockedParty() {
         return false;
     }
 

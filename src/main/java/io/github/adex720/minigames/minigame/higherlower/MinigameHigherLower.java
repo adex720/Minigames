@@ -8,6 +8,7 @@ import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class MinigameHigherLower extends Minigame {
 
@@ -58,7 +59,7 @@ public class MinigameHigherLower extends Minigame {
     }
 
     public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
-        active();
+        active(commandInfo);
         int guess = (int) event.getOption("number").getAsDouble();
         Replyable replyable = Replyable.from(event);
 
@@ -92,8 +93,8 @@ public class MinigameHigherLower extends Minigame {
     }
 
     @Override
-    public String quit() {
-        super.quit();
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
         return "You quit your previous game of higher or lower. The number was " + number + " and you had " + life + " guess" + (life > 1 ? "es" : "") + " left.";
     }
 

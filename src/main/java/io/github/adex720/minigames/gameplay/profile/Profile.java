@@ -609,7 +609,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
                 if (minigame != null) {
                     // This also removes it from the list.
                     // The result of the minigame is sent so other people from the party will see it.
-                    event.getHook().sendMessage(minigame.quit()).queue();
+                    event.getHook().sendMessage(minigame.quit(Replyable.from(event))).queue();
                 }
 
                 party.clearInvites();

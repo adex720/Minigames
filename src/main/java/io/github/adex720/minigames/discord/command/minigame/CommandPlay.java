@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.ParentCommand;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
+import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -60,7 +61,7 @@ public class CommandPlay extends ParentCommand {
             }
 
             if (ci.hasMinigame()) {
-                event.getHook().sendMessage(ci.minigame().quit()).queue();
+                event.getHook().sendMessage(ci.minigame().quit(Replyable.from(event))).queue();
             }
 
             Minigame minigame = this.minigame.create(event, ci);
