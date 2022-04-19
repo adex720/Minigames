@@ -22,7 +22,7 @@ public class CommandMinigameRules extends Command {
         String type = event.getOption("minigame").getAsString();
 
         MinigameType<? extends Minigame> minigameType = bot.getMinigameTypeManager().getType(type);
-        event.getHook().sendMessage(minigameType.name + " rules:" + minigameType.rules).queue();
+        event.getHook().sendMessage(minigameType.name + " rules: " + minigameType.rules).queue();
 
         return true;
     }

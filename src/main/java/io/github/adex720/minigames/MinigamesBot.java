@@ -453,10 +453,9 @@ public class MinigamesBot {
 
     TODO: guilds
 
+    TODO: better rewards for playing minigame better
+
     TODO: global boosters
-
-    TODO: /rules <minigame>
-
     TODO: trivia
      (https://opentdb.com/api_config.php)
 

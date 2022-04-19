@@ -6,7 +6,7 @@ import java.util.TimerTask;
 
 /**
  * Contains a bunch of utility methods and fields which don't have a clear class associated with them.
- * */
+ */
 public class Util {
 
     public static final int MINIGAMES_COLOR = 0x3D6bf4;
@@ -54,6 +54,36 @@ public class Util {
 
     public static String formatTime(Duration duration) {
         return formatTime((int) duration.toSeconds());
+    }
+
+    public static String formatNumber(long number) {
+        String numberUnformatted = Long.toString(number);
+        StringBuilder numberFormatted = new StringBuilder();
+
+        int length = numberUnformatted.length();
+
+        int mod = length % 3;
+
+        boolean first = true;
+        int id = 0;
+        var iter = numberUnformatted.chars().iterator();
+        while (iter.hasNext()) {
+            char letter = (char) (int) (iter.next());
+            if (first){
+                first = false;
+                numberFormatted.append(letter);
+                continue;
+            }
+
+            id++;
+
+            if (id % 3 == mod) {
+                numberFormatted.append(',');
+            }
+            numberFormatted.append(letter);
+        }
+
+        return numberFormatted.toString();
     }
 
     public static int getMillisecondsUntilUtcMidnight() {
