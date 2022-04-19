@@ -5,10 +5,7 @@ import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.devcommand.*;
-import io.github.adex720.minigames.discord.command.minigame.CommandMinigameInfo;
-import io.github.adex720.minigames.discord.command.minigame.CommandPlay;
-import io.github.adex720.minigames.discord.command.minigame.CommandQuit;
-import io.github.adex720.minigames.discord.command.minigame.CommandTip;
+import io.github.adex720.minigames.discord.command.minigame.*;
 import io.github.adex720.minigames.discord.command.miscellaneous.*;
 import io.github.adex720.minigames.discord.command.party.*;
 import io.github.adex720.minigames.discord.command.user.*;
@@ -111,6 +108,7 @@ public class CommandManager extends Manager {
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(new CommandMinigameInfo(bot));
+        MAIN_COMMANDS.add(new CommandMinigameRules(bot));
         MAIN_COMMANDS.add(new CommandTip(bot));
         MAIN_COMMANDS.add(new CommandQuit(bot));
 

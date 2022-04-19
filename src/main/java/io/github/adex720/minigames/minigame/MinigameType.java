@@ -23,6 +23,7 @@ public abstract class MinigameType<M extends Minigame> {
 
     public final String name;
     public final String description;
+    public final String rules;
     public final String tips;
 
     public final int color;
@@ -45,6 +46,7 @@ public abstract class MinigameType<M extends Minigame> {
         JsonObject minigameJson = JsonHelper.getJsonObject(json, name);
         this.description = JsonHelper.getString(minigameJson, "description");
         this.tips = JsonHelper.getString(minigameJson, "tips");
+        this.rules = JsonHelper.getString(minigameJson, "rules");
         this.color = Integer.parseInt(JsonHelper.getString(minigameJson, "color"), 16);
     }
 

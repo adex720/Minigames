@@ -2,31 +2,37 @@
   "hangman": {
     "description": "Hangman is a classic game originally played with paper and pencil. A word is chosen and the guessers get to know its length. The guessers proceed to guessing letters. If the word contains at least one of the letter places of all of that letter are revealed. If the word does not contain the guessed letter a picture of hang is drawn to be closer to finished. If the picture gets finished the game is lost. If the guesser thinks he/she knows the word he can also guess the word but if it's wrong a the picture is being continued on.",
     "tips": "- Start by guessing the most common letters. (e, t, a, o, i, n)\n- Guess letters that you think would be in a word with the known letters.\n- Only guess as word when you are sure. You don't lose anything from guessing only letters.",
-    "color": "000000"
+    "rules": "Each wrong guess reduces one life. You have 10 life per game.",
+    "color": "8A6308"
   },
   "unscramble": {
     "description": "Unscramble is a game where you have to guess a word in 3 tries. The letters are shuffled but you will get more hints after each guess. You will also get extra hints for longer words.",
     "tips": "- The bolded letters are at correct position.\n- The game is up to the last round on most of the cases because that round you have the most hints.\n- Try to guess the word on the first rounds too since you will earn better reward if you guess it earlier.",
-    "color": "000000"
+    "rules": "You only have 3 guesses. The correct letters are on **bold**.",
+    "color": "7132E2"
   },
   "higher-lower": {
     "description": "Higher or Lower is a number guessing game where you guess a number. You will be told if your guess was too high or low. But you only have little tries, so you must guess wisely to win.",
-    "tips": "- Always pick a number from the very middle of the range.\n- Risks aren't worth trying.\n- There is no pattern, the numbers are picked by random.",
-    "color": "000000"
+    "tips": "- Always pick a number from the very middle of the range.\n- Risks aren't worth trying.\n- There is no pattern, the numbers are picked by random.\n- Do not risk silly guesses, even with optimal playing winning is not guaranteed.",
+    "rules": "Guess a number on the range. You will be told if it's lower or higher than the correct number. You have 6 guesses to find the correct number.",
+    "color": "03C4BA"
   },
   "tic-tac-toe": {
     "description": "Tic Tac toe is a two player minigame. This bot has a simple AI for it. On their turn, each player puts one mark on the board on an empty spot. The winner is the player who first gets 3 marks in a horizontal, vertical or diagonal line. If the board gets full with neither of the players having a winning line, the game ends as draw.",
     "tips": "- Try to place your marks on places they are on multiple possible winning rows.\n- To win you must have 2 lines having 2 of your own marks while the last spot being empty.\n- The best place to put your first mark is in corner.\n- If a player plays optimistically it is impossible for them to lose, were they first or second.",
-    "color": "000000"
+    "rules": "",
+    "color": "F3F300"
   },
   "wordle": {
     "description": "Wordle is a online word guessing game originally made by Josh Wardle. The player guesses a 5 letters long word and is told if the letter a) is at the correct position, b) is in the word but at wrong position or c) is not in the word.",
     "tips": "- Aim guessing the most common letters.\n- Don't guess letters you know don't exist on the word.\nDon't repeat letters on places you know they aren't.\n- You don't need to include letters whose position you know on your guesses.",
-    "color": "000000"
+    "rules": "Guess a five letter word. The letters will have different color background as hints. Green means it's on correct position. Yellow means it's at wrong position but ob the word. Gray means it's not on the word.",
+    "color": "20BD0A"
   },
   "counting": {
     "description": "Counting is a minigame where you aim to count to as high as possible. The game ends when something else than the next number is presented. (Don't worry, only messages on the channel the game is started are counted.) The same user isn't allowed to count twice in a row.",
     "tips": "- While having a set order for players to count is the most efficient way to play, having no order is probably more fun.\n- Try playing with both your friends and people you don't know.",
-    "color": "000000"
+    "rules": "If message is something else than the next number the game is lost. Same user can't count twice on row. Each number has 8 second tie to be guessed.",
+    "color": "F642ED"
   }
 }
