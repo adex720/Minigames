@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
+
 public class MinigameHigherLower extends Minigame {
 
     public static final int MIN_VALUE = 1;
@@ -56,6 +58,13 @@ public class MinigameHigherLower extends Minigame {
         event.reply("You started a new game of higher or lower. The range is: " + minigame.min + "-" + minigame.max).queue();
 
         return minigame;
+    }
+
+    @Override
+    public int getReward(Random random) {
+        if (life == 1) return random.nextInt(100, 251);
+        if (life == 2) return random.nextInt(200, 251);
+        return random.nextInt(230, 251);
     }
 
     public void guess(SlashCommandEvent event, CommandInfo commandInfo) {

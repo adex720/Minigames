@@ -106,13 +106,14 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         int coins = 50; // 50 coins for lost minigame
         if (won) {
             Random random = bot.getRandom();
+            coins = getReward(random); // 100-250 coins for won minigame
+
             if (random.nextInt(3) == 0) { // If won there's a 33% chance to get a crate.
-                CrateType reward = random.nextBoolean() ? CrateType.COMMON : CrateType.UNCOMMON;
+                CrateType reward = coins < 200 ? CrateType.COMMON : CrateType.UNCOMMON;
                 profile.addCrate(reward);
                 return "You received " + reward.getNameWithArticle() + " crate!";
             }
 
-            coins = random.nextInt(100, 250); // 100-250 coins for won minigame
         }
 
         profile.addCoins(coins, true, replyable);
@@ -188,5 +189,18 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     public boolean requiresLockedParty() {
         return false;
     }
+
+    /**
+     * Returns a number between 100 and 250.
+     * The better the minigame was played the more coins should be given.
+     * The random should be used almost always and with relatively large interval for amount of coins.
+     * There is also a ⅓ chance for the reward to be a crate.
+     * If the reward is less than 200 it's a common crate and if it's 200 or higher it's an uncommon crate.
+     * This method is not called if the minigame was lost.
+     *
+     * @param random random to use.
+     * @return amount of coins to give as reward.
+     */
+    public abstract int getReward(Random random);
 
 }

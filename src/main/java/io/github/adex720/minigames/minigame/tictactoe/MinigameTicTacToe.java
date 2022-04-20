@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Date;
+import java.util.Random;
 
 public class MinigameTicTacToe extends DuelMinigame {
 
@@ -116,6 +117,30 @@ public class MinigameTicTacToe extends DuelMinigame {
                 board[x][y] = ' ';
             }
         }
+    }
+
+    @Override
+    public int getReward(Random random) {
+        int spaceLeft = getAmountOfEmptySpots();
+
+        // A game can't end with 5 or more free spaces
+        int min, max;
+
+        if (spaceLeft == 0) {
+            min = 175;
+        } else {
+            min = 150;
+        }
+
+        if (spaceLeft <= 2) {
+            max = 250;
+        } else if (spaceLeft == 3) {
+            max = 200;
+        } else {
+            max = 175;
+        }
+
+        return random.nextInt(min, max + 1);
     }
 
     /**
@@ -261,6 +286,16 @@ public class MinigameTicTacToe extends DuelMinigame {
         }
 
         return false;
+    }
+
+    public int getAmountOfEmptySpots() {
+        int amount = 0;
+        for (short x = 0; x < 3; x++) {
+            for (short y = 0; y < 3; y++) {
+                if (board[x][y] == ' ') amount++;
+            }
+        }
+        return amount;
     }
 
     @Override

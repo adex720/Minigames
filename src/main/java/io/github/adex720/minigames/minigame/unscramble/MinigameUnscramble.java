@@ -11,10 +11,12 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.ranges.Range;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class MinigameUnscramble extends Minigame {
 
@@ -50,6 +52,16 @@ public class MinigameUnscramble extends Minigame {
         event.reply("You started a new game of unscramble. The word is: " + minigame.wordKnown).queue();
 
         return minigame;
+    }
+
+    @Override
+    public int getReward(Random random) {
+        return switch (life) {
+            case 1 -> random.nextInt(100, 151);
+            case 2 -> random.nextInt(150, 101);
+            case 3 -> random.nextInt(200, 251);
+            default -> throw new IllegalStateException("Unexpected value for guesses left: " + life);
+        };
     }
 
     public void updateKnowWord() {

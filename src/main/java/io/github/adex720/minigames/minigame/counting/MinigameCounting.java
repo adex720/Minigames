@@ -153,6 +153,14 @@ public class MinigameCounting extends PartyMinigame {
         return new MinigameCounting(bot, gameId, channel, mode, count, lastUser, lastActive);
     }
 
+    /**
+     * This method is never reached since a game of counting can't be won.
+     */
+    @Override
+    public int getReward(Random random) {
+        return -1;
+    }
+
     public void onMessageReceive(MessageReceivedEvent event) {
         if (event.getChannel().getIdLong() != channelId) return;
 
@@ -183,7 +191,7 @@ public class MinigameCounting extends PartyMinigame {
     }
 
     /**
-     * This needs to be called before {@link io.github.adex720.minigames.minigame.Minigame#active()}.
+     * This needs to be called before {@link io.github.adex720.minigames.minigame.Minigame#active(CommandInfo)}.
      */
     public boolean isReplyTooLate(long time) {
         return time - lastActive > TIME_TO_GUESS;

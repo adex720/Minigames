@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * See <a href="file:src/main/resources/stats.json">/resources/stopWords.txt</a> if you don't know how Hangman works.
@@ -55,6 +56,28 @@ public class MinigameHangman extends Minigame {
         return minigame;
     }
 
+    @Override
+    public int getReward(Random random) {
+        if (life >= 8) return 250; // 3 or fewer guesses is always worth 250 coins
+
+        int min, max; // Add min and max amounts for coins depending on amount of life
+        if (life >= 5) {
+            max = 250;
+        } else if (life >= 2) {
+            max = 225;
+        } else {
+            max = 200;
+        }
+
+        if (life <= 3) {
+            min = 100;
+        } else {
+            min = 25 * life + 25;
+        }
+
+        return random.nextInt(min, max + 1);
+    }
+
     public void guess(SlashCommandEvent event, CommandInfo ci) {
         active(ci);
         String guess = event.getOption("guess").getAsString();
@@ -68,12 +91,12 @@ public class MinigameHangman extends Minigame {
             }
 
             if (guessLetter < 'a' || guessLetter > 'z') { // guess was not a letter
-               replyable.reply("You should only guess English letters!");
+                replyable.reply("You should only guess English letters!");
                 return;
             }
 
             if (guesses.contains(guessLetter)) {
-               replyable.reply("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
+                replyable.reply("You have already guessed the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
                 return;
             }
 
@@ -115,42 +138,42 @@ public class MinigameHangman extends Minigame {
 
                 if (lettersLeft) {
                     wordGuessed = wordBuilder.toString();
-                   replyable.reply("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
+                    replyable.reply("The word contains the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
                     return;
                 }
 
-               replyable.reply("Good job! The word was " + word + ". You had " + life + " tries left!");
+                replyable.reply("Good job! The word was " + word + ". You had " + life + " tries left!");
                 finish(replyable, ci, true);
 
             } else {
                 life--;
                 if (life == 0) {
-                   replyable.reply("You ran out of life. The word was " + word + ".");
+                    replyable.reply("You ran out of life. The word was " + word + ".");
                     finish(replyable, ci, false);
                     return;
                 }
 
-               replyable.reply("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
+                replyable.reply("The word doesn't contain the letter " + guessLetter + ". You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
 
             }
         } else {
             if (word.equals(guess.toLowerCase(Locale.ROOT))) {
-               replyable.reply("Good Job! " + guess + " was the word! You had " + life + " health left.");
+                replyable.reply("Good Job! " + guess + " was the word! You had " + life + " health left.");
                 finish(replyable, ci, true);
                 return;
             }
 
             life--;
             if (life == 0) {
-               replyable.reply("You ran out of life. The word was " + word + ".");
+                replyable.reply("You ran out of life. The word was " + word + ".");
                 finish(replyable, ci, false);
                 return;
             }
 
             if (Util.isUserNormal(guess)) {
-               replyable.reply(guess + " was not the word. You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
+                replyable.reply(guess + " was not the word. You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
             } else {
-               replyable.reply("That was not the word! You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
+                replyable.reply("That was not the word! You have " + life + " health left. The word is: " + wordGuessed + getGuesses());
             }
         }
     }
@@ -199,7 +222,7 @@ public class MinigameHangman extends Minigame {
 
     /**
      * @return Guessed letters on a new line. If no guesses are made yet the String will be empty.
-     * */
+     */
     public String getGuesses() {
         if (guesses.isEmpty()) return "";
 

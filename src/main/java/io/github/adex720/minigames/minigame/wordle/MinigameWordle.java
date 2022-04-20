@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 // Don't lie, you've heard about wordle
 public class MinigameWordle extends Minigame {
@@ -87,6 +88,21 @@ public class MinigameWordle extends Minigame {
 
     public static String getWord(WordManager wordManager) {
         return wordManager.getWordForWordle();
+    }
+
+    @Override
+    public int getReward(Random random) {
+        int guessesCount = guesses.size();
+        if (guessesCount == 1) return 250;
+
+        int minCoins = 250 - guessesCount * 50;
+        return random.nextInt(minCoins, minCoins + 51);
+
+        // 1 guess made: 250
+        // 2 guesses made: 200 - 250
+        // 3 guesses made: 175 - 225
+        // 4 guesses made: 150 - 200
+        // etc.
     }
 
     public void guess(SlashCommandEvent event, CommandInfo ci) throws IOException {
