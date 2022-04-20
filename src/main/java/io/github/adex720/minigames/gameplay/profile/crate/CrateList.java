@@ -6,6 +6,8 @@ import io.github.adex720.minigames.util.JsonHelper;
 
 /**
  * Lists all unopened crates a player has.
+ *
+ * @author adex720
  * */
 public class CrateList {
 

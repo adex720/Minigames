@@ -25,6 +25,8 @@ import java.util.Set;
 
 /**
  * This class contains all commands the bot has.
+ *
+ * @author adex720
  */
 public class CommandManager extends Manager {
 

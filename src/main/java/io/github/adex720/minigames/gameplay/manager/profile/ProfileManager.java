@@ -14,6 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Manages {@link Profile}s.
+ *
+ * @author adex720
  */
 public class ProfileManager extends IdCompoundSavableManager<Profile> {
 

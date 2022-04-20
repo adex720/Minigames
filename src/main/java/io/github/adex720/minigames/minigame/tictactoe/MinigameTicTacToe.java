@@ -17,6 +17,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * @author adex720
+ */
 public class MinigameTicTacToe extends DuelMinigame {
 
     public static final int ROW_TOP = 1;

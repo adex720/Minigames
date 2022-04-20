@@ -14,6 +14,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Set;
 
+/**
+ * @author adex720
+ */
 public class MinigameTypeWordle extends MinigameType<MinigameWordle> {
 
     public MinigameTypeWordle(MinigamesBot bot, MinigameTypeManager typeManager) {

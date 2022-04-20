@@ -11,6 +11,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Date;
 
+/**
+ * @author adex720
+ */
 public class CommandCooldowns extends Command {
 
     public CommandCooldowns(MinigamesBot bot) {

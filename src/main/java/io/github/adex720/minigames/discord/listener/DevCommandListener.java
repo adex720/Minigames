@@ -15,6 +15,8 @@ import java.util.Set;
  * The dev commands can only be run be te developer.
  * <p>
  * Examples of dev commands are saving data, updating leaderboards and shutting the bot down.
+ *
+ * @author adex720
  */
 public class DevCommandListener extends ListenerAdapter {
 

@@ -17,6 +17,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * @author adex720
+ */
 public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
 
     private final HashMap<Long, Integer> REPLAY_MODES; // Stores counting mode for replay buttons

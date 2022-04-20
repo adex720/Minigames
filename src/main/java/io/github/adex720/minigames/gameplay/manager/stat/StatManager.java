@@ -9,6 +9,11 @@ import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 
 import java.util.*;
 
+/**
+ * Manages different stats and has methods for interacting with leaderboards.
+ *
+ * @author adex720
+ */
 public class StatManager extends Manager {
 
     private final HashMap<String, Stat> STATS_BY_NAME;

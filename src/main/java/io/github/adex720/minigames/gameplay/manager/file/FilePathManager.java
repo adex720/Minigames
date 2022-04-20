@@ -7,6 +7,8 @@ import java.io.File;
 
 /**
  * Returns te path to given file name.
+ *
+ * @author adex720
  * */
 public class FilePathManager extends Manager {
 
@@ -14,7 +16,7 @@ public class FilePathManager extends Manager {
         super(bot, "file-path-manager");
     }
 
-    public File getFile(String name){
+    public File getFile(String name){ //TODO: use resource loader
         return new File("src/main/resources/" + name);
     }
 

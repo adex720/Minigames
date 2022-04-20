@@ -3,6 +3,11 @@ package io.github.adex720.minigames.discord.command.devcommand;
 import io.github.adex720.minigames.MinigamesBot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+/**
+ * Disconnects the bot from Discord but doesn't save data.
+ *
+ * @author adex720
+ */
 public class DevCommandTerminate extends DevCommand {
 
     public DevCommandTerminate(MinigamesBot bot) {

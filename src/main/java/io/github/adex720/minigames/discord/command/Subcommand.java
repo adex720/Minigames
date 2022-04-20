@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
  * Subcommand is a command which is associated to its {@link ParentCommand}.
  * If the command shown at Discord is "/foo bah", foo is the parent command and bah is a subcommand
  * If a command has any subcommands the parent command is unrunnable from Discord.
+ *
+ * @author adex720
  * */
 public abstract class Subcommand extends Command {
 

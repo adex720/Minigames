@@ -3,7 +3,9 @@ package io.github.adex720.minigames.gameplay.manager.stat;
 import io.github.adex720.minigames.MinigamesBot;
 
 /**
- * Manages leaderboards
+ * Manages leaderboards.
+ *
+ * @author adex720
  * */
 public class LeaderboardManager extends Thread {
 

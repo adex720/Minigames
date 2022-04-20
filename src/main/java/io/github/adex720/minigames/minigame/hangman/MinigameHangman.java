@@ -19,6 +19,8 @@ import java.util.Random;
 
 /**
  * See <a href="file:src/main/resources/stats.json">/resources/stopWords.txt</a> if you don't know how Hangman works.
+ *
+ * @author adex720
  */
 public class MinigameHangman extends Minigame {
 

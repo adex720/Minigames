@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Set;
 
+/**
+ * @author adex720
+ */
 public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
 
     public MinigameTypeUnscramble(MinigamesBot bot, MinigameTypeManager typeManager) {

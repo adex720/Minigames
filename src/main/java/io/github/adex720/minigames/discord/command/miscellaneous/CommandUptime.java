@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.text.DecimalFormat;
 
+/**
+ * @author adex720
+ */
 public class CommandUptime extends Command {
 
     private long started;

@@ -9,6 +9,9 @@ import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 
+/**
+ * @author adex720
+ */
 public class CommandQuit extends Command {
 
     public CommandQuit(MinigamesBot bot) {

@@ -10,6 +10,8 @@ import java.util.Map;
 
 /**
  * Manages stats for one user.
+ *
+ * @author adex720
  */
 public class StatList {
 

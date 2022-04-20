@@ -11,6 +11,9 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 import java.io.IOException;
 
+/**
+ * @author adex720
+ */
 public class CommandWordleGuess extends MinigameSubcommand {
     public CommandWordleGuess(MinigamesBot bot, MinigameTypeManager typeManager) {
         super(bot, typeManager.WORDLE, "guess", "Guesses a word in a wordle game.");

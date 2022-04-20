@@ -4,6 +4,8 @@ import io.github.adex720.minigames.MinigamesBot;
 
 /**
  * This class manages something.
+ *
+ * @author adex720
  */
 public abstract class Manager {
 

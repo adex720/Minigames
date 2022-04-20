@@ -17,6 +17,8 @@ import java.util.Set;
 
 /**
  * Manages {@link Quest}s
+ *
+ * @author adex720
  */
 public class QuestManager extends SavableManager<Quest> {
 

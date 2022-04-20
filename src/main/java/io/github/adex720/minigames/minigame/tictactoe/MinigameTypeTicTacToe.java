@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author adex720
+ */
 public class MinigameTypeTicTacToe extends DuelMinigameType<MinigameTicTacToe> {
 
     public MinigameTypeTicTacToe(MinigamesBot bot, MinigameTypeManager typeManager) {

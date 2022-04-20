@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * @author adex720
+ */
 public class CommandPing extends Command {
 
     public CommandPing(MinigamesBot bot) {

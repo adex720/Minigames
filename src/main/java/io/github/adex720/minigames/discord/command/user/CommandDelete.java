@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
+/**
+ * @author adex720
+ */
 public class CommandDelete extends Command {
 
     public CommandDelete(MinigamesBot bot) {

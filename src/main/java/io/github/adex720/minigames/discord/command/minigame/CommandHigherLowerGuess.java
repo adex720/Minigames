@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
+/**
+ * @author adex720
+ */
 public class CommandHigherLowerGuess extends MinigameSubcommand {
 
     public CommandHigherLowerGuess(MinigamesBot bot, MinigameTypeManager typeManager) {

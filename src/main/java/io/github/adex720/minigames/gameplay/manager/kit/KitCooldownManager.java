@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 /**
  * Manages kits.
+ *
+ * @author adex720
  */
 public class KitCooldownManager extends Manager {
 

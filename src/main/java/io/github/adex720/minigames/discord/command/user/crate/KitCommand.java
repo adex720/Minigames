@@ -16,6 +16,9 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 
+/**
+ * @author adex720
+ */
 public class KitCommand extends Command {
 
     public static final int NO_COINS = 0;

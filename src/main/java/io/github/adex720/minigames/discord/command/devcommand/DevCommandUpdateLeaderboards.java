@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * Updates each leaderboard.
+ *
+ * @author adex720
  * */
 public class DevCommandUpdateLeaderboards extends DevCommand{
 

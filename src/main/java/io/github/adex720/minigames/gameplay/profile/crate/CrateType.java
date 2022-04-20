@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A crate can contain coins, boosters all both.
  * If the crate can contain both it randomly picks one each time opened.
+ *
+ * @author adex720
  * */
 public enum CrateType {
 

@@ -21,6 +21,8 @@ import java.util.Set;
  *   <li>- Converting an {@link ArrayList} to {@link JsonArray}.</li>
  *   <li>- Converting a {@link JsonArray} to an {@link ArrayList}.</li>
  * </ul>
+ *
+ * @author adex720
  */
 public class JsonHelper {
 

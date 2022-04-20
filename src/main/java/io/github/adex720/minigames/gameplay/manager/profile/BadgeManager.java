@@ -13,6 +13,8 @@ import java.util.*;
 
 /**
  * Manages {@link Badge}
+ *
+ * @author adex720
  */
 public class BadgeManager extends Manager {
 

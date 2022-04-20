@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author adex720
+ */
 public class MinigameTypeHigherLower extends MinigameType<MinigameHigherLower> {
 
     public MinigameTypeHigherLower(MinigamesBot bot, MinigameTypeManager typeManager) {

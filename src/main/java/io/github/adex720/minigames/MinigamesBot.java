@@ -45,6 +45,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * @author adex720
+ */
 public class MinigamesBot {
 
     private final JDA jda;

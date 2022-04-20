@@ -10,6 +10,8 @@ import java.util.Set;
 /**
  * This object has a list of objects can be converted into a {@link JsonArray} containing each element as {@link JsonObject}
  * The objects can be loaded from JsonObject.
+ *
+ * @author adex720
  * */
 public interface JsonConvertible<T extends JsonSavable<T>> {
 

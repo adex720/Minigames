@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * Saves all data
+ *
+ * @author adex720
  * */
 public class DevCommandSave extends DevCommand {
 

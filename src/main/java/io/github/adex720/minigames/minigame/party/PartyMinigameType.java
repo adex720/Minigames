@@ -4,6 +4,9 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
 
+/**
+ * @author adex720
+ */
 public abstract class PartyMinigameType<T extends PartyMinigame> extends MinigameType<T> {
 
     protected PartyMinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name, int minPartySize) {

@@ -14,6 +14,8 @@ import java.util.List;
 /**
  * This Listener listens for {@link GuildJoinEvent}.
  * The only job this listener has is to send a greeting message when the bot joins a new server.
+ *
+ * @author adex720
  * */
 public class GuildJoinListener extends ListenerAdapter {
 

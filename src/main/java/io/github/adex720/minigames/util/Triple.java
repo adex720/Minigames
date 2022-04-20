@@ -1,5 +1,8 @@
 package io.github.adex720.minigames.util;
 
+/**
+ * @author adex720
+ */
 public class Triple<F, S, T> {
 
     public F first;

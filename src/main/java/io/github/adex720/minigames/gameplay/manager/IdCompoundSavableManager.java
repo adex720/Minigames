@@ -10,6 +10,8 @@ import io.github.adex720.minigames.data.MapAndJsonConvertible;
  * This class manages a group of other objects.
  * The objects are savable as Json files.
  * Each of the objects can be combined with a unique id.
+ *
+ * @author adex720
  * */
 public abstract class IdCompoundSavableManager<T extends IdCompound & JsonSavable<T>> extends Manager implements MapAndJsonConvertible<T> {
 

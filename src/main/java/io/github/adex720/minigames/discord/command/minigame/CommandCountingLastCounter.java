@@ -7,6 +7,9 @@ import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.counting.MinigameCounting;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
+/**
+ * @author adex720
+ */
 public class CommandCountingLastCounter extends MinigameSubcommand {
 
     public CommandCountingLastCounter(MinigamesBot bot, MinigameTypeManager typeManager) {

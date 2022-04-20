@@ -8,6 +8,8 @@ import java.util.Set;
 
 /**
  * This object has a {@link HashMap} containing objects than can be saved as {@link com.google.gson.JsonObject}
+ *
+ * @author adex720
  */
 public interface MapAndJsonConvertible<T extends JsonSavable<T> & IdCompound> extends JsonConvertible<T> {
 

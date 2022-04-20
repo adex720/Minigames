@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
+/**
+ * @author adex720
+ */
 public class CommandPartyKick extends Subcommand {
 
     public CommandPartyKick(MinigamesBot bot) {

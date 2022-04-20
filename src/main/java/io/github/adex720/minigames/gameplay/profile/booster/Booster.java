@@ -7,6 +7,8 @@ import io.github.adex720.minigames.util.JsonHelper;
 
 /**
  * A booster gives temporary multiplier to the amount of coins player receives from certain actions.
+ *
+ * @author adex720
  * */
 public class Booster implements JsonSavable<Booster> {
 

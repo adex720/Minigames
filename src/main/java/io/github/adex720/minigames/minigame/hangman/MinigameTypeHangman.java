@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Set;
 
+/**
+ * @author adex720
+ */
 public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
 
     public MinigameTypeHangman(MinigamesBot bot, MinigameTypeManager typeManager) {

@@ -17,6 +17,9 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * @author adex720
+ */
 public class CommandClaim extends Command {
 
     public CommandClaim(MinigamesBot bot) {

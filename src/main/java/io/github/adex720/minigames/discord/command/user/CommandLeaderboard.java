@@ -18,6 +18,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.util.Date;
 import java.util.TreeSet;
 
+/**
+ * @author adex720
+ */
 public class CommandLeaderboard extends Command {
 
     public static final int PER_PAGE = 10;

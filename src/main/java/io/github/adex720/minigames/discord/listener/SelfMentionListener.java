@@ -14,6 +14,8 @@ import java.util.Date;
 /**
  * Sends an embed message including basic information when pinged.
  * Only counts messages where the mention is the only thing.
+ *
+ * @author adex720
  * */
 public class SelfMentionListener extends ListenerAdapter {
 

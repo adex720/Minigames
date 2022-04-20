@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * Deletes each command from Discord and registers them again.
+ *
+ * @author adex720
  * */
 public class DevCommandReloadCommands extends DevCommand {
 

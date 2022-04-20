@@ -6,6 +6,11 @@ import io.github.adex720.minigames.gameplay.manager.Manager;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Manages a list of banned users.
+ *
+ * @author adex720
+ */
 public class BanManager extends Manager {
 
     private final Set<Long> BANS;

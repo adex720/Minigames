@@ -11,6 +11,9 @@ import io.github.adex720.minigames.util.JsonHelper;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author adex720
+ */
 public class PlayerSettings implements IdCompound, JsonSavable<PlayerSettings> {
 
     private final long userId;

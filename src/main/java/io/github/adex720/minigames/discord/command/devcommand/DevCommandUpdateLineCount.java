@@ -4,7 +4,9 @@ import io.github.adex720.minigames.MinigamesBot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
- * Saves all data
+ * Recalculates line count
+ *
+ * @author adex720
  * */
 public class DevCommandUpdateLineCount extends DevCommand {
 

@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * Reloads everything from last save state.
+ *
+ * @author adex720
  * */
 public class DevCommandReloadData extends DevCommand {
 

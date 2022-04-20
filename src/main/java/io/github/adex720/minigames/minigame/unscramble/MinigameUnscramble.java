@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author adex720
+ */
 public class MinigameUnscramble extends Minigame {
 
     private final String word;

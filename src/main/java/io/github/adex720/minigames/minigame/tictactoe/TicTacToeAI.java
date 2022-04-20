@@ -15,6 +15,8 @@ import java.util.Random;
  * <li>Second, block any possible straight wins for opponent.</li>
  * <li>Lastly, if this step is reached, place the mark at a random position while giving double weight for corner and the middle tiles.</li>
  * </pl>
+ *
+ * @author adex720
  */
 public class TicTacToeAI extends MinigameAI<MinigameTicTacToe> {
 

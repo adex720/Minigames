@@ -13,6 +13,8 @@ import java.util.Objects;
 
 /**
  * A command which contains the same embed (excluding date and author data) each time.
+ *
+ * @author adex720
  * */
 public abstract class SimpleEmbedReplyCommand extends Command {
 

@@ -12,6 +12,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
+/**
+ * @author adex720
+ */
 public class MinigameHigherLower extends Minigame {
 
     public static final int MIN_VALUE = 1;

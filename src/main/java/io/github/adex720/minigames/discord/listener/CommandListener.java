@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author adex720
+ */
 public class CommandListener extends ListenerAdapter {
 
     private final MinigamesBot bot;

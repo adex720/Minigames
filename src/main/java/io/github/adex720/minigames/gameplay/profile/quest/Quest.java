@@ -18,6 +18,8 @@ import io.github.adex720.minigames.util.Replyable;
  * <p>
  * Quests have 3 different {@link QuestDifficulty}s.
  * Player always has at least one quest of each difficulty.
+ *
+ * @author adex720
  */
 public class Quest implements JsonSavable<Quest> {
 

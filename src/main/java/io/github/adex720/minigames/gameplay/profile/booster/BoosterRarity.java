@@ -2,6 +2,9 @@ package io.github.adex720.minigames.gameplay.profile.booster;
 
 import io.github.adex720.minigames.MinigamesBot;
 
+/**
+ * @author adex720
+ */
 public enum BoosterRarity {
 
     COMMON("common", 0, 5, 1.3f, true),
@@ -39,7 +42,7 @@ public enum BoosterRarity {
         };
     }
 
-    public String getKeyName(){
+    public String getKeyName() {
         return name.replace(" ", "_");
     }
 

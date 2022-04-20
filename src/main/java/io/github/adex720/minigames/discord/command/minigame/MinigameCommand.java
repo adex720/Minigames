@@ -5,6 +5,9 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.ParentCommand;
 import io.github.adex720.minigames.discord.command.Subcommand;
 
+/**
+ * @author adex720
+ */
 public class MinigameCommand extends ParentCommand {
 
     public MinigameCommand(MinigamesBot bot, String name, String description) {

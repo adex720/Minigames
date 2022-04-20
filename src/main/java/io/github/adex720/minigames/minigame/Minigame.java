@@ -13,6 +13,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
+/**
+ * Minigame is a game you play with the bot and get rewards for finishing one
+ *
+ * @author adex720
+ */
 public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     protected final MinigamesBot bot;

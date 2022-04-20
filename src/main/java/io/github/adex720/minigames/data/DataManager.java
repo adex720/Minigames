@@ -7,6 +7,8 @@ import io.github.adex720.minigames.gameplay.manager.Manager;
 
 /**
  * This class can save and load json files.
+ *
+ * @author adex720
  * */
 public abstract class DataManager extends Manager {
 

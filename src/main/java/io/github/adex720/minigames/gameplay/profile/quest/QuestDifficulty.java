@@ -1,5 +1,8 @@
 package io.github.adex720.minigames.gameplay.profile.quest;
 
+/**
+ * @author adex720
+ */
 public class QuestDifficulty {
 
     public final String name;

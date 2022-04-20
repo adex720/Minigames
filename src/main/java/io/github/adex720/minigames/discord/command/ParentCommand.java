@@ -10,6 +10,8 @@ import java.util.Set;
  * Once this command is run all of its subCommands are looped through and the correct one is executed.
  * If the command shown at Discord is "/foo bah", foo is the parent command and bah is a subcommand
  * All {@link Subcommand}s must be registered with {@link ParentCommand#addSubcommand(Subcommand)}.
+ *
+ * @author adex720
  * */
 public abstract class ParentCommand extends Command {
 

@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
  * This class is used to access various variables throughout the execution of an interaction.
  * The values use  {@link CommandInfo.CalculableValue} interface to only calculate values once required.
  * Most of the methods also check if the value is already calculated and uses it if it is.
+ *
+ * @author adex720
  */
 public class CommandInfo {
 

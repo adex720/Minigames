@@ -4,6 +4,9 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.SimpleEmbedReplyCommand;
 
+/**
+ * @author adex720
+ */
 public class CommandSuggest extends SimpleEmbedReplyCommand {
 
     public static final String GITHUB_LINK = "https://github.com/adex720/Minigames/issues";

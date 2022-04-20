@@ -11,7 +11,9 @@ import java.util.HashMap;
 
 /**
  * Loads resource Json files.
- * File contents are also cached
+ * File contents are also cached.
+ *
+ * @author adex720
  */
 public class ResourceDataManager extends DataManager {
 

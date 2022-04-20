@@ -11,6 +11,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.Date;
 
+/**
+ * @author adex720
+ */
 public class CommandCrates  extends Command {
 
     public CommandCrates(MinigamesBot bot) {

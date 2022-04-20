@@ -15,6 +15,8 @@ import java.util.Set;
 
 /**
  * Manages active minigames.
+ *
+ * @author adex720
  */
 public class MinigameManager extends IdCompoundSavableManager<Minigame> {
 

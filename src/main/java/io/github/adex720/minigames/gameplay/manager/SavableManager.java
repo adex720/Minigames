@@ -7,6 +7,8 @@ import io.github.adex720.minigames.data.JsonSavable;
 
 /**
  * This manager manages a list of objects that can be saved.
+ *
+ * @author adex720
  * */
 public abstract class SavableManager<T extends JsonSavable<T>> extends Manager implements JsonConvertible<T> {
 

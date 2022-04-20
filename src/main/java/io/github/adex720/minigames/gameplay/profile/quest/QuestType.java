@@ -7,6 +7,8 @@ import io.github.adex720.minigames.minigame.MinigameType;
 
 /**
  * QuestType determines when the quest gets progressed.
+ *
+ * @author adex720
  */
 public abstract class QuestType {
 

@@ -5,6 +5,8 @@ import io.github.adex720.minigames.util.Util;
 /**
  * This class runs bunch of task which are faster for computer than human.
  * (For example turning white background transparent)
+ *
+ * @author adex720
  */
 public class Test {
 

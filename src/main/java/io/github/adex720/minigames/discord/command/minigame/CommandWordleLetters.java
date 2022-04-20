@@ -11,6 +11,9 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * @author adex720
+ */
 public class CommandWordleLetters extends MinigameSubcommand {
 
     public CommandWordleLetters(MinigamesBot bot, MinigameTypeManager typeManager) {

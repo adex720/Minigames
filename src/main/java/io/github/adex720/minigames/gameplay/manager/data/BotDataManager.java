@@ -14,6 +14,8 @@ import java.nio.file.Paths;
 
 /**
  * Saves and loads data as {@link JsonElement}.
+ *
+ * @author adex720
  * */
 public class BotDataManager extends DataManager {
 

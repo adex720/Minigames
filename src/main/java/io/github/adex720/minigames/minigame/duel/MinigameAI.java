@@ -6,6 +6,8 @@ import java.util.Random;
 
 /**
  * An AI to play {@link DuelMinigame}
+ *
+ * @author adex720
  * */
 public abstract class MinigameAI<M extends DuelMinigame> {
 

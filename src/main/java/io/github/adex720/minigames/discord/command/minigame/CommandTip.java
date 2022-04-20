@@ -15,6 +15,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Date;
 
+/**
+ * @author adex720
+ */
 public class CommandTip extends Command {
 
     public CommandTip(MinigamesBot bot) {

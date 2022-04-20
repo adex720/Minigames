@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.requests.restaction.WebhookMessageAction;
  * A class serving as a way to use multiple types of Discord events
  * as one parameter while keeping replying to it easy.
  * Methods for getting a {@link MessageAction} or {@link WebhookMessageAction} are also supported.
+ *
+ * @author adex720
  */
 public class Replyable {
 

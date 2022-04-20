@@ -6,6 +6,9 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
+/**
+ * @author adex720
+ */
 public class CommandPartyHelp extends Subcommand {
 
     public CommandPartyHelp(MinigamesBot bot) {

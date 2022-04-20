@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
+/**
+ * @author adex720
+ */
 public class SettingsList {
 
     public final Setting CLAIM_QUESTS;

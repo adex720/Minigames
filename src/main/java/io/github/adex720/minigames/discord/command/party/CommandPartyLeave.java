@@ -8,6 +8,9 @@ import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
+/**
+ * @author adex720
+ */
 public class CommandPartyLeave extends Subcommand {
 
     public CommandPartyLeave(MinigamesBot bot) {

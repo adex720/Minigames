@@ -7,6 +7,9 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author adex720
+ */
 public class ButtonListener extends ListenerAdapter {
 
     private final MinigamesBot bot;

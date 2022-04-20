@@ -6,6 +6,9 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.awt.*;
 
+/**
+ * @author adex720
+ */
 public abstract class Command {
 
     public static final Color SUCCESSFUL = new Color(0, 186, 0);

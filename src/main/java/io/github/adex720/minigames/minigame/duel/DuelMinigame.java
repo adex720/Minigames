@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * A duel minigame can only be played with a party of 2 players.
  * The players play against each others.
  * Some duel minigames can be played against AI.
+ *
+ * @author adex720
  * */
 public abstract class DuelMinigame extends Minigame {
 

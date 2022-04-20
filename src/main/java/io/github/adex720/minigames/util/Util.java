@@ -6,6 +6,8 @@ import java.util.TimerTask;
 
 /**
  * Contains a bunch of utility methods and fields which don't have a clear class associated with them.
+ *
+ * @author adex720
  */
 public class Util {
 

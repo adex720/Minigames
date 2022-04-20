@@ -11,6 +11,8 @@ import java.util.TimerTask;
 /**
  * Manages Timers.
  * All managed timers can be canceled with {@link TimerManager#stop()}.
+ *
+ * @author adex720
  * */
 public class TimerManager extends Manager {
 

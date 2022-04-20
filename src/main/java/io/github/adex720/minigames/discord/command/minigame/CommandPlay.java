@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
+/**
+ * @author adex720
+ */
 public class CommandPlay extends ParentCommand {
 
     public CommandPlay(MinigamesBot bot) {

@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * Removes a ban from a user.
+ *
+ * @author adex720
  */
 public class DevCommandUnban extends DevCommand {
 

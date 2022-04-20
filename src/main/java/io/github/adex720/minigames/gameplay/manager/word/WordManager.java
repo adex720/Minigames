@@ -10,16 +10,18 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Manages words used for minigames.
+ *
+ * @author adex720
  */
 public class WordManager extends Manager {
 
-    private final ArrayList<String> HANGMAN_WORDS; // length: 4+, 10k most common
+    private final ArrayList<String> HANGMAN_WORDS; // length: 4+ from 10k most common
     private final int HANGMAN_WORDS_AMOUNT;
 
-    private final ArrayList<String> UNSCRAMBLE_WORDS; // length: 6+, 10k most common
+    private final ArrayList<String> UNSCRAMBLE_WORDS; // length: 6+ from 10k most common
     private final int UNSCRAMBLE_WORDS_AMOUNT;
 
-    private final ArrayList<String> COMMON_WORDLES; // length: 5, 10k most common
+    private final ArrayList<String> COMMON_WORDLES; // length: 5 from 10k most common
     private final int COMMON_WORDLES_AMOUNT;
 
     private final ArrayList<String> LENGTH_OF_5; //length: 5,

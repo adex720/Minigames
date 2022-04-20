@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 /**
  * A command which contains the same message (excluding date and author data) each time.
+ *
+ * @author adex720
  * */
 public abstract class SimpleReplyCommand extends Command {
 

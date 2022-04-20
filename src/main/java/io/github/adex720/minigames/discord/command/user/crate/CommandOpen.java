@@ -21,6 +21,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * @author adex720
+ */
 public class CommandOpen extends Command {
 
     public CommandOpen(MinigamesBot bot) {

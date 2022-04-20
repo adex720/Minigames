@@ -4,6 +4,9 @@ import io.github.adex720.minigames.MinigamesBot;
 
 import java.util.Objects;
 
+/**
+ * @author adex720
+ */
 public record Setting(String name, String description, int id, boolean defaultValue) {
 
     public void init(MinigamesBot bot) {

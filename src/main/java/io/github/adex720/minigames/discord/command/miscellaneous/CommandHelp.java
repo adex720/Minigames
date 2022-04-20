@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * @author adex720
+ */
 public class CommandHelp extends Command {
 
     public static final int COMMANDS_PER_PAGE = 6;

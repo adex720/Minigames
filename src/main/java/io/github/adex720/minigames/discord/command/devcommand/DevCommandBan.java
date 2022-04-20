@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * Bans a user from the bot.
+ *
+ * @author adex720
  * */
 public class DevCommandBan extends DevCommand {
 

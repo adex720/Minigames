@@ -6,6 +6,9 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 
+/**
+ * @author adex720
+ */
 public abstract class MinigameSubcommand extends Subcommand {
 
     public MinigameSubcommand(MinigamesBot bot, MinigameType<? extends Minigame> type, String name, String description) {

@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 /**
  * List all boosters one player has in inventory.
+ *
+ * @author adex720
  * */
 public class BoosterList {
 

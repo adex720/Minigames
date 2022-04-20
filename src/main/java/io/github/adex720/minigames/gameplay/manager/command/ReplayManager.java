@@ -15,6 +15,8 @@ import java.util.HashMap;
  * Manages minigame replay feature.
  * After finishing a minigame, a new minigame of same type can be started
  * by pressing the replay button during the nextUpperCase minute.
+ *
+ * @author adex720
  */
 public class ReplayManager extends Manager {
 

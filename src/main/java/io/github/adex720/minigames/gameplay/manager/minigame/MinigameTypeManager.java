@@ -22,7 +22,9 @@ import java.util.Locale;
 
 /**
  * Contains each minigame type.
- * */
+ *
+ * @author adex720
+ */
 public class MinigameTypeManager extends Manager {
 
     private final ArrayList<String> types;
@@ -63,7 +65,7 @@ public class MinigameTypeManager extends Manager {
 
     /**
      * Adds required slash commands for the minigame.
-     * */
+     */
     private void initCommand(MinigameType<?> minigameType) {
         minigameType.initCommand();
         minigameType.createPlayCommand();
@@ -73,7 +75,7 @@ public class MinigameTypeManager extends Manager {
 
     /**
      * Gets minigame type from its String name.
-     * */
+     */
     public MinigameType<? extends Minigame> getType(String name) {
         return switch (name.toLowerCase(Locale.ROOT)) { // simply faster
             case "hangman" -> HANGMAN;
@@ -88,7 +90,7 @@ public class MinigameTypeManager extends Manager {
 
     /**
      * Returns an {@link ArrayList} containg the name of each minigame type.
-     * */
+     */
     public ArrayList<String> getTypes() {
         return types;
     }

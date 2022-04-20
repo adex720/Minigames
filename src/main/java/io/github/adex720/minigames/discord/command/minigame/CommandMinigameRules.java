@@ -11,6 +11,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+/**
+ * @author adex720
+ */
 public class CommandMinigameRules extends Command {
 
     public CommandMinigameRules(MinigamesBot bot) {

@@ -4,6 +4,9 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.SimpleEmbedReplyCommand;
 
+/**
+ * @author adex720
+ */
 public class CommandInvite extends SimpleEmbedReplyCommand {
 
     public static final String INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=814109421118554134&permissions=274878220352&scope=bot%20applications.commands";

@@ -15,6 +15,8 @@ import java.util.Set;
 
 /**
  * Manages {@link Party}ies.
+ *
+ * @author adex720
  * */
 public class PartyManager extends IdCompoundSavableManager<Party> {
 

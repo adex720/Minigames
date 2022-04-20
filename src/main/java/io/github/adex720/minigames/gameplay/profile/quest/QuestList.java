@@ -9,6 +9,9 @@ import io.github.adex720.minigames.util.JsonHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * @author adex720
+ */
 public class QuestList {
 
     public static final int AMOUNT_OF_QUESTS = 5;

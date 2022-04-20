@@ -19,6 +19,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * @author adex720
+ */
 public class CommandSettings extends Command {
 
     private ArrayList<Setting> settings;

@@ -37,7 +37,9 @@ import java.util.Set;
 
 /**
  * Profile stores most of the data a player has.
- * The class also contains many useful methods.
+ * The class also contains many useful methods interacting with profiles.
+ *
+ * @author adex720
  */
 public class Profile implements IdCompound, JsonSavable<Profile> {
 

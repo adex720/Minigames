@@ -5,6 +5,8 @@ import io.github.adex720.minigames.util.JsonHelper;
 
 /**
  * Most of the stats are only shown on /stats but few appear on leaderboards.
+ *
+ * @author adex720
  * */
 public record Stat(int id, String name, String description, boolean onLeaderboard) {
 

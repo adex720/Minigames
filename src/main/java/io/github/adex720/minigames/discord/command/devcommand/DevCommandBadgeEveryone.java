@@ -4,6 +4,11 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.profile.Badge;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+/**
+ * Gives each bot user a badge.
+ *
+ * @author adex720
+ */
 public class DevCommandBadgeEveryone extends DevCommand {
 
     public DevCommandBadgeEveryone(MinigamesBot bot) {

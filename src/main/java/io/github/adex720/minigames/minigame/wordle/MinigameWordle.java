@@ -26,6 +26,10 @@ import java.util.Locale;
 import java.util.Random;
 
 // Don't lie, you've heard about wordle
+
+/**
+ * @author adex720
+ */
 public class MinigameWordle extends Minigame {
 
     public static final int SQUARE_SIZE = 100;

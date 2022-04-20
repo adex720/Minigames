@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.Random;
 
+/**
+ * @author adex720
+ */
 public class MinigameCounting extends PartyMinigame {
 
     public static final int CORRECT_NUMBER = 1;

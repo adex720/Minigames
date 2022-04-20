@@ -3,6 +3,11 @@ package io.github.adex720.minigames.discord.command.devcommand;
 import io.github.adex720.minigames.MinigamesBot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+/**
+ * A command that can only be run be the developer.
+ *
+ * @author adex720
+ */
 public abstract class DevCommand {
 
     protected final MinigamesBot bot;

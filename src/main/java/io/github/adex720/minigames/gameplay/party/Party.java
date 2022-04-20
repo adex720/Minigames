@@ -21,6 +21,8 @@ import java.util.Set;
 /**
  * Party is a group of users who can play minigames together.
  * If a party finished a minigame everyone in it receives rewards.
+ *
+ * @author adex720
  */
 public class Party implements JsonSavable<Party>, IdCompound {
 

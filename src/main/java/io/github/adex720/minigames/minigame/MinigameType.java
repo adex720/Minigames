@@ -15,6 +15,8 @@ import java.util.Set;
 
 /**
  * Stores information common with each of the minigames of same type.
+ *
+ * @author adex720
  */
 public abstract class MinigameType<M extends Minigame> {
 
