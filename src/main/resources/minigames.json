@@ -36,9 +36,9 @@
     "color": "F642ED"
   },
   "mastermind": {
-    "description": "a",
-    "tips": "b",
-    "rules": "c",
+    "description": "Mastermind is a minigames where you aim to guess a code which is made from 4 different colors. There are total 8 colors the code can contain. After each guess you are told how many colors were at the correct place and how many are in the code but at wrong place, but you don't get to know which of them is which. You have 10 guesses to find the correct code.",
+    "tips": "- Try to find the position of one or two marks at a time instead of trying to find a place for each at the same time.\n- Using already know correct colors, duplicate colors or already knows non-present values is effective when trying to gather new info.",
+    "rules": "A red mark will be present for each correct color on correct position. A white mark will be present for each correct color on wrong position. It is not revealed which mark represents which position.",
     "color": "960909"
   }
 }
