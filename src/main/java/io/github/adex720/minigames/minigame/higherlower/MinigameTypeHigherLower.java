@@ -41,9 +41,4 @@ public class MinigameTypeHigherLower extends MinigameType<MinigameHigherLower> {
     public Set<Subcommand> getSubcommands() {
         return Set.of(new CommandHigherLowerGuess(bot, typeManager));
     }
-
-    @Override
-    public String getReplyForInvalidStartState() {
-        return "";
-    }
 }

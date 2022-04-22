@@ -46,8 +46,4 @@ public class MinigameTypeWordle extends MinigameType<MinigameWordle> {
                 new CommandWordleWordlist(bot, typeManager));
     }
 
-    @Override
-    public String getReplyForInvalidStartState() {
-        return "";
-    }
 }

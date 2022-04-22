@@ -41,9 +41,4 @@ public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
         return Set.of(new CommandHangmanGuess(bot, typeManager));
     }
 
-    @Override
-    public String getReplyForInvalidStartState() {
-        return "";
-    }
-
 }

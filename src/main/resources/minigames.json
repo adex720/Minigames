@@ -34,5 +34,11 @@
     "tips": "- While having a set order for players to count is the most efficient way to play, having no order is probably more fun.\n- Try playing with both your friends and people you don't know.",
     "rules": "If message is something else than the next number the game is lost. Same user can't count twice on row. Each number has 8 second tie to be guessed.",
     "color": "F642ED"
+  },
+  "mastermind": {
+    "description": "a",
+    "tips": "b",
+    "rules": "c",
+    "color": "960909"
   }
 }

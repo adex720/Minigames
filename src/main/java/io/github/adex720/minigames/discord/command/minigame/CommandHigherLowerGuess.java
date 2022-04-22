@@ -37,6 +37,6 @@ public class CommandHigherLowerGuess extends MinigameSubcommand {
     @Override
     protected SubcommandData getSubcommandData() {
         return super.getSubcommandData()
-                .addOption(OptionType.NUMBER, "number", "Number to guess", true);
+                .addOption(OptionType.INTEGER, "number", "Number to guess", true);
     }
 }

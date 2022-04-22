@@ -118,6 +118,8 @@ public class MinigamesBot {
         settingsList = new SettingsList();
         settingsList.init(this);
 
+        emoteJson = getResourceJson("emotes").getAsJsonObject();
+
         commandManager = new CommandManager(this);
         commandListener = new CommandListener(this, commandManager);
 
@@ -154,8 +156,6 @@ public class MinigamesBot {
 
 
         commandManager.initCommands(this);
-
-        emoteJson = getResourceJson("emotes").getAsJsonObject();
 
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
@@ -458,7 +458,8 @@ public class MinigamesBot {
      - connect 4
      - blackjack
      - memo (party)
-     - mastermind
+
+    TODO: include minigame state on replay button id
 
     TODO: guilds
 

@@ -92,8 +92,11 @@ public abstract class MinigameType<M extends Minigame> {
 
     /**
      * If the initialization of minigame ends this will be sent as reason.
+     * If the initialization of the minigame can't fail it doesn't matter what is returned.
      */
-    public abstract String getReplyForInvalidStartState();
+    public String getReplyForInvalidStartState() {
+        return "";
+    }
 
     /**
      * Returns the name with dashes being replaced by spaces.

@@ -41,9 +41,4 @@ public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
         return Set.of(new CommandUnscrambleSolve(bot, typeManager));
     }
 
-    @Override
-    public String getReplyForInvalidStartState() {
-        return "";
-    }
-
 }

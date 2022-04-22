@@ -72,7 +72,7 @@ public class MinigameHigherLower extends Minigame {
 
     public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
         active(commandInfo);
-        int guess = (int) event.getOption("number").getAsDouble();
+        int guess = (int) event.getOption("number").getAsLong();
         Replyable replyable = Replyable.from(event);
 
         if (guess == number) {

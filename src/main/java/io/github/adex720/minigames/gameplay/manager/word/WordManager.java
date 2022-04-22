@@ -80,15 +80,15 @@ public class WordManager extends Manager {
     }
 
     public String getWordForHangman() {
-        return HANGMAN_WORDS.get(ThreadLocalRandom.current().nextInt(HANGMAN_WORDS_AMOUNT));
+        return HANGMAN_WORDS.get(bot.getRandom().nextInt(HANGMAN_WORDS_AMOUNT));
     }
 
     public String getWordForUnscramble() {
-        return UNSCRAMBLE_WORDS.get(ThreadLocalRandom.current().nextInt(UNSCRAMBLE_WORDS_AMOUNT));
+        return UNSCRAMBLE_WORDS.get(bot.getRandom().nextInt(UNSCRAMBLE_WORDS_AMOUNT));
     }
 
     public String getWordForWordle() {
-        return COMMON_WORDLES.get(ThreadLocalRandom.current().nextInt(COMMON_WORDLES_AMOUNT));
+        return COMMON_WORDLES.get(bot.getRandom().nextInt(COMMON_WORDLES_AMOUNT));
     }
 
     public boolean isValidWordForWordle(String word) {

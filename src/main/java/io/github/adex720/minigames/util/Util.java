@@ -71,7 +71,7 @@ public class Util {
         var iter = numberUnformatted.chars().iterator();
         while (iter.hasNext()) {
             char letter = (char) (int) (iter.next());
-            if (first){
+            if (first) {
                 first = false;
                 numberFormatted.append(letter);
                 continue;
@@ -90,6 +90,64 @@ public class Util {
 
     public static int getMillisecondsUntilUtcMidnight() {
         return MILLISECONDS_IN_DAY - (int) (System.currentTimeMillis() % MILLISECONDS_IN_DAY);
+    }
+
+
+    public static String capitalizeFirstLetter(String string) {
+        if (string.isEmpty()) return "";
+        char first = string.charAt(0);
+
+        if (first < 'a' || first > 'z') return string;
+        String firstCapital = Character.toString((char) (first - 0x20));
+
+        if (string.length() == 1) return firstCapital; // Lower case letter - capital letter = 32 aka 0x20.
+
+        return firstCapital + string.substring(1);
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static<T> boolean hasPureDuplicateValues(T[] values){
+        for (int i = 0; i < values.length; i++){
+            T value = values[i];
+
+            for (int i2 = i+1; i2 < values.length; i2++){
+                if (values[i2] == value) return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Compares the values with {@link Object#equals(Object)}.
+     */
+    public static<T> boolean hasEqualDuplicateValues(T[] values){
+        for (int i = 0; i < values.length; i++){
+            T value = values[i];
+
+            for (int i2 = i+1; i2 < values.length; i2++){
+                if (values[i2] == value) return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static boolean hasPureDuplicateValues(int[] values){
+        for (int i = 0; i < values.length; i++){
+            int value = values[i];
+
+            for (int i2 = i+1; i2 < values.length; i2++){
+                if (values[i2] == value) return true;
+            }
+        }
+
+        return false;
     }
 
 }

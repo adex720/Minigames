@@ -10,6 +10,8 @@ import io.github.adex720.minigames.minigame.hangman.MinigameHangman;
 import io.github.adex720.minigames.minigame.hangman.MinigameTypeHangman;
 import io.github.adex720.minigames.minigame.higherlower.MinigameHigherLower;
 import io.github.adex720.minigames.minigame.higherlower.MinigameTypeHigherLower;
+import io.github.adex720.minigames.minigame.mastermind.MinigameMastermind;
+import io.github.adex720.minigames.minigame.mastermind.MinigameTypeMastermind;
 import io.github.adex720.minigames.minigame.tictactoe.MinigameTicTacToe;
 import io.github.adex720.minigames.minigame.tictactoe.MinigameTypeTicTacToe;
 import io.github.adex720.minigames.minigame.unscramble.MinigameTypeUnscramble;
@@ -34,6 +36,8 @@ public class MinigameTypeManager extends Manager {
     public MinigameType<MinigameHigherLower> HIGHER_OR_LOWER;
     public MinigameType<MinigameTicTacToe> TIC_TAC_TOE;
     public MinigameType<MinigameWordle> WORDLE;
+    public MinigameType<MinigameMastermind> MASTERMIND;
+
     public MinigameType<MinigameCounting> COUNTING;
 
     public MinigameTypeManager(MinigamesBot bot) {
@@ -59,6 +63,9 @@ public class MinigameTypeManager extends Manager {
         WORDLE = new MinigameTypeWordle(bot, this);
         initCommand(WORDLE);
 
+        MASTERMIND = new MinigameTypeMastermind(bot, this);
+        initCommand(MASTERMIND);
+
         COUNTING = new MinigameTypeCounting(bot, this);
         initCommand(COUNTING);
     }
@@ -83,13 +90,15 @@ public class MinigameTypeManager extends Manager {
             case "higher-lower" -> HIGHER_OR_LOWER;
             case "tic-tac-toe" -> TIC_TAC_TOE;
             case "wordle" -> WORDLE;
+            case "mastermind" -> MASTERMIND;
+
             case "counting" -> COUNTING;
             default -> throw new IllegalStateException("Invalid minigame type: " + name);
         };
     }
 
     /**
-     * Returns an {@link ArrayList} containg the name of each minigame type.
+     * Returns an {@link ArrayList} containing the name of each minigame type.
      */
     public ArrayList<String> getTypes() {
         return types;
