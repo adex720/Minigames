@@ -61,7 +61,7 @@ public class MinigameUnscramble extends Minigame {
     public int getReward(Random random) {
         return switch (life) {
             case 1 -> random.nextInt(100, 151);
-            case 2 -> random.nextInt(150, 101);
+            case 2 -> random.nextInt(150, 201);
             case 3 -> random.nextInt(200, 251);
             default -> throw new IllegalStateException("Unexpected value for guesses left: " + life);
         };

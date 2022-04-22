@@ -8,7 +8,7 @@
   "unscramble": {
     "description": "Unscramble is a game where you have to guess a word in 3 tries. The letters are shuffled but you will get more hints after each guess. You will also get extra hints for longer words.",
     "tips": "- The bolded letters are at correct position.\n- The game is up to the last round on most of the cases because that round you have the most hints.\n- Try to guess the word on the first rounds too since you will earn better reward if you guess it earlier.",
-    "rules": "You only have 3 guesses. The correct letters are on **bold**.",
+    "rules": "You only have 3 guesses. The correct hint letters are in **__bold and underline__**.",
     "color": "7132E2"
   },
   "higher-lower": {
