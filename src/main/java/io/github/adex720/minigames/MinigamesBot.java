@@ -456,10 +456,13 @@ public class MinigamesBot {
 /*
     TODO: minigames to add
      - connect 4
+     - blackjack
+     - memo (party)
+     - mastermind
 
     TODO: guilds
 
-    TODO: trivia
+    TODO: trivia (party)
      (https://opentdb.com/api_config.php)
 
     TODO: (After a long time)
