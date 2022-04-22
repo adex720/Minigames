@@ -59,6 +59,9 @@ public class MinigameMastermind extends Minigame {
         return minigame;
     }
 
+    /**
+     * Generates a code tp guess in a game of Mastermind.
+     */
     public static int getCode(MinigamesBot bot) {
         Random random = bot.getRandom();
 
@@ -139,6 +142,9 @@ public class MinigameMastermind extends Minigame {
     }
 
 
+    /**
+     * Places the given pointers on the board and sends correct messages.
+     */
     public void place(SlashCommandEvent event, CommandInfo ci) {
         int[] guessRaw = new int[]{(int) event.getOption("first").getAsLong(),
                 (int) event.getOption("second").getAsLong(),
@@ -181,11 +187,17 @@ public class MinigameMastermind extends Minigame {
                 .build()).queue();
     }
 
-
+    /**
+     * Compacts the ids of the 4 guessed colors into one int.
+     */
     public int compactCode(int first, int second, int third, int fourth) {
         return (first << 12) | (second << 8) | (third << 4) | fourth;
     }
 
+
+    /**
+     * Crates a String containing the emotes of already guessed codes and the hint pins.
+     */
     public String guessesToString() {
         StringBuilder stringBuilder = new StringBuilder();
         boolean newLine = false;
@@ -194,14 +206,16 @@ public class MinigameMastermind extends Minigame {
                 stringBuilder.append('\n');
             } else newLine = true;
 
-            stringBuilder.append(codeToString(guess));
+            stringBuilder.append(codeToString(guess)).append(getHintEmote(guess));
         }
 
         return stringBuilder.toString();
     }
 
     /**
-     * Doesn't work when guesses ArrayList is empty.
+     * Crates a String containing the emotes of already guessed codes and the hint pins and
+     * fills the remaining guesses with emptiness.
+     * If the guesses ArrayList is empty the returned String starts with a new line.
      */
     public String guessesAndEmptiesToString() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -220,6 +234,9 @@ public class MinigameMastermind extends Minigame {
         return stringBuilder.toString();
     }
 
+    /**
+     * Returns the correct pin emotes for the given code.
+     */
     public String codeToString(int code) {
         int first = (code >> 12) & 0xF;
         int second = (code >> 8) & 0xF;
@@ -229,6 +246,9 @@ public class MinigameMastermind extends Minigame {
         return castedType.COLOR_EMOTES[first] + castedType.COLOR_EMOTES[second] + castedType.COLOR_EMOTES[third] + castedType.COLOR_EMOTES[fourth];
     }
 
+    /**
+     * Returns the correct hint pin emote for the given guess code.
+     */
     public String getHintEmote(int guess) {
         int codeFirst = (code >> 12) & 0xF;
         int codeSecond = (code >> 8) & 0xF;
@@ -259,6 +279,13 @@ public class MinigameMastermind extends Minigame {
         return bot.getEmote("mastermind_" + correct + wrong);
     }
 
+    /**
+     * Returns the amount of the given color on the given code.
+     *
+     * @param color color to check
+     * @param code code to check on
+     * @return amount of correct color pins.
+     */
     public int amountOfColor(int color, int code) {
         int codeFirst = (code >> 12) & 0xF;
         int codeSecond = (code >> 8) & 0xF;
@@ -274,6 +301,13 @@ public class MinigameMastermind extends Minigame {
         return amount;
     }
 
+    /**
+     * Checks if the code contains a color.
+     *
+     * @param color color to find
+     * @param code code to check from
+     * @return if the given code contains at least one pin of the given color
+     */
     public boolean hasColor(int color, int code) {
         int codeFirst = (code >> 12) & 0xF;
         if (color == codeFirst) return true;
