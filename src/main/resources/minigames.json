@@ -2,13 +2,13 @@
   "hangman": {
     "description": "Hangman is a classic game originally played with paper and pencil. A word is chosen and the guessers get to know its length. The guessers proceed to guessing letters. If the word contains at least one of the letter places of all of that letter are revealed. If the word does not contain the guessed letter a picture of hang is drawn to be closer to finished. If the picture gets finished the game is lost. If the guesser thinks he/she knows the word he can also guess the word but if it's wrong a the picture is being continued on.",
     "tips": "- Start by guessing the most common letters. (e, t, a, o, i, n)\n- Guess letters that you think would be in a word with the known letters.\n- Only guess as word when you are sure. You don't lose anything from guessing only letters.",
-    "rules": "Each wrong guess reduces one life. You have 10 life per game.",
+    "rules": "Each wrong guess reduces one life. You have 10 life per game. Each wrong guess draws a new part to the image.",
     "color": "8A6308"
   },
   "unscramble": {
     "description": "Unscramble is a game where you have to guess a word in 3 tries. The letters are shuffled but you will get more hints after each guess. You will also get extra hints for longer words.",
     "tips": "- The bolded letters are at correct position.\n- The game is up to the last round on most of the cases because that round you have the most hints.\n- Try to guess the word on the first rounds too since you will earn better reward if you guess it earlier.",
-    "rules": "You only have 3 guesses. The correct hint letters are in **__bold and underline__**.",
+    "rules": "You only have 3 guesses. The correct hint letters are in **__bold and underline__**. The amount of hint letters increases when the amount of guesses increases.",
     "color": "7132E2"
   },
   "higher-lower": {
@@ -20,7 +20,7 @@
   "tic-tac-toe": {
     "description": "Tic Tac toe is a two player minigame. This bot has a simple AI for it. On their turn, each player puts one mark on the board on an empty spot. The winner is the player who first gets 3 marks in a horizontal, vertical or diagonal line. If the board gets full with neither of the players having a winning line, the game ends as draw.",
     "tips": "- Try to place your marks on places they are on multiple possible winning rows.\n- To win you must have 2 lines having 2 of your own marks while the last spot being empty.\n- The best place to put your first mark is in corner.\n- If a player plays optimistically it is impossible for them to lose, were they first or second.",
-    "rules": "",
+    "rules": "The players place one mark on an empty tile on the board on their turn. If a player gets 3 marks on the same row (horizontal, vertical or diagonal) they win.",
     "color": "F3F300"
   },
   "wordle": {
