@@ -70,11 +70,11 @@ public class MinigameUnscramble extends Minigame {
     public void updateKnowWord() {
         int hints = 4 - life;
 
-        String wordStart = "**" + word.substring(0, hints) + "**";
+        String wordStart = "**__" + word.substring(0, hints) + "__**";
 
         int end = wordLength >= 8 ? 3 - life : 0;
         String wordShuffled = new String(shuffleLetters(word.substring(hints, wordLength - end)));
-        String wordEnd = end > 0 ? "**" + word.substring(wordLength - end) + "**" : "";
+        String wordEnd = end > 0 ? "**__" + word.substring(wordLength - end) + "__**" : "";
 
         wordKnown = wordStart + wordShuffled + wordEnd;
     }

@@ -46,6 +46,9 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
+ * Contains all event listeners, managers and other objects the bot has.
+ * Also contains the JDA instance, as well as the main method.
+ *
  * @author adex720
  */
 public class MinigamesBot {
@@ -456,14 +459,12 @@ public class MinigamesBot {
 
     TODO: guilds
 
-    TODO: better rewards for playing minigame better
-
-    TODO: global boosters
     TODO: trivia
      (https://opentdb.com/api_config.php)
 
     TODO: (After a long time)
      - vote (after verification)
+     - global boosters (after votes)
      - sharding (at 2000 guilds)
 
 */
