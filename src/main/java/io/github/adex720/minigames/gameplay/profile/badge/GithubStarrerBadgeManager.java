@@ -82,3 +82,6 @@ public class GithubStarrerBadgeManager extends Manager {
 
 
 }
+
+// https://discordjs.guide/oauth2/#implicit-grant-flow
+
