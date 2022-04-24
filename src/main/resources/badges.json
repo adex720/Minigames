@@ -13,5 +13,10 @@
     "id": 3,
     "name": "beta",
     "emoji": "<:beta:963129216457670716>"
+  },
+  {
+    "id": 4,
+    "name": "starrer",
+    "emoji": ":star:"
   }
 ]
