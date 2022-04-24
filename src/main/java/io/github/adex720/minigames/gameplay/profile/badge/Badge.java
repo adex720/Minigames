@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.gameplay.profile;
+package io.github.adex720.minigames.gameplay.profile.badge;
 
 /**
  * Badge is a visual feature displayed on profiles.

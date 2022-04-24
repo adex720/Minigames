@@ -1,7 +1,7 @@
 package io.github.adex720.minigames.discord.command.devcommand;
 
 import io.github.adex720.minigames.MinigamesBot;
-import io.github.adex720.minigames.gameplay.profile.Badge;
+import io.github.adex720.minigames.gameplay.profile.badge.Badge;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**

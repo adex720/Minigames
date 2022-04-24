@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.Manager;
-import io.github.adex720.minigames.gameplay.profile.Badge;
+import io.github.adex720.minigames.gameplay.profile.badge.Badge;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.JsonHelper;
 

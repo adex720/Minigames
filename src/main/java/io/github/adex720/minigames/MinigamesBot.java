@@ -1,6 +1,9 @@
 package io.github.adex720.minigames;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.*;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
@@ -30,20 +33,18 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.security.auth.login.LoginException;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Contains all event listeners, managers and other objects the bot has.
@@ -101,6 +102,7 @@ public class MinigamesBot {
 
     private final SettingsList settingsList;
 
+    private final HttpsRequester httpsRequester;
 
     private int linesOfCodeTotal;
     private int linesOfCodeJava;
@@ -175,6 +177,8 @@ public class MinigamesBot {
         leaderboardManager.start();
 
         startTimers();
+
+        httpsRequester = new HttpsRequester();
 
         calculateLinesOfCode();
     }
@@ -344,37 +348,25 @@ public class MinigamesBot {
     public void calculateLinesOfCode() {
         String request = "https://api.codetabs.com/v1/loc?github=adex720/Minigames&ignored=words";
 
+        JsonArray jsonArray;
         try {
-            URL url = new URL(request);
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-
-            InputStream ins = connection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(ins);
-            BufferedReader in = new BufferedReader(isr);
-            String inputLine;
-
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                stringBuilder.append(inputLine);
-            }
-
-            JsonArray jsonArray = JsonParser.parseString(stringBuilder.toString()).getAsJsonArray();
-
-            for (JsonElement jsonElement : jsonArray) {
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-
-                switch (jsonObject.get("language").getAsString()) {
-                    case "Java" -> linesOfCodeJava = jsonObject.get("lines").getAsInt();
-                    case "JSON" -> linesOfCodeJson = jsonObject.get("lines").getAsInt();
-                    case "Total" -> linesOfCodeTotal = jsonObject.get("lines").getAsInt();
-                }
-            }
-
-            logger.info("Loaded amount of lines of code!");
+            jsonArray = httpsRequester.requestJson(request).getAsJsonArray();
         } catch (Exception e) {
             logger.error("Failed to get amount of lines of code!" + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-
+            return;
         }
+
+        for (JsonElement jsonElement : jsonArray) {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+            switch (jsonObject.get("language").getAsString()) {
+                case "Java" -> linesOfCodeJava = jsonObject.get("lines").getAsInt();
+                case "JSON" -> linesOfCodeJson = jsonObject.get("lines").getAsInt();
+                case "Total" -> linesOfCodeTotal = jsonObject.get("lines").getAsInt();
+            }
+        }
+
+        logger.info("Loaded amount of lines of code!");
     }
 
 
@@ -470,5 +462,6 @@ public class MinigamesBot {
      - vote (after verification)
      - global boosters (after votes)
      - sharding (at 2000 guilds)
+     - ensure not overcoming ratelimit
 
 */

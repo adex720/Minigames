@@ -1,5 +1,7 @@
 package io.github.adex720.minigames;
 
+import io.github.adex720.minigames.util.network.HttpsRequester;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,6 +17,17 @@ import java.io.IOException;
 public class Test {
 
     public static void main(String[] args) throws IOException {
+        testWebRequest();
+
+    }
+
+    public static void testWebRequest() throws IOException {
+        HttpsRequester requester = new HttpsRequester();
+
+        System.out.println(requester.requestString("https://api.github.com/repos/adex720/Minigames/stargazers"));
+    }
+
+    public static void generateMastermindHintpinEmotes() throws IOException {
         String pathDefault = "src/main/resources/textures/emotes/minigames/mastermind_";
 
         Color colorCorrect = new Color(0xD62C17);

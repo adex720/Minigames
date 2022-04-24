@@ -9,6 +9,7 @@ import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.discord.command.user.crate.KitCommand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.party.Party;
+import io.github.adex720.minigames.gameplay.profile.badge.Badge;
 import io.github.adex720.minigames.gameplay.profile.booster.Booster;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterList;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
