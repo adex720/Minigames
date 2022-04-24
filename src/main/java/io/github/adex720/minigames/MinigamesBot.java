@@ -324,6 +324,10 @@ public class MinigamesBot {
         return settingsList;
     }
 
+    public HttpsRequester getHttpsRequester() {
+        return httpsRequester;
+    }
+
     public long getEmoteId(String name) {
         return JsonHelper.getLong(emoteJson, name, 1L);
     }

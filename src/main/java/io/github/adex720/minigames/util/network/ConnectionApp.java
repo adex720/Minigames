@@ -2,6 +2,9 @@ package io.github.adex720.minigames.util.network;
 
 import net.dv8tion.jda.api.utils.data.DataObject;
 
+/**
+ * @author adex720
+ */
 public class ConnectionApp {
 
     public final String app;

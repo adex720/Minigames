@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author adex720
+ */
 public class HttpsRequester {
 
     public JsonElement requestJson(String request) throws IOException {
