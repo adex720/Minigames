@@ -26,6 +26,7 @@ import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.network.HttpsRequester;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -40,11 +41,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Contains all event listeners, managers and other objects the bot has.
