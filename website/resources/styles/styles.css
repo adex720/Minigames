@@ -1,0 +1,68 @@
+:root {
+    --darkestBlue: #143eba;
+    --darkerBlue: #1d4ad1;
+    --darkBlue: #2e5ce6;
+    --blue: #3D6bf4;
+    --lightBlue: #537aed;
+    --lighterBlue: #658cff;
+    --lightestBlue: #799afc;
+}
+
+body {
+    margin: 0px 25px;
+    font-size: 200%;
+}
+
+h1 {
+    color: var(--blue);
+}
+
+h2 {
+    color: var(--lightBlue);
+    font-size: 2em;
+}
+
+
+.topnav {
+  background-color: var(--lighterBlue);
+  overflow: hidden;
+  position: fixed;
+  z-index: 99;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  background-color: var(--lightestBlue);
+  color: var(--darkestBlue);
+  text-align: center;
+  padding: 25px 32px;
+  text-decoration: none;
+  font-size: 40px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: var(--blue);
+  color: #fff !important;
+}
+
+/* Add a color to the current link */
+.topnav a.active {
+  background-color: var(--blue);
+  color: var(--lightestBlue);
+}
+
+.belownav {
+  padding-top: 55px;
+}
+
+
+.minigames-list {
+  font-size: 150%;
+}
+
+
+.minigames-list a { position:relative; }
+.minigames-list a span { position:absolute; display:none; z-index:99; }
+.minigames-list a:hover span { display:block; }

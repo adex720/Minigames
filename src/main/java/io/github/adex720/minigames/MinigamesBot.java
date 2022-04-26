@@ -26,6 +26,7 @@ import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.network.HttpsRequester;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
