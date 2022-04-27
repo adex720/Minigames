@@ -50,9 +50,6 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
     public String finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
-        if (type.hasExtraArgumentsForReplay()) {
-            type.saveState(id, getState());
-        }
 
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
@@ -70,8 +67,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         if (shouldReply) {
             if (replyable.isWebhookBased()) {
                 replyable.getWebhookMessageAction(rewards)
-                        .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
-                addReplay();
+                        .addActionRow(Button.primary(getReplayButtonId(), "Play again")).queue(); // Add replay button
             } else {
                 replyable.reply(rewards);
             }
@@ -83,12 +79,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return rewards;
     }
 
-    public void addReplay() {
-        bot.getReplayManager().addReplay(id, type);
-
-        if (type.hasExtraArgumentsForReplay()) {
-            type.saveState(id, getState());
-        }
+    public String getReplayButtonId() {
+        return "replay-" + type.name + "-" + id;
     }
 
     public String finishForParty(Replyable replyable, Party party, boolean won) {
@@ -190,7 +182,19 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return 1;
     }
 
+    /**
+     * Sets the state of the minigame.
+     * This should only be used at the start of the minigame.
+     */
+    public void setState(String mode){
+    }
 
+    /**
+     * A locked party can chance its size.
+     * If a member leaves or gets kicked the current minigame is removed.
+     *
+     * @return does the minigame require locked party.
+     */
     public boolean requiresLockedParty() {
         return false;
     }

@@ -80,7 +80,7 @@ public class MinigameCounting extends PartyMinigame {
 
     private final long channelId;
 
-    private final int modeId;
+    private int modeId;
 
     private long lastUser;
     private int count;
@@ -124,6 +124,11 @@ public class MinigameCounting extends PartyMinigame {
         event.getHook().sendMessage("You started a new counting minigame.").queue();
 
         return minigame;
+    }
+
+    @Override
+    public void setState(String mode) {
+        this.modeId = Integer.parseInt(mode);
     }
 
 
@@ -297,6 +302,11 @@ public class MinigameCounting extends PartyMinigame {
         super.quit(replyable);
         String rewards = finishForParty(Replyable.IGNORE_ALL, bot.getPartyManager().getParty(id), false);
         return "You quit your counting game. You reached " + count + ". " + rewards;
+    }
+
+    @Override
+    public boolean requiresLockedParty() {
+        return true;
     }
 
     public abstract static class Mode {

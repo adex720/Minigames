@@ -8,5 +8,5 @@ public enum CommandCategory {
     MINIGAME,
     PARTY,
     USER,
-    MISCELLANEOUS;
+    MISCELLANEOUS
 }

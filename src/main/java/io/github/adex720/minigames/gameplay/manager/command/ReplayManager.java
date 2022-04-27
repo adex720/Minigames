@@ -5,38 +5,29 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
-import io.github.adex720.minigames.util.Util;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-
-import java.util.HashMap;
 
 /**
  * Manages minigame replay feature.
- * After finishing a minigame, a new minigame of same type can be started
- * by pressing the replay button during the nextUpperCase minute.
+ * After finishing a minigame, a new minigame of same type can be started by pressing the replay button.
+ * Only a player who played the previous minigame can use the button.
  *
  * @author adex720
  */
 public class ReplayManager extends Manager {
 
-    private final HashMap<Long, MinigameType<? extends Minigame>> WAITING; // stores each minigame.
-
     public ReplayManager(MinigamesBot bot) {
         super(bot, "replay-manager");
-
-        WAITING = new HashMap<>();
     }
 
-    public void addReplay(long id, MinigameType<? extends Minigame> type) {
-        WAITING.put(id, type);
-        Util.schedule(() -> WAITING.remove(id, type), 60000);
-    }
+    public void onButtonPress(ButtonClickEvent event, CommandInfo ci, String[] args) {
+        String minigameName = args[1];
+        long gameId = Long.parseLong(args[2]);
 
-    public void onButtonPress(ButtonClickEvent event, CommandInfo ci) {
-        User presser = ci.author();
+        if (ci.gameId() != gameId)
+            return; // Button is not for the player/party. This is to prevent accidental new games.
 
-        MinigameType<? extends Minigame> type = WAITING.remove(presser.getIdLong());
+        MinigameType<? extends Minigame> type = bot.getMinigameTypeManager().getType(minigameName);
 
         if (type != null) {
             if (!type.canStart(ci)) {
@@ -46,10 +37,17 @@ public class ReplayManager extends Manager {
 
             Minigame minigame = type.create(event, ci);
             if (minigame != null) {
+                if (args.length > 3) {
+                    minigame.setState(args[3]); // Set state for minigame if one is present
+                }
+
                 bot.getMinigameManager().addMinigame(minigame);
                 return;
             }
             event.reply(type.getReplyForInvalidStartState()).queue();
+            return;
         }
+
+        bot.getLogger().error("Unknown minigame type to replay:{}", minigameName);
     }
 }

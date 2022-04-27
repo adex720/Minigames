@@ -70,18 +70,7 @@ public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
     }
 
     @Override
-    public boolean hasExtraArgumentsForReplay() {
-        return true;
-    }
-
-    @Override
     public int getDefaultState() {
         return MinigameCounting.MODE_BASE_10_ID;
-    }
-
-    @Override
-    public void saveState(long gameId, int state) {
-        REPLAY_MODES.put(gameId, state);
-        Util.schedule(() -> REPLAY_MODES.remove(gameId, state), 60000);
     }
 }

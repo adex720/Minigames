@@ -26,12 +26,10 @@ public class CommandQuit extends Command {
             return true;
         }
 
-        event.getHook().sendMessage(ci.minigame().quit(Replyable.from(event))) // Finish message
-                .addActionRow(Button.primary("play-again", "Start again")) // Add button
-                .queue();
-
         Minigame minigame = ci.minigame();
-        minigame.addReplay(); // Save to replay data
+        event.getHook().sendMessage(ci.minigame().quit(Replyable.from(event))) // Finish message
+                .addActionRow(Button.primary(minigame.getReplayButtonId(), "Start again")) // Add button to replay
+                .queue();
 
         return true;
     }
