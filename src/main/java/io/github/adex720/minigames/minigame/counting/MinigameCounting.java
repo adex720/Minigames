@@ -5,7 +5,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
-import io.github.adex720.minigames.minigame.party.PartyMinigame;
+import io.github.adex720.minigames.minigame.party.PartyTeamMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -20,7 +20,7 @@ import java.util.Random;
 /**
  * @author adex720
  */
-public class MinigameCounting extends PartyMinigame {
+public class MinigameCounting extends PartyTeamMinigame {
 
     public static final int CORRECT_NUMBER = 1;
     public static final int WRONG_NUMBER = 2;

@@ -1,5 +1,8 @@
 package io.github.adex720.minigames.util;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -108,11 +111,11 @@ public class Util {
     /**
      * Compares the values with == -operator.
      */
-    public static<T> boolean hasPureDuplicateValues(T[] values){
-        for (int i = 0; i < values.length; i++){
+    public static <T> boolean hasPureDuplicateValues(T[] values) {
+        for (int i = 0; i < values.length; i++) {
             T value = values[i];
 
-            for (int i2 = i+1; i2 < values.length; i2++){
+            for (int i2 = i + 1; i2 < values.length; i2++) {
                 if (values[i2] == value) return true;
             }
         }
@@ -123,11 +126,11 @@ public class Util {
     /**
      * Compares the values with {@link Object#equals(Object)}.
      */
-    public static<T> boolean hasEqualDuplicateValues(T[] values){
-        for (int i = 0; i < values.length; i++){
+    public static <T> boolean hasEqualDuplicateValues(T[] values) {
+        for (int i = 0; i < values.length; i++) {
             T value = values[i];
 
-            for (int i2 = i+1; i2 < values.length; i2++){
+            for (int i2 = i + 1; i2 < values.length; i2++) {
                 if (values[i2] == value) return true;
             }
         }
@@ -138,16 +141,55 @@ public class Util {
     /**
      * Compares the values with == -operator.
      */
-    public static boolean hasPureDuplicateValues(int[] values){
-        for (int i = 0; i < values.length; i++){
+    public static boolean hasPureDuplicateValues(int[] values) {
+        for (int i = 0; i < values.length; i++) {
             int value = values[i];
 
-            for (int i2 = i+1; i2 < values.length; i2++){
+            for (int i2 = i + 1; i2 < values.length; i2++) {
                 if (values[i2] == value) return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static boolean containsPure(long[] list, long value) {
+        for (long obj : list) {
+            if (obj == value) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static <T> boolean containsPure(T[] list, T value) {
+        for (T obj : list) {
+            if (obj == value) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static <T> boolean containsEqual(T[] list, T value) {
+        for (T obj : list) {
+            if (obj.equals(value)) return true;
+        }
+
+        return false;
+    }
+
+    public static byte[] bufferedImageToBytes(BufferedImage image) {
+        Raster raster = image.getRaster();
+        DataBufferByte dataBufferByte = (DataBufferByte) raster.getDataBuffer();
+        return dataBufferByte.getData();
     }
 
 }

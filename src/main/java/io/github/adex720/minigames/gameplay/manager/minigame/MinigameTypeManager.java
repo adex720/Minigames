@@ -12,6 +12,8 @@ import io.github.adex720.minigames.minigame.higherlower.MinigameHigherLower;
 import io.github.adex720.minigames.minigame.higherlower.MinigameTypeHigherLower;
 import io.github.adex720.minigames.minigame.mastermind.MinigameMastermind;
 import io.github.adex720.minigames.minigame.mastermind.MinigameTypeMastermind;
+import io.github.adex720.minigames.minigame.memo.MinigameMemo;
+import io.github.adex720.minigames.minigame.memo.MinigameTypeMemo;
 import io.github.adex720.minigames.minigame.tictactoe.MinigameTicTacToe;
 import io.github.adex720.minigames.minigame.tictactoe.MinigameTypeTicTacToe;
 import io.github.adex720.minigames.minigame.unscramble.MinigameTypeUnscramble;
@@ -39,6 +41,7 @@ public class MinigameTypeManager extends Manager {
     public MinigameType<MinigameMastermind> MASTERMIND;
 
     public MinigameType<MinigameCounting> COUNTING;
+    public MinigameType<MinigameMemo> MEMO;
 
     public MinigameTypeManager(MinigamesBot bot) {
         super(bot, "minigame-type-manager");
@@ -66,8 +69,12 @@ public class MinigameTypeManager extends Manager {
         MASTERMIND = new MinigameTypeMastermind(bot, this);
         initCommand(MASTERMIND);
 
+
         COUNTING = new MinigameTypeCounting(bot, this);
         initCommand(COUNTING);
+
+        MEMO = new MinigameTypeMemo(bot, this);
+        initCommand(MEMO);
     }
 
     /**
@@ -93,6 +100,7 @@ public class MinigameTypeManager extends Manager {
             case "mastermind" -> MASTERMIND;
 
             case "counting" -> COUNTING;
+            case "memo" -> MEMO;
             default -> throw new IllegalStateException("Invalid minigame type: " + name);
         };
     }

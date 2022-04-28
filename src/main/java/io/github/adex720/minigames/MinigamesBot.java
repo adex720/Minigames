@@ -24,6 +24,7 @@ import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
+import io.github.adex720.minigames.minigame.memo.ImageBank;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import io.github.adex720.minigames.util.network.HttpsRequester;
@@ -75,6 +76,8 @@ public class MinigamesBot {
 
     private final BadgeManager badgeManager;
     private final StatManager statManager;
+
+    private final ImageBank memoImageBank;
 
     private final BanManager banManager;
     private final ProfileManager profileManager;
@@ -143,11 +146,13 @@ public class MinigamesBot {
 
         partyManager = new PartyManager(this);
 
-        minigameTypeManager = new MinigameTypeManager(this);
-        minigameManager = new MinigameManager(this);
-
         filePathManager = new FilePathManager(this);
         wordManager = new WordManager(this);
+
+        memoImageBank = new ImageBank(this);
+
+        minigameTypeManager = new MinigameTypeManager(this);
+        minigameManager = new MinigameManager(this);
 
         timerManager = new TimerManager(this);
         leaderboardManager = new LeaderboardManager(this);
@@ -334,6 +339,10 @@ public class MinigamesBot {
         return linesOfCodeJson;
     }
 
+    public ImageBank getMemoImageBank() {
+        return memoImageBank;
+    }
+
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
         timerManager.add(task, delay, repeat);
     }
@@ -448,8 +457,6 @@ public class MinigamesBot {
      - connect 4
      - blackjack
      - memo (party)
-
-    TODO: include minigame state on replay button id
 
     TODO: guilds
 

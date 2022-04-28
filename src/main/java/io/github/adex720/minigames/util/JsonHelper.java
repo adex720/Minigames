@@ -176,7 +176,7 @@ public class JsonHelper {
         int[] array = new int[size];
 
         for (int i = 0; i < size; i++) {
-            array[i] = jsonArray.get(i).getAsInt(); // aaaaaaaaaa, Deprecated
+            array[i] = jsonArray.get(i).getAsInt();
         }
 
         return array;
@@ -186,6 +186,27 @@ public class JsonHelper {
         JsonArray jsonArray = new JsonArray();
 
         for (int i : array) {
+            jsonArray.add(i);
+        }
+
+        return jsonArray;
+    }
+
+    public static long[] jsonArrayToLongArray(JsonArray jsonArray) {
+        int size = jsonArray.size();
+        long[] array = new long[size];
+
+        for (int i = 0; i < size; i++) {
+            array[i] = jsonArray.get(i).getAsLong();
+        }
+
+        return array;
+    }
+
+    public static JsonArray arrayToJsonArray(long[] array) {
+        JsonArray jsonArray = new JsonArray();
+
+        for (long i : array) {
             jsonArray.add(i);
         }
 

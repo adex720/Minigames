@@ -32,7 +32,7 @@ public class CommandTicTacToeSet extends MinigameSubcommand {
                 return true;
             }
         }
-        event.getHook().sendMessage("You don't have an ongoing tic tac toe game!").queue();
+        event.getHook().sendMessage("You don't have an ongoing tic-tac-toe game!").queue();
         return true;
     }
 

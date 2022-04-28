@@ -7,7 +7,9 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
+import io.github.adex720.minigames.minigame.party.PartyCompetitiveMinigame;
 import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,11 +56,42 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
 
-        if (isEveryoneOnSameTeam() && profile.isInParty()) {
-            return finishForParty(replyable, commandInfo.party(), won);
-        } else {
+        if (!profile.isInParty()) {
             return finishForUser(replyable, profile, won, true);
+
         }
+        if (isEveryoneOnSameTeam()) {
+            return finishForParty(replyable, commandInfo.party(), won);
+        }
+
+        long[] winnerIds;
+
+        if (this instanceof PartyCompetitiveMinigame minigame) {
+            winnerIds = minigame.getWinners();
+        } else {
+            // This should never be reached, but it's still included to prevent possible errors if something is wrong.
+            winnerIds = new long[]{commandInfo.authorId()};
+        }
+
+        // Players who lost
+        for (long user : commandInfo.party().getMembersWithOwner()) {
+            if (!Util.containsPure(winnerIds, user)) {
+                finishForUser(replyable, bot.getProfileManager().getProfile(user), false, false);
+            }
+        }
+
+        // PLayers who won
+        // Since this is never supposed to use the user from CommandInfo, it's not worth checking it and getting profile from there.
+        String reply = "";
+        for (long userId : winnerIds) {
+            if (reply.isEmpty()) {
+                reply = finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, true);
+                continue;
+            }
+
+            finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, false);
+        }
+        return reply;
     }
 
     public String finishForUser(Replyable replyable, Profile profile, boolean won, boolean shouldReply) {
@@ -152,7 +185,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
      *
      * @param commandInfo commandInfo to calculate party with.
      *                    If the commandInfo is not created or easily accessible,
-     *                    just insert null, and it'll be calculated if needed
+     *                    just put null, and it'll be calculated if needed
      */
     public void active(@Nullable CommandInfo commandInfo) {
         lastActive = System.currentTimeMillis();
@@ -186,7 +219,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
      * Sets the state of the minigame.
      * This should only be used at the start of the minigame.
      */
-    public void setState(String mode){
+    public void setState(String mode) {
     }
 
     /**

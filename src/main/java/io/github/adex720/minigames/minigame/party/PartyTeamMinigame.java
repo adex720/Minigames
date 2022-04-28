@@ -7,9 +7,9 @@ import io.github.adex720.minigames.minigame.MinigameType;
 /**
  * @author adex720
  */
-public abstract class PartyMinigame extends Minigame {
+public abstract class PartyTeamMinigame extends Minigame {
 
-    public PartyMinigame(MinigamesBot bot, MinigameType<? extends Minigame> type, long id, long lastActive) {
+    public PartyTeamMinigame(MinigamesBot bot, MinigameType<? extends Minigame> type, long id, long lastActive) {
         super(bot, type, id, true, lastActive);
     }
 

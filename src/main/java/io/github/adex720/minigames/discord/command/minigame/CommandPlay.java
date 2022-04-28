@@ -61,6 +61,7 @@ public class CommandPlay extends ParentCommand {
         public boolean execute(SlashCommandEvent event, CommandInfo ci) {
             if (!this.minigame.canStart(ci)) {
                 event.getHook().sendMessage(this.minigame.getReplyForInvalidStartState()).queue();
+                return true;
             }
 
             if (ci.hasMinigame()) {
@@ -70,10 +71,10 @@ public class CommandPlay extends ParentCommand {
             Minigame minigame = this.minigame.create(event, ci);
             if (minigame != null) {
                 bot.getMinigameManager().addMinigame(minigame);
-            } else {
-                event.getHook().sendMessage(this.minigame.getReplyForInvalidStartState()).queue();
+                return true;
             }
 
+            event.getHook().sendMessage(this.minigame.getReplyForInvalidStartState()).queue();
             return true;
         }
     }

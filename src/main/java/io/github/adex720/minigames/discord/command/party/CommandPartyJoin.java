@@ -61,8 +61,8 @@ public class CommandPartyJoin extends Subcommand {
             return true;
         }
 
-        if (party.isPublic() || party.isInvited(authorId)) {
-            event.reply("This party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
+        if (!(party.isPublic() || party.isInvited(authorId))) {
+            event.getHook().sendMessage("This party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
             return true;
         }
 

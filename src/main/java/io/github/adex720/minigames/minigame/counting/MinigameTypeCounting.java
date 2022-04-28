@@ -7,8 +7,7 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.CommandCountingCount;
 import io.github.adex720.minigames.discord.command.minigame.CommandCountingLastCounter;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
-import io.github.adex720.minigames.minigame.party.PartyMinigameType;
-import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.minigame.party.PartyTeamMinigameType;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -20,7 +19,7 @@ import java.util.Set;
 /**
  * @author adex720
  */
-public class MinigameTypeCounting extends PartyMinigameType<MinigameCounting> {
+public class MinigameTypeCounting extends PartyTeamMinigameType<MinigameCounting> {
 
     private final HashMap<Long, Integer> REPLAY_MODES; // Stores counting mode for replay buttons
 
