@@ -42,7 +42,10 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
     private int turnedX; // Value doesn't matter if 'turned' is false
     private int turnedY;
 
-    public MinigameMemo(MinigamesBot bot, long id, long lastActive, int[][] cards, long[] players, int currentPlayerIndex, int[] scores) {
+    /**
+     * If card is not turned, {@param turnedX} should be -1.
+     */
+    public MinigameMemo(MinigamesBot bot, long id, long lastActive, int[][] cards, long[] players, int currentPlayerIndex, int[] scores, int turnedX, int turnedY) {
         super(bot, bot.getMinigameTypeManager().MEMO, id, lastActive);
 
         this.cards = cards;
@@ -55,6 +58,10 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         this.scores = scores;
 
         onBlock = false;
+
+        this.turned = turnedX >= 0;
+        this.turnedX = turnedX;
+        this.turnedY = turnedY;
     }
 
     public MinigameMemo(MinigamesBot bot, Party party, long lastActive) {
@@ -208,7 +215,10 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         JsonArray scoresJson = JsonHelper.getJsonArray(json, "scores");
         int[] scores = JsonHelper.jsonArrayToIntArray(scoresJson);
 
-        return new MinigameMemo(bot, id, active, cards, players, currentPlayerIndex, scores);
+        int turnedX = JsonHelper.getInt(json, "turned_x", -1);
+        int turnedY = JsonHelper.getInt(json, "turned_y", -1);
+
+        return new MinigameMemo(bot, id, active, cards, players, currentPlayerIndex, scores, turnedX, turnedY);
     }
 
     @Override
@@ -231,6 +241,10 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         json.add("players", JsonHelper.arrayToJsonArray(players));
         json.addProperty("turn", currentPlayerIndex);
 
+        if (turned) {
+            json.addProperty("turned_x", turnedX);
+            json.addProperty("turned_y", turnedY);
+        }
 
         return json;
     }
@@ -273,8 +287,8 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      * Turns the card as it is the first card of the turn.
      *
      * @param event event to reply to.
-     * @param x column
-     * @param y row
+     * @param x     column
+     * @param y     row
      */
     public void turnFirst(SlashCommandEvent event, int x, int y) throws IOException {
         turnedX = x;
@@ -292,9 +306,9 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      * Turns the card as it is the second card of the turn.
      *
      * @param event event to reply to.
-     * @param ci Command Info
-     * @param x column
-     * @param y row
+     * @param ci    Command Info
+     * @param x     column
+     * @param y     row
      */
     public void turnSecond(SlashCommandEvent event, CommandInfo ci, int x, int y) throws IOException {
         int id1 = cards[turnedX][turnedY];
