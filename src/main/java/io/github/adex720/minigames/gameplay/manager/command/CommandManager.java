@@ -68,6 +68,7 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandSuggest(bot));
         MAIN_COMMANDS.add(new CommandReportBug(bot));
         MAIN_COMMANDS.add(new CommandUsage(bot));
+        MAIN_COMMANDS.add(new CommandWebsite(bot));
         MAIN_COMMANDS.add(commandUptime);
 
         MAIN_COMMANDS.add(new CommandProfile(bot));
