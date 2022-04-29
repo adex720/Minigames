@@ -11,6 +11,7 @@ import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,6 +42,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
     private boolean turned; // If one card is turned
     private int turnedX; // Value doesn't matter if 'turned' is false
     private int turnedY;
+    private AuditableRestAction<Void> turnedMessageDeletion;
 
     /**
      * If card is not turned, {@param turnedX} should be -1.
@@ -62,6 +64,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         this.turned = turnedX >= 0;
         this.turnedX = turnedX;
         this.turnedY = turnedY;
+        this.turnedMessageDeletion = null;
     }
 
     public MinigameMemo(MinigamesBot bot, Party party, long lastActive) {
@@ -299,7 +302,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         ImageIO.write(image, "png", data); // write card image to file
 
         turned = true;
-        event.getHook().sendMessage("You turned a card").addFile(data).queue();
+        event.getHook().sendMessage("You turned a card").addFile(data).queue(m -> turnedMessageDeletion = m.delete());
     }
 
     /**
@@ -323,6 +326,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         } else {
             onWrongPair(event, x, y);
         }
+        turnedMessageDeletion.queue(); // Delete message showing first turned card.
 
         turned = false;
     }
