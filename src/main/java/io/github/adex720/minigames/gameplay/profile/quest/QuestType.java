@@ -228,6 +228,38 @@ public abstract class QuestType {
         };
     }
 
+    /**
+     * Quest gets progressed when a gamble minigame is finished.
+     *
+     * @param goals       array of goals for difficulties as [easy, normal, hard].
+     * @param textStart   text displayed before progress.
+     * @param textEnd     text displayed after progress.
+     */
+    public static QuestType gambleMoney(int id, String name, String textStart, String textEnd, String hint, int[] goals) {
+        return new QuestType(id, name, textStart, textEnd, hint, goals) {
+            @Override
+            public int moneyGambled(int bet, boolean won) {
+                return bet;
+            }
+        };
+    }
+
+    /**
+     * Quest gets progressed when a gamble minigame is finished.
+     *
+     * @param goals       array of goals for difficulties as [easy, normal, hard].
+     * @param textStart   text displayed before progress.
+     * @param textEnd     text displayed after progress.
+     */
+    public static QuestType winBet(int id, String name, String textStart, String textEnd, String hint, int[] goals) {
+        return new QuestType(id, name, textStart, textEnd, hint, goals) {
+            @Override
+            public int moneyGambled(int bet, boolean won) {
+                return won ? bet : 0;
+            }
+        };
+    }
+
     public String getName() {
         return name;
     }
@@ -257,6 +289,10 @@ public abstract class QuestType {
     }
 
     public int kitClaimed(String kit, Profile profile) {
+        return 0;
+    }
+
+    public int moneyGambled(int bet, boolean won) {
         return 0;
     }
 }

@@ -26,7 +26,8 @@ public abstract class GambleMinigame extends Minigame {
     public void appendQuest(Replyable replyable, Profile profile, boolean won) {
         super.appendQuest(replyable, profile, won);
 
-        //TODO: add quest for gambling
+        if (won) profile.appendQuests(q -> q.moneyGambled(replyable, bet, profile), q -> q.betWon(replyable, bet, profile));
+        else profile.appendQuests(q -> q.moneyGambled(replyable, bet, profile));
     }
 
     @Override

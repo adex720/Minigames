@@ -127,6 +127,16 @@ public class Quest implements JsonSavable<Quest> {
         append(replyable, profile, this.type.kitClaimed(kit, profile));
     }
 
+    public void moneyGambled(Replyable replyable, int bet, Profile profile) {
+        if (isCompleted()) return;
+        append(replyable, profile, bet);
+    }
+
+    public void betWon(Replyable replyable, int bet, Profile profile) {
+        if (isCompleted()) return;
+        append(replyable, profile, bet);
+    }
+
     public boolean isCompleted() {
         return progress >= goal;
     }
