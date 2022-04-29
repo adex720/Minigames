@@ -16,11 +16,14 @@ body {
 
 h1 {
     color: var(--darkestBlue);
+    padding-top: 110px;
+    margin-top: 0px;
 }
 
 h2 {
     color: var(--darkerBlue);
     font-size: 64px;
+    padding-top: 100px;
 }
 
 p {
@@ -66,11 +69,6 @@ p {
   padding-right: 100vw;
   padding-top: 96px;
   z-index: 98;
-}
-
-/* Add empty filler below topnav to not hide header */
-.belownav {
-  padding-top: 55px;
 }
 
 /* Put minigame icon beneath name */
