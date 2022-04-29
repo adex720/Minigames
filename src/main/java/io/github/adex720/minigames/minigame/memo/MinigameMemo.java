@@ -473,6 +473,34 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return image;
     }
 
+    /**
+     * ONLY FOR DEBUG USE!!!
+     * <p>
+     * Creates the image of the cards with each of them being face up.
+     */
+    private BufferedImage getImage() {
+        int imageWidth = width * 55 - 5;
+        int imageHeight = height * 55 - 5;
+        BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics g = image.getGraphics();
+
+        ImageBank imageBank = bot.getMemoImageBank();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (cards[x][y] == -1) continue;
+
+                int posX = x * 55;
+                int posY = y * 55;
+
+                imageBank.drawCard(g, posX, posY, cards[x][y]);
+
+            }
+        }
+
+        return image;
+    }
+
     @Override
     public int getReward(Random random) { // Better average reward for higher amount of palyers
         return random.nextInt(80 + players.length * 10, 251);
