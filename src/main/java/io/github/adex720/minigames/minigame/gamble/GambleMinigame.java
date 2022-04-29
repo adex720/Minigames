@@ -44,6 +44,6 @@ public abstract class GambleMinigame extends Minigame {
     public void appendStats(Profile profile, boolean won) {
         super.appendStats(profile, won);
 
-        //TODO: add stat for gambling
+        profile.increaseStat("bets won", bet);
     }
 }

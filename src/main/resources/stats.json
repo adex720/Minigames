@@ -138,6 +138,12 @@
     "on_leaderboard": true
   },
   {
+    "id": 102,
+    "name": "bet won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
     "id": 110,
     "name": "current daily quest streak",
     "description": "Current streak of each quest being completed",
