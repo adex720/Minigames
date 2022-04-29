@@ -42,9 +42,15 @@
     "color": "960909"
   },
   "memo": {
-    "description": "Memo is ",
-    "tips": "- ",
-    "rules": "",
-    "color": "000000"
+    "description": "Memo is memory based multiplayer competition. By each one's own turn, they turn two cards. If their pattern matches, they are remover from the board and you get to turn another two cards. There is no limit on how many times you can turn cards if you always find a pair. If they don't match, they are flipped over again and everyone tries to remember their positions. Then it's the next person's turn. When all pairs are found, the winner(s) are the player(s) who found the most pairs.",
+    "tips": "- Do not try to remember too many tiles. It's easier to remember them if you don't try to remember each.\n- Create sentences that you match to few cards and remember the path the sentence goes on.\n- If it's your turn and you know the position of a pair, but you are unsure of the exact position of another of them, turn first one card where you think it could be, and if it was wrong, flip your second card somewhere else so you don't reveal the position.",
+    "rules": "There are eight different colorings and fill patterns, which results on 64 different combinations. The order of the cards on the board is fully random. Although good memory plays a larger role on the game, a bit of luck is also on the game.",
+    "color": "F58989"
+  },
+  "available-colors": {
+    "dark turquoise": "046B5B",
+    "gray": "A8A8A8",
+    "blue": "172BBF",
+    "yellow": "FFBE3B"
   }
 }
