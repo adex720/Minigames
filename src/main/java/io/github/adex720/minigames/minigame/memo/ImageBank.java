@@ -37,9 +37,9 @@ public class ImageBank {
                 new Color(0xb80b19),
                 new Color(0xa31d7d),
                 new Color(0x3e068c),
-                new Color(0x204499),
-                new Color(0x0a918d),
-                new Color(0x099c13),
+                new Color(0x3066E6),
+                new Color(0x046b5b),
+                new Color(0x19Bc23),
                 new Color(0xdeae1f),
                 new Color(0x663f17)
         };
