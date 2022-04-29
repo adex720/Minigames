@@ -221,6 +221,8 @@ public class MinigameTicTacToe extends DuelMinigame {
             return;
         }
 
+        active(ci);
+
         short x = (short) event.getOption("column").getAsLong();
         short y = (short) event.getOption("row").getAsLong();
 

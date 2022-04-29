@@ -146,6 +146,8 @@ public class MinigameMastermind extends Minigame {
      * Places the given pointers on the board and sends correct messages.
      */
     public void place(SlashCommandEvent event, CommandInfo ci) {
+        active(ci);
+
         int[] guessRaw = new int[]{(int) event.getOption("first").getAsLong(),
                 (int) event.getOption("second").getAsLong(),
                 (int) event.getOption("third").getAsLong(),

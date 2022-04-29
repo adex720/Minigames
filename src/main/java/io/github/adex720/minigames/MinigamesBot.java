@@ -456,7 +456,6 @@ public class MinigamesBot {
     TODO: minigames to add
      - connect 4
      - blackjack
-     - memo (party)
 
     TODO: guilds
 

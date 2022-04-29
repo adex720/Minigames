@@ -15,9 +15,9 @@ public abstract class PartyCompetitiveMinigame extends Minigame {
 
     /**
      * @return the winners of the minigame.
-     * If no one has won an empty array should be returned.
+     * If no one has won the return value may be inaccurate
      */
-    public abstract long[] getWinners();
+    public abstract Long[] getWinners();
 
     @Override
     public boolean requiresLockedParty() {

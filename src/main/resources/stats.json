@@ -114,6 +114,24 @@
     "on_leaderboard": false
   },
   {
+    "id": 21,
+    "name": "memo games played",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 22,
+    "name": "memo games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 23,
+    "name": "memo pairs found",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
     "id": 101,
     "name": "coins earned",
     "description": "",

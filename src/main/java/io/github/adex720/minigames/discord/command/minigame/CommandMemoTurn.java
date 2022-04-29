@@ -69,15 +69,11 @@ public class CommandMemoTurn extends MinigameSubcommand {
                 new Command.Choice("10", 9),
         };
 
-        OptionData row1 = new OptionData(OptionType.INTEGER, "row1", "Row of the first card", true)
+        OptionData row = new OptionData(OptionType.INTEGER, "row", "Row of the the card", true)
                 .addChoices(oneToEight);
-        OptionData row2 = new OptionData(OptionType.INTEGER, "row2", "Row of the second card", true)
-                .addChoices(oneToTen);
-        OptionData column1 = new OptionData(OptionType.INTEGER, "column1", "Column of the first card", true)
-                .addChoices(oneToEight);
-        OptionData column2 = new OptionData(OptionType.INTEGER, "column2", "Column of the second card", true)
+        OptionData column = new OptionData(OptionType.INTEGER, "column", "Column of the the card", true)
                 .addChoices(oneToTen);
 
-        return super.getSubcommandData().addOptions(row1, row2, column1, column2);
+        return super.getSubcommandData().addOptions(row, column);
     }
 }

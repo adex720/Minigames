@@ -64,18 +64,18 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             return finishForParty(replyable, commandInfo.party(), won);
         }
 
-        long[] winnerIds;
+        Long[] winnerIds;
 
         if (this instanceof PartyCompetitiveMinigame minigame) {
             winnerIds = minigame.getWinners();
         } else {
             // This should never be reached, but it's still included to prevent possible errors if something is wrong.
-            winnerIds = new long[]{commandInfo.authorId()};
+            winnerIds = new Long[]{commandInfo.authorId()};
         }
 
         // Players who lost
         for (long user : commandInfo.party().getMembersWithOwner()) {
-            if (!Util.containsPure(winnerIds, user)) {
+            if (!Util.containsEqual(winnerIds, user)) {
                 finishForUser(replyable, bot.getProfileManager().getProfile(user), false, false);
             }
         }

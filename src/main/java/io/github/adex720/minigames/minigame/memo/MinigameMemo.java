@@ -8,7 +8,6 @@ import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.minigame.party.PartyCompetitiveMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
-import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -38,6 +37,10 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
     private int currentPlayerIndex;
 
     private boolean onBlock; // Block commands when cards are shown
+
+    private boolean turned; // If one card is turned
+    private int turnedX; // Value doesn't matter if 'turned' is false
+    private int turnedY;
 
     public MinigameMemo(MinigamesBot bot, long id, long lastActive, int[][] cards, long[] players, int currentPlayerIndex, int[] scores) {
         super(bot, bot.getMinigameTypeManager().MEMO, id, lastActive);
@@ -233,73 +236,143 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
     }
 
     public void turn(SlashCommandEvent event, CommandInfo ci) throws IOException {
-        int x1 = (int) event.getOption("column1").getAsLong();
-        int y1 = (int) event.getOption("row1").getAsLong();
-        int x2 = (int) event.getOption("column2").getAsLong();
-        int y2 = (int) event.getOption("row2").getAsLong();
-
         long userId = players[currentPlayerIndex];
         if (ci.authorId() != userId) {
-            event.getHook().sendMessage("It is not your turn!").queue();
+            event.getHook().sendMessage("It is not your turn!").setEphemeral(true).queue();
             return;
         }
 
-        if (x1 >= width || x1 < 0 || y1 >= height || y1 < 0) {
-            event.getHook().sendMessage("The first card is outside the board!").queue();
+        if (onBlock) {
+            event.getHook().sendMessage("You can't turn cards right now.").setEphemeral(true).queue();
             return;
         }
 
-        if (x2 >= width || x2 < 0 || y2 >= height || y2 < 0) {
-            event.getHook().sendMessage("The second card is outside the board!").queue();
+        active(ci);
+        int x = (int) event.getOption("column").getAsLong();
+        int y = (int) event.getOption("row").getAsLong();
+
+        if (x >= width || x < 0 || y >= height || y < 0) {
+            event.getHook().sendMessage("The card is outside the board!").queue();
             return;
         }
 
-        int id1 = cards[x1][y1];
-        if (id1 == -1) {
-            event.getHook().sendMessage("The first tile is empty!").queue();
-            return;
-        }
-
-        int id2 = cards[x2][y2];
-        if (id2 == -1) {
-            event.getHook().sendMessage("The second tile is empty!").queue();
-            return;
-        }
-
-        BufferedImage image = getImage(x1, y1, x2, y2);
-        File data = new File("memo1.png");
-        ImageIO.write(image, "png", data);
-        if (id1 == id2) {
-            scores[currentPlayerIndex]++;
-            cards[x1][y1] = -1;
-            cards[x2][y2] = -1;
-            if (isEmpty()) {
-                event.getHook().sendMessage("All pairs were found! The scores are:\n" + getScores()).queue();
-                finish(Replyable.from(event), ci, true);
+        if (turned) {
+            if (x == turnedX && y == turnedY) {
+                event.getHook().sendMessage("That card is already turned").queue();
                 return;
             }
-            event.getHook().sendMessage("You found a pair and got another turn! The scores are:\n" + getScores())
-                    .addFile(data).queue();
 
-        } else {
-            currentPlayerIndex++;
-            if (currentPlayerIndex == players.length) currentPlayerIndex = 0;
-            event.getHook().sendMessage("You didn't find a pair.").addFile(data)
-                    .delay(Duration.ofSeconds(5))
-                    .flatMap(Message::delete).queue(); // Delete image after 5 seconds.
-
-            BufferedImage background = getBack();
-            File backgroundData = new File("memo2.png");
-            ImageIO.write(background, "png", backgroundData);
-            event.getHook().sendMessage("<@" + players[currentPlayerIndex] + ">, It's soon your turn!")
-                    .delay(Duration.ofSeconds(6))
-                    .flatMap(m->m.editMessage("<@" + players[currentPlayerIndex] + ">, It's now your turn!")
-                            .addFile(backgroundData))
-                            .queue();
-
+            turnSecond(event, ci, x, y);
+            return;
         }
+
+        turnFirst(event, x, y);
     }
 
+    /**
+     * Turns the card as it is the first card of the turn.
+     *
+     * @param event event to reply to.
+     * @param x column
+     * @param y row
+     */
+    public void turnFirst(SlashCommandEvent event, int x, int y) throws IOException {
+        turnedX = x;
+        turnedY = y;
+
+        BufferedImage image = getImage(x, y);
+        File data = new File("memo1.png");
+        ImageIO.write(image, "png", data); // write card image to file
+
+        turned = true;
+        event.getHook().sendMessage("You turned a card").addFile(data).queue();
+    }
+
+    /**
+     * Turns the card as it is the second card of the turn.
+     *
+     * @param event event to reply to.
+     * @param ci Command Info
+     * @param x column
+     * @param y row
+     */
+    public void turnSecond(SlashCommandEvent event, CommandInfo ci, int x, int y) throws IOException {
+        int id1 = cards[turnedX][turnedY];
+        int id2 = cards[x][y];
+        if (id2 == -1) {
+            event.getHook().sendMessage("The tile is empty!").queue();
+            return;
+        }
+
+        if (id1 == id2) {
+            onPairFound(event, ci, x, y);
+        } else {
+            onWrongPair(event, x, y);
+        }
+
+        turned = false;
+    }
+
+    /**
+     * Updates variables and stats.
+     * Sends correct messages and images.
+     */
+    public void onPairFound(SlashCommandEvent event, CommandInfo ci, int x, int y) throws IOException {
+        BufferedImage image = getImage(turnedX, turnedY, x, y); // get data before changing variables
+        File data = new File("memo1.png");
+        ImageIO.write(image, "png", data); // write card image to file
+
+        scores[currentPlayerIndex]++; // append score
+        cards[turnedX][turnedY] = -1; // remove cards from board
+        cards[x][y] = -1;
+        ci.profile().increaseStat("memo pairs found");
+
+        if (isEmpty()) {
+            event.getHook().sendMessage("All pairs were found! The scores are:\n" + getScores()).queue();
+            finish(Replyable.from(event), ci, true);
+            return;
+        }
+
+        event.getHook().sendMessage("You found a pair and got another turn! The scores are:\n" + getScores())
+                .addFile(data).queue();
+
+    }
+
+    /**
+     * Updates variables and stats.
+     * Sends correct messages and images.
+     */
+    public void onWrongPair(SlashCommandEvent event, int x, int y) throws IOException {
+        onBlock = true;
+        currentPlayerIndex++;
+        if (currentPlayerIndex == players.length) currentPlayerIndex = 0;
+
+        BufferedImage image = getImage(turnedX, turnedY, x, y);
+        File data = new File("memo1.png");
+        ImageIO.write(image, "png", data); // write card image to file
+
+        event.getHook().sendMessage("You didn't find a pair.").addFile(data)
+                .delay(Duration.ofSeconds(5))
+                .flatMap(Message::delete).queue(); // Delete image after 5 seconds.
+
+        BufferedImage background = getBack();
+        File backgroundData = new File("memo2.png");
+        ImageIO.write(background, "png", backgroundData);
+        event.getHook().sendMessage("<@" + players[currentPlayerIndex] + ">, It's soon your turn!")
+                .delay(Duration.ofSeconds(6))
+                .flatMap(m -> m.editMessage("<@" + players[currentPlayerIndex] + ">, It's now your turn!")
+                        .addFile(backgroundData)) // Add image to message after 6 seconds
+                .queue(m -> onBlock = false); // Remove block
+    }
+
+    /**
+     * Creates an image of the current cards with 2 of them being turned.
+     *
+     * @param x1 column of first card.
+     * @param y1 row of first card.
+     * @param x2 column of second card.
+     * @param y2 row of second card.
+     */
     public BufferedImage getImage(int x1, int y1, int x2, int y2) {
         int imageWidth = width * 55 - 5;
         int imageHeight = height * 55 - 5;
@@ -326,6 +399,41 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return image;
     }
 
+    /**
+     * Creates an image of the current cards with 1 of them being turned.
+     *
+     * @param column column of trh card.
+     * @param row    row of trh card.
+     */
+    public BufferedImage getImage(int column, int row) {
+        int imageWidth = width * 55 - 5;
+        int imageHeight = height * 55 - 5;
+        BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics g = image.getGraphics();
+
+        ImageBank imageBank = bot.getMemoImageBank();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (cards[x][y] == -1) continue;
+
+                int posX = x * 55;
+                int posY = y * 55;
+                if (column == x && row == y) {
+                    imageBank.drawCard(g, posX, posY, cards[x][y]);
+                    continue;
+                }
+
+                imageBank.drawBackground(g, posX, posY);
+            }
+        }
+
+        return image;
+    }
+
+    /**
+     * Creates an image of the current cards, each one being background up.
+     */
     public BufferedImage getBack() {
         int imageWidth = width * 55 - 5;
         int imageHeight = height * 55 - 5;
@@ -348,15 +456,32 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
     }
 
     @Override
-    public int getReward(Random random) {
+    public int getReward(Random random) { // Better average reward for higher amount of palyers
         return random.nextInt(80 + players.length * 10, 251);
     }
 
     @Override
-    public long[] getWinners() {
-        return new long[0];
+    public Long[] getWinners() {
+        int max = 0;
+        ArrayList<Long> winners = new ArrayList<>(players.length);
+
+        for (int i = 0; i < players.length; i++) {
+            int score = scores[i];
+            if (score > max) {
+                max = score;
+                winners.clear();
+                winners.add(players[i]);
+            } else if (score == max) {
+                winners.add(players[i]);
+            }
+        }
+
+        return winners.toArray(new Long[0]);
     }
 
+    /**
+     * Calculates the amount of pairs left.
+     */
     public int pairsLeft() {
         int left = 0;
         for (int[] row : cards) {
@@ -368,6 +493,9 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return left / 2;
     }
 
+    /**
+     * Checks if cards remain.
+     */
     public boolean isEmpty() {
         for (int[] row : cards) {
             for (int id : row) {
@@ -378,6 +506,10 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return true;
     }
 
+    /**
+     * Returns the scores of each player on their own rows.
+     * The order matches the turn order.
+     */
     public String getScores() {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -389,6 +521,12 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return stringBuilder.toString();
     }
 
+    /**
+     * Sends the current cards backgrounds with the given message.
+     *
+     * @param event   event to reply to.
+     * @param message Message to send the image with.
+     */
     public void sendImage(SlashCommandEvent event, String message) throws IOException {
         BufferedImage image = getBack();
         File data = new File("memo1.png");
