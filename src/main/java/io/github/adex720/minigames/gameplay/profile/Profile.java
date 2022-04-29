@@ -226,8 +226,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     }
 
     /**
-     * @param count should the amount be affected by current multiplier and counted towards quests and stats.
-     * @param replyable       must be non-null if {@param count} is true. If countForQuests is false event is ignored.
+     * @param amount    amount of coins.
+     * @param count     should the amount be affected by current multiplier and counted towards quests and stats.
+     * @param replyable must be non-null if {@param count} is true. If countForQuests is false event is ignored.
      */
     public void addCoins(int amount, boolean count, Replyable replyable) {
 
@@ -245,6 +246,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public int getCoins() {
         return coins;
+    }
+
+    public void removeCoins(int amount) {
+        coins -= amount;
     }
 
     /**
