@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.memo;
+package io.github.adex720.minigames.minigame.party.memo;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;

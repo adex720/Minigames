@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.mastermind;
+package io.github.adex720.minigames.minigame.normal.mastermind;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;

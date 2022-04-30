@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.tictactoe;
+package io.github.adex720.minigames.minigame.duel.tictactoe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

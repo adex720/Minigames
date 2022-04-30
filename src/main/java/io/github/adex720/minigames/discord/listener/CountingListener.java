@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.minigame.Minigame;
-import io.github.adex720.minigames.minigame.counting.MinigameCounting;
+import io.github.adex720.minigames.minigame.party.counting.MinigameCounting;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;

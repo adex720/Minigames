@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.unscramble;
+package io.github.adex720.minigames.minigame.normal.unscramble;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
@@ -11,7 +11,6 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.ranges.Range;
 
 import java.util.Arrays;
 import java.util.Collections;

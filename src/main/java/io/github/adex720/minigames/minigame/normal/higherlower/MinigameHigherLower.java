@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.higherlower;
+package io.github.adex720.minigames.minigame.normal.higherlower;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;

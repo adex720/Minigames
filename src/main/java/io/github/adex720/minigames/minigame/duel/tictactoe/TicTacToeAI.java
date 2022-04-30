@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.tictactoe;
+package io.github.adex720.minigames.minigame.duel.tictactoe;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.minigame.duel.DuelMinigame;

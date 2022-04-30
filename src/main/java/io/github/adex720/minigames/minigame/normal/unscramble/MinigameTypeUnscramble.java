@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.unscramble;
+package io.github.adex720.minigames.minigame.normal.unscramble;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;

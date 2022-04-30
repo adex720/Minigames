@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.counting;
+package io.github.adex720.minigames.minigame.party.counting;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;

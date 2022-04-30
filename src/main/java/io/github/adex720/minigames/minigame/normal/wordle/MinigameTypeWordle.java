@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.wordle;
+package io.github.adex720.minigames.minigame.normal.wordle;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;

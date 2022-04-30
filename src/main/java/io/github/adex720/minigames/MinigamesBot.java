@@ -24,7 +24,7 @@ import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
-import io.github.adex720.minigames.minigame.memo.ImageBank;
+import io.github.adex720.minigames.minigame.party.memo.ImageBank;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import io.github.adex720.minigames.util.network.HttpsRequester;

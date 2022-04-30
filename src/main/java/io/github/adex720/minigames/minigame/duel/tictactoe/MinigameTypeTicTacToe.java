@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.tictactoe;
+package io.github.adex720.minigames.minigame.duel.tictactoe;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
@@ -10,7 +10,6 @@ import io.github.adex720.minigames.minigame.duel.DuelMinigameType;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**

@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.minigame.hangman;
+package io.github.adex720.minigames.minigame.normal.hangman;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
