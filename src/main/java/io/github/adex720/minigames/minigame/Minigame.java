@@ -30,6 +30,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     protected long lastActive; // used to find inactive parties
 
+    private boolean finished;
+
     public Minigame(MinigamesBot bot, MinigameType<? extends Minigame> type, long id, boolean isParty, long lastActive) {
         this.bot = bot;
         this.type = type;
@@ -40,6 +42,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         if (requiresLockedParty() && isParty) {
             bot.getPartyManager().getParty(id).lock();
         }
+
+        finished = false;
     }
 
     @Override
@@ -52,6 +56,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
     public String finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
+        finished = true;
 
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
@@ -166,6 +171,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         if (requiresLockedParty() && isParty) {
             bot.getPartyManager().getParty(id).clearLock(replyable);
         }
+
+        finished = true;
     }
 
     /**
@@ -244,5 +251,9 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
      * @return amount of coins to give as reward.
      */
     public abstract int getReward(Random random);
+
+    public boolean shouldStart() {
+        return !finished;
+    }
 
 }

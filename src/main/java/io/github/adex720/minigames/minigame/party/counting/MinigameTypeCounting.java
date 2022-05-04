@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -21,11 +20,8 @@ import java.util.Set;
  */
 public class MinigameTypeCounting extends PartyTeamMinigameType<MinigameCounting> {
 
-    private final HashMap<Long, Integer> REPLAY_MODES; // Stores counting mode for replay buttons
-
     public MinigameTypeCounting(MinigamesBot bot, MinigameTypeManager typeManager) {
         super(bot, typeManager, "counting", 3);
-        REPLAY_MODES = new HashMap<>();
     }
 
     @Override
@@ -35,7 +31,17 @@ public class MinigameTypeCounting extends PartyTeamMinigameType<MinigameCounting
 
     @Override
     public MinigameCounting create(ButtonClickEvent event, CommandInfo ci) {
-        return MinigameCounting.start(event, ci, getState(ci.gameId()));
+        String[] args = ci.args();
+
+        int type;
+        if (args.length <= 3) type = getDefaultState();
+        else type = Integer.parseInt(ci.args()[3]);
+        // 0 = replay
+        // 1 = counting
+        // 2 = game id
+        // 3 = type (optional)
+
+        return MinigameCounting.start(event, ci, type);
     }
 
     @Override
@@ -53,19 +59,11 @@ public class MinigameTypeCounting extends PartyTeamMinigameType<MinigameCounting
         return MinigameCounting.fromJson(bot, json);
     }
 
-    /**
-     * @return Empty Set
-     */
     @Override
     public Set<Subcommand> getSubcommands() {
         return Set.of(
                 new CommandCountingCount(bot, typeManager),
                 new CommandCountingLastCounter(bot, typeManager));
-    }
-
-    @Override
-    public int getState(long gameId) {
-        return REPLAY_MODES.getOrDefault(gameId, getDefaultState());
     }
 
     @Override

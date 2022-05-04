@@ -29,6 +29,11 @@ public class ButtonListener extends ListenerAdapter {
             return; // Banned users shouldn't be able to use buttons
 
         String[] args = event.getButton().getId().split("-");
-        bot.getReplayManager().onButtonPress(event, commandInfo, args); // For replay button after finishing a minigame
+
+        switch (args[0]) {
+            case "replay" -> bot.getReplayManager().onButtonPress(event, commandInfo, args); // For replay button after finishing a minigame
+            case "blackjack" -> bot.getBlackjackButtonManager().onButtonPressed(event, commandInfo, args);
+        }
+
     }
 }

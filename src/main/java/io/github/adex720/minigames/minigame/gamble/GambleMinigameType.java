@@ -12,7 +12,7 @@ public abstract class GambleMinigameType<T extends GambleMinigame> extends Minig
 
     public final float betMultiplier;
 
-    protected GambleMinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name, int betMultiplier) {
+    protected GambleMinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name, float betMultiplier) {
         super(bot, typeManager, name, false, 1);
 
         this.betMultiplier = betMultiplier;

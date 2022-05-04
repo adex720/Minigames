@@ -37,10 +37,6 @@ public class ReplayManager extends Manager {
 
             Minigame minigame = type.create(event, ci);
             if (minigame != null) {
-                if (args.length > 3) {
-                    minigame.setState(args[3]); // Set state for minigame if one is present
-                }
-
                 bot.getMinigameManager().addMinigame(minigame);
                 return;
             }

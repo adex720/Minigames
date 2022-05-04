@@ -47,10 +47,21 @@
     "rules": "There are eight different colorings and fill patterns, which results on 64 different combinations. The order of the cards on the board is fully random. Although good memory plays a larger role on the game, a bit of luck is also on the game.",
     "color": "F58989"
   },
+  "blackjack": {
+    "description": "Gambling game",
+    "tips": "- ",
+    "rules": "",
+    "color": "A8A8A8"
+  },
   "available-colors": {
     "dark turquoise": "046B5B",
-    "gray": "A8A8A8",
     "blue": "172BBF",
     "yellow": "FFBE3B"
+  },
+  "default": {
+    "description": "",
+    "tips": "- ",
+    "rules": "",
+    "color": ""
   }
 }

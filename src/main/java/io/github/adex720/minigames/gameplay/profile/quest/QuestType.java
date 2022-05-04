@@ -245,7 +245,7 @@ public abstract class QuestType {
     }
 
     /**
-     * Quest gets progressed when a gamble minigame is finished.
+     * Quest gets progressed when a gamble minigame is won.
      *
      * @param goals       array of goals for difficulties as [easy, normal, hard].
      * @param textStart   text displayed before progress.

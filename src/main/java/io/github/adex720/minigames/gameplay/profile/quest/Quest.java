@@ -129,12 +129,12 @@ public class Quest implements JsonSavable<Quest> {
 
     public void moneyGambled(Replyable replyable, int bet, Profile profile) {
         if (isCompleted()) return;
-        append(replyable, profile, bet);
+        append(replyable, profile, this.type.moneyGambled(bet, false));
     }
 
     public void betWon(Replyable replyable, int bet, Profile profile) {
         if (isCompleted()) return;
-        append(replyable, profile, bet);
+        append(replyable, profile, this.type.moneyGambled(bet, true));
     }
 
     public boolean isCompleted() {

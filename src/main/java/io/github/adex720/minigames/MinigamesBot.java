@@ -24,6 +24,7 @@ import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
+import io.github.adex720.minigames.minigame.gamble.blackjack.BlackjackButtonManager;
 import io.github.adex720.minigames.minigame.party.memo.ImageBank;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
@@ -35,7 +36,9 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.CheckReturnValue;
 import javax.security.auth.login.LoginException;
+import java.beans.BeanProperty;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -69,6 +72,7 @@ public class MinigamesBot {
 
     private final ButtonListener buttonListener;
     private final ReplayManager replayManager;
+    private final BlackjackButtonManager blackjackButtonManager;
 
     private final GuildJoinListener guildJoinListener;
     private final SelfMentionListener selfMentionListener;
@@ -130,6 +134,7 @@ public class MinigamesBot {
 
         buttonListener = new ButtonListener(this);
         replayManager = new ReplayManager(this);
+        blackjackButtonManager = new BlackjackButtonManager(this);
 
         guildJoinListener = new GuildJoinListener(this);
         selfMentionListener = new SelfMentionListener(this);
@@ -223,122 +228,157 @@ public class MinigamesBot {
         addTimerTask(this::save, 1000 * 60 * 5, true); // save data
     }
 
+    @CheckReturnValue
     public JDA getJda() {
         return jda;
     }
 
+    @CheckReturnValue
     public Logger getLogger() {
         return logger;
     }
 
+    @CheckReturnValue
     public CommandManager getCommandManager() {
         return commandManager;
     }
 
+    @CheckReturnValue
     public CommandListener getCommandListener() {
         return commandListener;
     }
 
+    @CheckReturnValue
     public DevCommandListener getDevCommandListener() {
         return devCommandListener;
     }
 
+    @CheckReturnValue
     public ButtonListener getButtonListener() {
         return buttonListener;
     }
 
+    @CheckReturnValue
     public ReplayManager getReplayManager() {
         return replayManager;
     }
 
+    @CheckReturnValue
+    public BlackjackButtonManager getBlackjackButtonManager() {
+        return blackjackButtonManager;
+    }
+
+    @CheckReturnValue
     public GuildJoinListener getGuildJoinListener() {
         return guildJoinListener;
     }
 
+    @CheckReturnValue
     public SelfMentionListener getSelfMentionListener() {
         return selfMentionListener;
     }
 
+    @CheckReturnValue
     public CountingListener getCountingListener() {
         return countingListener;
     }
 
+    @CheckReturnValue
     public BanManager getBanManager() {
         return banManager;
     }
 
+    @CheckReturnValue
     public ProfileManager getProfileManager() {
         return profileManager;
     }
 
+    @CheckReturnValue
     public MinigameTypeManager getMinigameTypeManager() {
         return minigameTypeManager;
     }
 
+    @CheckReturnValue
     public PartyManager getPartyManager() {
         return partyManager;
     }
 
+    @CheckReturnValue
     public MinigameManager getMinigameManager() {
         return minigameManager;
     }
 
+    @CheckReturnValue
     public FilePathManager getFilePathManager() {
         return filePathManager;
     }
 
+    @CheckReturnValue
     public WordManager getWordManager() {
         return wordManager;
     }
 
+    @CheckReturnValue
     public BadgeManager getBadgeManager() {
         return badgeManager;
     }
 
+    @CheckReturnValue
     public StatManager getStatManager() {
         return statManager;
     }
 
+    @CheckReturnValue
     public QuestManager getQuestManager() {
         return questManager;
     }
 
+    @CheckReturnValue
     public QuestList getQuestList() {
         return questList;
     }
 
+    @CheckReturnValue
     public Random getRandom() {
         return random;
     }
 
+    @CheckReturnValue
     public KitCooldownManager getKitCooldownManager() {
         return kitCooldownManager;
     }
 
+    @CheckReturnValue
     public SettingsList getSettingsList() {
         return settingsList;
     }
 
+    @CheckReturnValue
     public long getEmoteId(String name) {
         return JsonHelper.getLong(emoteJson, name, 1L);
     }
 
+    @CheckReturnValue
     public String getEmote(String name) {
         return "<:" + name + ":" + getEmoteId(name) + ">";
     }
 
+    @CheckReturnValue
     public int getLinesOfCodeTotal() {
         return linesOfCodeTotal;
     }
 
+    @CheckReturnValue
     public int getLinesOfCodeJava() {
         return linesOfCodeJava;
     }
 
+    @CheckReturnValue
     public int getLinesOfCodeJson() {
         return linesOfCodeJson;
     }
 
+    @CheckReturnValue
     public ImageBank getMemoImageBank() {
         return memoImageBank;
     }
@@ -377,6 +417,7 @@ public class MinigamesBot {
     }
 
 
+    @CheckReturnValue
     private static JsonObject getConfigJson() {
         String filePath = "config.json";
 
@@ -400,6 +441,7 @@ public class MinigamesBot {
         return json;
     }
 
+    @CheckReturnValue
     public JsonElement getResourceJson(String name) {
         return resourceDataManager.loadJson(name);
     }
@@ -410,6 +452,7 @@ public class MinigamesBot {
         }
     }
 
+    @CheckReturnValue
     public JsonElement loadJson(String name) {
         return saveDataManager.loadJson(name);
     }
@@ -455,7 +498,6 @@ public class MinigamesBot {
 /*
     TODO: minigames to add
      - connect 4
-     - blackjack
 
     TODO: guilds
 

@@ -70,7 +70,9 @@ public class CommandPlay extends ParentCommand {
 
             Minigame minigame = this.minigame.create(event, ci);
             if (minigame != null) {
-                bot.getMinigameManager().addMinigame(minigame);
+                if (minigame.shouldStart()) { // This is false on scenarios like blackjack
+                    bot.getMinigameManager().addMinigame(minigame);
+                }
                 return true;
             }
 

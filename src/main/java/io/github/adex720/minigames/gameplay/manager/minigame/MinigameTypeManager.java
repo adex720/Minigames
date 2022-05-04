@@ -4,22 +4,25 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
-import io.github.adex720.minigames.minigame.party.counting.MinigameCounting;
-import io.github.adex720.minigames.minigame.party.counting.MinigameTypeCounting;
+import io.github.adex720.minigames.minigame.duel.tictactoe.MinigameTicTacToe;
+import io.github.adex720.minigames.minigame.duel.tictactoe.MinigameTypeTicTacToe;
+import io.github.adex720.minigames.minigame.gamble.GambleMinigameType;
+import io.github.adex720.minigames.minigame.gamble.blackjack.MinigameBlackjack;
+import io.github.adex720.minigames.minigame.gamble.blackjack.MinigameTypeBlackjack;
 import io.github.adex720.minigames.minigame.normal.hangman.MinigameHangman;
 import io.github.adex720.minigames.minigame.normal.hangman.MinigameTypeHangman;
 import io.github.adex720.minigames.minigame.normal.higherlower.MinigameHigherLower;
 import io.github.adex720.minigames.minigame.normal.higherlower.MinigameTypeHigherLower;
 import io.github.adex720.minigames.minigame.normal.mastermind.MinigameMastermind;
 import io.github.adex720.minigames.minigame.normal.mastermind.MinigameTypeMastermind;
-import io.github.adex720.minigames.minigame.party.memo.MinigameMemo;
-import io.github.adex720.minigames.minigame.party.memo.MinigameTypeMemo;
-import io.github.adex720.minigames.minigame.duel.tictactoe.MinigameTicTacToe;
-import io.github.adex720.minigames.minigame.duel.tictactoe.MinigameTypeTicTacToe;
 import io.github.adex720.minigames.minigame.normal.unscramble.MinigameTypeUnscramble;
 import io.github.adex720.minigames.minigame.normal.unscramble.MinigameUnscramble;
 import io.github.adex720.minigames.minigame.normal.wordle.MinigameTypeWordle;
 import io.github.adex720.minigames.minigame.normal.wordle.MinigameWordle;
+import io.github.adex720.minigames.minigame.party.counting.MinigameCounting;
+import io.github.adex720.minigames.minigame.party.counting.MinigameTypeCounting;
+import io.github.adex720.minigames.minigame.party.memo.MinigameMemo;
+import io.github.adex720.minigames.minigame.party.memo.MinigameTypeMemo;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -42,6 +45,8 @@ public class MinigameTypeManager extends Manager {
 
     public MinigameType<MinigameCounting> COUNTING;
     public MinigameType<MinigameMemo> MEMO;
+
+    public GambleMinigameType<MinigameBlackjack> BLACKJACK;
 
     public MinigameTypeManager(MinigamesBot bot) {
         super(bot, "minigame-type-manager");
@@ -75,6 +80,9 @@ public class MinigameTypeManager extends Manager {
 
         MEMO = new MinigameTypeMemo(bot, this);
         initCommand(MEMO);
+
+        BLACKJACK = new MinigameTypeBlackjack(bot, this);
+        initCommand(BLACKJACK);
     }
 
     /**
@@ -101,6 +109,8 @@ public class MinigameTypeManager extends Manager {
 
             case "counting" -> COUNTING;
             case "memo" -> MEMO;
+
+            case "blackjack" -> BLACKJACK;
             default -> throw new IllegalStateException("Invalid minigame type: " + name);
         };
     }

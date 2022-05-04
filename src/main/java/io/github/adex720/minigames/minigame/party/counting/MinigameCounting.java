@@ -309,6 +309,11 @@ public class MinigameCounting extends PartyTeamMinigame {
         return true;
     }
 
+    @Override
+    public String getReplayButtonId() {
+        return super.getReplayButtonId() + "-" + modeId;
+    }
+
     public abstract static class Mode {
 
         public abstract String getValue(int current);

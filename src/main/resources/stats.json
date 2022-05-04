@@ -132,6 +132,18 @@
     "on_leaderboard": false
   },
   {
+    "id": 25,
+    "name": "blackjack games played",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 26,
+    "name": "blackjack games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
     "id": 101,
     "name": "coins earned",
     "description": "",
