@@ -55,6 +55,9 @@ public class MinigameBlackjack extends GambleMinigame {
         this(ci.bot(), ci.profile(), ci.gameId(), System.currentTimeMillis(), bet);
     }
 
+    /**
+     * It should be checked if the player can afford the bet before this is called.
+     */
     public static MinigameBlackjack start(SlashCommandEvent event, CommandInfo commandInfo, int bet) {
         MinigameBlackjack minigame = new MinigameBlackjack(commandInfo, bet);
 
@@ -69,6 +72,9 @@ public class MinigameBlackjack extends GambleMinigame {
         return minigame;
     }
 
+    /**
+     * It should be checked if the player can afford the bet before this is called.
+     */
     public static MinigameBlackjack start(ButtonClickEvent event, CommandInfo commandInfo, int bet) {
         MinigameBlackjack minigame = new MinigameBlackjack(commandInfo, bet);
 
@@ -133,6 +139,10 @@ public class MinigameBlackjack extends GambleMinigame {
         return true;
     }
 
+    /**
+     * Draws a card for the player.
+     * The game ends if the sum of the cards goes over 21.
+     */
     public void hit(Replyable replyable, CommandInfo commandInfo) {
         String cardMessage = drawCardForPlayerWithMessage();
 
@@ -144,6 +154,12 @@ public class MinigameBlackjack extends GambleMinigame {
                 .addActionRows(getActionRow()).queue();
     }
 
+    /**
+     * 1. Doubles the bet for winning.<p>
+     * 2. Draws one card for the player.<p>
+     * 3. Draws cards for dealer.<p>
+     * 4. Calculates winner.
+     */
     public void hitDouble(Replyable replyable, CommandInfo commandInfo) {
         betMultiplier *= 2;
 
@@ -159,6 +175,13 @@ public class MinigameBlackjack extends GambleMinigame {
         stand(replyable, commandInfo);
     }
 
+    /**
+     * @param message     Text before win state.
+     *                    This is only sent if the game ended.
+     * @param replyable   Replyable
+     * @param commandInfo Command info
+     * @return True if the game ended.
+     */
     public boolean checkForWin(String message, Replyable replyable, CommandInfo commandInfo) {
         if (handSum > 21) {
             replyable.reply(message + " You busted and lost your bet!");
@@ -175,6 +198,9 @@ public class MinigameBlackjack extends GambleMinigame {
         return false;
     }
 
+    /**
+     * Draws cards for the dealer and calculates the winner.
+     */
     public void stand(Replyable replyable, CommandInfo commandInfo) {
         int dealerCount = drawCardsForDealer();
         String cards = toString();
@@ -197,12 +223,22 @@ public class MinigameBlackjack extends GambleMinigame {
         delete(replyable);
     }
 
+    /**
+     * Draws a new card for the player.
+     *
+     * @return Message containing id of the card and new sum of cards.
+     */
     public String drawCardForPlayerWithMessage() {
         int cardId = drawCardForPlayer();
 
         return "You drew a " + getCardName(cardId) + " and the sum of your cards is " + handSum + ".";
     }
 
+    /**
+     * Draws a new card for the player.
+     *
+     * @return id of the card.
+     */
     public int drawCardForPlayer() {
         int cardId = getNextCard();
         playerCards.add(cardId);
@@ -230,6 +266,11 @@ public class MinigameBlackjack extends GambleMinigame {
         return bot.getRandom().nextInt(52);
     }
 
+    /**
+     * Increases {@link MinigameBlackjack#handSum} with the amount of points the card gives.
+     *
+     * @param cardId id of the card.
+     */
     public void increaseHandSum(int cardId) {
         int cardNumber = getCardNumber(cardId);
 
@@ -254,22 +295,52 @@ public class MinigameBlackjack extends GambleMinigame {
         handSum += 11;
     }
 
+    /**
+     * Transforms the given card id to the English name of the card.
+     * Example names are 'Spade 7', 'Diamond Ace' and 'Club Queen'.
+     */
     public static String getCardName(int cardId) {
         return SUIT_NAMES[getSuitId(cardId)] + " " + CARD_NUMBER_NAMES[getCardNumberId(cardId)];
     }
 
+    /**
+     * Returns the number the card is assigned with.
+     * Ace is 1, Jack is 11, Queen is 12 and King is 13.
+     */
     public static int getCardNumber(int cardId) {
         return cardId % 13 + 1;
     }
 
+    /**
+     * Returns the id of the card number.
+     * The ids are on the same order as the cards
+     * starting from 0 which is Ace and ending at 12 which is King.
+     *
+     * @see MinigameBlackjack#CARD_NUMBER_NAMES
+     */
     public static int getCardNumberId(int cardId) {
         return cardId % 13;
     }
 
+    /**
+     * Returns the id of the suit of the card.
+     * The ids are:
+     * <ul>
+     *     <li> 0 - Club
+     *     <li> 1 - Spade
+     *     <li> 2 - Diamond
+     *     <li> 3 - Heart
+     * </ul>
+     *
+     * @see MinigameBlackjack#SUIT_NAMES
+     */
     public static int getSuitId(int cardId) {
         return cardId / 13;
     }
 
+    /**
+     * Returns the amount of points the card counts as if the sum of the hand was 1.
+     */
     public static int getCardDefaultNumber(int cardId) {
         int numberId = getCardNumberId(cardId);
 
@@ -303,6 +374,9 @@ public class MinigameBlackjack extends GambleMinigame {
         return count;
     }
 
+    /**
+     * Returns the sum of the cards the dealer has.
+     */
     public int getDealerHandSum() {
         int count = 0;
         for (int cardId : dealerCards) {
@@ -319,14 +393,23 @@ public class MinigameBlackjack extends GambleMinigame {
         return count;
     }
 
+    /**
+     * @return true if a card can be hit.
+     */
     public boolean canHit() {
         return handSum < 21;
     }
 
+    /**
+     * @return true if only starting cards are dealt.
+     */
     public boolean canDouble() {
         return playerCards.size() <= 2;
     }
 
+    /**
+     * Creates a String containing all dealt cards and their sums.
+     */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -376,6 +459,9 @@ public class MinigameBlackjack extends GambleMinigame {
         return super.getReplayButtonId() + "-" + bet;
     }
 
+    /**
+     * Contains methods for crating all required action buttons with given id.
+     */
     public static class Buttons {
 
         public static Button hit(long id) {
