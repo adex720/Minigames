@@ -48,15 +48,15 @@
     "color": "F58989"
   },
   "blackjack": {
-    "description": "Gambling game",
-    "tips": "- ",
-    "rules": "",
+    "description": "Blackjack is one of the most famous gambling games. The player and the dealer are both dealt two cards from start, but one of the dealer's stays hidden. The player draws more cards until the player decides to stop. After the player finished, the dealer draws cards. In the end, the one with larger total sum is the winner, but if either goes past 21, it's instantly a loose.",
+    "tips": "- The advantage is on the dealer. Don't play this minigame if you want more money.",
+    "rules": "Number cards are worth normal. Face cards are worth 10. Ace is worth 11 or 1 if the higher score would surpass the limit of 21. The dealer will stop drawing more cards when the sum of the cards is over 16. If your score is 21 after the first two cards, you win 1.5x your bet. If you haven't drawn any optional cards, you can double your bet, but then you must draw one card, and then give the turn to the dealer.",
     "color": "A8A8A8"
   },
   "connect4": {
     "description": "In Connect 4 game, two players aim to get 4 marks of their own color on a row. The row can be horizontal, vertical or diagonal. The marks can only be put on the lowest fromm spot of a column. The board has 7 columns and 6 rows.",
     "tips": "- Aim placing your marks close to the middle.\n- Plan your future moves.\n- Keep track of game ending positions.\n- Block your opponent before it's too late.\n- Don't focus too much on defence.\n- Find out the purpose of each move your opponent made.",
-    "rules": "The player with red marks starts. On one's turn, the player drops one mark on one of the free columns and it falls to the bottom of it. Once a mark is dropped, it can't be moved. If the board gets full without either player winning the result is a draw.",
+    "rules": "The player with red marks starts. On one's turn, the player drops one mark on one of the free columns, and it falls to the bottom of it. Once a mark is dropped, it can't be moved. If the board gets full without either player winning the result is a draw.",
     "color": "FFBE3B"
   },
   "available-colors": {
