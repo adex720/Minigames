@@ -276,7 +276,7 @@ public class MinigameTicTacToe extends DuelMinigame {
             if (score == -3) return SECOND_PLAYER_WON;
         }
 
-        return doesBoardHaveEmptySpots() ? 0 : DRAW;
+        return doesBoardHaveEmptySpots() ? UNFINISHED : DRAW;
     }
 
     public boolean isOccupied(short x, short y) {
@@ -308,7 +308,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         SelfUser selfUser = bot.getJda().getSelfUser();
         return new EmbedBuilder()
                 .setTitle("TIC TAC TOE")
-                .setColor(Util.MINIGAMES_COLOR)
+                .setColor(type.color)
                 .addField("Board", getBoard(), true)
                 .addField("Players", "**X** <@!" + id + ">\n**O** <@!" + opponentId + ">", true)
                 .setFooter(selfUser.getName(), selfUser.getAvatarUrl())

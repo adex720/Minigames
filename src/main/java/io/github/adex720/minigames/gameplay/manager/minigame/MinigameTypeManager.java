@@ -4,6 +4,8 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
+import io.github.adex720.minigames.minigame.duel.connect4.MinigameConnect4;
+import io.github.adex720.minigames.minigame.duel.connect4.MinigameTypeConnect4;
 import io.github.adex720.minigames.minigame.duel.tictactoe.MinigameTicTacToe;
 import io.github.adex720.minigames.minigame.duel.tictactoe.MinigameTypeTicTacToe;
 import io.github.adex720.minigames.minigame.gamble.GambleMinigameType;
@@ -39,9 +41,11 @@ public class MinigameTypeManager extends Manager {
     public MinigameType<MinigameHangman> HANGMAN;
     public MinigameType<MinigameUnscramble> UNSCRAMBLE;
     public MinigameType<MinigameHigherLower> HIGHER_OR_LOWER;
-    public MinigameType<MinigameTicTacToe> TIC_TAC_TOE;
     public MinigameType<MinigameWordle> WORDLE;
     public MinigameType<MinigameMastermind> MASTERMIND;
+
+    public MinigameType<MinigameTicTacToe> TIC_TAC_TOE;
+    public MinigameType<MinigameConnect4> CONNECT4;
 
     public MinigameType<MinigameCounting> COUNTING;
     public MinigameType<MinigameMemo> MEMO;
@@ -65,9 +69,6 @@ public class MinigameTypeManager extends Manager {
         HIGHER_OR_LOWER = new MinigameTypeHigherLower(bot, this);
         initCommand(HIGHER_OR_LOWER);
 
-        TIC_TAC_TOE = new MinigameTypeTicTacToe(bot, this);
-        initCommand(TIC_TAC_TOE);
-
         WORDLE = new MinigameTypeWordle(bot, this);
         initCommand(WORDLE);
 
@@ -75,11 +76,19 @@ public class MinigameTypeManager extends Manager {
         initCommand(MASTERMIND);
 
 
+        TIC_TAC_TOE = new MinigameTypeTicTacToe(bot, this);
+        initCommand(TIC_TAC_TOE);
+
+        CONNECT4 = new MinigameTypeConnect4(bot, this);
+        initCommand(CONNECT4);
+
+
         COUNTING = new MinigameTypeCounting(bot, this);
         initCommand(COUNTING);
 
         MEMO = new MinigameTypeMemo(bot, this);
         initCommand(MEMO);
+
 
         BLACKJACK = new MinigameTypeBlackjack(bot, this);
         initCommand(BLACKJACK);
@@ -103,9 +112,11 @@ public class MinigameTypeManager extends Manager {
             case "hangman" -> HANGMAN;
             case "unscramble" -> UNSCRAMBLE;
             case "higher-lower" -> HIGHER_OR_LOWER;
-            case "tic-tac-toe" -> TIC_TAC_TOE;
             case "wordle" -> WORDLE;
             case "mastermind" -> MASTERMIND;
+
+            case "tic-tac-toe" -> TIC_TAC_TOE;
+            case "connect4" -> CONNECT4;
 
             case "counting" -> COUNTING;
             case "memo" -> MEMO;

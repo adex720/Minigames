@@ -26,8 +26,8 @@ public class CommandTicTacToeSet extends MinigameSubcommand {
 
         if (minigame != null) {
             if (minigame.getType() == bot.getMinigameTypeManager().TIC_TAC_TOE) {
-                MinigameTicTacToe hangman = (MinigameTicTacToe) minigame;
-                hangman.set(event, ci);
+                MinigameTicTacToe ticTacToe = (MinigameTicTacToe) minigame;
+                ticTacToe.set(event, ci);
 
                 return true;
             }

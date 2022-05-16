@@ -497,7 +497,6 @@ public class MinigamesBot {
 
 /*
     TODO: minigames to add
-     - connect 4
 
     TODO: guilds
 

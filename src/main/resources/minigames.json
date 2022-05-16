@@ -53,10 +53,15 @@
     "rules": "",
     "color": "A8A8A8"
   },
+  "connect4": {
+    "description": "Duel game",
+    "tips": "- ",
+    "rules": "",
+    "color": "FFBE3B"
+  },
   "available-colors": {
     "dark turquoise": "046B5B",
-    "blue": "172BBF",
-    "yellow": "FFBE3B"
+    "blue": "172BBF"
   },
   "default": {
     "description": "",

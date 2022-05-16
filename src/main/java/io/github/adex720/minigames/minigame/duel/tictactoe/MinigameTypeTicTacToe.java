@@ -18,7 +18,7 @@ import java.util.Set;
 public class MinigameTypeTicTacToe extends DuelMinigameType<MinigameTicTacToe> {
 
     public MinigameTypeTicTacToe(MinigamesBot bot, MinigameTypeManager typeManager) {
-        super(bot, typeManager, "tic-tac-toe", true, new TicTacToeAI(bot));
+        super(bot, typeManager, "tic-tac-toe", new TicTacToeAI(bot));
     }
 
     @Override
