@@ -47,6 +47,11 @@ public class MinigameWordle extends Minigame {
     public static final int KEY_SIZE = 70;
     public static final int HALF_KEY_SIZE = KEY_SIZE / 2;
     public static final int KEY_LETTER_LIFT = 55;
+    public static final int KEY_HOLE = 5;
+
+
+    public static final int KEYBOARD_WIDTH =  10 * KEY_SIZE + 9 * KEY_HOLE;
+    public static final int KEYBOARD_HEIGHT = 3 * KEY_SIZE + 2 * KEY_HOLE;
 
 
     public static final int GUESSES_AT_START = 6;
@@ -473,7 +478,7 @@ public class MinigameWordle extends Minigame {
     }
 
     public BufferedImage getLetters() {
-        BufferedImage image = new BufferedImage(645, 220, BufferedImage.TYPE_4BYTE_ABGR);
+        BufferedImage image = new BufferedImage(KEYBOARD_WIDTH, KEYBOARD_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics g = image.getGraphics();
         g.setFont(new Font("Helvetica", Font.PLAIN, 64));
 
