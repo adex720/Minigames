@@ -53,6 +53,11 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
     public void createProfile(long id) {
         Profile profile = Profile.create(bot, id);
         PROFILES.put(id, profile);
+
+        BadgeManager badgeManager = bot.getBadgeManager();
+        for (int badgeId : badgeManager.getBadgesForNewUsers()) {
+            profile.addBadge(badgeId);
+        }
     }
 
     private void addProfile(Profile profile) {
