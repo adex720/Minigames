@@ -36,7 +36,7 @@ public class CommandWordleLetters extends MinigameSubcommand {
 
         MinigameWordle wordle = (MinigameWordle) minigame;
 
-        File image = new File("wordle.png");
+        File image = new File("wordle" + wordle.id + ".png");
         try {
             ImageIO.write(wordle.getLetters(), "png", image);
             event.getHook().sendMessage("Letters on the word:").addFile(image).queue();
