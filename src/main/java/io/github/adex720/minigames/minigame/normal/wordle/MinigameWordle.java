@@ -50,7 +50,7 @@ public class MinigameWordle extends Minigame {
     public static final int KEY_HOLE = 5;
 
 
-    public static final int KEYBOARD_WIDTH =  10 * KEY_SIZE + 9 * KEY_HOLE;
+    public static final int KEYBOARD_WIDTH = 10 * KEY_SIZE + 9 * KEY_HOLE;
     public static final int KEYBOARD_HEIGHT = 3 * KEY_SIZE + 2 * KEY_HOLE;
 
 
@@ -151,9 +151,10 @@ public class MinigameWordle extends Minigame {
      * Sends the progress image attached to the given message.
      */
     public void sendImage(SlashCommandEvent event, String message) throws IOException {
-        File image = new File("wordle.png");
+        File image = new File("wordle" + id + ".png");
+        image.createNewFile();
         ImageIO.write(getImage(), "png", image);
-        event.getHook().sendMessage(message).addFile(image).queue();
+        event.getHook().sendMessage(message).addFile(image).queue((m) -> image.delete());
     }
 
     /**

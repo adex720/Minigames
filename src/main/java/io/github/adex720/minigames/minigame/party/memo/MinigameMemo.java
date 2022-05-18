@@ -298,7 +298,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         turnedY = y;
 
         BufferedImage image = getImage(x, y);
-        File data = new File("memo1.png");
+        File data = new File("memo" + id + ".png");
         ImageIO.write(image, "png", data); // write card image to file
 
         turned = true;
@@ -337,7 +337,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      */
     public void onPairFound(SlashCommandEvent event, CommandInfo ci, int x, int y) throws IOException {
         BufferedImage image = getImage(turnedX, turnedY, x, y); // get data before changing variables
-        File data = new File("memo1.png");
+        File data = new File("memo" + id + ".png");
         ImageIO.write(image, "png", data); // write card image to file
 
         scores[currentPlayerIndex]++; // append score
@@ -366,7 +366,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         if (currentPlayerIndex == players.length) currentPlayerIndex = 0;
 
         BufferedImage image = getImage(turnedX, turnedY, x, y);
-        File data = new File("memo1.png");
+        File data = new File("memo" + id + ".png");
         ImageIO.write(image, "png", data); // write card image to file
 
         event.getHook().sendMessage("You didn't find a pair.").addFile(data)
@@ -374,7 +374,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
                 .flatMap(Message::delete).queue(); // Delete image after 5 seconds.
 
         BufferedImage background = getBack();
-        File backgroundData = new File("memo2.png");
+        File backgroundData = new File("memo2" + id + ".png");
         ImageIO.write(background, "png", backgroundData);
         event.getHook().sendMessage("<@" + players[currentPlayerIndex] + ">, It's soon your turn!")
                 .delay(Duration.ofSeconds(6))
@@ -575,7 +575,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      */
     public void sendImage(SlashCommandEvent event, String message) throws IOException {
         BufferedImage image = getBack();
-        File data = new File("memo1.png");
+        File data = new File("memo" + id + ".png");
         ImageIO.write(image, "png", data);
 
         event.getHook().sendMessage(message).addFile(data).queue();
