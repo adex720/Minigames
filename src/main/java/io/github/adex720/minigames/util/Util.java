@@ -192,4 +192,24 @@ public class Util {
         return dataBufferByte.getData();
     }
 
+    /***
+     * 12345     -> 12345
+     * <@34567>  -> 34567
+     * <@!56789> -> 56789
+     * DFHRGHHST -> -1
+     */
+    public static long idOrMentionToId(String string) {
+        if (string.charAt(0) == '<') {
+            int last = string.length() - 1;
+            if (string.charAt(2) == '!') string = string.substring(3, last);
+            else string = string.substring(2, last);
+        }
+
+        try {
+            return Long.parseLong(string);
+        } catch (Exception ignored) {
+            return -1L;
+        }
+    }
+
 }
