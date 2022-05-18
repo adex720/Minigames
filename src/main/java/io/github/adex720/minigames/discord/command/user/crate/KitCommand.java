@@ -79,7 +79,7 @@ public class KitCommand extends Command {
             OffsetDateTime current = event.getTimeCreated();
             if (ready != null) {
                 if (ready.isAfter(current)) {
-                    replyable.reply("This booster is on cooldown for " + getCooldown(ready, current) + ".");
+                    replyable.reply("This kit is on cooldown for " + getCooldown(ready, current) + ".");
                     return true;
                 }
             }
@@ -88,7 +88,7 @@ public class KitCommand extends Command {
             addReward(replyable, profile);
 
             startCooldown(ci.authorId(), current);
-            replyable.reply("You claimed your " + name + " booster. You received " + rewardCoins + " coins.");
+            replyable.reply("You claimed your " + name + " kit. You received " + rewardCoins + " coins.");
 
             profile.appendQuests(quest -> quest.kitClaimed(replyable, name, profile));
         } else {
@@ -148,7 +148,7 @@ public class KitCommand extends Command {
 
     public interface PermissionCheck {
         /**
-         * @return 0 if booster can be used.
+         * @return 0 if kit can be claimed.
          * Different positive return values are used to indicate reply message.
          */
         int canUse(SlashCommandEvent event, CommandInfo ci);
@@ -161,7 +161,7 @@ public class KitCommand extends Command {
     }
 
     /**
-     * Returns 0 if booster can be used.
+     * @return 0 if kit can be claimed.
      * Positive return values are used to indicate reply message.
      */
     public int canClaim(SlashCommandEvent event, CommandInfo ci) {
@@ -209,10 +209,10 @@ public class KitCommand extends Command {
             @Override
             public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
                 if (reason == 1) {
-                    return "This booster can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
+                    return "This kit can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
                 }
                 if (reason == 2) {
-                    return "You need to be on this server for 24 hours to claim this booster. This is to ensure people leaving after claiming the booster and then leaving.";
+                    return "You need to be on this server for 24 hours to claim this kit. This is to prevent people from leaving after claiming the kit and rejoining after 24 hours.";
                 }
 
                 return ""; // never reached
