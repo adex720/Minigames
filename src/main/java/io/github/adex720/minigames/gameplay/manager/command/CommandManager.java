@@ -139,6 +139,8 @@ public class CommandManager extends Manager {
         devCommandListener.addCommand(new DevCommandUnban(bot));
 
         devCommandListener.addCommand(new DevCommandBadgeEveryone(bot));
+
+        devCommandListener.addCommand(new DevCommandAddCoins(bot));
     }
 
     public void addCommand(Command command) {
