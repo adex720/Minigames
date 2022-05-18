@@ -8,8 +8,8 @@ import io.github.adex720.minigames.discord.command.minigame.CommandCountingCount
 import io.github.adex720.minigames.discord.command.minigame.CommandCountingLastCounter;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.party.PartyTeamMinigameType;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -25,12 +25,12 @@ public class MinigameTypeCounting extends PartyTeamMinigameType<MinigameCounting
     }
 
     @Override
-    public MinigameCounting create(SlashCommandEvent event, CommandInfo ci) {
+    public MinigameCounting create(SlashCommandInteractionEvent event, CommandInfo ci) {
         return MinigameCounting.start(event, ci);
     }
 
     @Override
-    public MinigameCounting create(ButtonClickEvent event, CommandInfo ci) {
+    public MinigameCounting create(ButtonInteractionEvent event, CommandInfo ci) {
         String[] args = ci.args();
 
         int type;

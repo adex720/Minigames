@@ -8,8 +8,8 @@ import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class MinigameUnscramble extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), 3);
     }
 
-    public static MinigameUnscramble start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameUnscramble start(SlashCommandInteractionEvent event, CommandInfo ci) {
         MinigameUnscramble minigame = new MinigameUnscramble(ci);
 
         event.getHook().sendMessage("You started a new game of unscramble. The word is: " + minigame.wordKnown).queue();
@@ -48,7 +48,7 @@ public class MinigameUnscramble extends Minigame {
         return minigame;
     }
 
-    public static MinigameUnscramble start(ButtonClickEvent event, CommandInfo ci) {
+    public static MinigameUnscramble start(ButtonInteractionEvent event, CommandInfo ci) {
         MinigameUnscramble minigame = new MinigameUnscramble(ci);
 
         event.reply("You started a new game of unscramble. The word is: " + minigame.wordKnown).queue();
@@ -90,7 +90,7 @@ public class MinigameUnscramble extends Minigame {
         return shuffled;
     }
 
-    public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
+    public void guess(SlashCommandInteractionEvent event, CommandInfo commandInfo) {
         active(commandInfo);
         String guess = event.getOption("word").getAsString();
         Replyable replyable = Replyable.from(event);

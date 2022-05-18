@@ -7,8 +7,8 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.CommandHangmanGuess;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.Set;
 
@@ -22,12 +22,12 @@ public class MinigameTypeHangman extends MinigameType<MinigameHangman> {
     }
 
     @Override
-    public MinigameHangman create(SlashCommandEvent event, CommandInfo ci) {
+    public MinigameHangman create(SlashCommandInteractionEvent event, CommandInfo ci) {
         return MinigameHangman.start(event, ci);
     }
 
     @Override
-    public MinigameHangman create(ButtonClickEvent event, CommandInfo ci) {
+    public MinigameHangman create(ButtonInteractionEvent event, CommandInfo ci) {
         return MinigameHangman.start(event, ci);
     }
 

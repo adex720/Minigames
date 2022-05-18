@@ -10,8 +10,8 @@ import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.Date;
 import java.util.Random;
@@ -47,7 +47,7 @@ public class MinigameConnect4 extends DuelMinigame {
         }
     }
 
-    public static MinigameConnect4 start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameConnect4 start(SlashCommandInteractionEvent event, CommandInfo ci) {
         MinigameConnect4 minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
@@ -63,7 +63,7 @@ public class MinigameConnect4 extends DuelMinigame {
         return minigame;
     }
 
-    public static MinigameConnect4 start(ButtonClickEvent event, CommandInfo ci) {
+    public static MinigameConnect4 start(ButtonInteractionEvent event, CommandInfo ci) {
         MinigameConnect4 minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
@@ -121,7 +121,7 @@ public class MinigameConnect4 extends DuelMinigame {
     /**
      * Drops one mark to the board
      */
-    public void drop(SlashCommandEvent event, CommandInfo ci) {
+    public void drop(SlashCommandInteractionEvent event, CommandInfo ci) {
         long userId = ci.authorId();
 
         if ((id == userId) != isFirstPlayersTurn) {

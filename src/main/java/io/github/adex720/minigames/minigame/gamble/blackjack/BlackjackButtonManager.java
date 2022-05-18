@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 /**
  * @author adex720
@@ -17,7 +17,7 @@ public class BlackjackButtonManager {
         this.bot = bot;
     }
 
-    public void onButtonPressed(ButtonClickEvent event, CommandInfo commandInfo, String[] args) {
+    public void onButtonPressed(ButtonInteractionEvent event, CommandInfo commandInfo, String[] args) {
         String action = args[1];
         String gameId = args[2];
 

@@ -1,7 +1,7 @@
 package io.github.adex720.minigames.discord.command;
 
 import io.github.adex720.minigames.MinigamesBot;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 /**
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
  * If a command has any subcommands the parent command is unrunnable from Discord.
  *
  * @author adex720
- * */
+ */
 public abstract class Subcommand extends Command {
 
     protected final ParentCommand parent;
@@ -21,7 +21,7 @@ public abstract class Subcommand extends Command {
     }
 
     @Override
-    public abstract boolean execute(SlashCommandEvent event, CommandInfo ci);
+    public abstract boolean execute(SlashCommandInteractionEvent event, CommandInfo ci);
 
     @Override
     public String getFullName() {

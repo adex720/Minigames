@@ -7,14 +7,14 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Date;
 
 /**
  * @author adex720
  */
-public class CommandCrates  extends Command {
+public class CommandCrates extends Command {
 
     public CommandCrates(MinigamesBot bot) {
         super(bot, "crates", "Views your crates.", CommandCategory.USER);
@@ -22,7 +22,7 @@ public class CommandCrates  extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         User user = ci.author();
 
         event.getHook().sendMessageEmbeds(

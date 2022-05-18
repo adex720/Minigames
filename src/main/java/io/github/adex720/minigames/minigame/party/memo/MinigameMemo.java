@@ -9,8 +9,8 @@ import io.github.adex720.minigames.minigame.party.PartyCompetitiveMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import javax.imageio.ImageIO;
@@ -183,7 +183,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return result;
     }
 
-    public static MinigameMemo start(SlashCommandEvent event, CommandInfo commandInfo) {
+    public static MinigameMemo start(SlashCommandInteractionEvent event, CommandInfo commandInfo) {
         MinigameMemo minigame = new MinigameMemo(commandInfo);
 
         event.getHook().sendMessage("You started a new game of memo.").queue();
@@ -191,7 +191,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return minigame;
     }
 
-    public static MinigameMemo start(ButtonClickEvent event, CommandInfo commandInfo) {
+    public static MinigameMemo start(ButtonInteractionEvent event, CommandInfo commandInfo) {
         MinigameMemo minigame = new MinigameMemo(commandInfo);
 
         event.getHook().sendMessage("You started a new game of memo.").queue();
@@ -252,7 +252,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return json;
     }
 
-    public void turn(SlashCommandEvent event, CommandInfo ci) throws IOException {
+    public void turn(SlashCommandInteractionEvent event, CommandInfo ci) throws IOException {
         long userId = players[currentPlayerIndex];
         if (ci.authorId() != userId) {
             event.getHook().sendMessage("It is not your turn!").setEphemeral(true).queue();
@@ -293,7 +293,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      * @param x     column
      * @param y     row
      */
-    public void turnFirst(SlashCommandEvent event, int x, int y) throws IOException {
+    public void turnFirst(SlashCommandInteractionEvent event, int x, int y) throws IOException {
         turnedX = x;
         turnedY = y;
 
@@ -313,7 +313,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      * @param x     column
      * @param y     row
      */
-    public void turnSecond(SlashCommandEvent event, CommandInfo ci, int x, int y) throws IOException {
+    public void turnSecond(SlashCommandInteractionEvent event, CommandInfo ci, int x, int y) throws IOException {
         int id1 = cards[turnedX][turnedY];
         int id2 = cards[x][y];
         if (id2 == -1) {
@@ -335,7 +335,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      * Updates variables and stats.
      * Sends correct messages and images.
      */
-    public void onPairFound(SlashCommandEvent event, CommandInfo ci, int x, int y) throws IOException {
+    public void onPairFound(SlashCommandInteractionEvent event, CommandInfo ci, int x, int y) throws IOException {
         BufferedImage image = getImage(turnedX, turnedY, x, y); // get data before changing variables
         File data = new File("memo" + id + ".png");
         ImageIO.write(image, "png", data); // write card image to file
@@ -360,7 +360,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      * Updates variables and stats.
      * Sends correct messages and images.
      */
-    public void onWrongPair(SlashCommandEvent event, int x, int y) throws IOException {
+    public void onWrongPair(SlashCommandInteractionEvent event, int x, int y) throws IOException {
         onBlock = true;
         currentPlayerIndex++;
         if (currentPlayerIndex == players.length) currentPlayerIndex = 0;
@@ -573,7 +573,7 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
      * @param event   event to reply to.
      * @param message Message to send the image with.
      */
-    public void sendImage(SlashCommandEvent event, String message) throws IOException {
+    public void sendImage(SlashCommandInteractionEvent event, String message) throws IOException {
         BufferedImage image = getBack();
         File data = new File("memo" + id + ".png");
         ImageIO.write(image, "png", data);

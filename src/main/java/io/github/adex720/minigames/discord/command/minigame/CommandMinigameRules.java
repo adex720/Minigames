@@ -4,14 +4,13 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
-import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.util.Date;
 
@@ -25,7 +24,7 @@ public class CommandMinigameRules extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         User author = ci.author();
         String type = event.getOption("minigame").getAsString();
 
@@ -43,7 +42,7 @@ public class CommandMinigameRules extends Command {
     }
 
     @Override
-    protected CommandData createCommandData() {
+    protected SlashCommandData createCommandData() {
         OptionData data = new OptionData(OptionType.STRING, "minigame", "Minigame", true);
         for (String minigame : bot.getMinigameTypeManager().getTypes()) {
             data.addChoice(minigame, minigame);

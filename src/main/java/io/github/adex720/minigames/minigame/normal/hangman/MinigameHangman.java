@@ -9,8 +9,8 @@ import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class MinigameHangman extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), 10, new ArrayList<>());
     }
 
-    public static MinigameHangman start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameHangman start(SlashCommandInteractionEvent event, CommandInfo ci) {
         MinigameHangman minigame = new MinigameHangman(ci);
 
         event.getHook().sendMessage("You started a new game of hangman. The word is: " + minigame.wordGuessed).queue();
@@ -50,7 +50,7 @@ public class MinigameHangman extends Minigame {
         return minigame;
     }
 
-    public static MinigameHangman start(ButtonClickEvent event, CommandInfo ci) {
+    public static MinigameHangman start(ButtonInteractionEvent event, CommandInfo ci) {
         MinigameHangman minigame = new MinigameHangman(ci);
 
         event.reply("You started a new game of hangman. The word is: " + minigame.wordGuessed).queue();
@@ -80,7 +80,7 @@ public class MinigameHangman extends Minigame {
         return random.nextInt(min, max + 1);
     }
 
-    public void guess(SlashCommandEvent event, CommandInfo ci) {
+    public void guess(SlashCommandInteractionEvent event, CommandInfo ci) {
         active(ci);
         String guess = event.getOption("guess").getAsString();
         Replyable replyable = Replyable.from(event);

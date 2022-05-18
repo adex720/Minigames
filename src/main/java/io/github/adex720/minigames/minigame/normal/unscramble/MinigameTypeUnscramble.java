@@ -7,8 +7,8 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.CommandUnscrambleSolve;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.Set;
 
@@ -22,12 +22,12 @@ public class MinigameTypeUnscramble extends MinigameType<MinigameUnscramble> {
     }
 
     @Override
-    public MinigameUnscramble create(SlashCommandEvent event, CommandInfo ci) {
+    public MinigameUnscramble create(SlashCommandInteractionEvent event, CommandInfo ci) {
         return MinigameUnscramble.start(event, ci);
     }
 
     @Override
-    public MinigameUnscramble create(ButtonClickEvent event, CommandInfo ci) {
+    public MinigameUnscramble create(ButtonInteractionEvent event, CommandInfo ci) {
         return MinigameUnscramble.start(event, ci);
     }
 

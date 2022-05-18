@@ -6,8 +6,8 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 /**
  * @author adex720
@@ -20,7 +20,7 @@ public class CommandQuit extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         if (!ci.hasMinigame()) {
             event.getHook().sendMessage("You don't have an ongoing minigame").queue();
             return true;

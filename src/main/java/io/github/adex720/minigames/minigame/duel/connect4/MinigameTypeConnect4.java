@@ -7,8 +7,8 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.CommandConnect4Drop;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.duel.DuelMinigameType;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.Set;
 
@@ -19,12 +19,12 @@ public class MinigameTypeConnect4 extends DuelMinigameType<MinigameConnect4> {
     }
 
     @Override
-    public MinigameConnect4 create(SlashCommandEvent event, CommandInfo ci) {
+    public MinigameConnect4 create(SlashCommandInteractionEvent event, CommandInfo ci) {
         return MinigameConnect4.start(event, ci);
     }
 
     @Override
-    public MinigameConnect4 create(ButtonClickEvent event, CommandInfo ci) {
+    public MinigameConnect4 create(ButtonInteractionEvent event, CommandInfo ci) {
         return MinigameConnect4.start(event, ci);
     }
 

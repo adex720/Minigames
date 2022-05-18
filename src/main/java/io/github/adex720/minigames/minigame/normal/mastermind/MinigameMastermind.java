@@ -9,8 +9,8 @@ import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class MinigameMastermind extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getCode(ci.bot()), new ArrayList<>());
     }
 
-    public static MinigameMastermind start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameMastermind start(SlashCommandInteractionEvent event, CommandInfo ci) {
         MinigameMastermind minigame = new MinigameMastermind(ci);
 
         event.getHook().sendMessage("You started a new game of Mastermind! You have " + DEFAULT_GUESSES + " guesses left.").queue();
@@ -51,7 +51,7 @@ public class MinigameMastermind extends Minigame {
         return minigame;
     }
 
-    public static MinigameMastermind start(ButtonClickEvent event, CommandInfo ci) {
+    public static MinigameMastermind start(ButtonInteractionEvent event, CommandInfo ci) {
         MinigameMastermind minigame = new MinigameMastermind(ci);
 
         event.reply("You started a new game of Mastermind! You have " + DEFAULT_GUESSES + " guesses left.").queue();
@@ -145,7 +145,7 @@ public class MinigameMastermind extends Minigame {
     /**
      * Places the given pointers on the board and sends correct messages.
      */
-    public void place(SlashCommandEvent event, CommandInfo ci) {
+    public void place(SlashCommandInteractionEvent event, CommandInfo ci) {
         active(ci);
 
         int[] guessRaw = new int[]{(int) event.getOption("first").getAsLong(),
@@ -285,7 +285,7 @@ public class MinigameMastermind extends Minigame {
      * Returns the amount of the given color on the given code.
      *
      * @param color color to check
-     * @param code code to check on
+     * @param code  code to check on
      * @return amount of correct color pins.
      */
     public int amountOfColor(int color, int code) {
@@ -307,7 +307,7 @@ public class MinigameMastermind extends Minigame {
      * Checks if the code contains a color.
      *
      * @param color color to find
-     * @param code code to check from
+     * @param code  code to check from
      * @return if the given code contains at least one pin of the given color
      */
     public boolean hasColor(int color, int code) {

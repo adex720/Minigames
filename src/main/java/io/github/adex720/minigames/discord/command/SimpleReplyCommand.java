@@ -1,13 +1,13 @@
 package io.github.adex720.minigames.discord.command;
 
 import io.github.adex720.minigames.MinigamesBot;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /**
  * A command which contains the same message (excluding date and author data) each time.
  *
  * @author adex720
- * */
+ */
 public abstract class SimpleReplyCommand extends Command {
 
     protected final String reply;
@@ -18,7 +18,7 @@ public abstract class SimpleReplyCommand extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         event.getHook().sendMessage(reply).queue();
         return true;
     }

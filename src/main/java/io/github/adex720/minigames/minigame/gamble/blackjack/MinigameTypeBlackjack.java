@@ -9,8 +9,8 @@ import io.github.adex720.minigames.discord.command.minigame.CommandBlackjackHit;
 import io.github.adex720.minigames.discord.command.minigame.CommandBlackjackStand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.gamble.GambleMinigameType;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -26,14 +26,14 @@ public class MinigameTypeBlackjack extends GambleMinigameType<MinigameBlackjack>
     }
 
     @Override
-    public MinigameBlackjack create(SlashCommandEvent event, CommandInfo ci) {
+    public MinigameBlackjack create(SlashCommandInteractionEvent event, CommandInfo ci) {
         int bet = (int) event.getOption("bet").getAsLong();
 
         return MinigameBlackjack.start(event, ci, bet);
     }
 
     @Override
-    public MinigameBlackjack create(ButtonClickEvent event, CommandInfo ci) {
+    public MinigameBlackjack create(ButtonInteractionEvent event, CommandInfo ci) {
         int bet = Integer.parseInt(ci.args()[3]);
         // 0 = replay
         // 1 = blackjack

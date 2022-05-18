@@ -9,11 +9,12 @@ import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.util.Date;
 import java.util.TreeSet;
@@ -31,7 +32,7 @@ public class CommandLeaderboard extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         int categoryId = (int) event.getOption("category").getAsLong();
 
         int page = 1;
@@ -79,7 +80,7 @@ public class CommandLeaderboard extends Command {
     /**
      * @return Entries on given leaderboard from ranks {@param first} to {@param last} (both included).
      * The entries count rank, username and score.
-     * */
+     */
     public String getRanks(TreeSet<Profile> leaderboard, int first, int last, int categoryId, String categoryName) {
         StringBuilder leaderboardStringBuilder = new StringBuilder();
         int index = 0;
@@ -100,8 +101,8 @@ public class CommandLeaderboard extends Command {
     }
 
     @Override
-    protected CommandData createCommandData() {
-        CommandData commandData = super.createCommandData();
+    protected SlashCommandData createCommandData() {
+        SlashCommandData commandData = super.createCommandData();
 
         OptionData optionData = new OptionData(OptionType.INTEGER, "category", "Category to show.", true);
         for (Stat stat : bot.getStatManager().getLeaderboardStats()) {

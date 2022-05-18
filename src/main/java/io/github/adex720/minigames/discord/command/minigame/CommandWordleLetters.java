@@ -5,7 +5,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.normal.wordle.MinigameWordle;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -21,7 +21,7 @@ public class CommandWordleLetters extends MinigameSubcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         Minigame minigame = ci.minigame();
 
         if (minigame == null) { // no minigame

@@ -7,7 +7,7 @@ import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.normal.mastermind.MinigameMastermind;
 import io.github.adex720.minigames.minigame.normal.mastermind.MinigameTypeMastermind;
 import io.github.adex720.minigames.util.Util;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -22,7 +22,7 @@ public class CommandMastermindPlace extends MinigameSubcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         Minigame minigame = ci.minigame();
 
         if (minigame != null) {

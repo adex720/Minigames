@@ -8,8 +8,8 @@ import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.party.PartyTeamMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.Nullable;
@@ -107,7 +107,7 @@ public class MinigameCounting extends PartyTeamMinigame {
         this(ci.bot(), ci.gameId(), ci.channelId(), mode, System.currentTimeMillis());
     }
 
-    public static MinigameCounting start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameCounting start(SlashCommandInteractionEvent event, CommandInfo ci) {
         OptionMapping optionMapping = event.getOption("mode");
         int mode = optionMapping != null ? ((int) event.getOption("mode").getAsLong()) : MODE_BASE_10_ID;
 
@@ -118,7 +118,7 @@ public class MinigameCounting extends PartyTeamMinigame {
         return minigame;
     }
 
-    public static MinigameCounting start(ButtonClickEvent event, CommandInfo ci, int modeId) {
+    public static MinigameCounting start(ButtonInteractionEvent event, CommandInfo ci, int modeId) {
         MinigameCounting minigame = new MinigameCounting(ci, modeId);
 
         event.getHook().sendMessage("You started a new counting minigame.").queue();

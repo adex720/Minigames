@@ -6,7 +6,7 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.gamble.blackjack.MinigameBlackjack;
 import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /**
  * @author adex720
@@ -19,7 +19,7 @@ public class CommandBlackjackStand extends MinigameSubcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         Minigame minigame = ci.minigame();
 
         if (minigame != null) {

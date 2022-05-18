@@ -8,11 +8,11 @@ import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class CommandHelp extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         CommandManager commandManager = bot.getCommandManager();
 
         OptionMapping category = event.getOption("category");
@@ -42,7 +42,7 @@ public class CommandHelp extends Command {
         return sendCategories(event, commandManager, author);
     }
 
-    private boolean sendCommandsFromCategory(SlashCommandEvent event, CommandCategory category, User author) {
+    private boolean sendCommandsFromCategory(SlashCommandInteractionEvent event, CommandCategory category, User author) {
         OptionMapping pageOptionMapping = event.getOption("page");
         int page = pageOptionMapping != null ? (int) pageOptionMapping.getAsLong() : 1;
 
@@ -84,7 +84,7 @@ public class CommandHelp extends Command {
         return true;
     }
 
-    public boolean sendCategories(SlashCommandEvent event, CommandManager commandManager, User author) {
+    public boolean sendCategories(SlashCommandInteractionEvent event, CommandManager commandManager, User author) {
         StringBuilder categories = new StringBuilder();
         boolean newLine = false;
         for (CommandCategory commandCategory : commandManager.getCategories()) {
@@ -112,7 +112,7 @@ public class CommandHelp extends Command {
     }
 
     @Override
-    protected CommandData createCommandData() {
+    protected SlashCommandData createCommandData() {
         return super.createCommandData()
                 .addOptions(new OptionData(OptionType.STRING, "category", "Category to filter commands with.", false)
                         .addChoice("Party", "party")

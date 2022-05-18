@@ -27,7 +27,7 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
@@ -642,7 +642,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return setting;
     }
 
-    public void onDelete(SlashCommandEvent event) {
+    public void onDelete(SlashCommandInteractionEvent event) {
         bot.getQuestManager().removeQuests(userId);
         bot.getKitCooldownManager().clearCooldowns(userId);
 

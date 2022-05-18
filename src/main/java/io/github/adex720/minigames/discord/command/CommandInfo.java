@@ -6,8 +6,8 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,12 +57,12 @@ public class CommandInfo {
         calculatedArgs = null;
     }
 
-    public static CommandInfo create(SlashCommandEvent event, MinigamesBot bot) {
+    public static CommandInfo create(SlashCommandInteractionEvent event, MinigamesBot bot) {
         User user = event.getUser();
         return new CommandInfo(event.getChannel(), user, bot, null);
     }
 
-    public static CommandInfo create(ButtonClickEvent event, MinigamesBot bot) {
+    public static CommandInfo create(ButtonInteractionEvent event, MinigamesBot bot) {
         User user = event.getUser();
 
         String buttonId = event.getButton().getId();

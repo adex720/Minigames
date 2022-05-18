@@ -10,11 +10,11 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +32,7 @@ public class CommandSettings extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         OptionMapping settingMapping = event.getOption("setting");
 
         if (settingMapping == null) {
@@ -77,7 +77,7 @@ public class CommandSettings extends Command {
     }
 
     @Override
-    protected CommandData createCommandData() {
+    protected SlashCommandData createCommandData() {
         OptionData settings = new OptionData(OptionType.INTEGER, "setting", "Setting to change", false);
 
         this.settings = new ArrayList<>();

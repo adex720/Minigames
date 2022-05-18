@@ -5,7 +5,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 /**
  * Manages minigame replay feature.
@@ -20,7 +20,7 @@ public class ReplayManager extends Manager {
         super(bot, "replay-manager");
     }
 
-    public void onButtonPress(ButtonClickEvent event, CommandInfo ci, String[] args) {
+    public void onButtonPress(ButtonInteractionEvent event, CommandInfo ci, String[] args) {
         String minigameName = args[1];
         long gameId = Long.parseLong(args[2]);
 

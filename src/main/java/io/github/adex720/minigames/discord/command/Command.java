@@ -1,8 +1,10 @@
 package io.github.adex720.minigames.discord.command;
 
 import io.github.adex720.minigames.MinigamesBot;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 import java.awt.*;
 
@@ -14,7 +16,7 @@ public abstract class Command {
     public static final Color SUCCESSFUL = new Color(0, 186, 0);
 
     protected final MinigamesBot bot;
-    public final CommandData commandData;
+    public final SlashCommandData commandData;
 
     public final String name;
     public final String description;
@@ -35,9 +37,9 @@ public abstract class Command {
 
     /**
      * @return true if the execution was successful
-     * */
-    public boolean onRun(SlashCommandEvent event, CommandInfo ci) {
-            if (requiresProfile) {
+     */
+    public boolean onRun(SlashCommandInteractionEvent event, CommandInfo ci) {
+        if (requiresProfile) {
             if (!ci.hasProfile()) {
                 event.getHook().sendMessage(ci.authorMention() + " You need to create a profile with the start-command to use this command!").queue();
                 return true;
@@ -48,12 +50,12 @@ public abstract class Command {
 
     /**
      * @return true if the execution was successful
-     * */
-    public abstract boolean execute(SlashCommandEvent event, CommandInfo ci);
+     */
+    public abstract boolean execute(SlashCommandInteractionEvent event, CommandInfo ci);
 
 
-    protected CommandData createCommandData() {
-        return new CommandData(name, description);
+    protected SlashCommandData createCommandData() {
+        return new CommandDataImpl(name, description);
     }
 
     public boolean isSubcommand() {
@@ -76,7 +78,7 @@ public abstract class Command {
         return name;
     }
 
-    public boolean shouldBeInHelp(CommandCategory category){
+    public boolean shouldBeInHelp(CommandCategory category) {
         return category == this.category;
     }
 }

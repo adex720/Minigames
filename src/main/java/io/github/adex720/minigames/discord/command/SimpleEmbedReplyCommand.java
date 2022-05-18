@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.util.Objects;
  * A command which contains the same embed (excluding date and author data) each time.
  *
  * @author adex720
- * */
+ */
 public abstract class SimpleEmbedReplyCommand extends Command {
 
     protected final String reply;
@@ -42,7 +42,7 @@ public abstract class SimpleEmbedReplyCommand extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         User author = ci.author();
 
         EmbedBuilder builder = new EmbedBuilder()

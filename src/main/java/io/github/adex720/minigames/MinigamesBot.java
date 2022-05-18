@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.CheckReturnValue;
 import javax.security.auth.login.LoginException;
-import java.beans.BeanProperty;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

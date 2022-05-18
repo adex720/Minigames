@@ -6,10 +6,10 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
  * @author adex720
@@ -22,7 +22,7 @@ public class CommandUse extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         int id = (int) event.getOption("type").getAsLong();
 
         event.getHook().sendMessage(ci.profile().useBooster(Replyable.from(event), id)).queue();
@@ -30,7 +30,7 @@ public class CommandUse extends Command {
     }
 
     @Override
-    protected CommandData createCommandData() {
+    protected SlashCommandData createCommandData() {
         OptionData optionData = new OptionData(OptionType.INTEGER, "type", "Type of booster", true);
 
         for (int id = 0; id < BoosterRarity.RARITIES_AMOUNT; id++) {

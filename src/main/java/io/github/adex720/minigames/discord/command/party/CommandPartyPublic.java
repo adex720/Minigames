@@ -5,7 +5,7 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.party.Party;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /**
  * @author adex720
@@ -18,7 +18,7 @@ public class CommandPartyPublic extends Subcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         if (!ci.isInParty()) {
             event.getHook().sendMessage("You don't have a party!").queue();
             return true;
@@ -32,7 +32,7 @@ public class CommandPartyPublic extends Subcommand {
             return true;
         }
 
-        if (party.isLocked()){
+        if (party.isLocked()) {
             event.getHook().sendMessage("The party can't be made public because of its current minigame.").queue();
             return true;
         }

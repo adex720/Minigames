@@ -11,8 +11,8 @@ import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
@@ -79,7 +79,7 @@ public class MinigameWordle extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), new ArrayList<>());
     }
 
-    public static MinigameWordle start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameWordle start(SlashCommandInteractionEvent event, CommandInfo ci) {
         MinigameWordle minigame = new MinigameWordle(ci);
 
         event.getHook().sendMessage("You started a new game of wordle.").queue();
@@ -87,7 +87,7 @@ public class MinigameWordle extends Minigame {
         return minigame;
     }
 
-    public static MinigameWordle start(ButtonClickEvent event, CommandInfo ci) {
+    public static MinigameWordle start(ButtonInteractionEvent event, CommandInfo ci) {
         MinigameWordle minigame = new MinigameWordle(ci);
 
         event.reply("You started a new game of wordle.").queue();
@@ -114,7 +114,7 @@ public class MinigameWordle extends Minigame {
         // etc.
     }
 
-    public void guess(SlashCommandEvent event, CommandInfo ci) throws IOException {
+    public void guess(SlashCommandInteractionEvent event, CommandInfo ci) throws IOException {
         active(ci);
         Replyable replyable = Replyable.from(event);
 
@@ -150,7 +150,7 @@ public class MinigameWordle extends Minigame {
     /**
      * Sends the progress image attached to the given message.
      */
-    public void sendImage(SlashCommandEvent event, String message) throws IOException {
+    public void sendImage(SlashCommandInteractionEvent event, String message) throws IOException {
         File image = new File("wordle" + id + ".png");
         image.createNewFile();
         ImageIO.write(getImage(), "png", image);
@@ -377,7 +377,7 @@ public class MinigameWordle extends Minigame {
         return isWordlistUsed;
     }
 
-    public void sendWordList(SlashCommandEvent event, String format) {
+    public void sendWordList(SlashCommandInteractionEvent event, String format) {
         if (isWordlistUsed()) {
             event.getHook().sendMessage("You have already used wordlist on this game!").queue();
             return;

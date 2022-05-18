@@ -6,8 +6,8 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -47,7 +47,7 @@ public class MinigameHigherLower extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getNumber(ci.bot()), MIN_VALUE, MAX_VALUE, DEFAULT_GUESSES);
     }
 
-    public static MinigameHigherLower start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameHigherLower start(SlashCommandInteractionEvent event, CommandInfo ci) {
         MinigameHigherLower minigame = new MinigameHigherLower(ci);
 
         event.getHook().sendMessage("You started a new game of higher or lower. The range is: " + minigame.min + "-" + minigame.max).queue();
@@ -55,7 +55,7 @@ public class MinigameHigherLower extends Minigame {
         return minigame;
     }
 
-    public static MinigameHigherLower start(ButtonClickEvent event, CommandInfo ci) {
+    public static MinigameHigherLower start(ButtonInteractionEvent event, CommandInfo ci) {
         MinigameHigherLower minigame = new MinigameHigherLower(ci);
 
         event.reply("You started a new game of higher or lower. The range is: " + minigame.min + "-" + minigame.max).queue();
@@ -70,7 +70,7 @@ public class MinigameHigherLower extends Minigame {
         return random.nextInt(230, 251);
     }
 
-    public void guess(SlashCommandEvent event, CommandInfo commandInfo) {
+    public void guess(SlashCommandInteractionEvent event, CommandInfo commandInfo) {
         active(commandInfo);
         int guess = (int) event.getOption("number").getAsLong();
         Replyable replyable = Replyable.from(event);

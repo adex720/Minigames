@@ -11,8 +11,8 @@ import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.Date;
 import java.util.Random;
@@ -75,7 +75,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         }
     }
 
-    public static MinigameTicTacToe start(SlashCommandEvent event, CommandInfo ci) {
+    public static MinigameTicTacToe start(SlashCommandInteractionEvent event, CommandInfo ci) {
         MinigameTicTacToe minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
@@ -93,7 +93,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         return minigame;
     }
 
-    public static MinigameTicTacToe start(ButtonClickEvent event, CommandInfo ci) {
+    public static MinigameTicTacToe start(ButtonInteractionEvent event, CommandInfo ci) {
         MinigameTicTacToe minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
@@ -202,7 +202,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         };
     }
 
-    public void set(SlashCommandEvent event, CommandInfo ci) {
+    public void set(SlashCommandInteractionEvent event, CommandInfo ci) {
         long setter = ci.authorId();
         Replyable replyable = Replyable.from(event);
 

@@ -1,7 +1,7 @@
 package io.github.adex720.minigames.discord.command;
 
 import io.github.adex720.minigames.MinigamesBot;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.Set;
  * All {@link Subcommand}s must be registered with {@link ParentCommand#addSubcommand(Subcommand)}.
  *
  * @author adex720
- * */
+ */
 public abstract class ParentCommand extends Command {
 
     protected final Set<Subcommand> SUB_COMMANDS;
@@ -23,7 +23,7 @@ public abstract class ParentCommand extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         String subCommandName = event.getSubcommandName();
 
         for (Subcommand subCommand : SUB_COMMANDS) {
@@ -37,7 +37,7 @@ public abstract class ParentCommand extends Command {
 
     /**
      * Adds {@param subcommand} to both {@link ParentCommand#SUB_COMMANDS} and the command data.
-     * */
+     */
     public void addSubcommand(Subcommand subcommand) {
         SUB_COMMANDS.add(subcommand);
         commandData.addSubcommands(subcommand.getSubcommandData());
@@ -48,7 +48,7 @@ public abstract class ParentCommand extends Command {
      * Each subcommand will be included on help if not made different.
      * <p>
      * This will make it so /party won't be shown at help but all of its sub commands will.
-     * */
+     */
     @Override
     public boolean shouldBeInHelp(CommandCategory category) {
         return false;

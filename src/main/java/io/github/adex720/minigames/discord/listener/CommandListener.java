@@ -5,7 +5,7 @@ import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,8 +23,8 @@ public class CommandListener extends ListenerAdapter {
         this.commandManager = commandManager;
     }
 
-    @Override
-    public void onSlashCommand(@NotNull SlashCommandEvent event) {
+
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (!event.isFromGuild()) {
             // Discord has a limit for how often a bot can dm a user.
             // There isn't any lost for not being able to use commands on dms anyways.

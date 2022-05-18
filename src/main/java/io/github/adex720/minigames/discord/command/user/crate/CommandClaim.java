@@ -11,7 +11,7 @@ import io.github.adex720.minigames.util.Pair;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.time.OffsetDateTime;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class CommandClaim extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         OffsetDateTime time = OffsetDateTime.now();
         User user = ci.author();
         long userId = user.getIdLong();

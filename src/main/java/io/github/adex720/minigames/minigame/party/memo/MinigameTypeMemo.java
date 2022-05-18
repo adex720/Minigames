@@ -8,8 +8,8 @@ import io.github.adex720.minigames.discord.command.minigame.CommandMemoCards;
 import io.github.adex720.minigames.discord.command.minigame.CommandMemoTurn;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.party.PartyCompetitiveMinigameType;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.Set;
 
@@ -23,12 +23,12 @@ public class MinigameTypeMemo extends PartyCompetitiveMinigameType<MinigameMemo>
     }
 
     @Override
-    public MinigameMemo create(SlashCommandEvent event, CommandInfo ci) {
+    public MinigameMemo create(SlashCommandInteractionEvent event, CommandInfo ci) {
         return MinigameMemo.start(event, ci);
     }
 
     @Override
-    public MinigameMemo create(ButtonClickEvent event, CommandInfo ci) {
+    public MinigameMemo create(ButtonInteractionEvent event, CommandInfo ci) {
         return MinigameMemo.start(event, ci);
     }
 

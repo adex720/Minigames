@@ -7,12 +7,12 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.gamble.GambleMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
-import net.dv8tion.jda.internal.interactions.ButtonImpl;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class MinigameBlackjack extends GambleMinigame {
     /**
      * It should be checked if the player can afford the bet before this is called.
      */
-    public static MinigameBlackjack start(SlashCommandEvent event, CommandInfo commandInfo, int bet) {
+    public static MinigameBlackjack start(SlashCommandInteractionEvent event, CommandInfo commandInfo, int bet) {
         MinigameBlackjack minigame = new MinigameBlackjack(commandInfo, bet);
 
         if (minigame.dealStartCards(Replyable.from(event), commandInfo)) {
@@ -75,7 +75,7 @@ public class MinigameBlackjack extends GambleMinigame {
     /**
      * It should be checked if the player can afford the bet before this is called.
      */
-    public static MinigameBlackjack start(ButtonClickEvent event, CommandInfo commandInfo, int bet) {
+    public static MinigameBlackjack start(ButtonInteractionEvent event, CommandInfo commandInfo, int bet) {
         MinigameBlackjack minigame = new MinigameBlackjack(commandInfo, bet);
 
         if (minigame.dealStartCards(Replyable.from(event), commandInfo)) {

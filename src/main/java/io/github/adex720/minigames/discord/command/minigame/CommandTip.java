@@ -8,10 +8,10 @@ import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.util.Date;
 
@@ -26,7 +26,7 @@ public class CommandTip extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         User author = ci.author();
         String minigameName = event.getOption("minigame").getAsString();
         MinigameType<? extends Minigame> minigame = bot.getMinigameTypeManager().getType(minigameName);
@@ -42,8 +42,8 @@ public class CommandTip extends Command {
     }
 
     @Override
-    protected CommandData createCommandData() {
-        CommandData commandData = super.createCommandData();
+    protected SlashCommandData createCommandData() {
+        SlashCommandData commandData = super.createCommandData();
 
         OptionData optionData = new OptionData(OptionType.STRING, "minigame", "Minigame to show tips for.", true);
         for (String minigame : bot.getMinigameTypeManager().getTypes()) {

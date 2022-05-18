@@ -1,8 +1,8 @@
 package io.github.adex720.minigames.util;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageAction;
@@ -82,7 +82,7 @@ public class Replyable {
         };
     }
 
-    public static Replyable from(SlashCommandEvent event) {
+    public static Replyable from(SlashCommandInteractionEvent event) {
         return new Replyable(true) {
             @Override
             public WebhookMessageAction<?> getWebhookMessageAction(String message) {
@@ -96,7 +96,7 @@ public class Replyable {
         };
     }
 
-    public static Replyable from(ButtonClickEvent event) {
+    public static Replyable from(ButtonInteractionEvent event) {
         return new Replyable(true) {
             @Override
             public WebhookMessageAction<?> getWebhookMessageAction(String message) {
