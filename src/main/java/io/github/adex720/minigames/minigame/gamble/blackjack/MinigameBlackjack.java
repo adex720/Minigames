@@ -205,6 +205,12 @@ public class MinigameBlackjack extends GambleMinigame {
         int dealerCount = drawCardsForDealer();
         String cards = toString();
 
+        if (dealerCount > 21) {
+            replyable.reply(cards + "\nThe dealer busted and you won!");
+            finish(replyable, commandInfo, true);
+            return;
+        }
+
         if (dealerCount > handSum) {
             replyable.reply(cards + "\nThe dealer won and you lost your bet!");
             return;
