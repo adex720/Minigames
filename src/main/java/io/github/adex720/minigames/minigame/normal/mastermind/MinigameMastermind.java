@@ -138,7 +138,7 @@ public class MinigameMastermind extends Minigame {
     @Override
     public String quit(@Nullable Replyable replyable) {
         super.quit(replyable);
-        return "You quit your previous game of unscramble. The code was " + code + " and you had " + (DEFAULT_GUESSES - guesses.size()) + " guesses left.";
+        return "You quit your previous game of mastermind. The code was " + codeToString(code) + " and you had " + (DEFAULT_GUESSES - guesses.size()) + " guesses left.";
     }
 
 
