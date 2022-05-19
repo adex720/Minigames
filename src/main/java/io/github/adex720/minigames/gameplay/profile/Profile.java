@@ -417,7 +417,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
      * @return message to send
      */
     public String openCrate(Replyable replyable, CrateType type) {
-        if (!hasCrate(type)) return "You don't have " + type.getNameWithArticle() + " crate!";
+        if (!hasCrate(type)) {
+            replyable.reply("You don't have any " + type.name() + " crates!");
+            return "";
+        }
 
         crates.subtract(type);
 

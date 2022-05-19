@@ -65,6 +65,8 @@ public class CommandOpen extends Command {
         Replyable replyable = Replyable.from(event);
 
         String description = getDescription(replyable, ci.profile(), type, typeId, count);
+        if (description.isEmpty()) return true; // Can't open any crates, replies are handled in the method
+
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("OPEN CRATES")
                 .addField("Opened " + count + " crates", description, false)
