@@ -173,8 +173,26 @@ public class MinigameMastermind extends Minigame {
 
         int triesLeft = DEFAULT_GUESSES - guesses.size();
 
+        if (triesLeft == 0) {
+            event.getHook().sendMessageEmbeds(new EmbedBuilder()
+                    .setTitle("MASTERMIND")
+                    .addField("That wasn't the correct combination!", "You ran out of guesses!", true)
+                    .addField("Board", guessesAndEmptiesToString(), true)
+                    .addField("The combination was ", codeToString(code), true)
+                    .setColor(type.color)
+                    .setFooter(author.getName(), author.getAvatarUrl())
+                    .setTimestamp(new Date().toInstant())
+                    .build()).queue();
+
+            finish(replyable, ci, false);
+            return;
+        }
+
         boolean duplicates = Util.hasPureDuplicateValues(guessRaw);
-        String infoFieldDescription = "You have " + triesLeft + " tries left";
+
+        String triesString = triesLeft == 1 ? "try" : "tries";
+
+        String infoFieldDescription = "You have " + triesLeft + " " + triesString + " left";
         if (duplicates) {
             infoFieldDescription += "\n**Hint:** The game plays on the easier difficulty and does not contain empty spots or duplicate colors.";
         }
