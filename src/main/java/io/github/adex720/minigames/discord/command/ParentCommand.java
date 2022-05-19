@@ -40,8 +40,8 @@ public abstract class ParentCommand extends Command {
      */
     public void addSubcommand(Subcommand subcommand) {
         SUB_COMMANDS.add(subcommand);
+
         commandData.addSubcommands(subcommand.getSubcommandData());
-        bot.getCommandManager().addSubcommand(subcommand);
     }
 
     /**

@@ -15,8 +15,4 @@ public class MinigameCommand extends ParentCommand {
         requiresProfile();
     }
 
-    @Override
-    public void addSubcommand(Subcommand subcommand) {
-        super.addSubcommand(subcommand);
-    }
 }

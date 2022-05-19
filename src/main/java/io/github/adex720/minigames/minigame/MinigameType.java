@@ -71,8 +71,7 @@ public abstract class MinigameType<M extends Minigame> {
 
     public void initCommand() {
         command = new MinigameCommand(bot, name, "Performs actions in a game of " + name);
-        getSubcommands().forEach(command::addSubcommand);
-        //bot.getCommandManager().addCommand(command);
+        getSubcommands().forEach(command -> bot.getCommandManager().addSubcommand(command));
     }
 
     /**
