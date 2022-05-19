@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.Random;
@@ -475,5 +476,11 @@ public class MinigameConnect4 extends DuelMinigame {
         }
 
         return getWinState();
+    }
+
+    @Override
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
+        return "You quit your previous game of connect 4. You didn't receive any rewards.";
     }
 }

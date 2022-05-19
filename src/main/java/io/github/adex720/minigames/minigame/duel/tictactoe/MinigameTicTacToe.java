@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.Random;
@@ -477,5 +478,11 @@ public class MinigameTicTacToe extends DuelMinigame {
 
             return new MinigameTicTacToe(bot, bot.getMinigameTypeManager(), id, lastActive, board);
         }
+    }
+
+    @Override
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
+        return "You quit your previous game of tic tac toe. You didn't receive any rewards.";
     }
 }

@@ -461,6 +461,12 @@ public class MinigameBlackjack extends GambleMinigame {
     }
 
     @Override
+    public String quit(@Nullable Replyable replyable) {
+        super.quit(replyable);
+        return "You quit your previous game of blackjack. You lost your bet.";
+    }
+
+    @Override
     public String getReplayButtonId() {
         return super.getReplayButtonId() + "-" + bet;
     }
