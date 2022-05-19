@@ -100,7 +100,7 @@ public class MinigameMastermind extends Minigame {
     @Override
     public JsonObject getAsJson() {
         JsonObject json = new JsonObject();
-        json.addProperty("type", "unscramble");
+        json.addProperty("type", "mastermind");
         json.addProperty("id", id);
 
         json.addProperty("code", code);
