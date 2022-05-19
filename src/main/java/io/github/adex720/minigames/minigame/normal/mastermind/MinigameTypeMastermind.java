@@ -18,8 +18,9 @@ import java.util.Set;
  */
 public class MinigameTypeMastermind extends MinigameType<MinigameMastermind> {
 
-    public static final String[] COLOR_NAMES = new String[]{"red", "purple", "blue", "cyan", "green", "yellow", "orange", "brown"};
-    public static final boolean[] HAS_CUSTOM_EMOTE = new boolean[]{false, false, false, true, false, false, false, false};
+    public static final String[] COLOR_NAMES = new String[]{"red", "purple", "blue", "white", "green", "yellow", "orange", "brown"};
+    // public static final String[] COLOR_NAMES = new String[]{"red", "purple", "blue", "cyan", "green", "yellow", "orange", "brown"};
+    // public static final boolean[] HAS_CUSTOM_EMOTE = new boolean[]{false, false, false, true, false, false, false, false};
 
     public final String[] COLOR_EMOTES;
 
@@ -31,8 +32,10 @@ public class MinigameTypeMastermind extends MinigameType<MinigameMastermind> {
 
         for (int i = 0; i < 8; i++) {
             String name = COLOR_NAMES[i] + "_circle";
-            if (HAS_CUSTOM_EMOTE[i]) COLOR_EMOTES[i] = bot.getEmote(name);
-            else COLOR_EMOTES[i] = ":" + name + ":";
+            COLOR_EMOTES[i] = ":" + name + ":";
+
+            // if (HAS_CUSTOM_EMOTE[i]) COLOR_EMOTES[i] = bot.getEmote(name);
+            // else COLOR_EMOTES[i] = ":" + name + ":";
         }
     }
 

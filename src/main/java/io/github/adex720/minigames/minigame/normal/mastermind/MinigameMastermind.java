@@ -248,7 +248,7 @@ public class MinigameMastermind extends Minigame {
             stringBuilder.append(codeToString(guess)).append(getHintEmote(guess));
         }
 
-        String emptyRow = "\n:black_circle::black_circle::black_circle::black_circle:<:mastermind_00:967107338538450984>";
+        String emptyRow = "\n:black_circle::black_circle::black_circle::black_circle:<:mm_00:967107338538450984>";
         stringBuilder.append(emptyRow.repeat(DEFAULT_GUESSES - guesses.size()));
 
         return stringBuilder.toString();
@@ -296,7 +296,7 @@ public class MinigameMastermind extends Minigame {
 
         int wrong = wrongPlaces - correct;
 
-        return bot.getEmote("mastermind_" + correct + wrong);
+        return bot.getEmote("mm_" + correct + wrong);
     }
 
     /**
