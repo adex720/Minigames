@@ -490,6 +490,12 @@ public class MinigamesBot {
 /*
     TODO: minigames to add
 
+    TODO: buttons to add
+     - tic-tac-toe
+     - connect 4
+     - leaderboard (next, previous)
+     - help (next, previous)
+
     TODO: guilds
 
     TODO: trivia (party)
