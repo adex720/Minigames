@@ -33,7 +33,7 @@ public class CommandMastermindPlace extends MinigameSubcommand {
                 return true;
             }
         }
-        event.getHook().sendMessage("You don't have an ongoing higher or lower game!").queue();
+        event.getHook().sendMessage("You don't have an ongoing mastermind game!").queue();
         return true;
     }
 
