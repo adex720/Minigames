@@ -24,12 +24,7 @@ public class CommandWordleLetters extends MinigameSubcommand {
     public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         Minigame minigame = ci.minigame();
 
-        if (minigame == null) { // no minigame
-            event.getHook().sendMessage("You don't have an ongoing wordle game!").queue();
-            return true;
-        }
-
-        if (minigame.getType() != bot.getMinigameTypeManager().WORDLE) { // wrong minigame
+        if (minigame == null || minigame.getType() != bot.getMinigameTypeManager().WORDLE) { // no minigame or wrong minigame
             event.getHook().sendMessage("You don't have an ongoing wordle game!").queue();
             return true;
         }
