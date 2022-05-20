@@ -2,9 +2,11 @@ package io.github.adex720.minigames.gameplay.profile.stat;
 
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Value;
 
+import javax.annotation.CheckReturnValue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,51 +50,57 @@ public class StatList {
         }
     }
 
+    @CheckReturnValue
     public int getValue(String stat) {
         return statsByName.get(stat).value;
     }
 
+    @CheckReturnValue
     public int getValue(int stat) {
         return statsById.get(stat).value;
     }
 
-    public int increaseStat(Stat stat) {
+    public int increaseStat(Stat stat, final Profile profile) {
         statsByName.get(stat.name()).value++;
         return statsById.get(stat.id()).value++;
     }
 
-    public int increaseStat(Stat stat, int amount) {
+    public int increaseStat(Stat stat, int amount, final Profile profile) {
         statsByName.get(stat.name()).value += amount;
         return statsById.get(stat.id()).value += amount;
     }
 
-    public int increaseStat(String stat) {
-        return increaseStat(bot.getStatManager().get(stat));
+    public int increaseStat(String stat, final Profile profile) {
+        return increaseStat(bot.getStatManager().get(stat), profile);
     }
 
-    public int increaseStat(String stat, int amount) {
-        return increaseStat(bot.getStatManager().get(stat), amount);
+    public int increaseStat(String stat, int amount, final Profile profile) {
+        return increaseStat(bot.getStatManager().get(stat), amount, profile);
     }
 
-    public int increaseStat(int stat) {
-        return increaseStat(bot.getStatManager().get(stat));
+    public int increaseStat(int stat, final Profile profile) {
+        return increaseStat(bot.getStatManager().get(stat), profile);
     }
 
-    public int increaseStat(int stat, int amount) {
-        return increaseStat(bot.getStatManager().get(stat), amount);
+    public int increaseStat(int stat, int amount, final Profile profile) {
+        return increaseStat(bot.getStatManager().get(stat), amount, profile);
     }
 
-    public void setValue(Stat stat, int value) {
+    public void setValue(Stat stat, int value, final Profile profile) {
         statsByName.get(stat.name()).value = value;
         statsById.get(stat.id()).value = value;
+
+        if (stat.onLeaderboard()) {
+            bot.getStatManager().getLeaderboard(stat.id()).update(profile);
+        }
     }
 
-    public void setValue(int stat, int value) {
-        setValue(bot.getStatManager().get(stat), value);
+    public void setValue(int stat, int value, final Profile profile) {
+        setValue(bot.getStatManager().get(stat), value, profile);
     }
 
-    public void setValue(String stat, int value) {
-        setValue(bot.getStatManager().get(stat), value);
+    public void setValue(String stat, int value, final Profile profile) {
+        setValue(bot.getStatManager().get(stat), value, profile);
     }
 
     public JsonObject asJson() {

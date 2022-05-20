@@ -62,13 +62,18 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
 
     private void addProfile(Profile profile) {
         PROFILES.put(profile.getId(), profile);
+
+        bot.getStatManager().addToLeaderboards(profile);
     }
 
     /**
      * @param event event to reply minigame results.
      */
     public void deleteProfile(SlashCommandInteractionEvent event, long id) {
-        PROFILES.remove(id).onDelete(event);
+        Profile profile = PROFILES.remove(id);
+
+        profile.onDelete(event);
+        bot.getStatManager().removeFromLeaderboards(profile);
     }
 
     /**

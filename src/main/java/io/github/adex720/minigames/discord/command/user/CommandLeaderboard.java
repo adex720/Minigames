@@ -4,6 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.gameplay.manager.stat.Leaderboard;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.util.Util;
@@ -12,12 +13,10 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.util.Date;
-import java.util.TreeSet;
 
 /**
  * @author adex720
@@ -46,7 +45,7 @@ public class CommandLeaderboard extends Command {
             }
         }
 
-        TreeSet<Profile> leaderboard = bot.getStatManager().getLeaderboard(categoryId);
+        Leaderboard leaderboard = bot.getStatManager().getLeaderboard(categoryId);
         int amount = leaderboard.size();
 
         int max = 1 + (amount - 1) / PER_PAGE; // TODO: Move this inside previous if statement once more profiles exist
@@ -63,13 +62,14 @@ public class CommandLeaderboard extends Command {
         }
 
         String categoryName = bot.getStatManager().get(categoryId).name();
-        String ranks = getRanks(leaderboard, first, last, categoryId, categoryName); // Get page as String
+        String ranks = getEntries(leaderboard, first, last, categoryName); // Get page as String
 
-        int userScore = ci.profile().getStatValue(categoryId); // Get authors' score
+        Profile profile = ci.profile();
+        int userScore = profile.getStatValue(categoryId); // Get authors' score
         User author = ci.author();
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("LEADERBOARD")
-                .addField(categoryName + " (Your score: " + userScore + ")", ranks, false)
+                .addField(categoryName + " (Your score: " + Util.formatNumber(userScore) + ", rank: #" + leaderboard.getRank(profile) + ")", ranks, false)
                 .setColor(Util.getColor(ci.authorId()))
                 .setFooter(author.getName(), author.getAvatarUrl())
                 .setTimestamp(new Date().toInstant())
@@ -81,23 +81,8 @@ public class CommandLeaderboard extends Command {
      * @return Entries on given leaderboard from ranks {@param first} to {@param last} (both included).
      * The entries count rank, username and score.
      */
-    public String getRanks(TreeSet<Profile> leaderboard, int first, int last, int categoryId, String categoryName) {
-        StringBuilder leaderboardStringBuilder = new StringBuilder();
-        int index = 0;
-        for (Profile profile : leaderboard) {
-            if (index < first) {
-                index++;
-                continue;
-            }
-
-            leaderboardStringBuilder.append(index + 1).append(". <@!").append(profile.getId()).append(">:\n- ")
-                    .append(profile.getStatValue(categoryId)).append(' ').append(categoryName).append('\n');
-
-            if (index == last) break;
-            index++;
-        }
-
-        return leaderboardStringBuilder.toString();
+    public String getEntries(Leaderboard leaderboard, int first, int last, String categoryName) {
+        return leaderboard.toEntry(first, last - first, categoryName);
     }
 
     @Override

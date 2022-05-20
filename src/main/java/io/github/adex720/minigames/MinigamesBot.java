@@ -18,7 +18,6 @@ import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BanManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
 import io.github.adex720.minigames.gameplay.manager.quest.QuestManager;
-import io.github.adex720.minigames.gameplay.manager.stat.LeaderboardManager;
 import io.github.adex720.minigames.gameplay.manager.stat.StatManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
@@ -100,7 +99,6 @@ public class MinigamesBot {
     private final QuestList questList;
 
     private final TimerManager timerManager;
-    private final LeaderboardManager leaderboardManager;
 
     private final KitCooldownManager kitCooldownManager;
 
@@ -147,6 +145,7 @@ public class MinigamesBot {
 
         banManager = new BanManager(this);
         profileManager = new ProfileManager(this);
+        statManager.initLeaderboards();
 
         partyManager = new PartyManager(this);
 
@@ -159,7 +158,6 @@ public class MinigamesBot {
         minigameManager = new MinigameManager(this);
 
         timerManager = new TimerManager(this);
-        leaderboardManager = new LeaderboardManager(this);
 
         kitCooldownManager = new KitCooldownManager(this);
 
@@ -180,8 +178,6 @@ public class MinigamesBot {
 
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
-
-        leaderboardManager.start();
 
         startTimers();
 
@@ -221,8 +217,6 @@ public class MinigamesBot {
         addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true); // Clear cached resource json files
 
         addTimerTask(questManager::unloadQuests, Util.MILLISECONDS_IN_DAY, Util.getMillisecondsUntilUtcMidnight()); // Unload all quests at UTC midnight
-
-        addTimerTask(leaderboardManager::run, 1000 * 60 * 5, true); // Update leaderboards
 
         addTimerTask(this::save, 1000 * 60 * 5, true); // save data
     }
@@ -481,7 +475,6 @@ public class MinigamesBot {
     public void stop() {
         jda.shutdown();
         timerManager.stop();
-        leaderboardManager.interrupt();
     }
 
     public void clearInactive() {

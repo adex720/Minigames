@@ -30,6 +30,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.CheckReturnValue;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -235,7 +236,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         if (count) {
             int finalAmount = (int) (amount * getBoosterMultiplier());
 
-            statList.increaseStat("coins earned", finalAmount);
+            statList.increaseStat("coins earned", finalAmount, this);
             coins += finalAmount;
 
             appendQuests(quest -> quest.coinsEarned(replyable, finalAmount, this));
@@ -260,48 +261,51 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         badges.add(id);
     }
 
+    @CheckReturnValue
     public int getStatValue(int id) {
         return statList.getValue(id);
     }
 
+    @CheckReturnValue
     public int getStatValue(String name) {
         return statList.getValue(name);
     }
 
+    @CheckReturnValue
     public int getStatValue(Stat stat) {
         return statList.getValue(stat.id());
     }
 
     public void setStatValue(int id, int value) {
-        statList.setValue(id, value);
+        statList.setValue(id, value, this);
     }
 
     public void setStatValue(String name, int value) {
-        statList.setValue(name, value);
+        statList.setValue(name, value, this);
     }
 
     public int increaseStat(String stat) {
-        return statList.increaseStat(stat);
-    }
-
-    public int increaseStat(Stat stat) {
-        return statList.increaseStat(stat);
-    }
-
-    public int increaseStat(String stat, int amount) {
-        return statList.increaseStat(stat, amount);
+        return statList.increaseStat(stat, this);
     }
 
     public int increaseStat(int stat) {
-        return statList.increaseStat(stat);
+        return statList.increaseStat(stat, this);
+    }
+
+    public int increaseStat(Stat stat) {
+        return statList.increaseStat(stat, this);
+    }
+
+    public int increaseStat(String stat, int amount) {
+        return statList.increaseStat(stat, amount, this);
     }
 
     public int increaseStat(int stat, int amount) {
-        return statList.increaseStat(stat, amount);
+        return statList.increaseStat(stat, amount, this);
     }
 
     public int increaseStat(Stat stat, int amount) {
-        return statList.increaseStat(stat, amount);
+        return statList.increaseStat(stat, amount, this);
     }
 
     /**
