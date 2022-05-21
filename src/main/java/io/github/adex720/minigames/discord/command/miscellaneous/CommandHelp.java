@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
+import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -13,6 +14,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,12 +41,12 @@ public class CommandHelp extends Command {
         User author = ci.author();
 
         if (category != null) {
-            return sendCommandsFromCategory(event, commandManager.getCategory(category.getAsString()), author);
+            return sendCommandsFromCategory(event, ci, commandManager.getCategory(category.getAsString()));
         }
         return sendCategories(event, commandManager, author);
     }
 
-    private boolean sendCommandsFromCategory(SlashCommandInteractionEvent event, CommandCategory category, User author) {
+    private boolean sendCommandsFromCategory(SlashCommandInteractionEvent event, CommandInfo commandInfo, CommandCategory category) {
         OptionMapping pageOptionMapping = event.getOption("page");
         int page = pageOptionMapping != null ? (int) pageOptionMapping.getAsLong() : 1;
 
@@ -51,8 +55,7 @@ public class CommandHelp extends Command {
             return true;
         }
 
-        ArrayList<Command> commands = bot.getCommandManager().getCommands(category);
-        int commandsAmount = commands.size();
+        int commandsAmount = bot.getCommandManager().getCommands(category).size();
         int max = 1 + (commandsAmount - 1) / COMMANDS_PER_PAGE; // Calculate last page with entries
 
         if (page > max) { // Check if page is out of range
@@ -67,6 +70,18 @@ public class CommandHelp extends Command {
             last = commandsAmount - 1;
         }
 
+        sendCommandsFromCategory(Replyable.from(event), commandInfo, category, page, first, last);
+
+        return true;
+    }
+
+    /**
+     * Page should be checked to be valid before calling this method.
+     */
+    public void sendCommandsFromCategory(Replyable replyable, CommandInfo commandInfo, CommandCategory category, int page, int first, int last) {
+        ArrayList<Command> commands = bot.getCommandManager().getCommands(category);
+        User author = commandInfo.author();
+
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("HELP")
                 .setColor(Util.getColor(author.getIdLong()));
@@ -76,12 +91,14 @@ public class CommandHelp extends Command {
             embedBuilder.addField("**" + command.getFullName() + "**", "**Description:** " + command.description, true);
         }
 
-        event.getHook().sendMessageEmbeds(embedBuilder
-                .setFooter(author.getName(), author.getAvatarUrl())
-                .setTimestamp(new Date().toInstant())
-                .build()).queue();
+        Button previous = getButtonForPage(page - 1, "previous", page == 1);
+        Button next = getButtonForPage(page + 1, "next", last == commands.size());
 
-        return true;
+        replyable.getWebhookMessageAction(embedBuilder
+                        .setFooter(author.getName(), author.getAvatarUrl())
+                        .setTimestamp(new Date().toInstant())
+                        .build())
+                .addActionRow(previous, next).queue();
     }
 
     public boolean sendCategories(SlashCommandInteractionEvent event, CommandManager commandManager, User author) {
@@ -109,6 +126,10 @@ public class CommandHelp extends Command {
                 .build()).queue();
 
         return true;
+    }
+
+    public Button getButtonForPage(int page, String label, boolean disabled) {
+        return new ButtonImpl("page-help-" + page, label, ButtonStyle.SECONDARY, disabled, null);
     }
 
     @Override
