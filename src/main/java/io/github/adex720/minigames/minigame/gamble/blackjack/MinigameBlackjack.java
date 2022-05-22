@@ -144,6 +144,7 @@ public class MinigameBlackjack extends GambleMinigame {
      * The game ends if the sum of the cards goes over 21.
      */
     public void hit(Replyable replyable, CommandInfo commandInfo) {
+        active(commandInfo);
         String cardMessage = drawCardForPlayerWithMessage();
 
         if (checkForWin(cardMessage, replyable, commandInfo)) {
@@ -160,6 +161,7 @@ public class MinigameBlackjack extends GambleMinigame {
      * 4. Calculates winner.
      */
     public void hitDouble(Replyable replyable, CommandInfo commandInfo) {
+        active(commandInfo);
         betMultiplier *= 2;
 
         int cardId = drawCardForPlayer();
@@ -201,6 +203,7 @@ public class MinigameBlackjack extends GambleMinigame {
      * Draws cards for the dealer and calculates the winner.
      */
     public void stand(Replyable replyable, CommandInfo commandInfo) {
+        active(commandInfo);
         int dealerCount = drawCardsForDealer();
         String cards = toString();
 

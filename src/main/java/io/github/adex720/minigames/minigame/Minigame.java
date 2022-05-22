@@ -13,6 +13,7 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -121,7 +122,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
     public String finishForParty(Replyable replyable, Party party, boolean won) {
-        for (long userId : party.getMembersWithOwner()) {
+        for (long userId : party.getActiveMembers()) {
             finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, false);
         }
 
@@ -163,7 +164,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             profile.increaseStat("minigames won");
         }
 
-        if (isParty){
+        if (isParty) {
             profile.increaseStat("party minigame played");
             if (won) profile.increaseStat("party minigames won");
         }
@@ -196,17 +197,32 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
      *
      * @param commandInfo commandInfo to calculate party with.
      *                    If the commandInfo is not created or easily accessible,
-     *                    just put null, and it'll be calculated if needed
+     *                    use {@link Minigame#active(long, Party)}.
      */
-    public void active(@Nullable CommandInfo commandInfo) {
+    public void active(@Nonnull CommandInfo commandInfo) {
         lastActive = System.currentTimeMillis();
 
         if (isParty) {
-            Party party;
-            if (commandInfo != null) party = commandInfo.party();
-            else party = bot.getPartyManager().getParty(id);
+            Party party = commandInfo.party();
 
-            party.active();
+            party.active(commandInfo.authorId());
+        }
+    }
+
+    /**
+     * Updates the stored value when the minigame was played.
+     * Calling this on each interaction is important so the minigame doesn't get deleted as inactive.
+     *
+     * @param party  Party of the user. Can be null.
+     * @param userId Id of the user who is active on the party.
+     */
+    public void active(long userId, @Nullable Party party) {
+        lastActive = System.currentTimeMillis();
+
+        if (isParty) {
+            if (party == null) party = bot.getPartyManager().getParty(id);
+
+            party.active(userId);
         }
     }
 

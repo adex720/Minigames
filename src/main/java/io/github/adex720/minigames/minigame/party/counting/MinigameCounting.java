@@ -179,7 +179,6 @@ public class MinigameCounting extends PartyTeamMinigame {
         long current = event.getMessage().getTimeCreated().toInstant().toEpochMilli(); // Getting unix time for event creation
         boolean tooLate = isReplyTooLate(current); // Needs to be called before active()
 
-        active(null);
         long authorId = event.getAuthor().getIdLong();
         String numberString = messageContent.split(" ")[0]; // Get everything before the first space. This way '5 sheep' is counted as '5'.
         int status = getStatus(numberString, authorId, tooLate);
@@ -188,6 +187,10 @@ public class MinigameCounting extends PartyTeamMinigame {
         Replyable replyable = Replyable.from(event);
 
         if (status == CORRECT_NUMBER) { // Call correct method depending on the state
+
+            // Adding player to active ones only if the player progressed the game.
+            // This way a player who hasn't counted a single time but loses the game doesn't receive rewards.
+            active(event.getAuthor().getIdLong(), null);
             onCorrectNumber(event, commandInfo);
         } else if (status == WRONG_NUMBER) {
             onWrongNumber(replyable, commandInfo);
