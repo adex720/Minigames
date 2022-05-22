@@ -507,7 +507,10 @@ public class MinigamesBot {
      - tic-tac-toe
      - connect 4
      - leaderboard (next, previous)
-     - help (next, previous)
+
+     TODO: make buttons only work from the original user
+
+     TODO: give rewards only to party members who participated
 
     TODO: guilds
 
