@@ -76,9 +76,10 @@ public class CommandGuide extends PageCommand {
     }
 
     public void sendPage(Replyable replyable, CommandInfo commandInfo, int page) {
+        long userId = commandInfo.authorId();
         MessageEmbed message = getPage(commandInfo, page);
-        Button buttonPrevious = getButtonForPage(page - 1, "previous", page == 1);
-        Button buttonNext = getButtonForPage(page + 1, "next", page == CONTENT.length);
+        Button buttonPrevious = getButtonForPage(userId,page - 1, "previous", page == 1);
+        Button buttonNext = getButtonForPage(userId,page + 1, "next", page == CONTENT.length);
 
         replyable.reply(message, buttonPrevious, buttonNext);
     }

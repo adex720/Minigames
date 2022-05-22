@@ -9,7 +9,10 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.util.HashMap;
 
 /**
+ * Edits messages which have multiple pages.
+ *
  * @author adex720
+ * @see PageCommand
  */
 public class PageMovementManager extends Manager {
 
@@ -26,6 +29,9 @@ public class PageMovementManager extends Manager {
     }
 
     public void onButtonPressed(ButtonInteractionEvent event, CommandInfo commandInfo, String[] args) {
+        long userId = Long.parseLong(args[3]);
+        if (userId != commandInfo.authorId()) return;
+
         String type = args[1];
         int page = Integer.parseInt(args[2]);
 

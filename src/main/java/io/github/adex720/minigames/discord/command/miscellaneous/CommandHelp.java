@@ -82,18 +82,19 @@ public class CommandHelp extends PageCommand {
     public void sendCommandsFromCategory(Replyable replyable, CommandInfo commandInfo, CommandCategory category, int page, int first, int last) {
         ArrayList<Command> commands = bot.getCommandManager().getCommandsForHelp(category);
         User author = commandInfo.author();
+        long authorId = author.getIdLong();
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("HELP")
-                .setColor(Util.getColor(author.getIdLong()));
+                .setColor(Util.getColor(authorId));
 
         for (int i = first; i <= last; i++) {
             Command command = commands.get(i); // Add entries on selected page
             embedBuilder.addField("**/" + command.getFullName() + "**", "**Description:** " + command.description, true);
         }
 
-        Button buttonPrevious = getButtonForPage(page - 1, "previous", page == 1, category.name);
-        Button buttonNext = getButtonForPage(page + 1, "next", (page) * 6 >= commands.size(), category.name);
+        Button buttonPrevious = getButtonForPage(authorId, page - 1, "previous", page == 1, category.name);
+        Button buttonNext = getButtonForPage(authorId, page + 1, "next", (page) * 6 >= commands.size(), category.name);
 
         MessageEmbed message = embedBuilder
                 .setFooter(author.getName(), author.getAvatarUrl())
@@ -135,7 +136,7 @@ public class CommandHelp extends PageCommand {
 
     @Override
     public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, String[] args, int page) {
-        CommandCategory category = CommandCategory.get(args[3]);
+        CommandCategory category = CommandCategory.get(args[4]);
 
         int commandsAmount = bot.getCommandManager().getCommandAmount(category);
 

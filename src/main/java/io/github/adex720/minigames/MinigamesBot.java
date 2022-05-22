@@ -508,9 +508,9 @@ public class MinigamesBot {
      - connect 4
      - leaderboard (next, previous)
 
-     TODO: make buttons only work from the original user
+    TODO: make buttons only work from the original user
 
-     TODO: give rewards only to party members who participated
+    TODO: give rewards only to party members who participated
 
     TODO: guilds
 

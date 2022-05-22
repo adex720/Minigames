@@ -89,7 +89,6 @@ public class PartyManager extends IdCompoundSavableManager<Party> {
         return false;
     }
 
-    @Nullable
     public Party getParty(long id) {
         return PARTIES.get(id);
     }
