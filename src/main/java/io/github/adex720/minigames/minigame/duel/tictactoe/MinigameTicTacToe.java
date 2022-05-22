@@ -312,8 +312,13 @@ public class MinigameTicTacToe extends DuelMinigame {
                 .setColor(type.color)
                 .addField("Board", getBoard(), true)
                 .addField("Players", "**X** <@!" + id + ">\n**O** <@!" + opponentId + ">", true)
+                .addField("Turn", "It's <@" + getCurrentPlayerId() + ">'s turn!", true)
                 .setFooter(selfUser.getName(), selfUser.getAvatarUrl())
                 .setTimestamp(new Date().toInstant());
+    }
+
+    public long getCurrentPlayerId (){
+        return isFirstPlayersTurn ? id : opponentId;
     }
 
     /**
