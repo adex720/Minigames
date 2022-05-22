@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 /**
  * A List containing a {@link Pair} containing value of a stat and the owner {@link Profile}
  * When the stat of the player gets changed {@link Leaderboard#update(Profile)} should be called.
+ * The values are saved like on a {@link LinkedList} rather than on an array.
  *
  * @author adex720
  */
@@ -233,11 +234,11 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
 
         Node node = getNode(profile.getId());
 
-        while (node.previous != null && node.previous.item.first < stat) {
+        while (node.previous != null && node.previous.entry.first < stat) {
             moveForward(node);
         }
 
-        while (node.next != null && node.next.item.first > stat) {
+        while (node.next != null && node.next.entry.first > stat) {
             moveBackWards(node);
         }
     }
@@ -291,7 +292,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Returns the score on the node.
      */
     public int getScore(@Nonnull Node node) {
-        return node.item.first;
+        return node.entry.first;
     }
 
     /**
@@ -305,7 +306,21 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Returns mention of the player on the node.
      */
     public String getMention(@Nonnull Node node) {
-        return "<@" + node.item.second.getId() + ">";
+        return "<@" + node.entry.second.getId() + ">";
+    }
+
+    /**
+     * Returns tag (ADEX#2242) of the user on the index.
+     */
+    public String getTag(int index) {
+        return getTag(getNode(index));
+    }
+
+    /**
+     * Returns tag (ADEX#2242) of the user on the node.
+     */
+    public String getTag(@Nonnull Node node) {
+        return node.entry.second.getTag();
     }
 
     /**
@@ -319,21 +334,35 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Returns {@link Profile} on the node.
      */
     public Profile getProfile(@Nonnull Node node) {
-        return node.item.second;
+        return node.entry.second;
     }
 
     /**
      * Returns a String containing the rank, mention and score on the given index.
      */
-    public String toEntry(int index) {
-        return toEntry(getNode(index), index + 1);
+    public String toEntryWithMention(int index) {
+        return toEntryWithMention(getNode(index), index + 1);
     }
 
     /**
      * Returns a String containing the rank, mention and score.
      */
-    public String toEntry(@Nonnull Node node, int rank) {
+    public String toEntryWithMention(@Nonnull Node node, int rank) {
         return rank + ". " + getMention(node) + ": " + Util.formatNumber(getScore(node));
+    }
+
+    /**
+     * Returns a String containing the rank, tag and score on the given index.
+     */
+    public String toEntryWithTag(int index) {
+        return toEntryWithTag(getNode(index), index + 1);
+    }
+
+    /**
+     * Returns a String containing the rank, tag and score.
+     */
+    public String toEntryWithTag(@Nonnull Node node, int rank) {
+        return rank + ". " + getTag(node) + ": " + Util.formatNumber(getScore(node));
     }
 
     /**
@@ -345,13 +374,43 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * @param entryCount amount of entries
      * @param statName   name of the stat.
      */
-    public String toEntry(int index, int entryCount, String statName) {
+    public String toEntryWithMention(int index, int entryCount, String statName) {
         Node node = getNode(index);
         StringBuilder entry = new StringBuilder();
 
         while (entryCount > 0) {
             index++;
-            entry.append(toEntry(node, index))
+            entry.append(toEntryWithMention(node, index))
+                    .append(' ')
+                    .append(statName);
+
+            node = node.next;
+
+            if (entryCount > 1) {
+                entry.append('\n');
+                entryCount--;
+            } else break;
+        }
+
+        return entry.toString();
+    }
+
+    /**
+     * Creates given amount of entries starting from given index.
+     * The entries contain rank, tag of the user and the score.
+     * Each entry is on its own line, and they are sorted starting from the best rank.
+     *
+     * @param index      index of the first entry
+     * @param entryCount amount of entries
+     * @param statName   name of the stat.
+     */
+    public String toEntryWithTag(int index, int entryCount, String statName) {
+        Node node = getNode(index);
+        StringBuilder entry = new StringBuilder();
+
+        while (entryCount > 0) {
+            index++;
+            entry.append(toEntryWithTag(node, index))
                     .append(' ')
                     .append(statName);
 
@@ -426,7 +485,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     public Node getNode(final Profile profile) {
         Node node = first;
         while (node != null) {
-            if (Objects.equals(node.item.second.getId(), profile.getId())) return node;
+            if (Objects.equals(node.entry.second.getId(), profile.getId())) return node;
             node = node.next;
         }
 
@@ -442,7 +501,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     public Node getNode(final long userId) {
         Node node = first;
         while (node != null) {
-            if (node.item.second.getId() == userId) return node;
+            if (node.entry.second.getId() == userId) return node;
             node = node.next;
         }
 
@@ -471,7 +530,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Removes the node from the leaderboard.
      */
     private Pair<Integer, Profile> unlink(Node node) {
-        final Pair<Integer, Profile> element = node.item;
+        final Pair<Integer, Profile> element = node.entry;
         final Node next = node.next;
         final Node prev = node.previous;
 
@@ -489,7 +548,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             node.next = null;
         }
 
-        node.item = null;
+        node.entry = null;
         size--;
         modCount++;
         return element;
@@ -545,7 +604,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             lastReturned = next;
             next = next.next;
             nextIndex++;
-            return lastReturned.item;
+            return lastReturned.entry;
         }
 
         public boolean hasPrevious() {
@@ -558,7 +617,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
 
             lastReturned = next = (next == null) ? last : next.previous;
             nextIndex--;
-            return lastReturned.item;
+            return lastReturned.entry;
         }
 
         public int nextIndex() {
@@ -588,7 +647,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             if (lastReturned == null)
                 throw new IllegalStateException();
             checkForComodification();
-            lastReturned.item = e;
+            lastReturned.entry = e;
         }
 
         public void add(Pair<Integer, Profile> e) {
@@ -605,7 +664,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         public void forEachRemaining(Consumer<? super Pair<Integer, Profile>> action) {
             Objects.requireNonNull(action);
             while (modCount == expectedModCount && nextIndex < size) {
-                action.accept(next.item);
+                action.accept(next.entry);
                 lastReturned = next;
                 next = next.next;
                 nextIndex++;
@@ -619,13 +678,19 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         }
     }
 
+    /**
+     * The list is made of Nodes.
+     * Each node has its previous and next Node linked in {@link Leaderboard.Node#previous} and {@link Leaderboard.Node#next}.
+     * If the Node is the first or the last the pointer is null.
+     * The value of the Node is located in {@link Leaderboard.Node#entry}.
+     */
     public static class Node {
-        Pair<Integer, Profile> item;
+        Pair<Integer, Profile> entry;
         Node next;
         Node previous;
 
         Node(Node previous, Pair<Integer, Profile> element, Node next) {
-            this.item = element;
+            this.entry = element;
             this.next = next;
             this.previous = previous;
         }

@@ -105,9 +105,12 @@ public class CommandInfo {
     public Profile profile() {
         if (calculatedProfile == null) {
             calculatedProfile = profile.calculate();
+
+            if (calculatedProfile == null) return null;
+            calculatedProfile.setTag(author.getAsTag()); // Update tag
         }
 
-        return profile.calculate();
+        return calculatedProfile;
     }
 
     @CheckReturnValue

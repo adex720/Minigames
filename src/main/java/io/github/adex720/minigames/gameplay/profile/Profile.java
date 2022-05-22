@@ -48,7 +48,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     private final MinigamesBot bot;
 
     private final long userId;
+    private String tag;
     private final long created;
+
     private boolean banned;
 
     private boolean isInParty;
@@ -68,10 +70,13 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final PlayerSettings playerSettings;
 
-    public Profile(MinigamesBot bot, long userId) {
+    public Profile(MinigamesBot bot, long userId, String tag) {
+        created = System.currentTimeMillis();
+
         this.bot = bot;
         this.userId = userId;
-        created = System.currentTimeMillis();
+        this.tag = tag;
+
         this.banned = false;
 
         isInParty = false;
@@ -88,13 +93,16 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         playerSettings = new PlayerSettings(userId);
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins,
+    public Profile(MinigamesBot bot, long userId, String tag, long crated, int coins,
                    JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson,
                    JsonArray activeBoostersJson, JsonArray statusesJson, JsonArray settingsJson, JsonArray badgesJson) {
         this.bot = bot;
         this.userId = userId;
+        this.tag = tag;
         this.created = crated;
+
         banned = false;
+
         isInParty = false;
         partyId = userId;
 
@@ -124,8 +132,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         }
     }
 
-    public static Profile create(MinigamesBot bot, long id) {
-        return new Profile(bot, id);
+    public static Profile create(MinigamesBot bot, long id, String tag) {
+        return new Profile(bot, id, tag);
     }
 
     @Override
@@ -140,6 +148,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         JsonObject json = new JsonObject();
 
         json.addProperty("id", userId);
+        json.addProperty("tag", tag);
         json.addProperty("created", created);
 
         json.addProperty("coins", coins);
@@ -166,6 +175,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public static Profile fromJson(MinigamesBot bot, JsonObject json) {
         long id = JsonHelper.getLong(json, "id");
+        String tag = JsonHelper.getString(json, "tag", "");
+
         long created = JsonHelper.getLong(json, "created");
 
         int coins = JsonHelper.getInt(json, "coins");
@@ -183,7 +194,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray badgesJson = JsonHelper.getJsonArray(json, "badges", new JsonArray());
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson, badgesJson);
+        return new Profile(bot, id, tag, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson, badgesJson);
     }
 
     private JsonArray getStatusesJson() {
@@ -224,6 +235,34 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public void partyLeft() {
         isInParty = false;
+    }
+
+    public String getTag() {
+        if (tag.isEmpty()) requestTag();
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    /**
+     * Makes a request to Discord receiving the user tag.
+     * <p>
+     * If the request doesn't return a tag the tag is not chanced.
+     * If it failed, and the current value at {@link Profile#tag} is empty, it is set to "unknown user".
+     */
+    private void requestTag() {
+        bot.getJda().retrieveUserById(userId).queue(v -> {
+            String result = v.getAsTag();
+
+            if (!result.isEmpty()) {
+                tag = result;
+                return;
+            }
+
+            if (tag.isEmpty()) tag = "unknown user";
+        });
     }
 
     /**

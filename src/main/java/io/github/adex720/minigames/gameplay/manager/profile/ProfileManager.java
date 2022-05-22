@@ -50,8 +50,8 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         return PROFILES.get(userId);
     }
 
-    public void createProfile(long id) {
-        Profile profile = Profile.create(bot, id);
+    public void createProfile(long id, String tag) {
+        Profile profile = Profile.create(bot, id, tag);
         PROFILES.put(id, profile);
 
         BadgeManager badgeManager = bot.getBadgeManager();

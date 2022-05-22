@@ -82,7 +82,7 @@ public class CommandLeaderboard extends Command {
      * The entries count rank, username and score.
      */
     public String getEntries(Leaderboard leaderboard, int first, int last, String categoryName) {
-        return leaderboard.toEntry(first, last - first, categoryName);
+        return leaderboard.toEntryWithTag(first, last - first, categoryName);
     }
 
     @Override
