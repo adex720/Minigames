@@ -31,8 +31,9 @@ public class ButtonListener extends ListenerAdapter {
         String[] args = event.getButton().getId().split("-");
 
         switch (args[0]) {
-            case "replay" -> bot.getReplayManager().onButtonPress(event, commandInfo, args); // For replay button after finishing a minigame
+            case "replay"    -> bot.getReplayManager()         .onButtonPress(event, commandInfo, args); // For replay button after finishing a minigame
             case "blackjack" -> bot.getBlackjackButtonManager().onButtonPressed(event, commandInfo, args);
+            case "page"      -> bot.getPageMovementManager()   .onButtonPressed(event, commandInfo, args);
         }
 
     }

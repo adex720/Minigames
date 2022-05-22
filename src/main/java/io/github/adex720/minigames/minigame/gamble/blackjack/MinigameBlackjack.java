@@ -150,8 +150,7 @@ public class MinigameBlackjack extends GambleMinigame {
             return;
         }
 
-        replyable.getWebhookMessageAction(cardMessage)
-                .addActionRows(getActionRow()).queue();
+        replyable.reply(cardMessage, getActionRow());
     }
 
     /**

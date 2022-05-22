@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.*;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
+import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
 import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
@@ -69,8 +70,11 @@ public class MinigamesBot {
     private final DevCommandListener devCommandListener;
 
     private final ButtonListener buttonListener;
+
     private final ReplayManager replayManager;
     private final BlackjackButtonManager blackjackButtonManager;
+    private final PageMovementManager pageMovementManager;
+
 
     private final GuildJoinListener guildJoinListener;
     private final SelfMentionListener selfMentionListener;
@@ -129,9 +133,13 @@ public class MinigamesBot {
 
         devCommandListener = new DevCommandListener(this, developerId, "-");
 
+
         buttonListener = new ButtonListener(this);
+
         replayManager = new ReplayManager(this);
         blackjackButtonManager = new BlackjackButtonManager(this);
+        pageMovementManager = new PageMovementManager(this);
+
 
         guildJoinListener = new GuildJoinListener(this);
         selfMentionListener = new SelfMentionListener(this);
@@ -259,6 +267,11 @@ public class MinigamesBot {
     @CheckReturnValue
     public BlackjackButtonManager getBlackjackButtonManager() {
         return blackjackButtonManager;
+    }
+
+    @CheckReturnValue
+    public PageMovementManager getPageMovementManager() {
+        return pageMovementManager;
     }
 
     @CheckReturnValue

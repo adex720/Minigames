@@ -104,8 +104,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
         if (shouldReply) {
             if (replyable.isWebhookBased()) {
-                replyable.getWebhookMessageAction(rewards)
-                        .addActionRow(Button.primary(getReplayButtonId(), "Play again")).queue(); // Add replay button
+                replyable.reply(rewards, Button.primary(getReplayButtonId(), "Play again")); // Add replay button
             } else {
                 replyable.reply(rewards);
             }

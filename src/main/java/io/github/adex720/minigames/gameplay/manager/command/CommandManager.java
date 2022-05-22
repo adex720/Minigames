@@ -178,7 +178,7 @@ public class CommandManager extends Manager {
      * Returns an {@link ArrayList} containing each slash command including subcommands.
      * The commands are on the order registered but subcommands are last.
      */
-    public ArrayList<Command> getCommands(CommandCategory category) {
+    public ArrayList<Command> getCommandsForHelp(CommandCategory category) {
         ArrayList<Command> commands = new ArrayList<>();
         for (Command command : MAIN_COMMANDS) {
             if (command.shouldBeInHelp(category)) {
@@ -195,17 +195,17 @@ public class CommandManager extends Manager {
     }
 
     /**
-     * @return Amount off all slash commands including subcommands.
+     * @return Amount off all slash commands including subcommands which should be shown on /help.
      */
     public int getCommandAmount(CommandCategory category) {
         int amount = 0;
         for (Command command : MAIN_COMMANDS) {
-            if (command.category == category) {
+            if (command.shouldBeInHelp(category)) {
                 amount++;
             }
         }
         for (Command command : SUBCOMMANDS) {
-            if (command.category == category) {
+            if (command.shouldBeInHelp(category)) {
                 amount++;
             }
         }
@@ -213,10 +213,16 @@ public class CommandManager extends Manager {
         return amount;
     }
 
+    /**
+     * Returns the amount of commands, excluding subcommands
+     */
     public int getCommandAmount() {
         return MAIN_COMMANDS.size();
     }
 
+    /**
+     * Returns the amount usable commands
+     */
     public int getAllCommandAmount() {
         int usableCommands = 0;
 

@@ -4,19 +4,20 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.discord.command.PageCommand;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
-import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +26,7 @@ import java.util.Locale;
 /**
  * @author adex720
  */
-public class CommandHelp extends Command {
+public class CommandHelp extends PageCommand {
 
     public static final int COMMANDS_PER_PAGE = 6;
 
@@ -55,18 +56,18 @@ public class CommandHelp extends Command {
             return true;
         }
 
-        int commandsAmount = bot.getCommandManager().getCommands(category).size();
-        int max = 1 + (commandsAmount - 1) / COMMANDS_PER_PAGE; // Calculate last page with entries
+        int commandsAmount = bot.getCommandManager().getCommandAmount(category);
+        int lastPage = 1 + (commandsAmount - 1) / COMMANDS_PER_PAGE; // Calculate last page with entries
 
-        if (page > max) { // Check if page is out of range
-            event.getHook().sendMessage("Max page for category " + category.name().toLowerCase(Locale.ROOT) + " is " + max + ".").queue();
+        if (page > lastPage) { // Check if page is out of range
+            event.getHook().sendMessage("Max page for category " + category.name().toLowerCase(Locale.ROOT) + " is " + lastPage + ".").queue();
             return true;
         }
 
         int first = (page - 1) * COMMANDS_PER_PAGE; // Calculate ranks shown on selected page
         int last = page * COMMANDS_PER_PAGE - 1;
 
-        if (page == max) {
+        if (page == lastPage) {
             last = commandsAmount - 1;
         }
 
@@ -79,7 +80,7 @@ public class CommandHelp extends Command {
      * Page should be checked to be valid before calling this method.
      */
     public void sendCommandsFromCategory(Replyable replyable, CommandInfo commandInfo, CommandCategory category, int page, int first, int last) {
-        ArrayList<Command> commands = bot.getCommandManager().getCommands(category);
+        ArrayList<Command> commands = bot.getCommandManager().getCommandsForHelp(category);
         User author = commandInfo.author();
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
@@ -88,19 +89,23 @@ public class CommandHelp extends Command {
 
         for (int i = first; i <= last; i++) {
             Command command = commands.get(i); // Add entries on selected page
-            embedBuilder.addField("**" + command.getFullName() + "**", "**Description:** " + command.description, true);
+            embedBuilder.addField("**/" + command.getFullName() + "**", "**Description:** " + command.description, true);
         }
 
-        Button previous = getButtonForPage(page - 1, "previous", page == 1);
-        Button next = getButtonForPage(page + 1, "next", last == commands.size());
+        Button buttonPrevious = getButtonForPage(page - 1, "previous", page == 1, category.name);
+        Button buttonNext = getButtonForPage(page + 1, "next", (page) * 6 >= commands.size(), category.name);
 
-        replyable.getWebhookMessageAction(embedBuilder
-                        .setFooter(author.getName(), author.getAvatarUrl())
-                        .setTimestamp(new Date().toInstant())
-                        .build())
-                .addActionRow(previous, next).queue();
+        MessageEmbed message = embedBuilder
+                .setFooter(author.getName(), author.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build();
+
+        replyable.reply(message, buttonPrevious, buttonNext);
     }
 
+    /**
+     * Sends a message containing all categories and amount of commands on them.
+     */
     public boolean sendCategories(SlashCommandInteractionEvent event, CommandManager commandManager, User author) {
         StringBuilder categories = new StringBuilder();
         boolean newLine = false;
@@ -128,8 +133,21 @@ public class CommandHelp extends Command {
         return true;
     }
 
-    public Button getButtonForPage(int page, String label, boolean disabled) {
-        return new ButtonImpl("page-help-" + page, label, ButtonStyle.SECONDARY, disabled, null);
+    @Override
+    public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, String[] args, int page) {
+        CommandCategory category = CommandCategory.get(args[3]);
+
+        int commandsAmount = bot.getCommandManager().getCommandAmount(category);
+
+        int first = (page - 1) * COMMANDS_PER_PAGE; // Calculate ranks shown on selected page
+        int last = page * COMMANDS_PER_PAGE - 1;
+
+        int lastPage = 1 + (commandsAmount - 1) / COMMANDS_PER_PAGE; // Calculate last page with entries
+        if (page == lastPage) {
+            last = commandsAmount - 1;
+        }
+
+        sendCommandsFromCategory(Replyable.edit(event), ci, category, page, first, last);
     }
 
     @Override
