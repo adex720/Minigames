@@ -22,7 +22,7 @@ public abstract class PageCommand extends Command {
         bot.getPageMovementManager().registerPageCommand(this);
     }
 
-    public abstract void onPageMove(ButtonInteractionEvent event, CommandInfo ci, String[] args, int page);
+    public abstract void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args);
 
     public Button getButtonForPage(long userId, int page, String label, boolean disabled, String... args) {
         return new ButtonImpl("page-" + name + "-" + page + "-" + userId + appendArgs(args), label, ButtonStyle.SECONDARY, disabled, null);

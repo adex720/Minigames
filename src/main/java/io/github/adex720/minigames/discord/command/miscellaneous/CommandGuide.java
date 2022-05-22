@@ -71,7 +71,7 @@ public class CommandGuide extends PageCommand {
     }
 
     @Override
-    public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, String[] args, int page) {
+    public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args) {
         sendPage(Replyable.edit(event), ci, page);
     }
 

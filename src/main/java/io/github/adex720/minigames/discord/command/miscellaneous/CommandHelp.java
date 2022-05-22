@@ -94,7 +94,7 @@ public class CommandHelp extends PageCommand {
         }
 
         Button buttonPrevious = getButtonForPage(authorId, page - 1, "previous", page == 1, category.name);
-        Button buttonNext = getButtonForPage(authorId, page + 1, "next", (page) * 6 >= commands.size(), category.name);
+        Button buttonNext = getButtonForPage(authorId, page + 1, "next", page * COMMANDS_PER_PAGE >= commands.size(), category.name);
 
         MessageEmbed message = embedBuilder
                 .setFooter(author.getName(), author.getAvatarUrl())
@@ -135,8 +135,8 @@ public class CommandHelp extends PageCommand {
     }
 
     @Override
-    public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, String[] args, int page) {
-        CommandCategory category = CommandCategory.get(args[4]);
+    public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args) {
+        CommandCategory category = CommandCategory.get(args[0]);
 
         int commandsAmount = bot.getCommandManager().getCommandAmount(category);
 

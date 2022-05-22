@@ -41,6 +41,15 @@ public class PageMovementManager extends Manager {
             return;
         }
 
-        command.onPageMove(event, commandInfo, args, page);
+        int extraArgsLength = args.length - 4;
+
+        if (extraArgsLength == 0) {
+            command.onPageMove(event, commandInfo, page, new String[0]);
+            return;
+        }
+
+        String[] extraArgs = new String[extraArgsLength];
+        System.arraycopy(args, 4, extraArgs, 0, extraArgsLength);
+        command.onPageMove(event, commandInfo, page, extraArgs);
     }
 }

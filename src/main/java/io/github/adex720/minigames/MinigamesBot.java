@@ -506,7 +506,6 @@ public class MinigamesBot {
     TODO: buttons to add
      - tic-tac-toe
      - connect 4
-     - leaderboard (next, previous)
 
     TODO: guilds
 
