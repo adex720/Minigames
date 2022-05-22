@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
@@ -88,7 +90,8 @@ public class MinigameTicTacToe extends DuelMinigame {
 
         if (minigame != null) {
             event.getHook().sendMessage("You started a new game of Tic Tac Toe against <@!" + minigame.opponentId + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbed()).queue();
+            event.getHook().sendMessageEmbeds(minigame.getEmbed())
+                    .addActionRows(minigame.getButtons()).queue();
         }
 
         return minigame;
@@ -106,7 +109,8 @@ public class MinigameTicTacToe extends DuelMinigame {
 
         if (minigame != null) {
             event.getHook().sendMessage("You started a new game of Tic Tac Toe against <@!" + minigame.opponentId + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbed()).queue();
+            event.getHook().sendMessageEmbeds(minigame.getEmbed())
+                    .addActionRows(minigame.getButtons()).queue();
         }
 
         return minigame;
@@ -236,16 +240,14 @@ public class MinigameTicTacToe extends DuelMinigame {
         isFirstPlayersTurn = !isFirstPlayersTurn;
 
         int winner = getWinner();
-        if (winner == 0) {
-            if (checkForAIMove()) {
-                winner = getWinner();
-            }
+        if (winner == 0 && checkForAIMove()) {
+            winner = getWinner();
         }
 
         if (winner == 0) {
             replyable.reply(getEmbedWithField("Set your mark",
                     "You set your mark in " + getPositionName(x, y) + "."
-                            + (isParty ? "" : "\nAI set its mark on " + lastAIMove)));
+                            + (isParty ? "" : "\nAI set its mark on " + lastAIMove)), getButtons());
             return;
         }
 
@@ -317,8 +319,52 @@ public class MinigameTicTacToe extends DuelMinigame {
                 .setTimestamp(new Date().toInstant());
     }
 
-    public long getCurrentPlayerId (){
+    public long getCurrentPlayerId() {
         return isFirstPlayersTurn ? id : opponentId;
+    }
+
+    public ActionRow[] getButtons() {
+        return new ActionRow[]{
+                ActionRow.of(getButton(0, 0), getButton(1, 0), getButton(2, 0)),
+                ActionRow.of(getButton(0, 1), getButton(1, 1), getButton(2, 1)),
+                ActionRow.of(getButton(0, 2), getButton(1, 2), getButton(2, 2))
+        };
+    }
+
+    /**
+     * Returns the button representing the given location.
+     */
+    public Button getButton(int x, int y) {
+        String buttonId = "tictactoe-" + id + "-" + x + y;
+
+        return createButton(buttonId, getMarkUpperCase(x, y));
+    }
+
+    public String getMarkUpperCase(int x, int y) {
+        return switch (board[x][y]) {
+            case 'x' -> "X";
+            case 'o' -> "O";
+            default -> " ";
+        };
+    }
+
+    /**
+     * Returns a button with the given id and label.
+     * Disables the button is so is specified.
+     */
+    public Button createButton(String id, String label) {
+        return createButton(id, label, !label.equals(" "));
+    }
+
+    /**
+     * Returns a button with the given id and label.
+     * Disables the button is so is specified.
+     */
+    public Button createButton(String id, String label, boolean disabled) {
+        Button button = Button.secondary(id, label);
+
+        if (disabled) return button.asDisabled();
+        return button;
     }
 
     /**

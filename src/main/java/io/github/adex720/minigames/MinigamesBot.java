@@ -504,8 +504,6 @@ public class MinigamesBot {
     TODO: minigames to add
 
     TODO: buttons to add
-     - tic-tac-toe
-     - connect 4
 
     TODO: guilds
 
