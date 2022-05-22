@@ -162,6 +162,11 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             profile.increaseStat(type.getNameWithSpaces() + " games won");
             profile.increaseStat("minigames won");
         }
+
+        if (isParty){
+            profile.increaseStat("party minigame played");
+            if (won) profile.increaseStat("party minigames won");
+        }
     }
 
     public void delete(@Nullable Replyable replyable) {
