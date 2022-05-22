@@ -362,7 +362,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Returns a String containing the rank, tag and score.
      */
     public String toEntryWithTag(@Nonnull Node node, int rank) {
-        return rank + ". " + getTag(node) + ": " + Util.formatNumber(getScore(node));
+        return rank + ". **" + getTag(node) + "**: " + Util.formatNumber(getScore(node));
     }
 
     /**
