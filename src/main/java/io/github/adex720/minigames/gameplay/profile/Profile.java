@@ -597,7 +597,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
             if (newLine) statsString.append('\n');
             newLine = true;
 
-            statsString.append(stat.name()).append(" - ").append(value);
+            statsString.append(stat.name()).append(" - ").append(Util.formatNumber(value));
         }
 
         return statsString.toString();
