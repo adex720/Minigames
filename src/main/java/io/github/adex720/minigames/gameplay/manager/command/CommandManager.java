@@ -61,6 +61,7 @@ public class CommandManager extends Manager {
      */
     public void initCommands(MinigamesBot bot) {
         MAIN_COMMANDS.add(new CommandHelp(bot));
+        MAIN_COMMANDS.add(new CommandGuide(bot));
         MAIN_COMMANDS.add(new CommandInvite(bot));
         MAIN_COMMANDS.add(new CommandPing(bot));
         MAIN_COMMANDS.add(new CommandServer(bot));
