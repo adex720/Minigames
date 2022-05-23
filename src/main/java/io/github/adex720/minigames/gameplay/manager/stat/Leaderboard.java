@@ -4,6 +4,7 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.Pair;
 import io.github.adex720.minigames.util.Util;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
@@ -482,6 +483,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Returns the {@link Leaderboard.Node} of the given profile.
      * If no entry exist the last Node is returned.
      */
+    @CheckReturnValue
     public Node getNode(final Profile profile) {
         Node node = first;
         while (node != null) {
@@ -498,6 +500,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      *
      * @param userId id of the user
      */
+    @CheckReturnValue
     public Node getNode(final long userId) {
         Node node = first;
         while (node != null) {
@@ -512,6 +515,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Returns the {@link Leaderboard.Node} in the given index.
      */
+    @CheckReturnValue
     public Node getNode(final int index) {
         Node node;
         if (index < (size >> 1)) {
@@ -554,28 +558,53 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         return element;
     }
 
+    /**
+     * Returns true if the given profile is on the leaderboard.
+     */
     public boolean contains(Profile profile) {
         return indexOf(profile) > 0;
     }
 
+    /**
+     * Returns true if the given user is on the leaderboard.
+     *
+     * @param userId Id of the user
+     */
     public boolean contains(long userId) {
         return indexOf(userId) > 0;
     }
 
-    public boolean contains(Object o) {
-        return indexOf(o) >= 0;
+    /**
+     * Returns true if an entry with the given score exists on the leaderboard.
+     */
+    public boolean contains(int score) {
+        return firstIndexOf(score) >= 0;
     }
 
+    /**
+     * If this method is reached instead of {@link Leaderboard#contains(Profile)}, {@link Leaderboard#contains(long)} or
+     * {@link Leaderboard#contains(int)}, the list can't contain entries of that type.
+     *
+     * @return false
+     */
+    public boolean contains(Object o) {
+        return false;
+    }
+
+    /**
+     * Returns the amount of entries on the leaderboard.
+     */
     public int size() {
         return size;
     }
 
+    @Override
     public boolean isEmpty() {
         return size > 0;
     }
 
     /**
-     * Returns a new Iterator for the Leaderboard.
+     * Returns an {@link Iterator} for the Leaderboard.
      */
     public ListIterator<Pair<Integer, Profile>> listIterator(int index) {
         return new LeaderboardListIterator(index);
@@ -592,10 +621,17 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             nextIndex = index;
         }
 
-        public boolean hasNext() {
-            return nextIndex < size;
+        /**
+         * Returns the current entry.
+         */
+        public Pair<Integer, Profile> current() {
+            checkForComodification();
+            return lastReturned.entry;
         }
 
+        /**
+         * Returns the previous entry.
+         */
         public Pair<Integer, Profile> next() {
             checkForComodification();
             if (!hasNext())
@@ -607,10 +643,9 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             return lastReturned.entry;
         }
 
-        public boolean hasPrevious() {
-            return nextIndex > 0;
-        }
-
+        /**
+         * Returns the previous entry.
+         */
         public Pair<Integer, Profile> previous() {
             checkForComodification();
             if (!hasPrevious()) throw new NoSuchElementException();
@@ -620,14 +655,37 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             return lastReturned.entry;
         }
 
+        /**
+         * Returns true if there are entries after the current one.
+         */
+        public boolean hasNext() {
+            return nextIndex < size;
+        }
+
+        /**
+         * Returns true if there are more entries before the current one.
+         */
+        public boolean hasPrevious() {
+            return nextIndex > 0;
+        }
+
+        /**
+         * Returns the index of the next entry.
+         */
         public int nextIndex() {
             return nextIndex;
         }
 
+        /**
+         * Returns the index of the previous entry.
+         */
         public int previousIndex() {
             return nextIndex - 1;
         }
 
+        /**
+         * Returns the current entry from the iterator.
+         */
         public void remove() {
             checkForComodification();
             if (lastReturned == null)
@@ -643,6 +701,37 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             expectedModCount++;
         }
 
+        /**
+         * Removes entry from the leaderboard.
+         *
+         * @param index Index of the entry
+         * @return The entry
+         */
+        public Pair<Integer, Profile> remove(int index) {
+            checkForComodification();
+
+            if (index < -1) throw new IllegalStateException("Id must be at least 0!");
+            if (index >= size) throw new IllegalStateException("Id is outside leaderboard!");
+
+            if (index == nextIndex) {
+                Pair<Integer, Profile> entry = current();
+                remove();
+                return entry;
+            }
+
+            Pair<Integer, Profile> entry = unlink(getNode(index));
+            expectedModCount++;
+
+            if (index < nextIndex) {
+                nextIndex--;
+            }
+
+            return entry;
+        }
+
+        /**
+         * Sets the current entry on the leaderboard.
+         */
         public void set(Pair<Integer, Profile> e) {
             if (lastReturned == null)
                 throw new IllegalStateException();
@@ -650,6 +739,9 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             lastReturned.entry = e;
         }
 
+        /**
+         * Adds the entry after the current entry.
+         */
         public void add(Pair<Integer, Profile> e) {
             checkForComodification();
             lastReturned = null;
@@ -661,6 +753,9 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
             expectedModCount++;
         }
 
+        /**
+         * Runs the action for each entry after the current one.
+         */
         public void forEachRemaining(Consumer<? super Pair<Integer, Profile>> action) {
             Objects.requireNonNull(action);
             while (modCount == expectedModCount && nextIndex < size) {
@@ -668,6 +763,22 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
                 lastReturned = next;
                 next = next.next;
                 nextIndex++;
+            }
+
+            checkForComodification();
+        }
+
+        /**
+         * Runs the action for each entry before the current one.
+         */
+        public void forEachBefore(Consumer<? super Pair<Integer, Profile>> action) {
+            Objects.requireNonNull(action);
+
+            while (modCount == expectedModCount && nextIndex > 0) {
+                next = next.previous;
+                nextIndex--;
+                action.accept(next.entry);
+                lastReturned = next;
             }
 
             checkForComodification();
