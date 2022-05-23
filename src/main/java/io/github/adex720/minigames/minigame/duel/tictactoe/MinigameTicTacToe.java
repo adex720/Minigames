@@ -82,10 +82,10 @@ public class MinigameTicTacToe extends DuelMinigame {
         MinigameTicTacToe minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
-                minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.authorId(), ci.party().getMemberId(), System.currentTimeMillis());
+                minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), ci.party().getMemberId(), System.currentTimeMillis());
             }
         } else {
-            minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.authorId(), System.currentTimeMillis());
+            minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), System.currentTimeMillis());
         }
 
         if (minigame != null) {
@@ -101,10 +101,10 @@ public class MinigameTicTacToe extends DuelMinigame {
         MinigameTicTacToe minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
-                minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.authorId(), ci.party().getMemberId(), System.currentTimeMillis());
+                minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), ci.party().getMemberId(), System.currentTimeMillis());
             }
         } else {
-            minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.authorId(), System.currentTimeMillis());
+            minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), System.currentTimeMillis());
         }
 
         if (minigame != null) {

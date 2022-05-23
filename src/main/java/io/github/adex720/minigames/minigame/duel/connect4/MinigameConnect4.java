@@ -9,9 +9,12 @@ import io.github.adex720.minigames.minigame.duel.DuelMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
@@ -52,13 +55,14 @@ public class MinigameConnect4 extends DuelMinigame {
         MinigameConnect4 minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
-                minigame = new MinigameConnect4(ci.bot(), ci.bot().getMinigameTypeManager(), ci.authorId(), ci.party().getMemberId(), System.currentTimeMillis());
+                minigame = new MinigameConnect4(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), ci.party().getMemberId(), System.currentTimeMillis());
             }
         }
 
         if (minigame != null) {
-            event.getHook().sendMessage("You started a new game of connect against <@!" + minigame.opponentId + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbedWithField("The player starting is:", "<@" + minigame.getCurrentPlayerId() + ">")).queue();
+            event.getHook().sendMessage("You started a new game of connect against <@!" + minigame.getDifferentPlayerId(ci.authorId()) + ">.").queue();
+            event.getHook().sendMessageEmbeds(minigame.getEmbedWithField("The player starting is:", "<@" + minigame.getCurrentPlayerId() + ">"))
+                    .addActionRows(minigame.getButtons()).queue();
         }
 
         return minigame;
@@ -68,16 +72,22 @@ public class MinigameConnect4 extends DuelMinigame {
         MinigameConnect4 minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
-                minigame = new MinigameConnect4(ci.bot(), ci.bot().getMinigameTypeManager(), ci.authorId(), ci.party().getMemberId(), System.currentTimeMillis());
+                minigame = new MinigameConnect4(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), ci.party().getMemberId(), System.currentTimeMillis());
             }
         }
 
         if (minigame != null) {
-            event.getHook().sendMessage("You started a new game of connect against <@!" + minigame.opponentId + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbedWithField("The player starting is:", "<@" + minigame.getCurrentPlayerId() + ">")).queue();
+            event.getHook().sendMessage("You started a new game of connect against <@!" + minigame.getDifferentPlayerId(ci.authorId()) + ">.").queue();
+            event.getHook().sendMessageEmbeds(minigame.getEmbedWithField("The player starting is:", "<@" + minigame.getCurrentPlayerId() + ">"))
+                    .addActionRows(minigame.getButtons()).queue();
         }
 
         return minigame;
+    }
+
+    public long getDifferentPlayerId(long id) {
+        if (id == this.id) return opponentId;
+        return this.id;
     }
 
     public static MinigameConnect4 fromJson(JsonObject json, MinigamesBot bot) {
@@ -123,17 +133,29 @@ public class MinigameConnect4 extends DuelMinigame {
      * Drops one mark to the board
      */
     public void drop(SlashCommandInteractionEvent event, CommandInfo ci) {
+        int columnId = (int) event.getOption("column").getAsLong();
+
+        drop(Replyable.from(event), ci, columnId);
+    }
+
+    /**
+     * Drops one mark to the board
+     */
+    public void drop(Replyable replyable, CommandInfo ci, int columnId) {
         long userId = ci.authorId();
 
-        if ((id == userId) != isFirstPlayersTurn) {
-            event.getHook().sendMessage("It's not your turn!").setEphemeral(true).queue();
+        if (userId != id && userId != opponentId) {
+            replyable.replyEphemeral("You are not part of this game!");
             return;
         }
 
-        int columnId = (int) event.getOption("column").getAsLong();
+        if ((id == userId) != isFirstPlayersTurn) {
+            replyable.replyEphemeral("It's not your turn!");
+            return;
+        }
 
         if (board[columnId][5] != ' ') {
-            event.getHook().sendMessage("That column is already full!").queue();
+            replyable.reply("That column is already full!");
             return;
         }
 
@@ -142,7 +164,7 @@ public class MinigameConnect4 extends DuelMinigame {
         String dropMessage = "You dropped your mark on column " + (columnId + 1) + ".";
         if (winState == 0) {
             isFirstPlayersTurn = !isFirstPlayersTurn;
-            event.getHook().sendMessageEmbeds(getEmbedWithField(dropMessage, "It's now <@" + getCurrentPlayerId() + ">'s turn.")).queue();
+            replyable.reply(getEmbedWithField(dropMessage, "It's now <@" + getCurrentPlayerId() + ">'s turn."), getButtons());
             return;
         }
 
@@ -153,8 +175,9 @@ public class MinigameConnect4 extends DuelMinigame {
             winnerMessage = "<@" + getCurrentPlayerId() + "> won!";
         }
 
-        Replyable replyable = Replyable.from(event);
-        replyable.reply(getEmbedWithField(dropMessage, winnerMessage));
+        MessageEmbed message = getEmbedWithField(dropMessage, winnerMessage);
+
+        replyable.reply(message, getButtons());
         finish(replyable, ci, winState);
     }
 
@@ -413,7 +436,7 @@ public class MinigameConnect4 extends DuelMinigame {
     }
 
     /**
-     * Converts the board to 42 emojis.
+     * Converts the board to 42 mark emojis and 7 number emojis giving each row its own id.
      *
      * @return Emotes and new lines as a String.
      */
@@ -439,7 +462,8 @@ public class MinigameConnect4 extends DuelMinigame {
                 .append(row3).append('\n')
                 .append(row2).append('\n')
                 .append(row1).append('\n')
-                .append(row0).toString();
+                .append(row0).append('\n')
+                .append(":one::two::three::four::five::six::seven:").toString();
     }
 
     /**
@@ -476,6 +500,25 @@ public class MinigameConnect4 extends DuelMinigame {
         }
 
         return getWinState();
+    }
+
+    /**
+     * Returns the buttons for one game.
+     */
+    public ActionRow[] getButtons() {
+        return new ActionRow[]{
+                ActionRow.of(getButton(0), getButton(1), getButton(2), getButton(3)),
+                ActionRow.of(getButton(4), getButton(5), getButton(6))
+        };
+    }
+
+    /**
+     * Returns the button representing the given column.
+     */
+    public Button getButton(int column) {
+        String buttonId = "connect4-" + id + "-" + column;
+
+        return Button.secondary(buttonId, Integer.toString(column + 1)).withDisabled(board[column][5] != ' ');
     }
 
     @Override

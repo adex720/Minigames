@@ -24,6 +24,7 @@ import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
+import io.github.adex720.minigames.minigame.duel.connect4.Connect4ButtonManager;
 import io.github.adex720.minigames.minigame.duel.tictactoe.TicTacToeButtonManager;
 import io.github.adex720.minigames.minigame.gamble.blackjack.BlackjackButtonManager;
 import io.github.adex720.minigames.minigame.party.memo.ImageBank;
@@ -76,6 +77,7 @@ public class MinigamesBot {
     private final PageMovementManager pageMovementManager;
     private final BlackjackButtonManager blackjackButtonManager;
     private final TicTacToeButtonManager ticTacToeButtonManager;
+    private final Connect4ButtonManager connect4ButtonManager;
 
 
     private final GuildJoinListener guildJoinListener;
@@ -142,6 +144,7 @@ public class MinigamesBot {
         pageMovementManager = new PageMovementManager(this);
         blackjackButtonManager = new BlackjackButtonManager(this);
         ticTacToeButtonManager = new TicTacToeButtonManager(this);
+        connect4ButtonManager = new Connect4ButtonManager(this);
 
 
         guildJoinListener = new GuildJoinListener(this);
@@ -281,6 +284,12 @@ public class MinigamesBot {
     public TicTacToeButtonManager getTicTacToeButtonManager() {
         return ticTacToeButtonManager;
     }
+
+    @CheckReturnValue
+    public Connect4ButtonManager getConnect4ButtonManager() {
+        return connect4ButtonManager;
+    }
+
 
     @CheckReturnValue
     public GuildJoinListener getGuildJoinListener() {
