@@ -25,8 +25,9 @@ public class BadgeManager extends Manager {
     public BadgeManager(MinigamesBot bot) {
         super(bot, "badge-manager");
 
-        BADGES = new TreeMap<>((o1, o2) -> o2 - o1);
+        BADGES = new TreeMap<>(Comparator.comparingInt(o -> o));
         BADGES_BY_NAME = new HashMap<>();
+        BADGES_AMOUNT = 0;
         loadBadges();
     }
 
