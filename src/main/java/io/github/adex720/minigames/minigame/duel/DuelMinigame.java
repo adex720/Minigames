@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Some duel minigames can be played against AI.
  *
  * @author adex720
- * */
+ */
 public abstract class DuelMinigame extends Minigame {
 
     public static final int UNFINISHED = 0;
@@ -74,17 +74,19 @@ public abstract class DuelMinigame extends Minigame {
     public void finish(Replyable replyable, CommandInfo commandInfo, int winState) {
         super.finish(replyable, commandInfo, winState == FIRST_PLAYER_WON);
 
-        Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
-        appendQuest(replyable, opponentProfile, winState == SECOND_PLAYER_WON);
-        appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
+        if (isParty) { // Not run against AI
+            Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
+            appendQuest(replyable, opponentProfile, winState == SECOND_PLAYER_WON);
+            appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
+        }
     }
 
     @Override
-    protected boolean isEveryoneOnSameTeam(){
+    protected boolean isEveryoneOnSameTeam() {
         return false;
     }
 
-    public long getCurrentPlayerId(){
+    public long getCurrentPlayerId() {
         return isFirstPlayersTurn ? id : opponentId;
     }
 }

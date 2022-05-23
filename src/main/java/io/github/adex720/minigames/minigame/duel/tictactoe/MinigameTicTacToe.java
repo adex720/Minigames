@@ -208,28 +208,31 @@ public class MinigameTicTacToe extends DuelMinigame {
     }
 
     public void set(SlashCommandInteractionEvent event, CommandInfo ci) {
+        short x = (short) event.getOption("column").getAsLong();
+        short y = (short) event.getOption("row").getAsLong();
+
+        set(Replyable.from(event), ci, x, y);
+    }
+
+    public void set(Replyable replyable, CommandInfo ci, short x, short y) {
         long setter = ci.authorId();
-        Replyable replyable = Replyable.from(event);
 
         if (setter == id) {
             if (!isFirstPlayersTurn) {
-                replyable.reply("It is not your turn!");
+                replyable.replyEphemeral("It is not your turn!");
                 return;
             }
         } else if (setter == opponentId) {
             if (isFirstPlayersTurn) {
-                replyable.reply("It is not your turn!");
+                replyable.replyEphemeral("It is not your turn!");
                 return;
             }
         } else {
-            replyable.reply("You are not part of this game.");
+            replyable.replyEphemeral("You are not part of this game.");
             return;
         }
 
         active(ci);
-
-        short x = (short) event.getOption("column").getAsLong();
-        short y = (short) event.getOption("row").getAsLong();
 
         if (isOccupied(x, y)) {
             replyable.reply(getEmbedWithField("Can't set mark", "That position is already in use."));

@@ -1,8 +1,9 @@
-package io.github.adex720.minigames.gameplay.manager.command;
+package io.github.adex720.minigames.gameplay.manager.minigame;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.Manager;
+import io.github.adex720.minigames.gameplay.manager.button.ButtonManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -14,13 +15,14 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
  *
  * @author adex720
  */
-public class ReplayManager extends Manager {
+public class ReplayManager extends ButtonManager {
 
     public ReplayManager(MinigamesBot bot) {
-        super(bot, "replay-manager");
+        super(bot, "replay");
     }
 
-    public void onButtonPress(ButtonInteractionEvent event, CommandInfo ci, String[] args) {
+    @Override
+    public void onButtonPressed(ButtonInteractionEvent event, CommandInfo ci, String[] args) {
         String minigameName = args[1];
         long gameId = Long.parseLong(args[2]);
 

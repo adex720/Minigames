@@ -111,11 +111,11 @@ public class MinigameTypeManager extends Manager {
         return switch (name.toLowerCase(Locale.ROOT)) { // simply faster
             case "hangman" -> HANGMAN;
             case "unscramble" -> UNSCRAMBLE;
-            case "higher-lower" -> HIGHER_OR_LOWER;
+            case "higher-lower", "higherlower" -> HIGHER_OR_LOWER;
             case "wordle" -> WORDLE;
             case "mastermind" -> MASTERMIND;
 
-            case "tic-tac-toe" -> TIC_TAC_TOE;
+            case "tic-tac-toe", "tictactoe" -> TIC_TAC_TOE;
             case "connect4" -> CONNECT4;
 
             case "counting" -> COUNTING;

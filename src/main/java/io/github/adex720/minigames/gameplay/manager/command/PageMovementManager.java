@@ -3,7 +3,7 @@ package io.github.adex720.minigames.gameplay.manager.command;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.PageCommand;
-import io.github.adex720.minigames.gameplay.manager.Manager;
+import io.github.adex720.minigames.gameplay.manager.button.ButtonManager;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.HashMap;
@@ -14,12 +14,12 @@ import java.util.HashMap;
  * @author adex720
  * @see PageCommand
  */
-public class PageMovementManager extends Manager {
+public class PageMovementManager extends ButtonManager {
 
     private final HashMap<String, PageCommand> COMMANDS;
 
     public PageMovementManager(MinigamesBot bot) {
-        super(bot, "page-manager");
+        super(bot, "page");
 
         COMMANDS = new HashMap<>();
     }
@@ -28,6 +28,7 @@ public class PageMovementManager extends Manager {
         COMMANDS.put(command.name, command);
     }
 
+    @Override
     public void onButtonPressed(ButtonInteractionEvent event, CommandInfo commandInfo, String[] args) {
         long userId = Long.parseLong(args[3]);
         if (userId != commandInfo.authorId()) return;

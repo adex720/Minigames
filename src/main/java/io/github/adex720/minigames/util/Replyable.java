@@ -62,26 +62,50 @@ public class Replyable {
      * Sends the message to the channel.
      */
     public void reply(String message) {
-        MessageAction messageAction = getMessageAction(message);
-        if (messageAction != null) {
-            messageAction.queue();
+        if (isWebhookBased) {
+            getWebhookMessageAction(message).queue();
             return;
         }
 
-        getWebhookMessageAction(message).queue();
+        getMessageAction(message).queue();
     }
 
     /**
      * Sends the message to the channel.
      */
     public void reply(MessageEmbed message) {
-        MessageAction messageAction = getMessageAction(message);
-        if (messageAction != null) {
-            messageAction.queue();
+        if (isWebhookBased) {
+            getWebhookMessageAction(message).queue();
             return;
         }
 
-        getWebhookMessageAction(message).queue();
+        getMessageAction(message).queue();
+    }
+
+    /**
+     * Sends the message to the channel.
+     * The message will be ephemeral (Hidden to other users) if possible.
+     */
+    public void replyEphemeral(String message) {
+        if (isWebhookBased) {
+            getWebhookMessageAction(message).setEphemeral(true).queue();
+            return;
+        }
+
+        getMessageAction(message).queue();
+    }
+
+    /**
+     * Sends the message to the channel.
+     * The message will be ephemeral (Hidden to other users) if possible.
+     */
+    public void replyEphemeral(MessageEmbed message) {
+        if (isWebhookBased) {
+            getWebhookMessageAction(message).setEphemeral(true).queue();
+            return;
+        }
+
+        getMessageAction(message).queue();
     }
 
     /**
@@ -105,7 +129,7 @@ public class Replyable {
             return;
         }
 
-        getWebhookMessageAction(message).addActionRows(actionRows).queue();
+        getWebhookMessageAction(message).addActionRows(actionRows).queue(m-> System.out.println("Sent"));
     }
 
     /**

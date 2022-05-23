@@ -118,7 +118,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     }
 
     public String getReplayButtonId() {
-        return "replay-" + type.name + "-" + id;
+        return "replay-" + type.getNameWithoutDashes() + "-" + id;
     }
 
     public String finishForParty(Replyable replyable, Party party, boolean won) {

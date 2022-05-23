@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.*;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
-import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
+import io.github.adex720.minigames.gameplay.manager.minigame.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
@@ -24,6 +24,7 @@ import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
+import io.github.adex720.minigames.minigame.duel.tictactoe.TicTacToeButtonManager;
 import io.github.adex720.minigames.minigame.gamble.blackjack.BlackjackButtonManager;
 import io.github.adex720.minigames.minigame.party.memo.ImageBank;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -72,8 +73,9 @@ public class MinigamesBot {
     private final ButtonListener buttonListener;
 
     private final ReplayManager replayManager;
-    private final BlackjackButtonManager blackjackButtonManager;
     private final PageMovementManager pageMovementManager;
+    private final BlackjackButtonManager blackjackButtonManager;
+    private final TicTacToeButtonManager ticTacToeButtonManager;
 
 
     private final GuildJoinListener guildJoinListener;
@@ -137,8 +139,9 @@ public class MinigamesBot {
         buttonListener = new ButtonListener(this);
 
         replayManager = new ReplayManager(this);
-        blackjackButtonManager = new BlackjackButtonManager(this);
         pageMovementManager = new PageMovementManager(this);
+        blackjackButtonManager = new BlackjackButtonManager(this);
+        ticTacToeButtonManager = new TicTacToeButtonManager(this);
 
 
         guildJoinListener = new GuildJoinListener(this);
@@ -265,13 +268,18 @@ public class MinigamesBot {
     }
 
     @CheckReturnValue
+    public PageMovementManager getPageMovementManager() {
+        return pageMovementManager;
+    }
+
+    @CheckReturnValue
     public BlackjackButtonManager getBlackjackButtonManager() {
         return blackjackButtonManager;
     }
 
     @CheckReturnValue
-    public PageMovementManager getPageMovementManager() {
-        return pageMovementManager;
+    public TicTacToeButtonManager getTicTacToeButtonManager() {
+        return ticTacToeButtonManager;
     }
 
     @CheckReturnValue

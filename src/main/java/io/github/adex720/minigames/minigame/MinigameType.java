@@ -99,9 +99,18 @@ public abstract class MinigameType<M extends Minigame> {
 
     /**
      * Returns the name with dashes being replaced by spaces.
+     * Ex. 'tic-tac-toe' -> 'tic tac toe
      */
     public String getNameWithSpaces() {
         return name.replaceAll("-", " ");
+    }
+
+    /**
+     * Returns the name without dashes.
+     * Ex. 'tic-tac-toe' -> 'tictactoe
+     */
+    public String getNameWithoutDashes() {
+        return name.replaceAll("-", "");
     }
 
     /**
