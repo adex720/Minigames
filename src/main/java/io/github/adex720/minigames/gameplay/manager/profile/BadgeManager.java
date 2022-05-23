@@ -94,6 +94,6 @@ public class BadgeManager extends Manager {
     }
 
     public int[] getBadgesForNewUsers() {
-        return new int[]{1};
+        return new int[]{2};
     }
 }
