@@ -95,7 +95,7 @@ public class CommandClaim extends Command {
 
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("CLAIM")
-                .addField("You opened " + claimed + " kit" + (claimed > 1 ? "s" : "") + "!", description.toString(), false)
+                .addField("You claimed " + claimed + " kit" + (claimed > 1 ? "s" : "") + "!", description.toString(), false)
                 .setColor(Util.getColor(userId))
                 .setFooter(user.getName(), user.getAvatarUrl())
                 .setTimestamp(new Date().toInstant())
