@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.button.ButtonManager;
 import io.github.adex720.minigames.minigame.Minigame;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 /**

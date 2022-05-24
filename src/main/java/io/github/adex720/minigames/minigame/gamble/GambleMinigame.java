@@ -3,7 +3,7 @@ package io.github.adex720.minigames.minigame.gamble;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;

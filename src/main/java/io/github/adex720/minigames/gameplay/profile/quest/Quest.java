@@ -7,7 +7,7 @@ import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 
 /**
  * Each player has own daily quests.

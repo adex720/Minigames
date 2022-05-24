@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.util;
+package io.github.adex720.minigames.util.replyable;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -22,7 +22,7 @@ public class Replyable {
 
     private final boolean isWebhookBased;
 
-    private Replyable(boolean isWebhookBased) {
+    Replyable(boolean isWebhookBased) {
         this.isWebhookBased = isWebhookBased;
     }
 
