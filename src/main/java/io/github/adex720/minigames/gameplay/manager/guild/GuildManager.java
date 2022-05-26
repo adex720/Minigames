@@ -22,6 +22,8 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
     public GuildManager(MinigamesBot bot) {
         super(bot, "guild-manager");
         GUILDS = new HashMap<>();
+
+        load(bot.loadJson("guilds").getAsJsonArray());
     }
 
     @Override

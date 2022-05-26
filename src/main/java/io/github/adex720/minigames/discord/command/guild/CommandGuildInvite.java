@@ -42,6 +42,11 @@ public class CommandGuildInvite extends Subcommand {
             return true;
         }
 
+        if (guild.isPublic()){
+            event.getHook().sendMessage("The guild is public. Users don't need to be invited in order to join.").queue();
+            return true;
+        }
+
         if (guild.isFull()) {
             event.getHook().sendMessage("Your guild is full!").setEphemeral(true).queue();
             return true;

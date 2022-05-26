@@ -29,7 +29,7 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         PROFILES = new HashMap<>();
         DELETION_CODES = new HashMap<>();
 
-        load((JsonArray) bot.loadJson("profiles"));
+        load(bot.loadJson("profiles").getAsJsonArray());
     }
 
     @Override

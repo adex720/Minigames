@@ -287,7 +287,20 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     }
 
     /**
-     * Doesn't remove the owner
+     * Adds member to the guild.
+     *
+     * @param userId Id of the member
+     * @param tag Tag of the member
+     */
+    public void addMember(long userId, String tag) {
+        members.add(new Pair<>(userId, tag));
+    }
+
+    /**
+     * Removes a member from the guild.
+     * Doesn't remove the owner.
+     *
+     * @param userId Id of the member
      */
     public void removeMember(long userId) {
         members.removeIf(memberPair -> memberPair.first == userId);
