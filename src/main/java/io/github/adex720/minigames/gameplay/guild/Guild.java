@@ -34,6 +34,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
     private final Set<Long> elders;
     private final Set<Long> invites;
+    private boolean isPublic;
 
     private final long createdTime;
 
@@ -263,6 +264,14 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
     public void rename(String name) {
         this.name = name;
+    }
+
+    public boolean isPublic(){
+        return isPublic;
+    }
+
+    public void setPublicity(boolean toPublic){
+        isPublic = toPublic;
     }
 
     public void minigameWon() {
