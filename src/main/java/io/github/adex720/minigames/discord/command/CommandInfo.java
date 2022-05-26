@@ -53,7 +53,7 @@ public class CommandInfo {
         this.hasProfile = () -> bot.getProfileManager().hasProfile(author.getIdLong());
         this.profile = () -> bot.getProfileManager().getProfile(author.getIdLong());
 
-        this.isInGuild = () -> bot.getGuildManager().isInGuide(author.getIdLong());
+        this.isInGuild = () -> bot.getGuildManager().isInGuild(author.getIdLong());
         this.guild = () -> bot.getGuildManager().getGuild(author.getIdLong());
 
         this.author = author;

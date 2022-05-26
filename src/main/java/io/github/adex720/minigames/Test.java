@@ -4,6 +4,8 @@ import io.github.adex720.minigames.util.network.HttpsRequester;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +18,16 @@ import java.io.IOException;
  */
 public class Test {
 
-    public static void main(String[] args) throws IOException {
-        testWebRequest();
+    public static void main(String[] args) {
+        testCharacterBytes();
+    }
 
+    public static void testCharacterBytes(){
+        String string = "語";
+        char firstChar = string.charAt(0);
+        System.out.println("String: " + string);
+        System.out.println("First char: " + firstChar);
+        System.out.println("As int: " + (int) firstChar);
     }
 
     public static void testWebRequest() throws IOException {

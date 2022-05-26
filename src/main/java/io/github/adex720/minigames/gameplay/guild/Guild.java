@@ -22,6 +22,9 @@ import java.util.Set;
  */
 public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record member join date
 
+    public static final int MAX_NAME_LENGTH = 15;
+    public static final char[] INVALID_NAME_CHARACTERS = {'@', '\\'};
+
     public static final int MAX_SIZE = 10;
 
     private long ownerId;
@@ -34,10 +37,11 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     private int minigamesWonTotal;
     private int minigamesWonCurrentWeek;
 
-    public Guild(long ownerId, String name) {
+    public Guild(long ownerId, String ownerTag, String name) {
         createdTime = System.currentTimeMillis();
 
         this.ownerId = ownerId;
+        this.ownerTag = ownerTag;
         members = new HashSet<>();
         this.name = name;
 
@@ -56,6 +60,22 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
         this.minigamesWonTotal = minigamesWonTotal;
         this.minigamesWonCurrentWeek = minigamesWonCurrentWeek;
+    }
+
+    public static boolean isNameValid(String name) {
+        int length = name.length();
+        if (length > MAX_NAME_LENGTH) return false;
+
+        for (int i = 0; i < length; i++) {
+            char checking = name.charAt(i);
+            for (char illegalChar : INVALID_NAME_CHARACTERS) {
+                if (checking == illegalChar) return false;
+            }
+
+            if (checking > 255) return false; // Non ascii characters are invalid
+            if (checking < 0x20) return false; // Control characters are invalid
+        }
+        return true;
     }
 
     @Override

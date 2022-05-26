@@ -42,8 +42,8 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
         }
     }
 
-    public Guild create(long owner, String name) {
-        Guild guild = new Guild(owner, name);
+    public Guild create(long owner, String ownerTag, String name) {
+        Guild guild = new Guild(owner, ownerTag, name);
         GUILDS.put(owner, guild);
         return guild;
     }
@@ -54,6 +54,22 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
 
     public Guild getById(long ownerId) {
         return GUILDS.get(ownerId);
+    }
+
+    public boolean doesGuildExist(String name) {
+        for (Guild guild : GUILDS.values()) {
+            if (guild.getName().equals(name)) return true;
+        }
+
+        return false;
+    }
+
+    public Guild getByName(String name) {
+        for (Guild guild : GUILDS.values()) {
+            if (guild.getName().equals(name)) return guild;
+        }
+
+        return null;
     }
 
     public boolean isGuildOwner(long userId) {
@@ -72,7 +88,7 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
         return null;
     }
 
-    public boolean isInGuide(long userId) {
+    public boolean isInGuild(long userId) {
         Guild owned = GUILDS.get(userId);
 
         if (owned != null) return true;
