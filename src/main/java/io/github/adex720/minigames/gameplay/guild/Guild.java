@@ -199,6 +199,27 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     }
 
     /**
+     * Returns the amount of users on the party or on the invite list.
+     */
+    public int sizeWithInvites() {
+        return size() + invites.size();
+    }
+
+    /**
+     * Returns true if the party is full.
+     */
+    public boolean isFull() {
+        return size() >= MAX_SIZE;
+    }
+
+    /**
+     * Returns true if the party is full after every invited user joins.
+     */
+    public boolean isFullWithInvites() {
+        return sizeWithInvites() >= MAX_SIZE;
+    }
+
+    /**
      * Returns a {@link MessageEmbed} containing information about the guild.
      */
     public MessageEmbed getInfoMessage() {
@@ -251,8 +272,12 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         elders.remove(memberId);
     }
 
-    public boolean isElder(long memberId){
+    public boolean isElder(long memberId) {
         return elders.contains(memberId);
+    }
+
+    public boolean isElderOrOwner(long memberId) {
+        return ownerId == memberId || isElder(memberId);
     }
 
     /**
@@ -260,17 +285,37 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
      */
     public void removeMember(long userId) {
         members.removeIf(memberPair -> memberPair.first == userId);
+        elders.remove(userId);
+    }
+
+    /**
+     * Returns true if the user is in the invite list.
+     *
+     * @param memberId Id of the user
+     */
+    public boolean isInvited(long memberId){
+        return invites.contains(memberId);
+    }
+
+    /**
+     * Adds the user to the invite list.
+     *
+     * @param memberId Id of the user
+     */
+    public void invite(long memberId) {
+        invites.add(memberId);
+        Util.schedule(() -> invites.remove(memberId), 60000);
     }
 
     public void rename(String name) {
         this.name = name;
     }
 
-    public boolean isPublic(){
+    public boolean isPublic() {
         return isPublic;
     }
 
-    public void setPublicity(boolean toPublic){
+    public void setPublicity(boolean toPublic) {
         isPublic = toPublic;
     }
 
