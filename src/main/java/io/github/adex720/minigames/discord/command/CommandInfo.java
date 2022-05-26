@@ -23,6 +23,7 @@ import javax.annotation.CheckReturnValue;
  */
 public class CommandInfo {
 
+    private final CalculableValue<Party> party;
     @Nullable
     private Party calculatedParty;
 
@@ -32,8 +33,10 @@ public class CommandInfo {
     private Profile calculatedProfile;
 
     private final CalculableValue<Boolean> isInGuild;
+    private final CalculableValue<Boolean> isGuildOwner;
     private final CalculableValue<Guild> guild;
     private Boolean calculatedIsInGuild;
+    private Boolean calculatedIsGuildOwner;
     private Guild calculatedGuild;
 
     private final User author;
@@ -50,10 +53,13 @@ public class CommandInfo {
     private String[] calculatedArgs;
 
     public CommandInfo(MessageChannel channel, User author, MinigamesBot bot, @Nullable CalculableValue<String[]> args) {
+        this.party = () -> bot.getPartyManager().getParty(profile().getPartyId());
+
         this.hasProfile = () -> bot.getProfileManager().hasProfile(author.getIdLong());
         this.profile = () -> bot.getProfileManager().getProfile(author.getIdLong());
 
         this.isInGuild = () -> bot.getGuildManager().isInGuild(author.getIdLong());
+        this.isGuildOwner = () -> bot.getGuildManager().isGuildOwner(author.getIdLong());
         this.guild = () -> bot.getGuildManager().getGuild(author.getIdLong());
 
         this.author = author;
@@ -65,7 +71,8 @@ public class CommandInfo {
         calculatedParty = null;
         calculatedProfile = null;
         calculatedGuild = null;
-        this.calculatedIsInGuild = null;
+        calculatedIsInGuild = null;
+        calculatedIsGuildOwner = null;
         calculatedMinigame = null;
         calculatedArgs = null;
     }
@@ -98,7 +105,7 @@ public class CommandInfo {
     @CheckReturnValue
     public Party party() {
         if (calculatedParty == null) {
-            calculatedParty = bot.getPartyManager().getParty(profile().getPartyId());
+            calculatedParty = party.calculate();
         }
 
         return calculatedParty;
@@ -113,9 +120,17 @@ public class CommandInfo {
     }
 
     @CheckReturnValue
+    public boolean isGuildOwner() {
+        if (calculatedGuild != null && calculatedGuild.getId() == author.getIdLong()) return true;
+        if (calculatedIsGuildOwner == null) calculatedIsGuildOwner = isGuildOwner.calculate();
+
+        return calculatedIsGuildOwner;
+    }
+
+    @CheckReturnValue
     public Guild guild() {
         if (calculatedGuild == null) {
-            calculatedGuild = bot.getGuildManager().getGuild(authorId());
+            calculatedGuild = guild.calculate();
         }
 
         return calculatedGuild;
