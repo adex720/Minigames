@@ -79,7 +79,8 @@ public class CommandGuildHelp extends Subcommand implements DocumentedPageComman
 
 
     public String getPageName() {
-        return "guildhelp";
+        return "guildhelp"; // Args on the id are separated by dashes
+                            // The id only accepts lower case letters, numbers and dashse
     }
 
     @Override

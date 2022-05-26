@@ -37,7 +37,7 @@ public class CommandGuildInvite extends Subcommand {
 
         User invitable = event.getOption("user").getAsUser();
         long invitableId = invitable.getIdLong();
-        if (guild.isInGuild(invitableId)) {
+        if (guild.isInGuild(invitableId)) { // Self inviting goes here
             event.getHook().sendMessage("The user is already in the guild!").setEphemeral(true).queue();
             return true;
         }

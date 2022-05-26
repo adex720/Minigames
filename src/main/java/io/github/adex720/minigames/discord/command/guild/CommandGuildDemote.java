@@ -49,8 +49,8 @@ public class CommandGuildDemote extends Subcommand {
             return true;
         }
 
-        if (guild.isElder(demotingId)) {
-            event.getHook().sendMessage("The user is already an elder!").setEphemeral(true).queue();
+        if (!guild.isElder(demotingId)) {
+            event.getHook().sendMessage("The user is not an elder!").setEphemeral(true).queue();
             return true;
         }
 
