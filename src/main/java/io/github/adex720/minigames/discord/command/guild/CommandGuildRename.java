@@ -5,7 +5,6 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.guild.Guild;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -13,42 +12,47 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 /**
  * @author adex720
  */
-public class CommandGuildCreate extends Subcommand {
+public class CommandGuildRename extends Subcommand {
 
-    public CommandGuildCreate(MinigamesBot bot) {
-        super(bot, bot.getCommandManager().parentCommandGuild, "create", "Creates a guild.", CommandCategory.GUILD);
+    public CommandGuildRename(MinigamesBot bot) {
+        super(bot, bot.getCommandManager().parentCommandGuild, "rename", "Renames your guild.", CommandCategory.GUILD);
         requiresProfile();
     }
 
     @Override
     public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
-        if (ci.isInGuild()) {
-            event.getHook().sendMessage("You are already in a guild!").setEphemeral(true).queue();
+        Guild guild = ci.guild();
+
+        if (!ci.isInGuild()) {
+            event.getHook().sendMessage("You are not in a guild!").setEphemeral(true).queue();
             return true;
         }
 
-        String guildName = event.getOption("name").getAsString();
+        if (!ci.isGuildOwner()) {
+            event.getHook().sendMessage("Only the guild owner can rename the guild!").setEphemeral(true).queue();
+            return true;
+        }
 
-        if (!Guild.isNameValid(name)) {
+        String newName = event.getOption("name").getAsString();
+
+        if (!Guild.isNameValid(newName)) {
             event.getHook().sendMessage("The name is invalid. (too long or contains illegal characters)").setEphemeral(true).queue();
             return true;
         }
 
-        if (bot.getGuildManager().doesGuildExist(name)) {
+        if (bot.getGuildManager().doesGuildExist(newName)) {
             event.getHook().sendMessage("That name unfortunately is already in use.").setEphemeral(true).queue();
             return true;
         }
 
-        User user = ci.author();
-        bot.getGuildManager().create(user.getIdLong(), user.getAsTag(), guildName);
-
-        event.getHook().sendMessage("You created guild " + guildName).queue();
+        guild.rename(newName);
+        event.getHook().sendMessage("Your guild was renamed to " + newName).setEphemeral(true).queue();
         return true;
     }
 
     @Override
     protected SubcommandData getSubcommandData() {
         return super.getSubcommandData()
-                .addOption(OptionType.STRING, "name", "Name of the guild", true);
+                .addOption(OptionType.STRING, "name", "New name", true);
     }
 }

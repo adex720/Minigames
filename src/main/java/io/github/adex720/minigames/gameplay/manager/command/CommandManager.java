@@ -129,6 +129,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandGuildPrivate(bot));
         SUBCOMMANDS.add(new CommandGuildPromote(bot));
         SUBCOMMANDS.add(new CommandGuildPublic(bot));
+        SUBCOMMANDS.add(new CommandGuildRename(bot));
         SUBCOMMANDS.add(new CommandGuildShop(bot));
         SUBCOMMANDS.add(new CommandGuildTransfer(bot));
 
