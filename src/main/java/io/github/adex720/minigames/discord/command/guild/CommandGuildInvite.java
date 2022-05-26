@@ -57,6 +57,11 @@ public class CommandGuildInvite extends Subcommand {
             return true;
         }
 
+        if (!bot.getProfileManager().hasProfile(invitableId)){
+            event.getHook().sendMessage("The chosen user doesn't have a profile!").setEphemeral(true).queue();
+            return true;
+        }
+
         guild.invite(invitableId);
         event.getHook().sendMessage("You invited " + invitable.getAsMention() + " to join your guild.").queue();
         return true;
