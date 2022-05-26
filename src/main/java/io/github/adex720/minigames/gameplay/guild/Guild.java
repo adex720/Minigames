@@ -32,6 +32,9 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     private final Set<Pair<Long, String>> members;
     private String name;
 
+    private final Set<Long> elders;
+    private final Set<Long> invites;
+
     private final long createdTime;
 
     private int minigamesWonTotal;
@@ -45,16 +48,23 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         members = new HashSet<>();
         this.name = name;
 
+        this.elders = new HashSet<>();
+        this.invites = new HashSet<>();
+
         minigamesWonTotal = 0;
         minigamesWonCurrentWeek = 0;
     }
 
-    public Guild(long ownerId, ArrayList<Pair<Long, String>> members, String name, long created, int minigamesWonTotal, int minigamesWonCurrentWeek) {
+    public Guild(long ownerId, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, int minigamesWonTotal, int minigamesWonCurrentWeek) {
         this.ownerId = ownerId;
 
         this.members = new HashSet<>();
         this.members.addAll(members);
         this.name = name;
+
+        this.elders = new HashSet<>();
+        this.elders.addAll(elders);
+        this.invites = new HashSet<>();
 
         this.createdTime = created;
 
@@ -92,15 +102,18 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
         JsonArray membersJson = JsonHelper.getJsonArrayOrEmpty(json, "members");
         ArrayList<Pair<Long, String>> members = new ArrayList<>();
+        ArrayList<Long> elders = new ArrayList<>();
 
         for (JsonElement jsonElement : membersJson) {
             JsonObject memberJson = jsonElement.getAsJsonObject();
 
             long userId = JsonHelper.getLong(memberJson, "id");
             String tag = JsonHelper.getString(memberJson, "tag");
-
             members.add(new Pair<>(userId, tag));
+
+            if (memberJson.has("elder")) elders.add(userId);
         }
+
 
         String name = JsonHelper.getString(json, "name");
         long created = JsonHelper.getLong(json, "created");
@@ -108,7 +121,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         int minigamesWonTotal = JsonHelper.getInt(json, "wins");
         int minigamesWonCurrentWeek = JsonHelper.getInt(json, "wins-week");
 
-        return new Guild(ownerId, members, name, created, minigamesWonTotal, minigamesWonCurrentWeek);
+        return new Guild(ownerId, members, elders, name, created, minigamesWonTotal, minigamesWonCurrentWeek);
     }
 
     @Override
@@ -135,6 +148,8 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
             memberJson.addProperty("id", member.first);
             memberJson.addProperty("tag", member.second);
+
+            if (elders.contains(member.first)) memberJson.addProperty("elder", 1);
 
             json.add(memberJson);
         }
@@ -225,6 +240,18 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
         ownerId = newOwnerId;
         ownerTag = newOwnerTag;
+    }
+
+    public void promote(long memberId) {
+        elders.add(memberId);
+    }
+
+    public void demote(long memberId) {
+        elders.remove(memberId);
+    }
+
+    public boolean isElder(long memberId){
+        return elders.contains(memberId);
     }
 
     /**
