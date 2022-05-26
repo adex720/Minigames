@@ -52,11 +52,13 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         this.elders = new HashSet<>();
         this.invites = new HashSet<>();
 
+        isPublic = true;
+
         minigamesWonTotal = 0;
         minigamesWonCurrentWeek = 0;
     }
 
-    public Guild(long ownerId, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, int minigamesWonTotal, int minigamesWonCurrentWeek) {
+    public Guild(long ownerId, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek) {
         this.ownerId = ownerId;
 
         this.members = new HashSet<>();
@@ -66,6 +68,8 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         this.elders = new HashSet<>();
         this.elders.addAll(elders);
         this.invites = new HashSet<>();
+
+        this.isPublic = isPublic;
 
         this.createdTime = created;
 
@@ -115,14 +119,15 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
             if (memberJson.has("elder")) elders.add(userId);
         }
 
-
         String name = JsonHelper.getString(json, "name");
+
+        boolean isPublic = JsonHelper.getBoolean(json, "public");
         long created = JsonHelper.getLong(json, "created");
 
         int minigamesWonTotal = JsonHelper.getInt(json, "wins");
         int minigamesWonCurrentWeek = JsonHelper.getInt(json, "wins-week");
 
-        return new Guild(ownerId, members, elders, name, created, minigamesWonTotal, minigamesWonCurrentWeek);
+        return new Guild(ownerId, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek);
     }
 
     @Override
@@ -133,6 +138,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         if (!members.isEmpty()) json.add("members", getMembersJson());
 
         json.addProperty("name", name);
+        json.addProperty("public", isPublic);
         json.addProperty("created", createdTime);
 
         json.addProperty("wins", minigamesWonTotal);
@@ -293,7 +299,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
      *
      * @param memberId Id of the user
      */
-    public boolean isInvited(long memberId){
+    public boolean isInvited(long memberId) {
         return invites.contains(memberId);
     }
 
@@ -311,10 +317,24 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         this.name = name;
     }
 
+    /**
+     * A public party allows anyone to join the party.
+     * The default state for a new guild is public.
+     * The privacy can only be changed by the owner.
+     * <p>
+     * A private party requires the owner or any elder to invite each user before they can join.
+     *
+     * @return Is the party public.
+     */
     public boolean isPublic() {
         return isPublic;
     }
 
+    /**
+     * Sets the guild publicity.
+     *
+     * @see Guild#isPublic() for the difference between public and private party.
+     */
     public void setPublicity(boolean toPublic) {
         isPublic = toPublic;
     }
