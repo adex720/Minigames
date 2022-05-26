@@ -52,6 +52,17 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
         return GUILDS.remove(id);
     }
 
+    public void transfer(long previousOwnerId, long newOwnerId, String newOwnerTag) {
+        Guild guild = transfer(previousOwnerId, newOwnerId);
+        guild.transfer(newOwnerId, newOwnerTag);
+    }
+
+    public Guild transfer(long oldId, long newId) {
+        Guild guild = GUILDS.remove(oldId);
+        GUILDS.put(newId, guild);
+        return guild;
+    }
+
     public Guild getById(long ownerId) {
         return GUILDS.get(ownerId);
     }
