@@ -221,13 +221,11 @@ public class Replyable {
         return new Replyable(false) {
             @Override
             public MessageAction getMessageAction(String message) {
-                event.deferEdit().queue();
                 return event.getMessage().editMessage(message).setActionRow();
             }
 
             @Override
             public MessageAction getMessageAction(MessageEmbed message) {
-                event.deferEdit().queue();
                 return event.getMessage().editMessageEmbeds(message);
             }
         };

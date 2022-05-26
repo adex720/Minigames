@@ -1,13 +1,10 @@
 package io.github.adex720.minigames.discord.command.miscellaneous;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
-import io.github.adex720.minigames.discord.command.PageCommand;
-import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.discord.command.DocumentedPageCommand;
 import io.github.adex720.minigames.util.Util;
 import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -26,38 +23,13 @@ import java.util.Date;
 /**
  * @author adex720
  */
-public class CommandGuide extends Command implements PageCommand {
+public class CommandGuide extends Command implements DocumentedPageCommand {
 
     private MessageEmbed.Field[][] CONTENT;
 
     public CommandGuide(MinigamesBot bot) {
         super(bot, "guide", "Teaches you how to use the bot.", CommandCategory.MISCELLANEOUS);
-    }
-
-    private MessageEmbed.Field[][] loadPagesContent() {
-        JsonArray pagesJson = bot.getResourceJson("guide").getAsJsonArray();
-
-        int pageCount = pagesJson.size();
-        MessageEmbed.Field[][] pages = new MessageEmbed.Field[pageCount][];
-
-        for (int i = 0; i < pageCount; i++) {
-            JsonArray fieldsJson = pagesJson.get(i).getAsJsonArray();
-            int fieldCount = fieldsJson.size();
-
-            MessageEmbed.Field[] fields = new MessageEmbed.Field[fieldCount];
-            for (int i2 = 0; i2 < fieldCount; i2++) {
-                JsonObject fieldJson = fieldsJson.get(i2).getAsJsonObject();
-
-                String question = JsonHelper.getString(fieldJson, "question");
-                String answer = JsonHelper.getString(fieldJson, "answer");
-
-                fields[i2] = new MessageEmbed.Field(question, answer, false);
-            }
-
-            pages[i] = fields;
-        }
-
-        return pages;
+        registerPageId(bot);
     }
 
     @Override
@@ -72,12 +44,18 @@ public class CommandGuide extends Command implements PageCommand {
 
     @Override
     public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args) {
+        event.deferEdit().queue();
         sendPage(Replyable.edit(event), ci, page);
     }
 
     @Override
-    public String getName() {
+    public String getPageName() {
         return name;
+    }
+
+    @Override
+    public String getJsonFileName() {
+        return "guide";
     }
 
     public void sendPage(Replyable replyable, CommandInfo commandInfo, int page) {
@@ -108,7 +86,7 @@ public class CommandGuide extends Command implements PageCommand {
 
     @Override
     protected SlashCommandData createCommandData() {
-        CONTENT = loadPagesContent();
+        CONTENT = loadPagesContent(bot);
 
         return super.createCommandData()
                 .addOptions(new OptionData(OptionType.STRING, "page", "Page of guide", false)

@@ -1,5 +1,6 @@
 package io.github.adex720.minigames.discord.command;
 
+import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -17,10 +18,14 @@ public interface PageCommand {
 
     void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args);
 
-    String getName();
+    String getPageName();
+
+    default void registerPageId(MinigamesBot bot){
+        bot.getPageMovementManager().registerPageCommand(this);
+    }
 
     default Button getButtonForPage(long userId, int page, String label, boolean disabled, String... args) {
-        return new ButtonImpl("page-" + getName() + "-" + page + "-" + userId + appendArgs(args), label, ButtonStyle.SECONDARY, disabled, null);
+        return new ButtonImpl("page-" + getPageName() + "-" + page + "-" + userId + appendArgs(args), label, ButtonStyle.SECONDARY, disabled, null);
     }
 
     default String appendArgs(String[] args) {

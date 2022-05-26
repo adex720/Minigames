@@ -32,6 +32,7 @@ public class CommandHelp extends Command implements PageCommand {
 
     public CommandHelp(MinigamesBot bot) {
         super(bot, "help", "Sends list of commands with descriptions.", CommandCategory.MISCELLANEOUS);
+        registerPageId(bot);
     }
 
     @Override
@@ -148,11 +149,12 @@ public class CommandHelp extends Command implements PageCommand {
             last = commandsAmount - 1;
         }
 
+        event.deferEdit().queue();
         sendCommandsFromCategory(Replyable.edit(event), ci, category, page, first, last);
     }
 
     @Override
-    public String getName() {
+    public String getPageName() {
         return name;
     }
 

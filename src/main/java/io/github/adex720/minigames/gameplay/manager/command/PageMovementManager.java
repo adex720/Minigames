@@ -25,7 +25,7 @@ public class PageMovementManager extends ButtonManager {
     }
 
     public void registerPageCommand(PageCommand command) {
-        COMMANDS.put(command.getName(), command);
+        COMMANDS.put(command.getPageName(), command);
     }
 
     @Override

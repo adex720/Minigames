@@ -33,6 +33,7 @@ public class CommandLeaderboard extends Command implements PageCommand {
     public CommandLeaderboard(MinigamesBot bot) {
         super(bot, "leaderboard", "Shows the leaderboard of a category.", CommandCategory.USER);
         requiresProfile();
+        registerPageId(bot);
     }
 
     @Override
@@ -73,6 +74,7 @@ public class CommandLeaderboard extends Command implements PageCommand {
 
     @Override
     public void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args) {
+        event.deferEdit().queue();
         Replyable replyable = Replyable.edit(event);
 
         int categoryId = Integer.parseInt(args[0]);
@@ -90,7 +92,7 @@ public class CommandLeaderboard extends Command implements PageCommand {
     }
 
     @Override
-    public String getName() {
+    public String getPageName() {
         return name;
     }
 
