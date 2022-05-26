@@ -1,6 +1,7 @@
 package io.github.adex720.minigames.discord.command;
 
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.gameplay.guild.Guild;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
@@ -30,6 +31,11 @@ public class CommandInfo {
     @Nullable
     private Profile calculatedProfile;
 
+    private final CalculableValue<Boolean> isInGuild;
+    private final CalculableValue<Guild> guild;
+    private Boolean calculatedIsInGuild;
+    private Guild calculatedGuild;
+
     private final User author;
 
     @Nullable
@@ -46,13 +52,20 @@ public class CommandInfo {
     public CommandInfo(MessageChannel channel, User author, MinigamesBot bot, @Nullable CalculableValue<String[]> args) {
         this.hasProfile = () -> bot.getProfileManager().hasProfile(author.getIdLong());
         this.profile = () -> bot.getProfileManager().getProfile(author.getIdLong());
+
+        this.isInGuild = () -> bot.getGuildManager().isInGuide(author.getIdLong());
+        this.guild = () -> bot.getGuildManager().getGuild(author.getIdLong());
+
         this.author = author;
         this.channel = channel;
+
         this.bot = bot;
         this.args = args;
 
         calculatedParty = null;
         calculatedProfile = null;
+        calculatedGuild = null;
+        this.calculatedIsInGuild = null;
         calculatedMinigame = null;
         calculatedArgs = null;
     }
@@ -89,6 +102,23 @@ public class CommandInfo {
         }
 
         return calculatedParty;
+    }
+
+    @CheckReturnValue
+    public boolean isInGuild() {
+        if (calculatedGuild != null) return true;
+        if (calculatedIsInGuild == null) calculatedIsInGuild = isInGuild.calculate();
+
+        return calculatedIsInGuild;
+    }
+
+    @CheckReturnValue
+    public Guild guild() {
+        if (calculatedGuild == null) {
+            calculatedGuild = bot.getGuildManager().getGuild(authorId());
+        }
+
+        return calculatedGuild;
     }
 
     @CheckReturnValue

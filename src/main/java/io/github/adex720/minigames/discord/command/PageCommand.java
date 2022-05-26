@@ -1,6 +1,5 @@
 package io.github.adex720.minigames.discord.command;
 
-import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -14,21 +13,17 @@ import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
  * @author adex720
  * @see PageMovementManager
  */
-public abstract class PageCommand extends Command {
+public interface PageCommand {
 
-    protected PageCommand(MinigamesBot bot, String name, String description, CommandCategory category) {
-        super(bot, name, description, category);
+    void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args);
 
-        bot.getPageMovementManager().registerPageCommand(this);
+    String getName();
+
+    default Button getButtonForPage(long userId, int page, String label, boolean disabled, String... args) {
+        return new ButtonImpl("page-" + getName() + "-" + page + "-" + userId + appendArgs(args), label, ButtonStyle.SECONDARY, disabled, null);
     }
 
-    public abstract void onPageMove(ButtonInteractionEvent event, CommandInfo ci, int page, String[] args);
-
-    public Button getButtonForPage(long userId, int page, String label, boolean disabled, String... args) {
-        return new ButtonImpl("page-" + name + "-" + page + "-" + userId + appendArgs(args), label, ButtonStyle.SECONDARY, disabled, null);
-    }
-
-    public String appendArgs(String[] args) {
+    default String appendArgs(String[] args) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (String arg : args) {

@@ -42,7 +42,7 @@ public class CommandOpen extends Command {
     public int getTypeId(SlashCommandInteractionEvent event) {
         OptionMapping type = getType(event);
         if (type == null) return -1;
-        return (int) type.getAsLong();
+        return type.getAsInt();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class CommandOpen extends Command {
                 return -1;
             }
 
-            int maxCount = ci.profile().amountOfCrates((int) type.getAsLong());
+            int maxCount = ci.profile().amountOfCrates(type.getAsInt());
             if (maxCount == 0) {
                 event.getHook().sendMessage("You don't have crates. You can get them from claiming kits or playing minigames.").queue();
                 return -1;
@@ -123,7 +123,7 @@ public class CommandOpen extends Command {
             }
 
             if (type != null) {
-                int typeId = (int) type.getAsLong();
+                int typeId = type.getAsInt();
                 int count = ci.profile().amountOfCrates(typeId);
 
                 if (count == 0) {

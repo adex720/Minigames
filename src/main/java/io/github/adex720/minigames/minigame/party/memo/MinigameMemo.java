@@ -265,8 +265,8 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         }
 
         active(ci);
-        int x = (int) event.getOption("column").getAsLong();
-        int y = (int) event.getOption("row").getAsLong();
+        int x = event.getOption("column").getAsInt();
+        int y = event.getOption("row").getAsInt();
 
         if (x >= width || x < 0 || y >= height || y < 0) {
             event.getHook().sendMessage("The card is outside the board!").queue();

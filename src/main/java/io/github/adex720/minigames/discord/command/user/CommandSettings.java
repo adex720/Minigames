@@ -46,7 +46,7 @@ public class CommandSettings extends Command {
             return true;
         }
 
-        String reply = set(ci, (int) settingMapping.getAsLong(), valueMapping.getAsBoolean());
+        String reply = set(ci, settingMapping.getAsInt(), valueMapping.getAsBoolean());
         event.getHook().sendMessage(reply).queue();
         return true;
     }

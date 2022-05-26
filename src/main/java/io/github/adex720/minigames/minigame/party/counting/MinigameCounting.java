@@ -109,7 +109,7 @@ public class MinigameCounting extends PartyTeamMinigame {
 
     public static MinigameCounting start(SlashCommandInteractionEvent event, CommandInfo ci) {
         OptionMapping optionMapping = event.getOption("mode");
-        int mode = optionMapping != null ? ((int) event.getOption("mode").getAsLong()) : MODE_BASE_10_ID;
+        int mode = optionMapping != null ? (event.getOption("mode").getAsInt()) : MODE_BASE_10_ID;
 
         MinigameCounting minigame = new MinigameCounting(ci, mode);
 

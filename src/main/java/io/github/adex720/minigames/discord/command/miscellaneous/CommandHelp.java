@@ -26,7 +26,7 @@ import java.util.Locale;
 /**
  * @author adex720
  */
-public class CommandHelp extends PageCommand {
+public class CommandHelp extends Command implements PageCommand {
 
     public static final int COMMANDS_PER_PAGE = 6;
 
@@ -49,7 +49,7 @@ public class CommandHelp extends PageCommand {
 
     private boolean sendCommandsFromCategory(SlashCommandInteractionEvent event, CommandInfo commandInfo, CommandCategory category) {
         OptionMapping pageOptionMapping = event.getOption("page");
-        int page = pageOptionMapping != null ? (int) pageOptionMapping.getAsLong() : 1;
+        int page = pageOptionMapping != null ?pageOptionMapping.getAsInt() : 1;
 
         if (page <= 0) {
             event.getHook().sendMessage("Page must be at least 1.").queue();
@@ -149,6 +149,11 @@ public class CommandHelp extends PageCommand {
         }
 
         sendCommandsFromCategory(Replyable.edit(event), ci, category, page, first, last);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

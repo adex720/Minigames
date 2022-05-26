@@ -208,8 +208,8 @@ public class MinigameTicTacToe extends DuelMinigame {
     }
 
     public void set(SlashCommandInteractionEvent event, CommandInfo ci) {
-        short x = (short) event.getOption("column").getAsLong();
-        short y = (short) event.getOption("row").getAsLong();
+        short x = (short) event.getOption("column").getAsInt();
+        short y = (short) event.getOption("row").getAsInt();
 
         set(Replyable.from(event), ci, x, y);
     }

@@ -3,18 +3,18 @@ package io.github.adex720.minigames.discord.command.miscellaneous;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.PageCommand;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -26,7 +26,7 @@ import java.util.Date;
 /**
  * @author adex720
  */
-public class CommandGuide extends PageCommand {
+public class CommandGuide extends Command implements PageCommand {
 
     private MessageEmbed.Field[][] CONTENT;
 
@@ -75,11 +75,16 @@ public class CommandGuide extends PageCommand {
         sendPage(Replyable.edit(event), ci, page);
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
     public void sendPage(Replyable replyable, CommandInfo commandInfo, int page) {
         long userId = commandInfo.authorId();
         MessageEmbed message = getPage(commandInfo, page);
-        Button buttonPrevious = getButtonForPage(userId,page - 1, "previous", page == 1);
-        Button buttonNext = getButtonForPage(userId,page + 1, "next", page == CONTENT.length);
+        Button buttonPrevious = getButtonForPage(userId, page - 1, "previous", page == 1);
+        Button buttonNext = getButtonForPage(userId, page + 1, "next", page == CONTENT.length);
 
         replyable.reply(message, buttonPrevious, buttonNext);
     }
@@ -110,12 +115,12 @@ public class CommandGuide extends PageCommand {
                         .addChoices(getChoices()));
     }
 
-    private Command.Choice[] getChoices() {
+    private net.dv8tion.jda.api.interactions.commands.Command.Choice[] getChoices() {
         int length = CONTENT.length;
-        Command.Choice[] choices = new Command.Choice[length];
+        net.dv8tion.jda.api.interactions.commands.Command.Choice[] choices = new net.dv8tion.jda.api.interactions.commands.Command.Choice[length];
 
         for (int i = 1; i <= length; i++) {
-            choices[i - 1] = new Command.Choice(Integer.toString(i), i);
+            choices[i - 1] = new net.dv8tion.jda.api.interactions.commands.Command.Choice(Integer.toString(i), i);
         }
 
         return choices;

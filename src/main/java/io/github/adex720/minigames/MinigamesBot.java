@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.*;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
@@ -93,6 +94,7 @@ public class MinigamesBot {
     private final ProfileManager profileManager;
 
     private final PartyManager partyManager;
+    private final GuildManager guildManager;
 
     private final BotDataManager saveDataManager;
     private final ResourceDataManager resourceDataManager;
@@ -162,6 +164,7 @@ public class MinigamesBot {
         statManager.initLeaderboards();
 
         partyManager = new PartyManager(this);
+        guildManager = new GuildManager(this);
 
         filePathManager = new FilePathManager(this);
         wordManager = new WordManager(this);
@@ -231,6 +234,7 @@ public class MinigamesBot {
         addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true); // Clear cached resource json files
 
         addTimerTask(questManager::unloadQuests, Util.MILLISECONDS_IN_DAY, Util.getMillisecondsUntilUtcMidnight()); // Unload all quests at UTC midnight
+        addTimerTask(guildManager::onNewWeek, Util.MILLISECONDS_IN_WEEK, Util.getMillisecondsUntilUtcNewWeek()); // Reset guild weekly progress at new UTC week
 
         addTimerTask(this::save, 1000 * 60 * 5, true); // save data
     }
@@ -324,6 +328,10 @@ public class MinigamesBot {
     @CheckReturnValue
     public PartyManager getPartyManager() {
         return partyManager;
+    }
+
+    public GuildManager getGuildManager() {
+        return guildManager;
     }
 
     @CheckReturnValue
@@ -485,6 +493,7 @@ public class MinigamesBot {
 
         saveJson(profileManager.asJson(), "profiles");
         saveJson(partyManager.asJson(), "parties");
+        saveJson(guildManager.asJson(), "guilds");
         saveJson(minigameManager.asJson(), "minigames");
 
         long end = System.currentTimeMillis();
@@ -494,9 +503,10 @@ public class MinigamesBot {
     public void reload() {
         long start = System.currentTimeMillis();
 
-        profileManager.load((JsonArray) saveDataManager.loadJson("profiles"));
-        partyManager.load((JsonArray) saveDataManager.loadJson("parties"));
-        minigameManager.load((JsonArray) saveDataManager.loadJson("minigames"));
+        profileManager.load( saveDataManager.loadJson("profiles").getAsJsonArray());
+        partyManager.load( saveDataManager.loadJson("parties").getAsJsonArray());
+        guildManager.load( saveDataManager.loadJson("guilds").getAsJsonArray());
+        minigameManager.load( saveDataManager.loadJson("minigames").getAsJsonArray());
 
         long end = System.currentTimeMillis();
         logger.info("Reloaded all data in {}ms", end - start);
@@ -522,7 +532,13 @@ public class MinigamesBot {
 
     TODO: buttons to add
 
-    TODO: guilds
+    TODO: merge the two start- and create-methods
+
+    TODO: save saving time on
+
+    TODO: guilds:
+     - wars (more minigames completed)
+     - leaderboard
 
     TODO: trivia (party)
      (https://opentdb.com/api_config.php)

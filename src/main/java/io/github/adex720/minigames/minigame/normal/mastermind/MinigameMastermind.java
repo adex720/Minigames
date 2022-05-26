@@ -148,10 +148,10 @@ public class MinigameMastermind extends Minigame {
     public void place(SlashCommandInteractionEvent event, CommandInfo ci) {
         active(ci);
 
-        int[] guessRaw = new int[]{(int) event.getOption("first").getAsLong(),
-                (int) event.getOption("second").getAsLong(),
-                (int) event.getOption("third").getAsLong(),
-                (int) event.getOption("fourth").getAsLong()};
+        int[] guessRaw = new int[]{event.getOption("first").getAsInt(),
+                event.getOption("second").getAsInt(),
+                event.getOption("third").getAsInt(),
+                event.getOption("fourth").getAsInt()};
 
         int guessCompacted = compactCode(guessRaw[0], guessRaw[1], guessRaw[2], guessRaw[3]);
 

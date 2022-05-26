@@ -12,6 +12,7 @@ import io.github.adex720.minigames.discord.command.user.*;
 import io.github.adex720.minigames.discord.command.user.booster.CommandBoosters;
 import io.github.adex720.minigames.discord.command.user.booster.CommandUse;
 import io.github.adex720.minigames.discord.command.user.crate.*;
+import io.github.adex720.minigames.discord.command.user.guild.*;
 import io.github.adex720.minigames.discord.listener.DevCommandListener;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
@@ -36,6 +37,7 @@ public class CommandManager extends Manager {
     // Parent commands must be declared as their own variables,
     // so they can be given as parameters for subcommands.
     public final CommandParty parentCommandParty;
+    public final CommandGuild parentCommandGuild;
     public final CommandPlay parentCommandPlay;
 
     // Some commands must be declared as their own variables,
@@ -50,6 +52,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS = new ArrayList<>();
 
         parentCommandParty = new CommandParty(bot);
+        parentCommandGuild = new CommandGuild(bot);
         parentCommandPlay = new CommandPlay(bot);
 
         commandUptime = new CommandUptime(bot);
@@ -101,6 +104,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyDelete(bot));
         SUBCOMMANDS.add(new CommandPartyInfo(bot));
         SUBCOMMANDS.add(new CommandPartyInvite(bot));
+        SUBCOMMANDS.add(new CommandPartyHelp(bot));
         SUBCOMMANDS.add(new CommandPartyJoin(bot));
         SUBCOMMANDS.add(new CommandPartyKick(bot));
         SUBCOMMANDS.add(new CommandPartyLeave(bot));
@@ -108,7 +112,23 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyPrivate(bot));
         SUBCOMMANDS.add(new CommandPartyPublic(bot));
         SUBCOMMANDS.add(new CommandPartyTransfer(bot));
-        SUBCOMMANDS.add(new CommandPartyHelp(bot));
+
+        SUBCOMMANDS.add(new CommandGuildBoss(bot));
+        SUBCOMMANDS.add(new CommandGuildBuy(bot));
+        SUBCOMMANDS.add(new CommandGuildCreate(bot));
+        SUBCOMMANDS.add(new CommandGuildDelete(bot));
+        SUBCOMMANDS.add(new CommandGuildDemote(bot));
+        SUBCOMMANDS.add(new CommandGuildHelp(bot));
+        SUBCOMMANDS.add(new CommandGuildInvite(bot));
+        SUBCOMMANDS.add(new CommandGuildJoin(bot));
+        SUBCOMMANDS.add(new CommandGuildKick(bot));
+        SUBCOMMANDS.add(new CommandGuildLeave(bot));
+        SUBCOMMANDS.add(new CommandGuildMembers(bot));
+        SUBCOMMANDS.add(new CommandGuildPrivate(bot));
+        SUBCOMMANDS.add(new CommandGuildPromote(bot));
+        SUBCOMMANDS.add(new CommandGuildPublic(bot));
+        SUBCOMMANDS.add(new CommandGuildShop(bot));
+        SUBCOMMANDS.add(new CommandGuildTransfer(bot));
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(new CommandMinigameInfo(bot));

@@ -2,7 +2,6 @@
 /.idea
 /out
 /build
-/src/test
 
 src/main/resources/excel
 

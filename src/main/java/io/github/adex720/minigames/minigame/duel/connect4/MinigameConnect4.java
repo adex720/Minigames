@@ -133,7 +133,7 @@ public class MinigameConnect4 extends DuelMinigame {
      * Drops one mark to the board
      */
     public void drop(SlashCommandInteractionEvent event, CommandInfo ci) {
-        int columnId = (int) event.getOption("column").getAsLong();
+        int columnId = event.getOption("column").getAsInt();
 
         drop(Replyable.from(event), ci, columnId);
     }

@@ -19,6 +19,8 @@ public class Util {
 
 
     public static final int MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
+    public static final int MILLISECONDS_IN_WEEK = MILLISECONDS_IN_DAY * 7;
+    public static final int MILLISECONDS_ON_THREE_DAYS = MILLISECONDS_IN_DAY * 3; // 1/1/1970 was Thursday
 
     public static void schedule(Task task, long delay) {
         new Timer().schedule(new TimerTask() {
@@ -92,7 +94,19 @@ public class Util {
     }
 
     public static int getMillisecondsUntilUtcMidnight() {
-        return MILLISECONDS_IN_DAY - (int) (System.currentTimeMillis() % MILLISECONDS_IN_DAY);
+        return getMillisecondsUntilUtcMidnight(System.currentTimeMillis());
+    }
+
+    public static int getMillisecondsUntilUtcMidnight(long time) {
+        return (int) (MILLISECONDS_IN_DAY - time % MILLISECONDS_IN_DAY);
+    }
+
+    public static int getMillisecondsUntilUtcNewWeek() {
+        return getMillisecondsUntilUtcNewWeek(System.currentTimeMillis());
+    }
+
+    public static int getMillisecondsUntilUtcNewWeek(long time) {
+        return (int) (MILLISECONDS_IN_DAY * 7 - (time - MILLISECONDS_ON_THREE_DAYS) % MILLISECONDS_IN_WEEK); // Time shouldn't ever be so small it becomes a problem.
     }
 
 

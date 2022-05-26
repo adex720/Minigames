@@ -23,7 +23,7 @@ public class CommandUse extends Command {
 
     @Override
     public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
-        int id = (int) event.getOption("type").getAsLong();
+        int id = event.getOption("type").getAsInt();
 
         event.getHook().sendMessage(ci.profile().useBooster(Replyable.from(event), id)).queue();
         return true;

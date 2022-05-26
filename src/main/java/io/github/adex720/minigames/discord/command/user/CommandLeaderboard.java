@@ -1,6 +1,7 @@
 package io.github.adex720.minigames.discord.command.user;
 
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.PageCommand;
@@ -25,7 +26,7 @@ import java.util.Date;
 /**
  * @author adex720
  */
-public class CommandLeaderboard extends PageCommand {
+public class CommandLeaderboard extends Command implements PageCommand {
 
     public static final int PER_PAGE = 10;
 
@@ -36,12 +37,12 @@ public class CommandLeaderboard extends PageCommand {
 
     @Override
     public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
-        int categoryId = (int) event.getOption("category").getAsLong();
+        int categoryId = event.getOption("category").getAsInt();
 
         int page = 1;
         OptionMapping pageOptionMapping = event.getOption("page");
         if (pageOptionMapping != null) {
-            page = (int) pageOptionMapping.getAsLong(); // get page from argument
+            page = pageOptionMapping.getAsInt(); // get page from argument
 
             if (page <= 0) {
                 event.getHook().sendMessage("Page must be at least 1!").queue();
@@ -86,6 +87,11 @@ public class CommandLeaderboard extends PageCommand {
         int userRank = leaderboard.getRank(ci.profile());
 
         sendLeaderboard(replyable, ci, categoryName, categoryId, userRank, ranks, page, entriesAmount);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     /**
