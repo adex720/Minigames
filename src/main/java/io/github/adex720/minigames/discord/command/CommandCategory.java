@@ -8,9 +8,10 @@ import java.util.Locale;
 public enum CommandCategory {
 
     MINIGAME(0),
-    PARTY(1),
-    USER(2),
-    MISCELLANEOUS(3);
+    USER(1),
+    PARTY(2),
+    GUILD(3),
+    MISCELLANEOUS(4);
 
     public final int id;
     public final String name;

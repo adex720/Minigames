@@ -8,6 +8,7 @@ import io.github.adex720.minigames.gameplay.guild.Guild;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -25,7 +26,7 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
 
     @Override
     public Set<Guild> getValues() {
-        return (Set<Guild>) GUILDS.values();
+        return new HashSet<>(GUILDS.values());
     }
 
     @Override
@@ -35,7 +36,7 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
 
     @Override
     public void load(JsonArray data) {
-        for (JsonElement json : data){
+        for (JsonElement json : data) {
             Guild guild = Guild.fromJson(json.getAsJsonObject());
             GUILDS.put(guild.getId(), guild);
         }
@@ -83,7 +84,7 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
         return false;
     }
 
-    public void onNewWeek(){
+    public void onNewWeek() {
         getValues().forEach(Guild::onNewWeek);
         bot.getLogger().info("Reset guild weekly progress!");
     }
