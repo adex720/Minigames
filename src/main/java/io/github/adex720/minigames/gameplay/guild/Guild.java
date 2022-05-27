@@ -60,8 +60,9 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         minigamesWonCurrentWeek = 0;
     }
 
-    public Guild(long ownerId, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek) {
+    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek) {
         this.ownerId = ownerId;
+        this.ownerTag = ownerTag;
 
         this.members = new HashSet<>();
         this.members.addAll(members);
@@ -106,6 +107,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
     public static Guild fromJson(JsonObject json) {
         long ownerId = JsonHelper.getLong(json, "owner");
+        String ownerTag = JsonHelper.getString(json, "owner-tag");
 
         JsonArray membersJson = JsonHelper.getJsonArrayOrEmpty(json, "members");
         ArrayList<Pair<Long, String>> members = new ArrayList<>();
@@ -129,7 +131,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         int minigamesWonTotal = JsonHelper.getInt(json, "wins");
         int minigamesWonCurrentWeek = JsonHelper.getInt(json, "wins-week");
 
-        return new Guild(ownerId, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek);
+        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek);
     }
 
     @Override
@@ -137,6 +139,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         JsonObject json = new JsonObject();
 
         json.addProperty("owner", ownerId);
+        json.addProperty("owner-tag", ownerTag);
         if (!members.isEmpty()) json.add("members", getMembersJson());
 
         json.addProperty("name", name);
