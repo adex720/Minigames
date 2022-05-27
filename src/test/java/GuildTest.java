@@ -1,16 +1,23 @@
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.gameplay.guild.Guild;
+import io.github.adex720.minigames.util.Pair;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 /**
  * @author adex720
  */
 class GuildTest {
 
-    Guild exampleGuild = new Guild(22L, new long[]{17L, 18L}, "test", 123456, 27, 12);
+    Guild exampleGuild = new Guild(22L, "User#1234",new ArrayList<>(), new ArrayList<>(), "name", 123456L, true, 27, 12);
 
+    GuildTest(){
+        exampleGuild.addMember(17L, "User1#1111");
+        exampleGuild.addMember(18L, "User2#2222");
+    }
 
     @Test
     void saveAndLoad() {
@@ -34,11 +41,6 @@ class GuildTest {
         MatcherAssert.assertThat("All members are not counted as guild members", exampleGuild.isInGuild(18L));
 
         MatcherAssert.assertThat("Members not on the guild are counted as guild members", !exampleGuild.isInGuild(16L));
-    }
-
-    @Test
-    void infoMessage() {
-        MessageEmbed response = exampleGuild.getInfoMessage();
     }
 
 
