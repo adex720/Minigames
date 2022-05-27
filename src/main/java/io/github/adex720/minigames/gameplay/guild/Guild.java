@@ -22,6 +22,8 @@ import java.util.Set;
  */
 public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record member join date
 
+    public static final int MINIGAMES_WON_STAT_ID = 2;
+
     public static final int MAX_NAME_LENGTH = 15;
     public static final char[] INVALID_NAME_CHARACTERS = {'@', '\\'};
 
@@ -228,8 +230,28 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     /**
      * Returns a {@link MessageEmbed} containing information about the guild.
      */
-    public MessageEmbed getInfoMessage() {
-        return new EmbedBuilder().build();
+    public MessageEmbed getInfoMessage(User user) {
+        return new EmbedBuilder()
+                .setTitle(name)
+                .addField("Information:", getInformation(), false)
+                .addField("Stats:", getStats(), false)
+                .setColor(Util.getColor(ownerId))
+                .setFooter(user.getName(), user.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build();
+    }
+
+    private String getInformation() {
+        return "- **Owner:** " + ownerTag + "\n" +
+                "- **" + size() + "** members\n" +
+                "- **Created: ** <t:" + createdTime + ":D>\n" +
+                "- **State:** " + (isPublic ? "public" : "private");
+    }
+
+    private String getStats() {
+        return "- " + minigamesWonTotal + " minigames won total\n" +
+                "- " + minigamesWonCurrentWeek + " minigames won this week\n" +
+                "- "; //TODO: display boss progression
     }
 
     /**
@@ -241,6 +263,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         return new EmbedBuilder()
                 .setTitle(name)
                 .addField("Owner:", "<@" + ownerId + ">", false)
+                .addField(getMembersField())
                 .setColor(Util.getColor(ownerId))
                 .setFooter(user.getName(), user.getAvatarUrl())
                 .setTimestamp(new Date().toInstant())
@@ -255,7 +278,11 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
         for (Pair<Long, String> member : members) {
             if (newLine) membersString.append('\n');
+
             membersString.append(member.second);
+            if (elders.contains(member.first)) {
+                membersString.append(" **elder**");
+            }
             newLine = true;
         }
 
@@ -290,7 +317,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
      * Adds member to the guild.
      *
      * @param userId Id of the member
-     * @param tag Tag of the member
+     * @param tag    Tag of the member
      */
     public void addMember(long userId, String tag) {
         members.add(new Pair<>(userId, tag));
