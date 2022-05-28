@@ -4,12 +4,13 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.gameplay.guild.Guild;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.party.PartyCompetitiveMinigame;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,6 +114,11 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
         appendQuest(replyable, profile, won); // Update quests and stats
         appendStats(profile, won);
+
+        if (profile.isInGuild()) {
+            Guild guild = bot.getGuildManager().getById(profile.getGuildId());
+            guild.minigameWon(bot);
+        }
 
         return rewards;
     }

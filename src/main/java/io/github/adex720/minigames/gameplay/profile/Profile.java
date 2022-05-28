@@ -56,6 +56,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     private boolean isInParty;
     private long partyId;
 
+    private boolean isInGuild;
+    private long guildId;
+
     private int coins;
 
     private final Set<Integer> badges;
@@ -81,6 +84,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         isInParty = false;
         partyId = userId;
+
+        isInGuild = false;
+        guildId = userId;
 
         coins = 0;
         badges = new HashSet<>();
@@ -235,6 +241,28 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public void partyLeft() {
         isInParty = false;
+    }
+
+    public boolean isInGuild() {
+        return isInGuild;
+    }
+
+    /**
+     * Returns the id of the guild the user is in.
+     * If the user is not in a guild this value is either the id of the previous guild or the id of the user.
+     * If it is not certain if the user is in a party {@link Profile#isInGuild()} should be checked.
+     */
+    public long getGuildId() {
+        return guildId;
+    }
+
+    public void guildJoined(long guildId) {
+        isInGuild = true;
+        this.guildId = guildId;
+    }
+
+    public void guildLeft() {
+        isInGuild = false;
     }
 
     public String getTag() {
