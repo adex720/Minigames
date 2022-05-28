@@ -552,6 +552,8 @@ public class MinigamesBot {
 
     TODO: save saving time on
 
+    TODO: cache recently accessed guilds, profiles and parties
+
     TODO: guilds:
      - wars (more minigames completed)
      - leaderboard

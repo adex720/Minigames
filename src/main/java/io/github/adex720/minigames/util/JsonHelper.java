@@ -65,6 +65,15 @@ public class JsonHelper {
     }
 
     /**
+     * Returns the value from the key as Long.
+     * If no key is present null is returned.
+     */
+    public static Long getLongOrNull(JsonObject json, String key) {
+        if (!json.has(key)) return null;
+        return getLong(json, key);
+    }
+
+    /**
      * Returns the value from the key as long.
      * Throws a {@link JsonSyntaxException} if no key is present.
      *

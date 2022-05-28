@@ -99,7 +99,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         playerSettings = new PlayerSettings(userId);
     }
 
-    public Profile(MinigamesBot bot, long userId, String tag, long crated, int coins,
+    public Profile(MinigamesBot bot, long userId, String tag, long crated, int coins, @Nullable Long partyId, @Nullable Long guildId,
                    JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson,
                    JsonArray activeBoostersJson, JsonArray statusesJson, JsonArray settingsJson, JsonArray badgesJson) {
         this.bot = bot;
@@ -109,8 +109,21 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         banned = false;
 
-        isInParty = false;
-        partyId = userId;
+        if (partyId != null) {
+            isInParty = true;
+            this.partyId = partyId;
+        } else {
+            isInParty = false;
+            this.partyId = userId;
+        }
+
+        if (guildId != null) {
+            isInGuild = true;
+            this.guildId = guildId;
+        } else {
+            isInGuild = false;
+            this.guildId = userId;
+        }
 
         this.coins = coins;
         badges = JsonHelper.jsonArrayToIntHashSet(badgesJson);
@@ -157,6 +170,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         json.addProperty("tag", tag);
         json.addProperty("created", created);
 
+        if (isInParty) json.addProperty("party", partyId);
+        if (isInGuild) json.addProperty("guild", guildId);
+
         json.addProperty("coins", coins);
         json.add("stats", statList.asJson());
 
@@ -185,6 +201,9 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         long created = JsonHelper.getLong(json, "created");
 
+        Long partyId = JsonHelper.getLongOrNull(json, "party");
+        Long guildId = JsonHelper.getLongOrNull(json, "guild");
+
         int coins = JsonHelper.getInt(json, "coins");
         JsonObject statsJson = JsonHelper.getJsonObject(json, "stats");
 
@@ -200,7 +219,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray badgesJson = JsonHelper.getJsonArray(json, "badges", new JsonArray());
 
-        return new Profile(bot, id, tag, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson, badgesJson);
+        return new Profile(bot, id, tag, created, coins, partyId, guildId, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson, badgesJson);
     }
 
     private JsonArray getStatusesJson() {
