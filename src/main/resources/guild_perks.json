@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Perk 1",
+    "description": "Foo",
+    "effect": "Bah",
+    "prices": [
+      1
+    ],
+    "effects": [
+      1,
+      1
+    ],
+    "type": 0
+  },
+  {
+    "name": "Perk 2",
+    "description": "Foo",
+    "effect": "Bah",
+    "prices": [
+      1
+    ],
+    "effects": [
+      1,
+      1
+    ],
+    "type": 0
+  },
+  {
+    "name": "Perk 3",
+    "description": "Foo",
+    "effect": "Bah",
+    "prices": [
+      1
+    ],
+    "effects": [
+      1,
+      1
+    ],
+    "type": 1
+  },
+  {
+    "name": "Perk 4",
+    "description": "Foo",
+    "effect": "Bah",
+    "prices": [
+      1
+    ],
+    "effects": [
+      1,
+      1
+    ],
+    "type": 1
+  },
+  {
+    "name": "CEO",
+    "description": "Doubles the money earned from minigames.",
+    "effect": "Double coins from minigames.",
+    "prices": [
+      100
+    ],
+    "effects": [
+      1,
+      2
+    ],
+    "type": 2
+  }
+]

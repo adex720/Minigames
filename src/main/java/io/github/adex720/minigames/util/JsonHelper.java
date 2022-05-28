@@ -385,6 +385,33 @@ public class JsonHelper {
     }
 
     /**
+     * Converts a {@link JsonArray} to an array of int.
+     */
+    public static float[] jsonArrayToFloatArray(JsonArray jsonArray) {
+        int size = jsonArray.size();
+        float[] array = new float[size];
+
+        for (int i = 0; i < size; i++) {
+            array[i] = jsonArray.get(i).getAsFloat();
+        }
+
+        return array;
+    }
+
+    /**
+     * Converts an array of {@link int}s to a {@link JsonArray}.
+     */
+    public static JsonArray arrayToJsonArray(float[] array) {
+        JsonArray jsonArray = new JsonArray();
+
+        for (float i : array) {
+            jsonArray.add(i);
+        }
+
+        return jsonArray;
+    }
+
+    /**
      * Converts an array of {@link String}s to a {@link JsonArray}.
      */
     public static JsonArray arrayToJsonArray(String[] array) {

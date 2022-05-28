@@ -16,10 +16,10 @@ import java.util.Date;
 /**
  * @author adex720
  */
-public class CommandGuildShop extends Subcommand {
+public class CommandGuildPerks extends Subcommand {
 
-    public CommandGuildShop(MinigamesBot bot) {
-        super(bot, bot.getCommandManager().parentCommandGuild, "shop", "Shows the guild shop, current balance and perks.", CommandCategory.GUILD);
+    public CommandGuildPerks(MinigamesBot bot) {
+        super(bot, bot.getCommandManager().parentCommandGuild, "perks", "Shows information about guild perks.", CommandCategory.GUILD);
         requiresProfile();
     }
 
@@ -34,11 +34,10 @@ public class CommandGuildShop extends Subcommand {
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle(guild.getName())
-                .addField("Guild shop", "Note: The perks affect everyone on the guild, but only guild owner and elders can purchase something.", true)
-                .addField("Coins in guild vault:", guild.getCoins() + "/" + Guild.MAX_COINS, true)
+                .addField("Guild shop perks", "Note: The perks affect everyone on the guild, but only guild owner and elders can purchase something.", true)
                 .setColor(Util.getColor(guild.getId()));
 
-        for (MessageEmbed.Field field : guild.getShopFields()){
+        for (MessageEmbed.Field field : guild.getPerkInfoFields()){
             embedBuilder.addField(field);
         }
 

@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
+import io.github.adex720.minigames.gameplay.guild.boss.GuildBoss;
+import io.github.adex720.minigames.gameplay.guild.shop.GuildPerkList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Pair;
 import io.github.adex720.minigames.util.Util;
@@ -28,6 +30,8 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
     public static final int MAX_SIZE = 10;
 
+    public static final int MAX_COINS = 1000;
+
     private long ownerId;
     private String ownerTag;
     private final Set<Pair<Long, String>> members;
@@ -42,8 +46,9 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     private int minigamesWonTotal;
     private int minigamesWonCurrentWeek;
 
-
     private GuildBoss boss;
+    private final GuildPerkList perkList;
+    private int coins;
 
     public Guild(MinigamesBot bot, long ownerId, String ownerTag, String name) {
         createdTime = System.currentTimeMillis();
@@ -62,9 +67,13 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         minigamesWonCurrentWeek = 0;
 
         boss = bot.getGuildBossList().get(0);
+        perkList = new GuildPerkList(bot.getGuildPerkManager());
+        coins = 0;
     }
 
-    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek, GuildBoss boss) {
+    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders,
+                 String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek,
+                 GuildBoss boss, GuildPerkList perkList, int coins) {
         this.ownerId = ownerId;
         this.ownerTag = ownerTag;
 
@@ -84,6 +93,8 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         this.minigamesWonCurrentWeek = minigamesWonCurrentWeek;
 
         this.boss = boss;
+        this.perkList = perkList;
+        this.coins = coins;
     }
 
     public static boolean isNameValid(String name) {
@@ -144,8 +155,11 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         } else {
             boss = bot.getGuildBossList().get(0);
         }
+        JsonArray perksJsonArray = JsonHelper.getJsonArray(json, "perks");
+        GuildPerkList perkList = GuildPerkList.fromJson(perksJsonArray, bot.getGuildPerkManager());
+        int coins = JsonHelper.getInt(json, "coins", 0);
 
-        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss);
+        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss, perkList, coins);
     }
 
     @Override
@@ -162,6 +176,9 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
         json.addProperty("wins", minigamesWonTotal);
         json.addProperty("wins-week", minigamesWonCurrentWeek);
+
+        json.add("boss", boss.asJson());
+        json.addProperty("coins", coins);
 
         return json;
     }
@@ -447,6 +464,23 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
                 .setTimestamp(new Date().toInstant())
                 .build();
 
+    }
+
+    public MessageEmbed.Field[] getShopFields() {
+        return perkList.getFieldsOnShop();
+    }
+
+    public MessageEmbed.Field[] getPerkInfoFields() {
+        return perkList.getFieldsOnPerkInfo();
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    public void addCoins(int amount) {
+        coins += amount;
+        if (coins > MAX_COINS) coins = MAX_COINS;
     }
 
 }

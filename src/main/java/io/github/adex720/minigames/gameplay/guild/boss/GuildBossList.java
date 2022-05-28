@@ -1,4 +1,4 @@
-package io.github.adex720.minigames.gameplay.guild;
+package io.github.adex720.minigames.gameplay.guild.boss;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

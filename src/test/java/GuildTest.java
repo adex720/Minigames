@@ -1,7 +1,7 @@
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.gameplay.guild.Guild;
-import io.github.adex720.minigames.gameplay.guild.GuildBoss;
-import io.github.adex720.minigames.gameplay.guild.GuildBossReward;
+import io.github.adex720.minigames.gameplay.guild.boss.GuildBoss;
+import io.github.adex720.minigames.gameplay.guild.boss.GuildBossReward;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 

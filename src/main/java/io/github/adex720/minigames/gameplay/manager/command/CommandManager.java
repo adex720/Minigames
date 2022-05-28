@@ -25,7 +25,8 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
- * This class contains all commands the bot has.
+ * This class creates all commands the bot has.
+ * Exceptions are minigame commands, but they are also added to the lists.
  *
  * @author adex720
  */
@@ -116,6 +117,7 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(parentCommandGuild);
         SUBCOMMANDS.add(new CommandGuildBoss(bot));
         SUBCOMMANDS.add(new CommandGuildBuy(bot));
+        SUBCOMMANDS.add(new CommandGuildCoins(bot));
         SUBCOMMANDS.add(new CommandGuildCreate(bot));
         SUBCOMMANDS.add(new CommandGuildDelete(bot));
         SUBCOMMANDS.add(new CommandGuildDemote(bot));
@@ -126,6 +128,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandGuildKick(bot));
         SUBCOMMANDS.add(new CommandGuildLeave(bot));
         SUBCOMMANDS.add(new CommandGuildMembers(bot));
+        SUBCOMMANDS.add(new CommandGuildPerks(bot));
         SUBCOMMANDS.add(new CommandGuildPrivate(bot));
         SUBCOMMANDS.add(new CommandGuildPromote(bot));
         SUBCOMMANDS.add(new CommandGuildPublic(bot));

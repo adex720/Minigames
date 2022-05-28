@@ -5,11 +5,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.*;
-import io.github.adex720.minigames.gameplay.guild.GuildBossList;
+import io.github.adex720.minigames.gameplay.guild.boss.GuildBossList;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
 import io.github.adex720.minigames.gameplay.manager.guild.GuildBossManager;
 import io.github.adex720.minigames.gameplay.manager.guild.GuildManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildPerkManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
@@ -94,6 +95,7 @@ public class MinigamesBot {
 
     private final GuildBossManager guildBossManager;
     private final GuildBossList guildBossList;
+    private final GuildPerkManager guildPerkManager;
 
     private final BanManager banManager;
     private final ProfileManager profileManager;
@@ -166,6 +168,7 @@ public class MinigamesBot {
 
         guildBossManager = new GuildBossManager(this);
         guildBossList = new GuildBossList(this);
+        guildPerkManager = new GuildPerkManager(this);
 
         banManager = new BanManager(this);
         profileManager = new ProfileManager(this);
@@ -383,6 +386,10 @@ public class MinigamesBot {
 
     public GuildBossList getGuildBossList() {
         return guildBossList;
+    }
+
+    public GuildPerkManager getGuildPerkManager() {
+        return guildPerkManager;
     }
 
     @CheckReturnValue
