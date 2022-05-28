@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Foo",
+    "color": 11390625,
+    "hp": 50,
+    "reward": {
+      "coins": 15
+    }
+  },
+  {
+    "name": "Bah",
+    "color": 16777215,
+    "hp": 150,
+    "reward": {
+      "coins": 50
+    }
+  },
+  {
+    "name": "Immortal",
+    "color": 0,
+    "hp": 1000000000,
+    "reward": {
+      "coins": 1000000000
+    }
+  }
+]

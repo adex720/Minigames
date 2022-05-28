@@ -3,6 +3,7 @@ package io.github.adex720.minigames.gameplay.guild;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.util.JsonHelper;
@@ -21,8 +22,6 @@ import java.util.Set;
  * @author adex720
  */
 public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record member join date
-
-    public static final int MINIGAMES_WON_STAT_ID = 2;
 
     public static final int MAX_NAME_LENGTH = 15;
     public static final char[] INVALID_NAME_CHARACTERS = {'@', '\\'};
@@ -43,7 +42,10 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     private int minigamesWonTotal;
     private int minigamesWonCurrentWeek;
 
-    public Guild(long ownerId, String ownerTag, String name) {
+
+    private GuildBoss boss;
+
+    public Guild(MinigamesBot bot, long ownerId, String ownerTag, String name) {
         createdTime = System.currentTimeMillis();
 
         this.ownerId = ownerId;
@@ -58,9 +60,11 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
         minigamesWonTotal = 0;
         minigamesWonCurrentWeek = 0;
+
+        boss = bot.getGuildBossList().get(0);
     }
 
-    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek) {
+    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek, GuildBoss boss) {
         this.ownerId = ownerId;
         this.ownerTag = ownerTag;
 
@@ -78,6 +82,8 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
         this.minigamesWonTotal = minigamesWonTotal;
         this.minigamesWonCurrentWeek = minigamesWonCurrentWeek;
+
+        this.boss = boss;
     }
 
     public static boolean isNameValid(String name) {
@@ -105,7 +111,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         return name;
     }
 
-    public static Guild fromJson(JsonObject json) {
+    public static Guild fromJson(JsonObject json, MinigamesBot bot) {
         long ownerId = JsonHelper.getLong(json, "owner");
         String ownerTag = JsonHelper.getString(json, "owner-tag");
 
@@ -131,7 +137,15 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         int minigamesWonTotal = JsonHelper.getInt(json, "wins");
         int minigamesWonCurrentWeek = JsonHelper.getInt(json, "wins-week");
 
-        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek);
+        GuildBoss boss;
+        if (json.has("boss")) {
+            JsonObject bossJson = JsonHelper.getJsonObject(json, "boss");
+            boss = GuildBoss.fromJson(bossJson);
+        } else {
+            boss = bot.getGuildBossList().get(0);
+        }
+
+        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss);
     }
 
     @Override
@@ -338,6 +352,20 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     }
 
     /**
+     * Returns the ids of all members.
+     */
+    public Set<Long> getMemberIds() {
+        Set<Long> memberIds = new HashSet<>();
+        memberIds.add(ownerId);
+
+        for (Pair<Long, String> member : members) {
+            memberIds.add(member.first);
+        }
+
+        return memberIds;
+    }
+
+    /**
      * Returns true if the user is in the invite list.
      *
      * @param memberId Id of the user
@@ -382,13 +410,43 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         isPublic = toPublic;
     }
 
-    public void minigameWon() {
+    /**
+     * Appends stats and damages boss.
+     */
+    public void minigameWon(MinigamesBot bot) {
         minigamesWonTotal++;
         minigamesWonCurrentWeek++;
+
+        boss.damage();
+        if (boss.isDead()) {
+            boss.reward.apply(bot, this);
+
+            boss = bot.getGuildBossList().get(boss.id + 1);
+        }
     }
 
-    public void onNewWeek() {
+    /**
+     * Resets weekly progress and guild bosses.
+     */
+    public void onNewWeek(MinigamesBot bot) {
         minigamesWonCurrentWeek = 0;
+        boss = bot.getGuildBossList().get(0);
+    }
+
+    /**
+     * Creates a {@link MessageEmbed} containing information about the current {@link GuildBoss}.
+     *
+     * @param user User to use on footer.
+     */
+    public MessageEmbed getBossMessage(User user) {
+        return new EmbedBuilder()
+                .setTitle(name + ": Guild boss")
+                .addField(boss.getInfoField())
+                .setColor(boss.color)
+                .setFooter(user.getName(), user.getAvatarUrl())
+                .setTimestamp(new Date().toInstant())
+                .build();
+
     }
 
 }

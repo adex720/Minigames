@@ -4,8 +4,6 @@ import io.github.adex720.minigames.util.network.HttpsRequester;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +20,7 @@ public class Test {
         testCharacterBytes();
     }
 
-    public static void testCharacterBytes(){
+    public static void testCharacterBytes() {
         String string = "語";
         char firstChar = string.charAt(0);
         System.out.println("String: " + string);

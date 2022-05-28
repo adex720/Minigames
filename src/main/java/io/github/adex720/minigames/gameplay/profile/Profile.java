@@ -22,8 +22,8 @@ import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -268,7 +268,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     /**
      * @param amount    amount of coins.
      * @param count     should the amount be affected by current multiplier and counted towards quests and stats.
-     * @param replyable must be non-null if {@param count} is true. If countForQuests is false event is ignored.
+     * @param replyable must be non-null if {@param count} is true.
+     *                  Use {@link Replyable#IGNORE_ALL} if needed.
      */
     public void addCoins(int amount, boolean count, Replyable replyable) {
 
@@ -439,6 +440,17 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public void addCrate(CrateType type) {
         addCrate(type.id);
+    }
+
+    public void addCrates(int type, int count) {
+        while (count > 0) {
+            crates.add(type);
+            count--;
+        }
+    }
+
+    public void addCrates(CrateType type, int count) {
+        addCrates(type.id, count);
     }
 
     public boolean hasCrate(int crateType) {

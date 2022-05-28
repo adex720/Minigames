@@ -33,19 +33,19 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
 
     @Override
     public Guild fromJson(JsonObject json) {
-        return Guild.fromJson(json);
+        return Guild.fromJson(json, bot);
     }
 
     @Override
     public void load(JsonArray data) {
         for (JsonElement json : data) {
-            Guild guild = Guild.fromJson(json.getAsJsonObject());
+            Guild guild = Guild.fromJson(json.getAsJsonObject(), bot);
             GUILDS.put(guild.getId(), guild);
         }
     }
 
     public Guild create(long owner, String ownerTag, String name) {
-        Guild guild = new Guild(owner, ownerTag, name);
+        Guild guild = new Guild(bot, owner, ownerTag, name);
         GUILDS.put(owner, guild);
         return guild;
     }
@@ -114,7 +114,7 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
     }
 
     public void onNewWeek() {
-        getValues().forEach(Guild::onNewWeek);
+        getValues().forEach(guild -> guild.onNewWeek(bot));
         bot.getLogger().info("Reset guild weekly progress!");
     }
 }

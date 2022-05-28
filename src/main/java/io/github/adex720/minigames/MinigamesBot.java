@@ -5,8 +5,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.*;
+import io.github.adex720.minigames.gameplay.guild.GuildBossList;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildBossManager;
 import io.github.adex720.minigames.gameplay.manager.guild.GuildManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
@@ -90,6 +92,9 @@ public class MinigamesBot {
 
     private final ImageBank memoImageBank;
 
+    private final GuildBossManager guildBossManager;
+    private final GuildBossList guildBossList;
+
     private final BanManager banManager;
     private final ProfileManager profileManager;
 
@@ -158,6 +163,9 @@ public class MinigamesBot {
 
         questManager = new QuestManager(this);
         questList = new QuestList(this);
+
+        guildBossManager = new GuildBossManager(this);
+        guildBossList = new GuildBossList(this);
 
         banManager = new BanManager(this);
         profileManager = new ProfileManager(this);
@@ -367,6 +375,14 @@ public class MinigamesBot {
     @CheckReturnValue
     public QuestList getQuestList() {
         return questList;
+    }
+
+    public GuildBossManager getGuildBossManager() {
+        return guildBossManager;
+    }
+
+    public GuildBossList getGuildBossList() {
+        return guildBossList;
     }
 
     @CheckReturnValue

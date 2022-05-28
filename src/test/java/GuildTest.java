@@ -1,7 +1,7 @@
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.gameplay.guild.Guild;
-import io.github.adex720.minigames.util.Pair;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import io.github.adex720.minigames.gameplay.guild.GuildBoss;
+import io.github.adex720.minigames.gameplay.guild.GuildBossReward;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +12,10 @@ import java.util.ArrayList;
  */
 class GuildTest {
 
-    Guild exampleGuild = new Guild(22L, "User#1234",new ArrayList<>(), new ArrayList<>(), "name", 123456L, true, 27, 12);
+    Guild exampleGuild = new Guild(22L, "User#1234", new ArrayList<>(), new ArrayList<>(), "name", 123456L, true, 27, 12,
+            new GuildBoss("Boss 1", 0, 1234567, 500, new GuildBossReward(200)));
 
-    GuildTest(){
+    GuildTest() {
         exampleGuild.addMember(17L, "User1#1111");
         exampleGuild.addMember(18L, "User2#2222");
     }
@@ -22,7 +23,7 @@ class GuildTest {
     @Test
     void saveAndLoad() {
         JsonObject asJson = exampleGuild.getAsJson();
-        JsonObject loadedJson = Guild.fromJson(asJson).getAsJson();
+        JsonObject loadedJson = Guild.fromJson(asJson, null).getAsJson();
 
         MatcherAssert.assertThat("Json is not the same after loading", asJson.equals(loadedJson));
     }
