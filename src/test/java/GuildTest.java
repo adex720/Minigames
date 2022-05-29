@@ -2,6 +2,7 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.gameplay.guild.Guild;
 import io.github.adex720.minigames.gameplay.guild.boss.GuildBoss;
 import io.github.adex720.minigames.gameplay.guild.boss.GuildBossReward;
+import io.github.adex720.minigames.gameplay.guild.shop.GuildPerkList;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 class GuildTest {
 
     Guild exampleGuild = new Guild(22L, "User#1234", new ArrayList<>(), new ArrayList<>(), "name", 123456L, true, 27, 12,
-            new GuildBoss("Boss 1", 0, 1234567, 500, new GuildBossReward(200)));
+            new GuildBoss("Boss 1",0,1234567,20,new GuildBossReward(200)), null, 300);
 
     GuildTest() {
         exampleGuild.addMember(17L, "User1#1111");

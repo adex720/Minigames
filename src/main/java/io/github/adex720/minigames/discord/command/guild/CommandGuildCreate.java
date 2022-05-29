@@ -35,12 +35,13 @@ public class CommandGuildCreate extends Subcommand {
         }
 
         if (bot.getGuildManager().doesGuildExist(name)) {
-            event.getHook().sendMessage("That name unfortunately is already in use.").setEphemeral(true).queue();
+            event.getHook().sendMessage("The name is unfortunately already in use.").setEphemeral(true).queue();
             return true;
         }
 
         User user = ci.author();
         bot.getGuildManager().create(user.getIdLong(), user.getAsTag(), guildName);
+        ci.profile().guildJoined(user.getIdLong());
 
         event.getHook().sendMessage("You created guild " + guildName).queue();
         return true;

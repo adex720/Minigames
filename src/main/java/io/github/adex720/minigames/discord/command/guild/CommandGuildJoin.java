@@ -60,6 +60,7 @@ public class CommandGuildJoin extends Subcommand {
 
         guild.addMember(userId, ci.getAuthorTag());
         event.getHook().sendMessage("You joined " + guild.getName() + ".").queue();
+        ci.profile().guildJoined(guild.getId());
         return true;
     }
 

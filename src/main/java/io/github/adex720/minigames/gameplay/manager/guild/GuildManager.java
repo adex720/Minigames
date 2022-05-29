@@ -51,12 +51,14 @@ public class GuildManager extends IdCompoundSavableManager<Guild> {
     }
 
     public Guild remove(long id) {
-        return GUILDS.remove(id);
+        Guild guild = GUILDS.remove(id);
+        guild.onDelete(bot);
+        return guild;
     }
 
     public void transfer(long previousOwnerId, long newOwnerId, String newOwnerTag) {
         Guild guild = transfer(previousOwnerId, newOwnerId);
-        guild.transfer(newOwnerId, newOwnerTag);
+        guild.transfer(bot, newOwnerId, newOwnerTag);
     }
 
     public Guild transfer(long oldId, long newId) {

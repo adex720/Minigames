@@ -324,12 +324,14 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         return new MessageEmbed.Field("Members:", membersString.toString(), false);
     }
 
-    public void transfer(long newOwnerId, String newOwnerTag) {
+    public void transfer(MinigamesBot bot,long newOwnerId, String newOwnerTag) {
         removeMember(newOwnerId);
         members.add(new Pair<>(ownerId, ownerTag));
 
         ownerId = newOwnerId;
         ownerTag = newOwnerTag;
+
+        onTransfer(bot);
     }
 
     public void promote(long memberId) {
@@ -508,4 +510,18 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         if (amount < coins) coins -= amount;
     }
 
+    public void onDelete(MinigamesBot bot) {
+        for (long memberId : getMemberIds()){
+            bot.getProfileManager().getProfile(memberId).guildLeft();
+        }
+    }
+
+    /**
+     * Call this after changing the owner id
+     */
+    public void onTransfer(MinigamesBot bot) {
+        for (long memberId : getMemberIds()){
+            bot.getProfileManager().getProfile(memberId).guildJoined(ownerId);
+        }
+    }
 }

@@ -38,6 +38,7 @@ public class CommandGuildLeave extends Subcommand {
         }
 
         guild.removeMember(ci.authorId());
+        ci.profile().guildLeft();
         event.getHook().sendMessage("You left " + guild.getName() + ".").queue();
         return true;
     }
