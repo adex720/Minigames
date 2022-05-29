@@ -1,7 +1,7 @@
 [
   {
     "name": "Alexander",
-    "color": 11390625,
+    "color": "b6f1fb",
     "hp": 20,
     "reward": {
       "coins": 10
@@ -9,7 +9,7 @@
   },
   {
     "name": "Elizabeth",
-    "color": 11390625,
+    "color": "cccccc",
     "hp": 35,
     "reward": {
       "coins": 20
@@ -17,7 +17,7 @@
   },
   {
     "name": "Mansa Musa",
-    "color": 11390625,
+    "color": "f9c586",
     "hp": 50,
     "reward": {
       "coins": 30
@@ -25,7 +25,7 @@
   },
   {
     "name": "Che Guevara",
-    "color": 11390625,
+    "color": "6dc5f8",
     "hp": 75,
     "reward": {
       "coins": 50
@@ -33,7 +33,7 @@
   },
   {
     "name": "Napoleon",
-    "color": 11390625,
+    "color": "9e55f7",
     "hp": 100,
     "reward": {
       "coins": 75
@@ -41,7 +41,7 @@
   },
   {
     "name": "Louis XVI",
-    "color": 11390625,
+    "color": "d73cf6",
     "hp": 200,
     "reward": {
       "coins": 160
@@ -49,7 +49,7 @@
   },
   {
     "name": "Shaka Zulu",
-    "color": 11390625,
+    "color": "8c8c8c",
     "hp": 500,
     "reward": {
       "coins": 450
@@ -57,7 +57,7 @@
   },
   {
     "name": "Constantine I",
-    "color": 11390625,
+    "color": "08f76c",
     "hp": 1000,
     "reward": {
       "coins": 950
@@ -65,7 +65,7 @@
   },
   {
     "name": "Nelson Mandela",
-    "color": 11390625,
+    "color": "51d80e",
     "hp": 2000,
     "reward": {
       "coins": 2000
@@ -73,7 +73,7 @@
   },
   {
     "name": "Winston Churchill",
-    "color": 11390625,
+    "color": "081bc4",
     "hp": 2500,
     "reward": {
       "coins": 2550
@@ -81,7 +81,7 @@
   },
   {
     "name": "Charlemagne",
-    "color": 11390625,
+    "color": "a80b0b",
     "hp": 3000,
     "reward": {
       "coins": 3100
@@ -89,7 +89,7 @@
   },
   {
     "name": "Abraham Lincoln",
-    "color": 11390625,
+    "color": "0a638f",
     "hp": 3500,
     "reward": {
       "coins": 3650
@@ -97,7 +97,7 @@
   },
   {
     "name": "Hammurabi",
-    "color": 11390625,
+    "color": "7d7d03",
     "hp": 4000,
     "reward": {
       "coins": 4200
@@ -105,7 +105,7 @@
   },
   {
     "name": "Augustus Caesar",
-    "color": 11390625,
+    "color": "610542",
     "hp": 4500,
     "reward": {
       "coins": 4750
@@ -113,7 +113,7 @@
   },
   {
     "name": "Genghis Khan",
-    "color": 11390625,
+    "color": "483905",
     "hp": 5000,
     "reward": {
       "coins": 5500
@@ -121,7 +121,7 @@
   },
   {
     "name": "Immortal",
-    "color": 0,
+    "color": "1a1a1a",
     "hp": 1000000000,
     "reward": {
       "coins": 1000000000
