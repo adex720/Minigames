@@ -1,18 +1,122 @@
 [
   {
-    "name": "Foo",
+    "name": "Alexander",
     "color": 11390625,
-    "hp": 50,
+    "hp": 20,
     "reward": {
-      "coins": 15
+      "coins": 10
     }
   },
   {
-    "name": "Bah",
-    "color": 16777215,
-    "hp": 150,
+    "name": "Elizabeth",
+    "color": 11390625,
+    "hp": 35,
+    "reward": {
+      "coins": 20
+    }
+  },
+  {
+    "name": "Mansa Musa",
+    "color": 11390625,
+    "hp": 50,
+    "reward": {
+      "coins": 30
+    }
+  },
+  {
+    "name": "Che Guevara",
+    "color": 11390625,
+    "hp": 75,
     "reward": {
       "coins": 50
+    }
+  },
+  {
+    "name": "Napoleon",
+    "color": 11390625,
+    "hp": 100,
+    "reward": {
+      "coins": 75
+    }
+  },
+  {
+    "name": "Louis XVI",
+    "color": 11390625,
+    "hp": 200,
+    "reward": {
+      "coins": 160
+    }
+  },
+  {
+    "name": "Shaka Zulu",
+    "color": 11390625,
+    "hp": 500,
+    "reward": {
+      "coins": 450
+    }
+  },
+  {
+    "name": "Constantine I",
+    "color": 11390625,
+    "hp": 1000,
+    "reward": {
+      "coins": 950
+    }
+  },
+  {
+    "name": "Nelson Mandela",
+    "color": 11390625,
+    "hp": 2000,
+    "reward": {
+      "coins": 2000
+    }
+  },
+  {
+    "name": "Winston Churchill",
+    "color": 11390625,
+    "hp": 2500,
+    "reward": {
+      "coins": 2550
+    }
+  },
+  {
+    "name": "Charlemagne",
+    "color": 11390625,
+    "hp": 3000,
+    "reward": {
+      "coins": 3100
+    }
+  },
+  {
+    "name": "Abraham Lincoln",
+    "color": 11390625,
+    "hp": 3500,
+    "reward": {
+      "coins": 3650
+    }
+  },
+  {
+    "name": "Hammurabi",
+    "color": 11390625,
+    "hp": 4000,
+    "reward": {
+      "coins": 4200
+    }
+  },
+  {
+    "name": "Augustus Caesar",
+    "color": 11390625,
+    "hp": 4500,
+    "reward": {
+      "coins": 4750
+    }
+  },
+  {
+    "name": "Genghis Khan",
+    "color": 11390625,
+    "hp": 5000,
+    "reward": {
+      "coins": 5500
     }
   },
   {

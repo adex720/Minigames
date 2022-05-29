@@ -562,11 +562,14 @@ public class MinigamesBot {
     TODO: cache recently accessed guilds, profiles and parties
 
     TODO: guilds:
-     - wars (more minigames completed)
      - leaderboard
 
     TODO: trivia (party)
      (https://opentdb.com/api_config.php)
+
+    TODO: adventures
+
+    TODO: xp, leveling system
 
     TODO: (After a long time)
      - vote (after verification)

@@ -178,6 +178,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         json.addProperty("wins-week", minigamesWonCurrentWeek);
 
         json.add("boss", boss.asJson());
+        json.add("perks", perkList.asJson());
         json.addProperty("coins", coins);
 
         return json;
