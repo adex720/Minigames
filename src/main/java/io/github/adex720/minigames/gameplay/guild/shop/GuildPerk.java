@@ -70,9 +70,9 @@ public class GuildPerk {
      * If the perk is already maxed, -1 returned.
      */
     public int getPrice(int currentLevel) {
-        if (currentLevel >= prices.length) return -1;
+        if (currentLevel > prices.length) return -1;
 
-        return prices[currentLevel + 1];
+        return prices[currentLevel];
     }
 
     /**

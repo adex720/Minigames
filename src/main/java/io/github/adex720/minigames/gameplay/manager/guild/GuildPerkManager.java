@@ -5,6 +5,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.guild.shop.GuildPerk;
 import io.github.adex720.minigames.gameplay.manager.Manager;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -29,6 +30,10 @@ public class GuildPerkManager extends Manager {
             addPerk(GuildPerk.fromJson(jsonElement.getAsJsonObject(), count));
             count++;
         }
+    }
+
+    public Collection<GuildPerk> getPerks() {
+        return PERKS.values();
     }
 
     public void addPerk(GuildPerk perk) {

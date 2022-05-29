@@ -467,6 +467,10 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
 
     }
 
+    public GuildPerkList getPerkList() {
+        return perkList;
+    }
+
     public MessageEmbed.Field[] getShopFields() {
         return perkList.getFieldsOnShop();
     }
@@ -479,9 +483,29 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         return coins;
     }
 
+    /**
+     * Adds given amount of coins from to vault.
+     * Caps the count at {@link Guild#MAX_COINS}.
+     *
+     * @throws IllegalStateException If {@param amount} is negative. Use {@link Guild#removeCoins(int)} instead.
+     */
     public void addCoins(int amount) {
+        if (amount < 0) throw new IllegalStateException("You can't add negative amount of coins!");
+
         coins += amount;
         if (coins > MAX_COINS) coins = MAX_COINS;
+    }
+
+    /**
+     * Removes given amount of coins from to vault.
+     * If the amount of coins after would be below 0, no coins will be reduced.
+     *
+     * @throws IllegalStateException If {@param amount} is negative. Use {@link Guild#addCoins(int)} instead.
+     */
+    public void removeCoins(int amount) {
+        if (amount < 0) throw new IllegalStateException("You can't reduce negative amount of coins!");
+
+        if (amount < coins) coins -= amount;
     }
 
 }

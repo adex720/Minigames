@@ -31,12 +31,27 @@ public class GuildPerkList {
         return JsonHelper.arrayToJsonArray(levels);
     }
 
+    public boolean isMaxed(int perkId) {
+        return levels[perkId] >= guildPerkManager.get(perkId).getMaxLevel();
+    }
+
     public void upgrade(int perkId) {
         levels[perkId]++;
     }
 
     public int getPrice(int perkId) {
         return guildPerkManager.get(perkId).getPrice(levels[perkId]);
+    }
+
+    public int getLevel(int perkId) {
+        return levels[perkId];
+    }
+
+    /**
+     * Returns the name of the perk.
+     */
+    public String getName(int perkId) {
+        return guildPerkManager.get(perkId).name;
     }
 
     /**
