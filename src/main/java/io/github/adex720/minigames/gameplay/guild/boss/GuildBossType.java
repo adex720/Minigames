@@ -18,7 +18,7 @@ public record GuildBossType(String name,
 
     public static GuildBossType fromJson(JsonObject json, int id) {
         String name = JsonHelper.getString(json, "name");
-        int color = JsonHelper.getInt(json, "color");
+        int color = Integer.parseInt(JsonHelper.getString(json, "color"), 16);
         int hp = JsonHelper.getInt(json, "hp");
 
         JsonObject rewardJson = JsonHelper.getJsonObject(json, "reward");
