@@ -1,6 +1,7 @@
 package io.github.adex720.minigames.gameplay.guild.shop;
 
 import com.google.gson.JsonArray;
+import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.guild.GuildPerkManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -45,6 +46,10 @@ public class GuildPerkList {
 
     public int getLevel(int perkId) {
         return levels[perkId];
+    }
+
+    public float getEffect(int perkId) {
+        return guildPerkManager.get(perkId).getCurrentAffection(levels[perkId]);
     }
 
     /**

@@ -324,7 +324,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         return new MessageEmbed.Field("Members:", membersString.toString(), false);
     }
 
-    public void transfer(MinigamesBot bot,long newOwnerId, String newOwnerTag) {
+    public void transfer(MinigamesBot bot, long newOwnerId, String newOwnerTag) {
         removeMember(newOwnerId);
         members.add(new Pair<>(ownerId, ownerTag));
 
@@ -437,6 +437,15 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         minigamesWonTotal++;
         minigamesWonCurrentWeek++;
 
+        damageBoss(bot);
+        double chanceForDouble = getChanceForDoubleDamage();
+        if (chanceForDouble > 0d && bot.getRandom().nextDouble() < chanceForDouble) damageBoss(bot);
+    }
+
+    /**
+     * Damages the boss and checks if it's beaten.
+     */
+    public void damageBoss(MinigamesBot bot) {
         boss.damage();
         if (boss.isDead()) {
             boss.reward.apply(bot, this);
@@ -510,8 +519,44 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         if (amount < coins) coins -= amount;
     }
 
+    /**
+     * Returns the coin multiplier of Looter guild perk.
+     */
+    public int getExtraCrateCount() {
+        return (int) perkList.getEffect(0);
+    }
+
+    /**
+     * Returns the chance of dealing double damage to the guild boss from Slayer guild perk.
+     */
+    public float getChanceForDoubleDamage() {
+        return perkList.getEffect(1);
+    }
+
+    /**
+     * Returns the cooldownMultiplier of Adventurer guild perk.
+     */
+    public float getAdventureCooldownMultiplier() {
+        return perkList.getEffect(2);
+    }
+
+    /**
+     * Returns the xp multiplier of Researcher guild perk.
+     */
+    public float getXpMultiplier() {
+        return perkList.getEffect(3);
+    }
+
+    /**
+     * Returns the coin multiplier of CEO guild perk.
+     */
+    public int getCoinMultiplier() {
+        return (int) perkList.getEffect(4);
+    }
+
+
     public void onDelete(MinigamesBot bot) {
-        for (long memberId : getMemberIds()){
+        for (long memberId : getMemberIds()) {
             bot.getProfileManager().getProfile(memberId).guildLeft();
         }
     }
@@ -520,7 +565,7 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
      * Call this after changing the owner id
      */
     public void onTransfer(MinigamesBot bot) {
-        for (long memberId : getMemberIds()){
+        for (long memberId : getMemberIds()) {
             bot.getProfileManager().getProfile(memberId).guildJoined(ownerId);
         }
     }
