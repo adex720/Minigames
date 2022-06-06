@@ -8,16 +8,16 @@ import io.github.adex720.minigames.discord.listener.*;
 import io.github.adex720.minigames.gameplay.guild.boss.GuildBossList;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
 import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
-import io.github.adex720.minigames.gameplay.manager.guild.GuildBossManager;
-import io.github.adex720.minigames.gameplay.manager.guild.GuildManager;
-import io.github.adex720.minigames.gameplay.manager.guild.GuildPerkManager;
-import io.github.adex720.minigames.gameplay.manager.minigame.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildBossManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildPerkManager;
 import io.github.adex720.minigames.gameplay.manager.kit.KitCooldownManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
+import io.github.adex720.minigames.gameplay.manager.minigame.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BanManager;
@@ -518,18 +518,30 @@ public class MinigamesBot {
         saveJson(partyManager.asJson(), "parties");
         saveJson(guildManager.asJson(), "guilds");
         saveJson(minigameManager.asJson(), "minigames");
+        saveJson(createSaveInfoJson(start), "save");
 
         long end = System.currentTimeMillis();
         logger.info("Saved all data in {}ms", end - start);
     }
 
+    /**
+     * Creates a Json containing information about the save.
+     */
+    private JsonObject createSaveInfoJson(long startTimestamp) {
+        JsonObject json = new JsonObject();
+
+        json.addProperty("time", startTimestamp);
+
+        return json;
+    }
+
     public void reload() {
         long start = System.currentTimeMillis();
 
-        profileManager.load( saveDataManager.loadJson("profiles").getAsJsonArray());
-        partyManager.load( saveDataManager.loadJson("parties").getAsJsonArray());
-        guildManager.load( saveDataManager.loadJson("guilds").getAsJsonArray());
-        minigameManager.load( saveDataManager.loadJson("minigames").getAsJsonArray());
+        profileManager.load(saveDataManager.loadJson("profiles").getAsJsonArray());
+        partyManager.load(saveDataManager.loadJson("parties").getAsJsonArray());
+        guildManager.load(saveDataManager.loadJson("guilds").getAsJsonArray());
+        minigameManager.load(saveDataManager.loadJson("minigames").getAsJsonArray());
 
         long end = System.currentTimeMillis();
         logger.info("Reloaded all data in {}ms", end - start);
@@ -556,8 +568,6 @@ public class MinigamesBot {
     TODO: buttons to add
 
     TODO: merge the two start- and create-methods
-
-    TODO: save saving time on
 
     TODO: cache recently accessed guilds, profiles and parties
 
