@@ -160,7 +160,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         while (iterator.hasNext()) {
             Pair<Integer, Profile> value = iterator.next();
 
-            if (value.first == statValue) return iterator.previousIndex();
+            if (statValue == value.first) return iterator.previousIndex();
         }
 
         return -1;

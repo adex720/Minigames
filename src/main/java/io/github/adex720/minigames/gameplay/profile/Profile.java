@@ -45,6 +45,8 @@ import java.util.Set;
  */
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
+    public static final int STAT_COINS_EARNED_ID = 101;
+
     private final MinigamesBot bot;
 
     private final long userId;
@@ -330,6 +332,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         } else {
             coins += amount;
         }
+
+        bot.getStatManager().getLeaderboard(STAT_COINS_EARNED_ID).update(this);
     }
 
     public int getCoins() {
@@ -338,6 +342,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public void removeCoins(int amount) {
         coins -= amount;
+        bot.getStatManager().getLeaderboard(STAT_COINS_EARNED_ID).update(this);
     }
 
     /**
