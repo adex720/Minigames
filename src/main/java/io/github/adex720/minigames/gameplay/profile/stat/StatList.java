@@ -60,29 +60,39 @@ public class StatList {
         return statsById.get(stat).value;
     }
 
-    public int increaseStat(Stat stat, final Profile profile) {
+    public int increaseStat(Stat stat, Profile profile) {
         statsByName.get(stat.name()).value++;
-        return statsById.get(stat.id()).value++;
+        int newValue = statsById.get(stat.id()).value++;
+
+        if (stat.onLeaderboard()) {
+            bot.getStatManager().getLeaderboard(stat.id()).update(profile);
+        }
+        return newValue;
     }
 
-    public int increaseStat(Stat stat, int amount, final Profile profile) {
+    public int increaseStat(Stat stat, int amount, Profile profile) {
         statsByName.get(stat.name()).value += amount;
-        return statsById.get(stat.id()).value += amount;
+        int newValue = statsById.get(stat.id()).value += amount;
+
+        if (stat.onLeaderboard()) {
+            bot.getStatManager().getLeaderboard(stat.id()).update(profile);
+        }
+        return newValue;
     }
 
-    public int increaseStat(String stat, final Profile profile) {
+    public int increaseStat(String stat, Profile profile) {
         return increaseStat(bot.getStatManager().get(stat), profile);
     }
 
-    public int increaseStat(String stat, int amount, final Profile profile) {
+    public int increaseStat(String stat, int amount, Profile profile) {
         return increaseStat(bot.getStatManager().get(stat), amount, profile);
     }
 
-    public int increaseStat(int stat, final Profile profile) {
+    public int increaseStat(int stat, Profile profile) {
         return increaseStat(bot.getStatManager().get(stat), profile);
     }
 
-    public int increaseStat(int stat, int amount, final Profile profile) {
+    public int increaseStat(int stat, int amount, Profile profile) {
         return increaseStat(bot.getStatManager().get(stat), amount, profile);
     }
 
