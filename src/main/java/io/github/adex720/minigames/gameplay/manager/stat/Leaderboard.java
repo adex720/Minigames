@@ -234,6 +234,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         int stat = profile.getStatValue(statId);
 
         Node node = getNode(profile.getId());
+        node.entry.first = stat;
 
         while (node.previous != null && node.previous.entry.first < stat) {
             moveForward(node);
