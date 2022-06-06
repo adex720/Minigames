@@ -90,10 +90,24 @@ public abstract class MinigameType<M extends Minigame> {
     }
 
     /**
-     * If the initialization of minigame ends this will be sent as reason.
-     * If the initialization of the minigame can't fail it doesn't matter what is returned.
+     * Returns the message to be sent when {@link MinigameType#canStart(CommandInfo)} returns false.
+     * If the method never returns false for the minigame type, this method doesn't need to be overridden.
+     *
+     * @param commandInfo CommandInfo to send correct reply.
      */
-    public String getReplyForInvalidStartState() {
+    public String getReplyForInvalidStartState(CommandInfo commandInfo) {
+        return "";
+    }
+
+    /**
+     * If the returned value of {@link MinigameType#create(SlashCommandInteractionEvent, CommandInfo)} or
+     * {@link MinigameType#create(ButtonInteractionEvent, CommandInfo)} results on null,
+     * this will be sent as the reason why it failed.
+     * If the initialization of the minigame can't result on null, this method doesn't need to be overridden.
+     *
+     * @param commandInfo Command info to send correct reply.
+     */
+    public String getReplyForNullAfterConstructor(CommandInfo commandInfo) {
         return "";
     }
 

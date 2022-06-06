@@ -1,6 +1,7 @@
 package io.github.adex720.minigames.minigame.party;
 
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
 
@@ -14,7 +15,7 @@ public abstract class PartyTeamMinigameType<T extends PartyTeamMinigame> extends
     }
 
     @Override
-    public String getReplyForInvalidStartState() {
+    public String getReplyForInvalidStartState(CommandInfo commandInfo) {
         return "This minigame requires a party with a minimum size of " + minPartySize + " to be played!";
     }
 }

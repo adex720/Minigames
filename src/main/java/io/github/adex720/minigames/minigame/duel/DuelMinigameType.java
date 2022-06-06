@@ -28,7 +28,7 @@ public abstract class DuelMinigameType<M extends DuelMinigame> extends MinigameT
     }
 
     @Override
-    public String getReplyForInvalidStartState() {
+    public String getReplyForInvalidStartState(CommandInfo commandInfo) {
         return hasAI ? "Your party needs to have 2 members for you to play this minigame." :
                 "This minigame can only be played on a party with size of 2.";
     }

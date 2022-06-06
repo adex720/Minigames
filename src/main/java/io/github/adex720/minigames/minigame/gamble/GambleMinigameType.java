@@ -24,8 +24,14 @@ public abstract class GambleMinigameType<T extends GambleMinigame> extends Minig
     }
 
     @Override
-    public String getReplyForInvalidStartState() {
-        return "You can't gamble while being on a party!";
+    public String getReplyForInvalidStartState(CommandInfo commandInfo) {
+        if (commandInfo.isInParty()) return "You can't gamble while being on a party!";
+
+        return "You can't afford your bet";
     }
 
+    @Override
+    public String getReplyForNullAfterConstructor(CommandInfo commandInfo) {
+        return "You can't afford your bet";
+    }
 }

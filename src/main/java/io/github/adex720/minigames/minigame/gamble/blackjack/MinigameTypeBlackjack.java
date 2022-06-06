@@ -29,6 +29,10 @@ public class MinigameTypeBlackjack extends GambleMinigameType<MinigameBlackjack>
     public MinigameBlackjack create(SlashCommandInteractionEvent event, CommandInfo ci) {
         int bet = event.getOption("bet").getAsInt();
 
+        if (ci.profile().getCoins() < bet){
+            return null;
+        }
+
         return MinigameBlackjack.start(event, ci, bet);
     }
 

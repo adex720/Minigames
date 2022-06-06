@@ -2,7 +2,6 @@ package io.github.adex720.minigames.gameplay.manager.minigame;
 
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
-import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.gameplay.manager.button.ButtonManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
@@ -33,7 +32,7 @@ public class ReplayManager extends ButtonManager {
 
         if (type != null) {
             if (!type.canStart(ci)) {
-                event.reply(type.getReplyForInvalidStartState()).queue();
+                event.reply(type.getReplyForInvalidStartState(ci)).queue();
                 return;
             }
 
@@ -42,7 +41,7 @@ public class ReplayManager extends ButtonManager {
                 bot.getMinigameManager().addMinigame(minigame);
                 return;
             }
-            event.reply(type.getReplyForInvalidStartState()).queue();
+            event.reply(type.getReplyForNullAfterConstructor(ci)).queue();
             return;
         }
 

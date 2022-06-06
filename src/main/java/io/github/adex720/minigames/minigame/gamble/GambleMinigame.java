@@ -66,4 +66,5 @@ public abstract class GambleMinigame extends Minigame {
     public int getReward(@Nullable Random random) {
         return (int) (bet * betMultiplier);
     }
+
 }
