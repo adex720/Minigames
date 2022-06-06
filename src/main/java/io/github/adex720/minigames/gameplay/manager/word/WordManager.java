@@ -6,7 +6,6 @@ import io.github.adex720.minigames.gameplay.manager.Manager;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Manages words used for minigames.

@@ -2,7 +2,6 @@ package io.github.adex720.minigames.discord.command;
 
 import io.github.adex720.minigames.MinigamesBot;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 

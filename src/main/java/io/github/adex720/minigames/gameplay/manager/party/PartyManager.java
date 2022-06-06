@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 import io.github.adex720.minigames.gameplay.party.Party;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
