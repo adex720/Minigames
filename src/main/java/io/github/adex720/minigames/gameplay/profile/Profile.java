@@ -61,7 +61,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     private boolean isInGuild;
     private long guildId;
 
-    private int coins;
+    private long coins;
 
     private final Set<Integer> badges;
     private final StatList statList;
@@ -90,7 +90,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         isInGuild = false;
         guildId = userId;
 
-        coins = 0;
+        coins = 0L;
         badges = new HashSet<>();
         statList = new StatList(bot);
 
@@ -101,7 +101,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         playerSettings = new PlayerSettings(userId);
     }
 
-    public Profile(MinigamesBot bot, long userId, String tag, long crated, int coins, @Nullable Long partyId, @Nullable Long guildId,
+    public Profile(MinigamesBot bot, long userId, String tag, long crated, long coins, @Nullable Long partyId, @Nullable Long guildId,
                    JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson,
                    JsonArray activeBoostersJson, JsonArray statusesJson, JsonArray settingsJson, JsonArray badgesJson) {
         this.bot = bot;
@@ -206,7 +206,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         Long partyId = JsonHelper.getLongOrNull(json, "party");
         Long guildId = JsonHelper.getLongOrNull(json, "guild");
 
-        int coins = JsonHelper.getInt(json, "coins");
+        long coins = JsonHelper.getLong(json, "coins");
         JsonObject statsJson = JsonHelper.getJsonObject(json, "stats");
 
         JsonArray questsJson = JsonHelper.getJsonArray(json, "quests", null);
@@ -320,7 +320,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
      * @param replyable must be non-null if {@param count} is true.
      *                  Use {@link Replyable#IGNORE_ALL} if needed.
      */
-    public void addCoins(int amount, boolean count, Replyable replyable) {
+    public void addCoins(long amount, boolean count, Replyable replyable) {
 
         if (count) {
             int finalAmount = (int) (amount * getBoosterMultiplier());
@@ -336,7 +336,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         bot.getStatManager().getLeaderboard(STAT_COINS_EARNED_ID).update(this);
     }
 
-    public int getCoins() {
+    public long getCoins() {
         return coins;
     }
 
@@ -354,17 +354,17 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
     }
 
     @CheckReturnValue
-    public int getStatValue(int id) {
+    public long getStatValue(int id) {
         return statList.getValue(id);
     }
 
     @CheckReturnValue
-    public int getStatValue(String name) {
+    public long getStatValue(String name) {
         return statList.getValue(name);
     }
 
     @CheckReturnValue
-    public int getStatValue(Stat stat) {
+    public long getStatValue(Stat stat) {
         return statList.getValue(stat.id());
     }
 
@@ -376,27 +376,27 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         statList.setValue(name, value, this);
     }
 
-    public int increaseStat(String stat) {
+    public long increaseStat(String stat) {
         return statList.increaseStat(stat, this);
     }
 
-    public int increaseStat(int stat) {
+    public long increaseStat(int stat) {
         return statList.increaseStat(stat, this);
     }
 
-    public int increaseStat(Stat stat) {
+    public long increaseStat(Stat stat) {
         return statList.increaseStat(stat, this);
     }
 
-    public int increaseStat(String stat, int amount) {
+    public long increaseStat(String stat, int amount) {
         return statList.increaseStat(stat, amount, this);
     }
 
-    public int increaseStat(int stat, int amount) {
+    public long increaseStat(int stat, int amount) {
         return statList.increaseStat(stat, amount, this);
     }
 
-    public int increaseStat(Stat stat, int amount) {
+    public long increaseStat(Stat stat, int amount) {
         return statList.increaseStat(stat, amount, this);
     }
 
@@ -471,7 +471,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         Stat current = bot.getStatManager().get("current daily quest streak");
         Stat highest = bot.getStatManager().get("highest daily quest streak");
-        int streak = increaseStat(current);
+        long streak = increaseStat(current);
         if (getStatValue(current) > getStatValue(highest)) {
             increaseStat(highest);
         }
@@ -694,7 +694,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         StringBuilder statsString = new StringBuilder();
         boolean newLine = false;
         for (Stat stat : bot.getStatManager().getLeaderboardStats()) {
-            int value = statList.getValue(stat.id());
+            long value = statList.getValue(stat.id());
             if (value == 0) continue;
 
             if (newLine) statsString.append('\n');

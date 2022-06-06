@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  *
  * @author adex720
  */
-public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> implements List<Pair<Integer, Profile>> {
+public class Leaderboard extends AbstractSequentialList<Pair<Long, Profile>> implements List<Pair<Long, Profile>> {
 
     public final int statId;
 
@@ -55,11 +55,11 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * @param profiles Profiles to convert
      * @param statId   id of the stat to sort by
      */
-    public static Collection<Pair<Integer, Profile>> calculateValues(Set<Profile> profiles, int statId) {
-        Collection<Pair<Integer, Profile>> values = new HashSet<>();
+    public static Collection<Pair<Long, Profile>> calculateValues(Set<Profile> profiles, int statId) {
+        Collection<Pair<Long, Profile>> values = new HashSet<>();
 
         for (Profile profile : profiles) {
-            int value = profile.getStatValue(statId);
+            long value = profile.getStatValue(statId);
             values.add(new Pair<>(value, profile));
         }
 
@@ -70,8 +70,8 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Adds the profile on the leaderboard on the correct index.
      */
     public void add(Profile profile) {
-        int value = profile.getStatValue(statId);
-        final Pair<Integer, Profile> pair = new Pair<>(value, profile);
+        long value = profile.getStatValue(statId);
+        final Pair<Long, Profile> pair = new Pair<>(value, profile);
 
         if (value > 0) add(pair);
         else addLast(pair);
@@ -81,7 +81,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Adds the profile on the leaderboard on the correct index.
      */
-    public boolean add(Pair<Integer, Profile> pair) {
+    public boolean add(Pair<Long, Profile> pair) {
         if (pair.first > 0) add(firstIndexWithSmallerValue(pair.first), pair);
         else addLast(pair);
 
@@ -92,7 +92,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Adds the profile on the leaderboard on the given index.
      */
-    public void add(int index, Pair<Integer, Profile> element) {
+    public void add(int index, Pair<Long, Profile> element) {
         if (index == size) linkLast(element);
         else linkBefore(element, getNode(index));
     }
@@ -101,7 +101,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Adds the profile on the leaderboard as last.
      */
-    public void addLast(Pair<Integer, Profile> e) {
+    public void addLast(Pair<Long, Profile> e) {
         linkLast(e);
     }
 
@@ -109,8 +109,8 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Adds the profiles on the leaderboard on the correct indexes.
      */
-    public boolean addAll(Collection<? extends Pair<Integer, Profile>> collection) {
-        for (Pair<Integer, Profile> pair : collection) {
+    public boolean addAll(Collection<? extends Pair<Long, Profile>> collection) {
+        for (Pair<Long, Profile> pair : collection) {
             add(pair);
         }
         return true;
@@ -121,10 +121,10 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      */
     public int indexOf(Profile profile) {
         if (profile == null) return -1;
-        ListIterator<Pair<Integer, Profile>> iterator = listIterator(size());
+        ListIterator<Pair<Long, Profile>> iterator = listIterator(size());
 
         while (iterator.hasNext()) {
-            Pair<Integer, Profile> value = iterator.next();
+            Pair<Long, Profile> value = iterator.next();
 
             if (value.second == profile) return iterator.previousIndex(); // TODO: test if works
         }
@@ -138,10 +138,10 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * @param userId id of the user
      */
     public int indexOf(long userId) {
-        ListIterator<Pair<Integer, Profile>> iterator = listIterator(size());
+        ListIterator<Pair<Long, Profile>> iterator = listIterator(size());
 
         while (iterator.hasNext()) {
-            Pair<Integer, Profile> value = iterator.next();
+            Pair<Long, Profile> value = iterator.next();
 
             if (value.second.getId() == userId) return iterator.previousIndex(); // TODO: test if works
         }
@@ -154,11 +154,11 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      *
      * @param statValue score
      */
-    public int firstIndexOf(int statValue) {
-        ListIterator<Pair<Integer, Profile>> iterator = listIterator();
+    public int firstIndexOf(long statValue) {
+        ListIterator<Pair<Long, Profile>> iterator = listIterator();
 
         while (iterator.hasNext()) {
-            Pair<Integer, Profile> value = iterator.next();
+            Pair<Long, Profile> value = iterator.next();
 
             if (statValue == value.first) return iterator.previousIndex();
         }
@@ -174,10 +174,10 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     public int lastIndexOf(int statValue) {
         if (statValue == 0) return size - 1;
 
-        ListIterator<Pair<Integer, Profile>> iterator = listIterator(size());
+        ListIterator<Pair<Long, Profile>> iterator = listIterator(size());
 
         while (iterator.hasPrevious()) {
-            Pair<Integer, Profile> value = iterator.previous();
+            Pair<Long, Profile> value = iterator.previous();
 
             if (value.first == statValue) return iterator.nextIndex();
         }
@@ -190,13 +190,13 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      *
      * @param value score
      */
-    public int firstIndexWithSmallerValue(int value) {
+    public int firstIndexWithSmallerValue(long value) {
         if (value == 0) return size;
 
-        ListIterator<Pair<Integer, Profile>> iterator = listIterator();
+        ListIterator<Pair<Long, Profile>> iterator = listIterator();
 
         while (iterator.hasNext()) {
-            Pair<Integer, Profile> pair = iterator.next();
+            Pair<Long, Profile> pair = iterator.next();
 
             if (pair.first < value) return iterator.previousIndex();
         }
@@ -223,7 +223,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Removes the entry from the index from the leaderboard.
      */
-    public Pair<Integer, Profile> remove(int index) {
+    public Pair<Long, Profile> remove(int index) {
         return unlink(getNode(index));
     }
 
@@ -231,7 +231,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * Calculates and moves the entry of the {@link Profile} to its correct position.
      */
     public void update(Profile profile) {
-        int stat = profile.getStatValue(statId);
+        long stat = profile.getStatValue(statId);
 
         Node node = getNode(profile.getId());
         node.entry.first = stat;
@@ -286,14 +286,14 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Returns the score of the player on the index.
      */
-    public int getScore(int index) {
+    public long getScore(int index) {
         return getScore(getNode(index));
     }
 
     /**
      * Returns the score on the node.
      */
-    public int getScore(@Nonnull Node node) {
+    public long getScore(@Nonnull Node node) {
         return node.entry.first;
     }
 
@@ -430,7 +430,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Puts the node to the beginning of the entries.
      */
-    private void linkFirst(@Nonnull Pair<Integer, Profile> node) {
+    private void linkFirst(@Nonnull Pair<Long, Profile> node) {
         final Node f = first;
         final Node newNode = new Node(null, node, f);
 
@@ -445,7 +445,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Puts the node to the end of the entries.
      */
-    private void linkLast(@Nonnull Pair<Integer, Profile> node) {
+    private void linkLast(@Nonnull Pair<Long, Profile> node) {
         final Node l = last;
         final Node newNode = new Node(l, node, null);
 
@@ -463,7 +463,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      *
      * @param anchor Node to link the entry before
      */
-    private void linkBefore(@Nonnull Pair<Integer, Profile> entry, @Nullable Node anchor) {
+    private void linkBefore(@Nonnull Pair<Long, Profile> entry, @Nullable Node anchor) {
         if (anchor == null) { // Adding to first index
             linkFirst(entry);
             return;
@@ -534,8 +534,8 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Removes the node from the leaderboard.
      */
-    private Pair<Integer, Profile> unlink(Node node) {
-        final Pair<Integer, Profile> element = node.entry;
+    private Pair<Long, Profile> unlink(Node node) {
+        final Pair<Long, Profile> element = node.entry;
         final Node next = node.next;
         final Node prev = node.previous;
 
@@ -607,11 +607,11 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
     /**
      * Returns an {@link Iterator} for the Leaderboard.
      */
-    public ListIterator<Pair<Integer, Profile>> listIterator(int index) {
+    public ListIterator<Pair<Long, Profile>> listIterator(int index) {
         return new LeaderboardListIterator(index);
     }
 
-    private class LeaderboardListIterator implements ListIterator<Pair<Integer, Profile>> {
+    private class LeaderboardListIterator implements ListIterator<Pair<Long, Profile>> {
         private Node lastReturned;
         private Node next;
         private int nextIndex;
@@ -625,7 +625,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         /**
          * Returns the current entry.
          */
-        public Pair<Integer, Profile> current() {
+        public Pair<Long, Profile> current() {
             checkForComodification();
             return lastReturned.entry;
         }
@@ -633,7 +633,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         /**
          * Returns the previous entry.
          */
-        public Pair<Integer, Profile> next() {
+        public Pair<Long, Profile> next() {
             checkForComodification();
             if (!hasNext())
                 throw new NoSuchElementException();
@@ -647,7 +647,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         /**
          * Returns the previous entry.
          */
-        public Pair<Integer, Profile> previous() {
+        public Pair<Long, Profile> previous() {
             checkForComodification();
             if (!hasPrevious()) throw new NoSuchElementException();
 
@@ -708,19 +708,19 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
          * @param index Index of the entry
          * @return The entry
          */
-        public Pair<Integer, Profile> remove(int index) {
+        public Pair<Long, Profile> remove(int index) {
             checkForComodification();
 
             if (index < -1) throw new IllegalStateException("Id must be at least 0!");
             if (index >= size) throw new IllegalStateException("Id is outside leaderboard!");
 
             if (index == nextIndex) {
-                Pair<Integer, Profile> entry = current();
+                Pair<Long, Profile> entry = current();
                 remove();
                 return entry;
             }
 
-            Pair<Integer, Profile> entry = unlink(getNode(index));
+            Pair<Long, Profile> entry = unlink(getNode(index));
             expectedModCount++;
 
             if (index < nextIndex) {
@@ -733,7 +733,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         /**
          * Sets the current entry on the leaderboard.
          */
-        public void set(Pair<Integer, Profile> e) {
+        public void set(Pair<Long, Profile> e) {
             if (lastReturned == null)
                 throw new IllegalStateException();
             checkForComodification();
@@ -743,7 +743,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         /**
          * Adds the entry after the current entry.
          */
-        public void add(Pair<Integer, Profile> e) {
+        public void add(Pair<Long, Profile> e) {
             checkForComodification();
             lastReturned = null;
 
@@ -757,7 +757,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         /**
          * Runs the action for each entry after the current one.
          */
-        public void forEachRemaining(Consumer<? super Pair<Integer, Profile>> action) {
+        public void forEachRemaining(Consumer<? super Pair<Long, Profile>> action) {
             Objects.requireNonNull(action);
             while (modCount == expectedModCount && nextIndex < size) {
                 action.accept(next.entry);
@@ -772,7 +772,7 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         /**
          * Runs the action for each entry before the current one.
          */
-        public void forEachBefore(Consumer<? super Pair<Integer, Profile>> action) {
+        public void forEachBefore(Consumer<? super Pair<Long, Profile>> action) {
             Objects.requireNonNull(action);
 
             while (modCount == expectedModCount && nextIndex > 0) {
@@ -797,11 +797,11 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
      * The value of the Node is located in {@link Leaderboard.Node#entry}.
      */
     public static class Node {
-        Pair<Integer, Profile> entry;
+        Pair<Long, Profile> entry;
         Node next;
         Node previous;
 
-        Node(Node previous, Pair<Integer, Profile> element, Node next) {
+        Node(Node previous, Pair<Long, Profile> element, Node next) {
             this.entry = element;
             this.next = next;
             this.previous = previous;

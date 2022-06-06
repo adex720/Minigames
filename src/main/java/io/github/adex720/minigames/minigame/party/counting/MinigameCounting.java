@@ -294,7 +294,7 @@ public class MinigameCounting extends PartyTeamMinigame {
     public void appendStats(Profile profile, boolean won) {
         super.appendStats(profile, won);
 
-        int previousHighestCount = profile.getStatValue("highest count");
+        long previousHighestCount = profile.getStatValue("highest count");
         if (count > previousHighestCount) {
             profile.setStatValue("highest count", count);
         }

@@ -149,7 +149,7 @@ public class CommandLeaderboard extends Command implements PageCommand {
      */
     public void sendLeaderboard(Replyable replyable, CommandInfo commandInfo, String categoryName, int categoryId, int authorRank, String ranks, int pageNumber, int entriesAmount) {
         Profile profile = commandInfo.profile();
-        int userScore = profile.getStatValue(categoryId); // Get author's score
+        long userScore = profile.getStatValue(categoryId); // Get author's score
         User author = commandInfo.author();
 
         MessageEmbed message = new EmbedBuilder()
