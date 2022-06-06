@@ -7,8 +7,8 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.duel.DuelMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -311,6 +311,8 @@ public class MinigameTicTacToe extends DuelMinigame {
 
     @Override
     public EmbedBuilder getEmbedBase() {
+        if (getWinner() != 0) return getEmbedBaseWithoutTurn();
+
         SelfUser selfUser = bot.getJda().getSelfUser();
         return new EmbedBuilder()
                 .setTitle("TIC TAC TOE")
@@ -318,6 +320,17 @@ public class MinigameTicTacToe extends DuelMinigame {
                 .addField("Board", getBoard(), true)
                 .addField("Players", "**X** <@!" + id + ">\n**O** <@!" + opponentId + ">", true)
                 .addField("Turn", "It's <@" + getCurrentPlayerId() + ">'s turn!", true)
+                .setFooter(selfUser.getName(), selfUser.getAvatarUrl())
+                .setTimestamp(new Date().toInstant());
+    }
+
+    public EmbedBuilder getEmbedBaseWithoutTurn() {
+        SelfUser selfUser = bot.getJda().getSelfUser();
+        return new EmbedBuilder()
+                .setTitle("TIC TAC TOE")
+                .setColor(type.color)
+                .addField("Board", getBoard(), true)
+                .addField("Players", "**X** <@!" + id + ">\n**O** <@!" + opponentId + ">", true)
                 .setFooter(selfUser.getName(), selfUser.getAvatarUrl())
                 .setTimestamp(new Date().toInstant());
     }
