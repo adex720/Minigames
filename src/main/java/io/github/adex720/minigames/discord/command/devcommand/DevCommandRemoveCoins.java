@@ -6,14 +6,14 @@ import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
- * Adds coins for a user.
+ * Removes conis from a user.
  *
  * @author adex720
  */
-public class DevCommandAddCoins extends DevCommand {
+public class DevCommandRemoveCoins extends DevCommand {
 
-    public DevCommandAddCoins(MinigamesBot bot) {
-        super(bot, "add-coins");
+    public DevCommandRemoveCoins(MinigamesBot bot) {
+        super(bot, "remove-coins");
     }
 
     @Override
@@ -51,8 +51,8 @@ public class DevCommandAddCoins extends DevCommand {
             return true;
         }
 
-        profile.addCoins(coins, false, null);
-        event.getChannel().sendMessage("Added " + args[2] + " coins to the user!").queue();
+        profile.removeCoins(coins);
+        event.getChannel().sendMessage("Removed " + args[2] + " coins to the user!").queue();
         return true;
     }
 }
