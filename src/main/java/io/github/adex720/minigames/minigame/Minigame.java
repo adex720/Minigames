@@ -105,11 +105,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         String rewards = addRewards(replyable, profile, won);
 
         if (shouldReply) {
-            if (replyable.isWebhookBased()) {
-                replyable.reply(rewards, Button.primary(getReplayButtonId(), "Play again")); // Add replay button
-            } else {
-                replyable.reply(rewards);
-            }
+            replyable.reply(rewards, Button.primary(getReplayButtonId(), "Play again")); // Add replay button
         }
 
         appendQuest(replyable, profile, won); // Update quests and stats
@@ -172,7 +168,7 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         }
 
         if (isParty) {
-            profile.increaseStat("party minigame played");
+            profile.increaseStat("party minigames played");
             if (won) profile.increaseStat("party minigames won");
         }
     }

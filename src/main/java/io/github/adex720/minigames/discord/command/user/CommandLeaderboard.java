@@ -8,8 +8,8 @@ import io.github.adex720.minigames.discord.command.PageCommand;
 import io.github.adex720.minigames.gameplay.manager.stat.Leaderboard;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.stat.Stat;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -41,6 +41,13 @@ public class CommandLeaderboard extends Command implements PageCommand {
         int categoryId = event.getOption("category").getAsInt();
 
         int page = 1;
+        int lastPage = 99;
+        // This is only used when calculating the amount of entries on the last page
+        // -> doesn't need to be calculated when the page is the first one.
+
+        Leaderboard leaderboard = bot.getStatManager().getLeaderboard(categoryId);
+        int entriesAmount = leaderboard.size();
+
         OptionMapping pageOptionMapping = event.getOption("page");
         if (pageOptionMapping != null) {
             page = pageOptionMapping.getAsInt(); // get page from argument
@@ -49,14 +56,12 @@ public class CommandLeaderboard extends Command implements PageCommand {
                 event.getHook().sendMessage("Page must be at least 1!").queue();
                 return true;
             }
+
+            lastPage = 1 + (entriesAmount - 1) / PER_PAGE;
         }
 
         Replyable replyable = Replyable.from(event);
 
-        Leaderboard leaderboard = bot.getStatManager().getLeaderboard(categoryId);
-        int entriesAmount = leaderboard.size();
-
-        int lastPage = 1 + (entriesAmount - 1) / PER_PAGE; // TODO: Move this inside previous if statement once more profiles exist
         if (page > lastPage) {
             replyable.reply("Page is outside leaderboard. Last page is " + page + ".");
             return true;
@@ -133,13 +138,13 @@ public class CommandLeaderboard extends Command implements PageCommand {
     /**
      * Sends a page of leaderboard.
      *
-     * @param replyable The replyable sending or editing the message
-     * @param commandInfo Command Info
-     * @param categoryName Name of the category
-     * @param categoryId Id of the category
-     * @param authorRank Rank of the executor of the command on the leaderboard
-     * @param ranks Entries on the page as String
-     * @param pageNumber Number of the page
+     * @param replyable     The replyable sending or editing the message
+     * @param commandInfo   Command Info
+     * @param categoryName  Name of the category
+     * @param categoryId    Id of the category
+     * @param authorRank    Rank of the executor of the command on the leaderboard
+     * @param ranks         Entries on the page as String
+     * @param pageNumber    Number of the page
      * @param entriesAmount Amount of entries on the leaderboard
      */
     public void sendLeaderboard(Replyable replyable, CommandInfo commandInfo, String categoryName, int categoryId, int authorRank, String ranks, int pageNumber, int entriesAmount) {
