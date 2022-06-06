@@ -256,8 +256,8 @@ public class Leaderboard extends AbstractSequentialList<Pair<Integer, Profile>> 
         Node previousNode = forwardGoing.previous;
         Node nextNode = backGoing.next;
 
-        previousNode.next = backGoing;
-        nextNode.previous = forwardGoing;
+        if (previousNode != null) previousNode.next = backGoing;
+        if (nextNode != null) nextNode.previous = forwardGoing;
 
         forwardGoing.previous = backGoing;
         forwardGoing.next = nextNode;
