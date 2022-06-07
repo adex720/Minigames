@@ -7,10 +7,9 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -42,19 +41,9 @@ public class MinigameHangman extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), 10, new ArrayList<>());
     }
 
-    public static MinigameHangman start(SlashCommandInteractionEvent event, CommandInfo ci) {
+    public static MinigameHangman start(Replyable replyable, CommandInfo ci) {
         MinigameHangman minigame = new MinigameHangman(ci);
-
-        event.getHook().sendMessage("You started a new game of hangman. The word is: " + minigame.wordGuessed).queue();
-
-        return minigame;
-    }
-
-    public static MinigameHangman start(ButtonInteractionEvent event, CommandInfo ci) {
-        MinigameHangman minigame = new MinigameHangman(ci);
-
-        event.reply("You started a new game of hangman. The word is: " + minigame.wordGuessed).queue();
-
+        replyable.reply("You started a new game of hangman. The word is: " + minigame.wordGuessed);
         return minigame;
     }
 

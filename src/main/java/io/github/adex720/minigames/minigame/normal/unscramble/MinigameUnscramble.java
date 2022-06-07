@@ -6,10 +6,9 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -40,19 +39,9 @@ public class MinigameUnscramble extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), 3);
     }
 
-    public static MinigameUnscramble start(SlashCommandInteractionEvent event, CommandInfo ci) {
+    public static MinigameUnscramble start(Replyable replyable, CommandInfo ci) {
         MinigameUnscramble minigame = new MinigameUnscramble(ci);
-
-        event.getHook().sendMessage("You started a new game of unscramble. The word is: " + minigame.wordKnown).queue();
-
-        return minigame;
-    }
-
-    public static MinigameUnscramble start(ButtonInteractionEvent event, CommandInfo ci) {
-        MinigameUnscramble minigame = new MinigameUnscramble(ci);
-
-        event.reply("You started a new game of unscramble. The word is: " + minigame.wordKnown).queue();
-
+        replyable.reply("You started a new game of unscramble. The word is: " + minigame.wordKnown);
         return minigame;
     }
 

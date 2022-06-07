@@ -10,7 +10,6 @@ import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import javax.imageio.ImageIO;
@@ -183,19 +182,9 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         return result;
     }
 
-    public static MinigameMemo start(SlashCommandInteractionEvent event, CommandInfo commandInfo) {
+    public static MinigameMemo start(Replyable replyable, CommandInfo commandInfo) {
         MinigameMemo minigame = new MinigameMemo(commandInfo);
-
-        event.getHook().sendMessage("You started a new game of memo.").queue();
-
-        return minigame;
-    }
-
-    public static MinigameMemo start(ButtonInteractionEvent event, CommandInfo commandInfo) {
-        MinigameMemo minigame = new MinigameMemo(commandInfo);
-
-        event.getHook().sendMessage("You started a new game of memo.").queue();
-
+        replyable.reply("You started a new game of memo.");
         return minigame;
     }
 

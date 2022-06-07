@@ -12,7 +12,6 @@ import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
@@ -78,7 +77,7 @@ public class MinigameTicTacToe extends DuelMinigame {
         }
     }
 
-    public static MinigameTicTacToe start(SlashCommandInteractionEvent event, CommandInfo ci) {
+    public static MinigameTicTacToe start(Replyable replyable, CommandInfo ci) {
         MinigameTicTacToe minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
@@ -89,28 +88,8 @@ public class MinigameTicTacToe extends DuelMinigame {
         }
 
         if (minigame != null) {
-            event.getHook().sendMessage("You started a new game of Tic Tac Toe against <@!" + minigame.opponentId + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbed())
-                    .addActionRows(minigame.getButtons()).queue();
-        }
-
-        return minigame;
-    }
-
-    public static MinigameTicTacToe start(ButtonInteractionEvent event, CommandInfo ci) {
-        MinigameTicTacToe minigame = null;
-        if (ci.isInParty()) {
-            if (ci.party().getMembersWithoutOwner().size() == 1) {
-                minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), ci.party().getMemberId(), System.currentTimeMillis());
-            }
-        } else {
-            minigame = new MinigameTicTacToe(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), System.currentTimeMillis());
-        }
-
-        if (minigame != null) {
-            event.getHook().sendMessage("You started a new game of Tic Tac Toe against <@!" + minigame.opponentId + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbed())
-                    .addActionRows(minigame.getButtons()).queue();
+            replyable.reply("You started a new game of Tic Tac Toe against <@!" + minigame.opponentId + ">.");
+            replyable.reply((minigame.getEmbed()), minigame.getButtons());
         }
 
         return minigame;

@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.CommandMastermindPlace;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
@@ -40,13 +41,8 @@ public class MinigameTypeMastermind extends MinigameType<MinigameMastermind> {
     }
 
     @Override
-    public @Nullable MinigameMastermind create(SlashCommandInteractionEvent event, CommandInfo ci) {
-        return MinigameMastermind.start(event, ci);
-    }
-
-    @Override
-    public @Nullable MinigameMastermind create(ButtonInteractionEvent event, CommandInfo ci) {
-        return MinigameMastermind.start(event, ci);
+    public @Nullable MinigameMastermind create(Replyable replyable, CommandInfo ci) {
+        return MinigameMastermind.start(replyable, ci);
     }
 
     @Override

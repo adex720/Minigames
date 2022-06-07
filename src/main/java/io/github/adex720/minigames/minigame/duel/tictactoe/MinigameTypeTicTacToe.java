@@ -7,8 +7,7 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.CommandTicTacToeSet;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.duel.DuelMinigameType;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import io.github.adex720.minigames.util.replyable.Replyable;
 
 import java.util.Set;
 
@@ -22,13 +21,8 @@ public class MinigameTypeTicTacToe extends DuelMinigameType<MinigameTicTacToe> {
     }
 
     @Override
-    public MinigameTicTacToe create(SlashCommandInteractionEvent event, CommandInfo ci) {
-        return MinigameTicTacToe.start(event, ci);
-    }
-
-    @Override
-    public MinigameTicTacToe create(ButtonInteractionEvent event, CommandInfo ci) {
-        return MinigameTicTacToe.start(event, ci);
+    public MinigameTicTacToe create(Replyable replyable, CommandInfo ci) {
+        return MinigameTicTacToe.start(replyable, ci);
     }
 
     @Override

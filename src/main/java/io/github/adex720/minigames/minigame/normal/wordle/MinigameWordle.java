@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
@@ -79,19 +78,9 @@ public class MinigameWordle extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getWord(ci.bot().getWordManager()), new ArrayList<>());
     }
 
-    public static MinigameWordle start(SlashCommandInteractionEvent event, CommandInfo ci) {
+    public static MinigameWordle start(Replyable replyable, CommandInfo ci) {
         MinigameWordle minigame = new MinigameWordle(ci);
-
-        event.getHook().sendMessage("You started a new game of wordle.").queue();
-
-        return minigame;
-    }
-
-    public static MinigameWordle start(ButtonInteractionEvent event, CommandInfo ci) {
-        MinigameWordle minigame = new MinigameWordle(ci);
-
-        event.reply("You started a new game of wordle.").queue();
-
+        replyable.reply("You started a new game of wordle.");
         return minigame;
     }
 

@@ -9,8 +9,8 @@ import io.github.adex720.minigames.discord.command.minigame.CommandBlackjackHit;
 import io.github.adex720.minigames.discord.command.minigame.CommandBlackjackStand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.gamble.GambleMinigameType;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -25,26 +25,35 @@ public class MinigameTypeBlackjack extends GambleMinigameType<MinigameBlackjack>
         super(bot, typeManager, "blackjack", 1f);
     }
 
+    /**
+     * Doesn't have access to required parameters, use {@link MinigameTypeBlackjack#create(Replyable, CommandInfo, SlashCommandInteractionEvent)}
+     * or {@link MinigameTypeBlackjack#create(Replyable, CommandInfo, String[])} instead.
+     */
     @Override
-    public MinigameBlackjack create(SlashCommandInteractionEvent event, CommandInfo ci) {
-        int bet = event.getOption("bet").getAsInt();
-
-        if (ci.profile().getCoins() < bet){
-            return null;
-        }
-
-        return MinigameBlackjack.start(event, ci, bet);
+    public MinigameBlackjack create(Replyable replyable, CommandInfo ci) {
+        return null;
     }
 
     @Override
-    public MinigameBlackjack create(ButtonInteractionEvent event, CommandInfo ci) {
+    public MinigameBlackjack create(Replyable replyable, CommandInfo ci, SlashCommandInteractionEvent event) {
+        long bet = event.getOption("bet").getAsLong();
+        if (bet > Integer.MAX_VALUE) return null;
+        if (ci.profile().getCoins() < bet) return null;
+
+        return MinigameBlackjack.start(replyable, ci, (int) bet);
+    }
+
+    @Override
+    public MinigameBlackjack create(Replyable replyable, CommandInfo ci, String[] buttonArgs) {
         int bet = Integer.parseInt(ci.args()[3]);
-        // 0 = replay
-        // 1 = blackjack
+        // Arguments by index:
+        // 0 = "replay"
+        // 1 = "blackjack"
         // 2 = game id
         // 3 = bet
+        if (ci.profile().getCoins() < bet) return null;
 
-        return MinigameBlackjack.start(event, ci, bet);
+        return MinigameBlackjack.start(replyable, ci, bet);
     }
 
     @Override

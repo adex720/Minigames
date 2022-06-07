@@ -7,6 +7,7 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.MinigameCommand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
@@ -52,11 +53,37 @@ public abstract class MinigameType<M extends Minigame> {
         this.color = Integer.parseInt(JsonHelper.getString(minigameJson, "color"), 16);
     }
 
+    /**
+     * Creates a new minigame of this type.
+     *
+     * @param replyable Replyable to send messages with.
+     */
     @Nullable
-    public abstract M create(SlashCommandInteractionEvent event, CommandInfo ci);
+    public abstract M create(Replyable replyable, CommandInfo ci);
 
+    /**
+     * Creates a new minigame of this type.
+     * Calls {@link MinigameType#create(Replyable, CommandInfo)} if not overridden.
+     *
+     * @param event     {@link SlashCommandInteractionEvent} to get options from
+     * @param replyable Replyable to send messages with
+     */
     @Nullable
-    public abstract M create(ButtonInteractionEvent event, CommandInfo ci);
+    public M create(Replyable replyable, CommandInfo ci, SlashCommandInteractionEvent event) {
+        return create(replyable, ci);
+    }
+
+    /**
+     * Creates a new minigame of this type.
+     * Calls {@link MinigameType#create(Replyable, CommandInfo)} if not overridden.
+     *
+     * @param buttonArgs Arguments on the button id
+     * @param replyable  Replyable to send messages with
+     */
+    @Nullable
+    public M create(Replyable replyable, CommandInfo ci, String[] buttonArgs) {
+        return create(replyable, ci);
+    }
 
     public abstract M fromJson(JsonObject json);
 

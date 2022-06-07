@@ -30,7 +30,6 @@ public class Connect4ButtonManager extends ButtonManager {
 
         int columnId = Integer.parseInt(args[2]);
 
-        event.deferReply().queue();
         connect4.drop(replyable, commandInfo, columnId);
     }
 }

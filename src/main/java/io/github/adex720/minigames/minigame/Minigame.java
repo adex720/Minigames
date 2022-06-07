@@ -57,18 +57,20 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return type;
     }
 
-    public String finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
+    public void finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
         finished = true;
 
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
 
         if (!profile.isInParty()) {
-            return finishForUser(replyable, profile, won, true);
+            finishForUser(replyable, profile, won, true);
+            return;
 
         }
         if (isEveryoneOnSameTeam()) {
-            return finishForParty(replyable, commandInfo.party(), won);
+            finishForParty(replyable, commandInfo.party(), won);
+            return;
         }
 
         Long[] winnerIds;
@@ -87,21 +89,16 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             }
         }
 
-        // PLayers who won
+        // Players who won
         // Since this is never supposed to use the user from CommandInfo, it's not worth checking it and getting profile from there.
-        String reply = "";
         for (long userId : winnerIds) {
-            if (reply.isEmpty()) {
-                reply = finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, true);
-                continue;
-            }
-
             finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, false);
         }
-        return reply;
+
+        replyable.reply("You received rewards for the ended minigame", Button.primary(getReplayButtonId(), "Play again"));
     }
 
-    public String finishForUser(Replyable replyable, Profile profile, boolean won, boolean shouldReply) {
+    public void finishForUser(Replyable replyable, Profile profile, boolean won, boolean shouldReply) {
         String rewards = addRewards(replyable, profile, won);
 
         if (shouldReply) {
@@ -116,19 +113,18 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             guild.minigameWon(bot);
         }
 
-        return rewards;
     }
 
     public String getReplayButtonId() {
         return "replay-" + type.getNameWithoutDashes() + "-" + id;
     }
 
-    public String finishForParty(Replyable replyable, Party party, boolean won) {
+    public void finishForParty(Replyable replyable, Party party, boolean won) {
         for (long userId : party.getActiveMembers()) {
             finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, false);
         }
 
-        return "You received rewards for the ended minigame";
+        replyable.reply("You received rewards for the ended minigame", Button.primary(getReplayButtonId(), "Play again"));
     }
 
     public void appendQuest(Replyable replyable, Profile profile, boolean won) {

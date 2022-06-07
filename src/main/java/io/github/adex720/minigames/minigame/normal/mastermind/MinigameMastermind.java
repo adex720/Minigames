@@ -5,12 +5,11 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,19 +42,9 @@ public class MinigameMastermind extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getCode(ci.bot()), new ArrayList<>());
     }
 
-    public static MinigameMastermind start(SlashCommandInteractionEvent event, CommandInfo ci) {
+    public static MinigameMastermind start(Replyable replyable, CommandInfo ci) {
         MinigameMastermind minigame = new MinigameMastermind(ci);
-
-        event.getHook().sendMessage("You started a new game of Mastermind! You have " + DEFAULT_GUESSES + " guesses left.").queue();
-
-        return minigame;
-    }
-
-    public static MinigameMastermind start(ButtonInteractionEvent event, CommandInfo ci) {
-        MinigameMastermind minigame = new MinigameMastermind(ci);
-
-        event.reply("You started a new game of Mastermind! You have " + DEFAULT_GUESSES + " guesses left.").queue();
-
+        replyable.reply("You started a new game of Mastermind! You have " + DEFAULT_GUESSES + " guesses left.");
         return minigame;
     }
 
@@ -162,12 +151,13 @@ public class MinigameMastermind extends Minigame {
         if (guessCompacted == code) {
             event.getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setTitle("MASTERMIND")
-                    .addField("You guessed the correct combination!", finish(replyable, ci, true), true)
+                    .addField("You found the correct combination!", "You won the minigame.", true)
                     .addField("Board", guessesAndEmptiesToString(), true)
                     .setColor(type.color)
                     .setFooter(author.getName(), author.getAvatarUrl())
                     .setTimestamp(new Date().toInstant())
                     .build()).queue();
+            finish(replyable, ci, true);
             return;
         }
 

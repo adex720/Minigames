@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +50,7 @@ public class MinigameConnect4 extends DuelMinigame {
         }
     }
 
-    public static MinigameConnect4 start(SlashCommandInteractionEvent event, CommandInfo ci) {
+    public static MinigameConnect4 start(Replyable replyable, CommandInfo ci) {
         MinigameConnect4 minigame = null;
         if (ci.isInParty()) {
             if (ci.party().getMembersWithoutOwner().size() == 1) {
@@ -60,26 +59,8 @@ public class MinigameConnect4 extends DuelMinigame {
         }
 
         if (minigame != null) {
-            event.getHook().sendMessage("You started a new game of connect against <@!" + minigame.getDifferentPlayerId(ci.authorId()) + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbedWithField("The player starting is:", "<@" + minigame.getCurrentPlayerId() + ">"))
-                    .addActionRows(minigame.getButtons()).queue();
-        }
-
-        return minigame;
-    }
-
-    public static MinigameConnect4 start(ButtonInteractionEvent event, CommandInfo ci) {
-        MinigameConnect4 minigame = null;
-        if (ci.isInParty()) {
-            if (ci.party().getMembersWithoutOwner().size() == 1) {
-                minigame = new MinigameConnect4(ci.bot(), ci.bot().getMinigameTypeManager(), ci.gameId(), ci.party().getMemberId(), System.currentTimeMillis());
-            }
-        }
-
-        if (minigame != null) {
-            event.getHook().sendMessage("You started a new game of connect against <@!" + minigame.getDifferentPlayerId(ci.authorId()) + ">.").queue();
-            event.getHook().sendMessageEmbeds(minigame.getEmbedWithField("The player starting is:", "<@" + minigame.getCurrentPlayerId() + ">"))
-                    .addActionRows(minigame.getButtons()).queue();
+            replyable.reply("You started a new game of connect against <@!" + minigame.getDifferentPlayerId(ci.authorId()) + ">.");
+            replyable.reply(minigame.getEmbedWithField("The player starting is:", "<@" + minigame.getCurrentPlayerId() + ">"), minigame.getButtons());
         }
 
         return minigame;

@@ -9,8 +9,7 @@ import io.github.adex720.minigames.discord.command.minigame.CommandWordleLetters
 import io.github.adex720.minigames.discord.command.minigame.CommandWordleWordlist;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.MinigameType;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import io.github.adex720.minigames.util.replyable.Replyable;
 
 import java.util.Set;
 
@@ -24,13 +23,8 @@ public class MinigameTypeWordle extends MinigameType<MinigameWordle> {
     }
 
     @Override
-    public MinigameWordle create(SlashCommandInteractionEvent event, CommandInfo ci) {
-        return MinigameWordle.start(event, ci);
-    }
-
-    @Override
-    public MinigameWordle create(ButtonInteractionEvent event, CommandInfo ci) {
-        return MinigameWordle.start(event, ci);
+    public MinigameWordle create(Replyable replyable, CommandInfo ci) {
+        return MinigameWordle.start(replyable, ci);
     }
 
     @Override

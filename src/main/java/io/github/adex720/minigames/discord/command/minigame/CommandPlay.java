@@ -68,7 +68,8 @@ public class CommandPlay extends ParentCommand {
                 event.getHook().sendMessage(ci.minigame().quit(Replyable.from(event))).queue();
             }
 
-            Minigame minigame = this.minigame.create(event, ci);
+            Replyable replyable = Replyable.from(event);
+            Minigame minigame = this.minigame.create(replyable, ci);
             if (minigame != null) {
                 if (minigame.shouldStart()) { // This is false on scenarios like start card sum being 21 on blackjack
                     bot.getMinigameManager().addMinigame(minigame);

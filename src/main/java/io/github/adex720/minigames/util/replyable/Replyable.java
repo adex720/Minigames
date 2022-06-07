@@ -129,7 +129,7 @@ public class Replyable {
             return;
         }
 
-        getWebhookMessageAction(message).addActionRows(actionRows).queue(m-> System.out.println("Sent"));
+        getWebhookMessageAction(message).addActionRows(actionRows).queue(m -> System.out.println("Sent"));
     }
 
     /**
@@ -199,6 +199,8 @@ public class Replyable {
      * Replying sends a new message to the channel.
      */
     public static Replyable from(ButtonInteractionEvent event) {
+        if (!event.isAcknowledged()) event.deferReply().queue();
+
         return new Replyable(true) {
             @Override
             public WebhookMessageAction<?> getWebhookMessageAction(String message) {

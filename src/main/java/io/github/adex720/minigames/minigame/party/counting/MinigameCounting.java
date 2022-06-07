@@ -8,10 +8,7 @@ import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.party.PartyTeamMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.replyable.Replyable;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
@@ -54,17 +51,14 @@ public class MinigameCounting extends PartyTeamMinigame {
         public String getValue(int value) {
             StringBuilder letters = new StringBuilder();
             String hexavigesimal = Integer.toString(value, 26); // get on format like hexadecimal but continuing until P (16th letter)
-
             for (int i = 0; i < hexavigesimal.length(); i++) {
                 char c = hexavigesimal.charAt(i);
-
                 if (c <= '9') { // 0 - 9
                     letters.append((char) (c + 0x30)); // 1 -> A, etc.
                 } else { // A - Q
                     letters.append(c);
                 }
             }
-
             return letters.toString();
         }
     };
@@ -107,22 +101,9 @@ public class MinigameCounting extends PartyTeamMinigame {
         this(ci.bot(), ci.gameId(), ci.channelId(), mode, System.currentTimeMillis());
     }
 
-    public static MinigameCounting start(SlashCommandInteractionEvent event, CommandInfo ci) {
-        OptionMapping optionMapping = event.getOption("mode");
-        int mode = optionMapping != null ? (event.getOption("mode").getAsInt()) : MODE_BASE_10_ID;
-
-        MinigameCounting minigame = new MinigameCounting(ci, mode);
-
-        event.getHook().sendMessage("You started a new counting minigame.").queue();
-
-        return minigame;
-    }
-
-    public static MinigameCounting start(ButtonInteractionEvent event, CommandInfo ci, int modeId) {
+    public static MinigameCounting start(Replyable replyable, CommandInfo ci, int modeId) {
         MinigameCounting minigame = new MinigameCounting(ci, modeId);
-
-        event.getHook().sendMessage("You started a new counting minigame.").queue();
-
+        replyable.reply("You started a new counting minigame.");
         return minigame;
     }
 
@@ -303,8 +284,8 @@ public class MinigameCounting extends PartyTeamMinigame {
     @Override
     public String quit(@Nullable Replyable replyable) {
         super.quit(replyable);
-        String rewards = finishForParty(Replyable.IGNORE_ALL, bot.getPartyManager().getParty(id), false);
-        return "You quit your counting game. You reached " + count + ". " + rewards;
+       finishForParty(Replyable.IGNORE_ALL, bot.getPartyManager().getParty(id), false);
+        return "You quit your counting game. You reached " + count + ". ";
     }
 
     @Override

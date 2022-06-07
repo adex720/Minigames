@@ -7,8 +7,6 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.gamble.GambleMinigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.replyable.Replyable;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -58,35 +56,15 @@ public class MinigameBlackjack extends GambleMinigame {
     /**
      * It should be checked if the player can afford the bet before this is called.
      */
-    public static MinigameBlackjack start(SlashCommandInteractionEvent event, CommandInfo commandInfo, int bet) {
+    public static MinigameBlackjack start(Replyable replyable, CommandInfo commandInfo, int bet) {
         MinigameBlackjack minigame = new MinigameBlackjack(commandInfo, bet);
 
-        if (minigame.dealStartCards(Replyable.from(event), commandInfo)) {
-            event.getHook().sendMessage("You started a new game of blackjack!\n" + minigame)
-                    .addActionRows(minigame.getActionRow()).queue();
-        } else {
-            event.getHook().sendMessage("You started a new game of blackjack! You got a blackjack and won!\n"
-                    + minigame).queue();
-        }
-
-        return minigame;
-    }
-
-    /**
-     * It should be checked if the player can afford the bet before this is called.
-     */
-    public static MinigameBlackjack start(ButtonInteractionEvent event, CommandInfo commandInfo, int bet) {
-        MinigameBlackjack minigame = new MinigameBlackjack(commandInfo, bet);
-
-        if (minigame.dealStartCards(Replyable.from(event), commandInfo)) {
-            event.getHook().sendMessage("You started a new game of blackjack!\n" + minigame)
-                    .addActionRows(minigame.getActionRow()).queue();
+        if (minigame.dealStartCards(replyable, commandInfo)) {
+            replyable.reply("You started a new game of blackjack!\n" + minigame, minigame.getActionRow());
             return minigame;
         }
 
-        event.getHook().sendMessage("You started a new game of blackjack! You got a blackjack and won!\n"
-                + minigame).queue();
-
+        replyable.reply("You started a new game of blackjack! You got a blackjack and won!\n" + minigame);
         return null;
     }
 

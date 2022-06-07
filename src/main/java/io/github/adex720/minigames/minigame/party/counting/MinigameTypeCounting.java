@@ -8,10 +8,11 @@ import io.github.adex720.minigames.discord.command.minigame.CommandCountingCount
 import io.github.adex720.minigames.discord.command.minigame.CommandCountingLastCounter;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.party.PartyTeamMinigameType;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -25,23 +26,27 @@ public class MinigameTypeCounting extends PartyTeamMinigameType<MinigameCounting
     }
 
     @Override
-    public MinigameCounting create(SlashCommandInteractionEvent event, CommandInfo ci) {
-        return MinigameCounting.start(event, ci);
+    public @Nullable MinigameCounting create(Replyable replyable, CommandInfo ci) {
+        return null;
     }
 
     @Override
-    public MinigameCounting create(ButtonInteractionEvent event, CommandInfo ci) {
-        String[] args = ci.args();
+    public @Nullable MinigameCounting create(Replyable replyable, CommandInfo ci, SlashCommandInteractionEvent event) {
+        return null;
+    }
 
+    @Override
+    public @Nullable MinigameCounting create(Replyable replyable, CommandInfo ci, String[] buttonArgs) {
         int type;
-        if (args.length <= 3) type = getDefaultState();
+        if (buttonArgs.length <= 3) type = getDefaultState();
         else type = Integer.parseInt(ci.args()[3]);
-        // 0 = replay
-        // 1 = counting
+        // Button id args
+        // 0 = "replay"
+        // 1 = "counting"
         // 2 = game id
         // 3 = type (optional)
 
-        return MinigameCounting.start(event, ci, type);
+        return MinigameCounting.start(replyable, ci, type);
     }
 
     @Override

@@ -7,7 +7,6 @@ import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -47,19 +46,9 @@ public class MinigameHigherLower extends Minigame {
         this(ci.bot(), ci.gameId(), ci.isInParty(), System.currentTimeMillis(), getNumber(ci.bot()), MIN_VALUE, MAX_VALUE, DEFAULT_GUESSES);
     }
 
-    public static MinigameHigherLower start(SlashCommandInteractionEvent event, CommandInfo ci) {
+    public static MinigameHigherLower start(Replyable replyable, CommandInfo ci) {
         MinigameHigherLower minigame = new MinigameHigherLower(ci);
-
-        event.getHook().sendMessage("You started a new game of higher or lower. The range is: " + minigame.min + "-" + minigame.max).queue();
-
-        return minigame;
-    }
-
-    public static MinigameHigherLower start(ButtonInteractionEvent event, CommandInfo ci) {
-        MinigameHigherLower minigame = new MinigameHigherLower(ci);
-
-        event.reply("You started a new game of higher or lower. The range is: " + minigame.min + "-" + minigame.max).queue();
-
+        replyable.reply("You started a new game of higher or lower. The range is: " + minigame.min + "-" + minigame.max);
         return minigame;
     }
 
