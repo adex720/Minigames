@@ -13,7 +13,6 @@ import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
 import io.github.adex720.minigames.gameplay.manager.guild.GuildBossManager;
 import io.github.adex720.minigames.gameplay.manager.guild.GuildManager;
-import io.github.adex720.minigames.gameplay.manager.guild.GuildPerkManager;
 import io.github.adex720.minigames.gameplay.manager.kit.KitCooldownManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
@@ -95,7 +94,6 @@ public class MinigamesBot {
 
     private final GuildBossManager guildBossManager;
     private final GuildBossList guildBossList;
-    private final GuildPerkManager guildPerkManager;
 
     private final BanManager banManager;
     private final ProfileManager profileManager;
@@ -168,7 +166,6 @@ public class MinigamesBot {
 
         guildBossManager = new GuildBossManager(this);
         guildBossList = new GuildBossList(this);
-        guildPerkManager = new GuildPerkManager(this);
 
         banManager = new BanManager(this);
         profileManager = new ProfileManager(this);
@@ -386,10 +383,6 @@ public class MinigamesBot {
 
     public GuildBossList getGuildBossList() {
         return guildBossList;
-    }
-
-    public GuildPerkManager getGuildPerkManager() {
-        return guildPerkManager;
     }
 
     @CheckReturnValue
