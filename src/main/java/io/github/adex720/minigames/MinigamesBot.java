@@ -567,8 +567,6 @@ public class MinigamesBot {
 
     TODO: buttons to add
 
-    TODO: merge the two start- and create-methods
-
     TODO: cache recently accessed guilds, profiles and parties
 
     TODO: guilds:
