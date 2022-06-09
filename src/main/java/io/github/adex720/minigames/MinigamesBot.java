@@ -377,10 +377,12 @@ public class MinigamesBot {
         return questList;
     }
 
+    @CheckReturnValue
     public GuildBossManager getGuildBossManager() {
         return guildBossManager;
     }
 
+    @CheckReturnValue
     public GuildBossList getGuildBossList() {
         return guildBossList;
     }
@@ -453,10 +455,10 @@ public class MinigamesBot {
         for (JsonElement jsonElement : jsonArray) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-            switch (jsonObject.get("language").getAsString()) {
-                case "Java" -> linesOfCodeJava = jsonObject.get("lines").getAsInt();
-                case "JSON" -> linesOfCodeJson = jsonObject.get("lines").getAsInt();
-                case "Total" -> linesOfCodeTotal = jsonObject.get("lines").getAsInt();
+            switch (JsonHelper.getString(jsonObject, "language")) {
+                case "Java" -> linesOfCodeJava = JsonHelper.getInt(jsonObject, "lines");
+                case "JSON" -> linesOfCodeJson = JsonHelper.getInt(jsonObject, "lines");
+                case "Total" -> linesOfCodeTotal = JsonHelper.getInt(jsonObject, "lines");
             }
         }
 
