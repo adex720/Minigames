@@ -149,7 +149,6 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
         }
 
-        coins *= profile.getMinigameCoinMultiplier();
         profile.addCoins(coins, true, replyable);
         return "You received " + coins + " coins!";
     }

@@ -7,6 +7,7 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.JsonHelper;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -124,20 +125,20 @@ public record GuildBossReward(int coins,
     }
 
     public void apply(MinigamesBot bot, Guild guild) {
-        if (coins > 0) guild.addCoins(coins);
 
         long guildOwnerId = guild.getId();
         for (long userId : guild.getMemberIds()) {
             Profile profile = bot.getProfileManager().getProfile(userId);
-            applyCrates(guild, profile);
+            addCoinsAndCrates(profile);
 
             if (userId == guildOwnerId) applyBoosters(profile);
         }
 
     }
 
-    private void applyCrates(Guild guild, Profile profile) {
-        if (crateCount > 0) profile.addCrates(crate, crateCount + guild.getExtraCrateCount());
+    private void addCoinsAndCrates(Profile profile) {
+        if (crateCount > 0) profile.addCrates(crate, crateCount);
+        if (coins > 0) profile.addCoins(coins, true, Replyable.IGNORE_ALL);
     }
 
     private void applyBoosters(Profile profile) {

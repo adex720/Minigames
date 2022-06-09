@@ -7,7 +7,6 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.gameplay.guild.boss.GuildBoss;
-import io.github.adex720.minigames.gameplay.guild.shop.GuildPerkList;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Pair;
 import io.github.adex720.minigames.util.Util;
@@ -47,8 +46,6 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
     private int minigamesWonCurrentWeek;
 
     private GuildBoss boss;
-    private final GuildPerkList perkList;
-    private int coins;
 
     public Guild(MinigamesBot bot, long ownerId, String ownerTag, String name) {
         createdTime = System.currentTimeMillis();
@@ -67,13 +64,11 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         minigamesWonCurrentWeek = 0;
 
         boss = bot.getGuildBossList().get(0);
-        perkList = new GuildPerkList(bot.getGuildPerkManager());
-        coins = 0;
     }
 
-    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders,
-                 String name, long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek,
-                 GuildBoss boss, GuildPerkList perkList, int coins) {
+    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name,
+                 long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek, GuildBoss boss) {
+
         this.ownerId = ownerId;
         this.ownerTag = ownerTag;
 
@@ -93,8 +88,6 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         this.minigamesWonCurrentWeek = minigamesWonCurrentWeek;
 
         this.boss = boss;
-        this.perkList = perkList;
-        this.coins = coins;
     }
 
     public static boolean isNameValid(String name) {
@@ -155,11 +148,8 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         } else {
             boss = bot.getGuildBossList().get(0);
         }
-        JsonArray perksJsonArray = JsonHelper.getJsonArray(json, "perks");
-        GuildPerkList perkList = GuildPerkList.fromJson(perksJsonArray, bot.getGuildPerkManager());
-        int coins = JsonHelper.getInt(json, "coins", 0);
 
-        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss, perkList, coins);
+        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss);
     }
 
     @Override
@@ -178,8 +168,6 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         json.addProperty("wins-week", minigamesWonCurrentWeek);
 
         json.add("boss", boss.asJson());
-        json.add("perks", perkList.asJson());
-        json.addProperty("coins", coins);
 
         return json;
     }
@@ -438,8 +426,6 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
         minigamesWonCurrentWeek++;
 
         damageBoss(bot);
-        double chanceForDouble = getChanceForDoubleDamage();
-        if (chanceForDouble > 0d && bot.getRandom().nextDouble() < chanceForDouble) damageBoss(bot);
     }
 
     /**
@@ -477,83 +463,6 @@ public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record me
                 .build();
 
     }
-
-    public GuildPerkList getPerkList() {
-        return perkList;
-    }
-
-    public MessageEmbed.Field[] getShopFields() {
-        return perkList.getFieldsOnShop();
-    }
-
-    public MessageEmbed.Field[] getPerkInfoFields() {
-        return perkList.getFieldsOnPerkInfo();
-    }
-
-    public int getCoins() {
-        return coins;
-    }
-
-    /**
-     * Adds given amount of coins from to vault.
-     * Caps the count at {@link Guild#MAX_COINS}.
-     *
-     * @throws IllegalStateException If {@param amount} is negative. Use {@link Guild#removeCoins(int)} instead.
-     */
-    public void addCoins(int amount) {
-        if (amount < 0) throw new IllegalStateException("You can't add negative amount of coins!");
-
-        coins += amount;
-        if (coins > MAX_COINS) coins = MAX_COINS;
-    }
-
-    /**
-     * Removes given amount of coins from to vault.
-     * If the amount of coins after would be below 0, no coins will be reduced.
-     *
-     * @throws IllegalStateException If {@param amount} is negative. Use {@link Guild#addCoins(int)} instead.
-     */
-    public void removeCoins(int amount) {
-        if (amount < 0) throw new IllegalStateException("You can't reduce negative amount of coins!");
-
-        if (amount < coins) coins -= amount;
-    }
-
-    /**
-     * Returns the coin multiplier of Looter guild perk.
-     */
-    public int getExtraCrateCount() {
-        return (int) perkList.getEffect(0);
-    }
-
-    /**
-     * Returns the chance of dealing double damage to the guild boss from Slayer guild perk.
-     */
-    public float getChanceForDoubleDamage() {
-        return perkList.getEffect(1);
-    }
-
-    /**
-     * Returns the cooldownMultiplier of Adventurer guild perk.
-     */
-    public float getAdventureCooldownMultiplier() {
-        return perkList.getEffect(2);
-    }
-
-    /**
-     * Returns the xp multiplier of Researcher guild perk.
-     */
-    public float getXpMultiplier() {
-        return perkList.getEffect(3);
-    }
-
-    /**
-     * Returns the coin multiplier of CEO guild perk.
-     */
-    public int getCoinMultiplier() {
-        return (int) perkList.getEffect(4);
-    }
-
 
     public void onDelete(MinigamesBot bot) {
         for (long memberId : getMemberIds()) {

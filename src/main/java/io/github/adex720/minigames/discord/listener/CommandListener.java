@@ -27,7 +27,7 @@ public class CommandListener extends ListenerAdapter {
     private final HashMap<Long, Long> COOLDOWNS;
     public static final long COMMAND_COOLDOWN = 750;
 
-    public static final OffsetDateTime ZERO = LocalDateTime.of(1970, 0, 0, 0, 0, 0).atOffset(ZoneOffset.UTC);
+    public static final OffsetDateTime ZERO = LocalDateTime.of(1970, 1, 1, 0, 0, 0).atOffset(ZoneOffset.UTC);
 
     public CommandListener(MinigamesBot bot, CommandManager commandManager) {
         this.bot = bot;

@@ -9,7 +9,6 @@ import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -127,8 +126,8 @@ public abstract class MinigameType<M extends Minigame> {
     }
 
     /**
-     * If the returned value of {@link MinigameType#create(SlashCommandInteractionEvent, CommandInfo)} or
-     * {@link MinigameType#create(ButtonInteractionEvent, CommandInfo)} results on null,
+     * If the returned value of {@link MinigameType#create(Replyable, CommandInfo, SlashCommandInteractionEvent)} or
+     * {@link MinigameType#create(Replyable, CommandInfo, String[])} results on null,
      * this will be sent as the reason why it failed.
      * If the initialization of the minigame can't result on null, this method doesn't need to be overridden.
      *

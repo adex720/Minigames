@@ -752,15 +752,6 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return setting;
     }
 
-    /**
-     * Returns the minigame reward cons multiplier of the guild where the user is.
-     * If the use is not in a guild, 1 is returned.
-     */
-    public int getMinigameCoinMultiplier() {
-        if (!isInGuild) return 1;
-        return bot.getGuildManager().getById(guildId).getCoinMultiplier();
-    }
-
     public void onDelete(SlashCommandInteractionEvent event) {
         bot.getQuestManager().removeQuests(userId);
         bot.getKitCooldownManager().clearCooldowns(userId);
