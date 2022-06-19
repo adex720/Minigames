@@ -199,6 +199,8 @@ public class MinigamesBot {
                 .awaitReady();
         long botOnlineTime = System.currentTimeMillis();
 
+        jda.setAutoReconnect(true);
+
         commandManager.registerCommands(jda);
 
         selfMentionListener.init();
