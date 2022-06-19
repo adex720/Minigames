@@ -86,6 +86,7 @@ public class MinigamesBot {
     private final GuildJoinListener guildJoinListener;
     private final SelfMentionListener selfMentionListener;
     private final CountingListener countingListener;
+    private final DisconnectListener disconnectListener;
 
     private final BadgeManager badgeManager;
     private final StatManager statManager;
@@ -114,7 +115,6 @@ public class MinigamesBot {
     private final QuestList questList;
 
     private final TimerManager timerManager;
-
     private final KitCooldownManager kitCooldownManager;
 
     private final SettingsList settingsList;
@@ -152,11 +152,13 @@ public class MinigamesBot {
         blackjackButtonManager = new BlackjackButtonManager(this);
         ticTacToeButtonManager = new TicTacToeButtonManager(this);
         connect4ButtonManager = new Connect4ButtonManager(this);
+        triviaButtonManager = new TriviaButtonManager(this);
 
 
         guildJoinListener = new GuildJoinListener(this);
         selfMentionListener = new SelfMentionListener(this);
         countingListener = new CountingListener(this);
+        disconnectListener = new DisconnectListener(this);
 
         badgeManager = new BadgeManager(this);
         statManager = new StatManager(this);
@@ -192,7 +194,7 @@ public class MinigamesBot {
         jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("/help"))
-                .addEventListeners(commandListener, buttonListener, devCommandListener, guildJoinListener, selfMentionListener, countingListener)
+                .addEventListeners(commandListener, buttonListener, devCommandListener, guildJoinListener, selfMentionListener, countingListener, disconnectListener)
                 .build()
                 .awaitReady();
         long botOnlineTime = System.currentTimeMillis();
@@ -205,8 +207,6 @@ public class MinigamesBot {
         commandManager.commandUptime.botOnline(botOnlineTime);
 
         startTimers();
-
-        httpsRequester = new HttpsRequester();
 
         calculateLinesOfCode();
     }
