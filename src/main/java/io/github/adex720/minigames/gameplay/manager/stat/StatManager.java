@@ -7,7 +7,10 @@ import io.github.adex720.minigames.gameplay.manager.Manager;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Manages different stats and has methods for interacting with leaderboards.
@@ -20,7 +23,7 @@ public class StatManager extends Manager {
     private final HashMap<Integer, Stat> STATS_BY_ID;
     private final ArrayList<Stat> LEADERBOARD_STATS;
 
-    private final HashMap<Integer, TreeSet<Profile>> LEADERBOARDS;
+    private final HashMap<Integer, Leaderboard> LEADERBOARDS;
 
     public StatManager(MinigamesBot bot) {
         super(bot, "stat-manager");
@@ -30,10 +33,12 @@ public class StatManager extends Manager {
 
         LEADERBOARDS = new HashMap<>();
         load(bot);
+    }
 
+    public void initLeaderboards() {
         for (Stat stat : LEADERBOARD_STATS) {
             final int id = stat.id();
-            LEADERBOARDS.put(stat.id(), new TreeSet<>(Comparator.comparing(profile -> profile.getStatValue(id))));
+            LEADERBOARDS.put(id, new Leaderboard(bot.getProfileManager().getValues(), id));
         }
     }
 
@@ -65,25 +70,20 @@ public class StatManager extends Manager {
         return LEADERBOARD_STATS;
     }
 
-    public void updateLeaderboards() {
-        for (Stat stat : LEADERBOARD_STATS) {
-            if (!stat.onLeaderboard()) continue;
-            updateLeaderboard(stat);
-        }
-        bot.getLogger().info("Updated leaderboards.");
-    }
-
-    public void updateLeaderboard(Stat stat) {
-        int statId = stat.id();
-
-        TreeSet<Profile> leaderboard = new TreeSet<>(Comparator.comparing(profile -> -profile.getStatValue(statId)));
-        leaderboard.addAll(bot.getProfileManager().getValues());
-
-        LEADERBOARDS.put(statId, leaderboard);
-    }
-
-    public TreeSet<Profile> getLeaderboard(int statId) {
+    public Leaderboard getLeaderboard(int statId) {
         return LEADERBOARDS.get(statId);
+    }
+
+    public void addToLeaderboards(Profile profile) {
+        for (Leaderboard leaderboard : LEADERBOARDS.values()) {
+            leaderboard.add(profile);
+        }
+    }
+
+    public void removeFromLeaderboards(Profile profile) {
+        for (Leaderboard leaderboard : LEADERBOARDS.values()) {
+            leaderboard.remove(profile);
+        }
     }
 
 }

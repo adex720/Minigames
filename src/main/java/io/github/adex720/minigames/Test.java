@@ -20,9 +20,16 @@ import java.io.IOException;
  */
 public class Test {
 
-    public static void main(String[] args) throws IOException {
-        testWebRequest();
+    public static void main(String[] args) {
+        testCharacterBytes();
+    }
 
+    public static void testCharacterBytes() {
+        String string = "語";
+        char firstChar = string.charAt(0);
+        System.out.println("String: " + string);
+        System.out.println("First char: " + firstChar);
+        System.out.println("As int: " + (int) firstChar);
     }
 
     public static void testWebRequest() throws IOException {

@@ -7,7 +7,7 @@ import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -32,6 +32,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     private long owner;
     private final Set<Long> members;
+    private final Set<Long> activeMembers; // members who have participated on current minigame
 
     private final Set<Long> invites;
     private boolean isPublic;
@@ -44,6 +45,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
         this.bot = bot;
         this.owner = ownerId;
         this.members = new HashSet<>();
+        activeMembers = new HashSet<>();
 
         invites = new HashSet<>();
 
@@ -116,6 +118,10 @@ public class Party implements JsonSavable<Party>, IdCompound {
         return members;
     }
 
+    public Set<Long> getActiveMembers() {
+        return activeMembers;
+    }
+
     /**
      * @return the first element of {@link Set#toArray()} is called from the list of non owner members.
      */
@@ -123,8 +129,21 @@ public class Party implements JsonSavable<Party>, IdCompound {
         return (long) members.toArray()[0];
     }
 
+    /**
+     * Updates the party timestamp used for clearing inactive parties.
+     */
     public void active() {
         lastActive = System.currentTimeMillis();
+    }
+
+    /**
+     * Updates the party timestamp used for clearing inactive parties.
+     *
+     * @param userId id of the user who is active on the party.
+     */
+    public void active(long userId) {
+        lastActive = System.currentTimeMillis();
+        activeMembers.add(userId);
     }
 
     public boolean isInactive(long limit) {
@@ -271,7 +290,8 @@ public class Party implements JsonSavable<Party>, IdCompound {
     public boolean equals(Object obj) {
         if (obj instanceof Party party) {
             return party.owner == owner;
-        } else return false;
+        }
+        return false;
     }
 
     @Override
@@ -313,14 +333,13 @@ public class Party implements JsonSavable<Party>, IdCompound {
     }
 
     public void onCreate() {
-
     }
 
     public void onDelete() {
+        bot.getMinigameManager().deleteMinigame(getId());
+
         bot.getProfileManager().getProfile(owner).partyLeft();
         members.forEach(id -> bot.getProfileManager().getProfile(id).partyLeft());
-
-        bot.getMinigameManager().deleteMinigame(getId());
     }
 
     public void onTransfer(long oldOwner) {
@@ -333,9 +352,19 @@ public class Party implements JsonSavable<Party>, IdCompound {
     }
 
     public void onMemberLeave(long member) {
+        activeMembers.remove(member);
     }
 
     public void onMemberKicked(long member) {
+        activeMembers.remove(member);
+    }
+
+    public void onMinigameStart(){
+        activeMembers.clear();
+    }
+
+    public void onMinigameEnd(){
+        activeMembers.clear();
     }
 
 }

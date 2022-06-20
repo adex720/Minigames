@@ -5,7 +5,7 @@ import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -17,9 +17,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * Some duel minigames can be played against AI.
  *
  * @author adex720
- * */
+ */
 public abstract class DuelMinigame extends Minigame {
 
+    public static final int UNFINISHED = 0;
     public static final int FIRST_PLAYER_WON = 1;
     public static final int SECOND_PLAYER_WON = 2;
     public static final int DRAW = 3;
@@ -73,13 +74,19 @@ public abstract class DuelMinigame extends Minigame {
     public void finish(Replyable replyable, CommandInfo commandInfo, int winState) {
         super.finish(replyable, commandInfo, winState == FIRST_PLAYER_WON);
 
-        Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
-        appendQuest(replyable, opponentProfile, winState == SECOND_PLAYER_WON);
-        appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
+        if (isParty) { // Not run against AI
+            Profile opponentProfile = bot.getProfileManager().getProfile(opponentId);
+            appendQuest(replyable, opponentProfile, winState == SECOND_PLAYER_WON);
+            appendStats(opponentProfile, winState == SECOND_PLAYER_WON);
+        }
     }
 
     @Override
-    protected boolean isEveryoneOnSameTeam(){
+    protected boolean isEveryoneOnSameTeam() {
         return false;
+    }
+
+    public long getCurrentPlayerId() {
+        return isFirstPlayersTurn ? id : opponentId;
     }
 }

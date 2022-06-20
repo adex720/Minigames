@@ -1,5 +1,8 @@
 package io.github.adex720.minigames.util;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,6 +19,8 @@ public class Util {
 
 
     public static final int MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
+    public static final int MILLISECONDS_IN_WEEK = MILLISECONDS_IN_DAY * 7;
+    public static final int MILLISECONDS_ON_THREE_DAYS = MILLISECONDS_IN_DAY * 3; // 1/1/1970 was Thursday
 
     public static void schedule(Task task, long delay) {
         new Timer().schedule(new TimerTask() {
@@ -89,7 +94,19 @@ public class Util {
     }
 
     public static int getMillisecondsUntilUtcMidnight() {
-        return MILLISECONDS_IN_DAY - (int) (System.currentTimeMillis() % MILLISECONDS_IN_DAY);
+        return getMillisecondsUntilUtcMidnight(System.currentTimeMillis());
+    }
+
+    public static int getMillisecondsUntilUtcMidnight(long time) {
+        return (int) (MILLISECONDS_IN_DAY - time % MILLISECONDS_IN_DAY);
+    }
+
+    public static int getMillisecondsUntilUtcNewWeek() {
+        return getMillisecondsUntilUtcNewWeek(System.currentTimeMillis());
+    }
+
+    public static int getMillisecondsUntilUtcNewWeek(long time) {
+        return (int) (MILLISECONDS_IN_DAY * 7 - (time - MILLISECONDS_ON_THREE_DAYS) % MILLISECONDS_IN_WEEK); // Time shouldn't ever be so small it becomes a problem.
     }
 
 
@@ -108,11 +125,11 @@ public class Util {
     /**
      * Compares the values with == -operator.
      */
-    public static<T> boolean hasPureDuplicateValues(T[] values){
-        for (int i = 0; i < values.length; i++){
+    public static <T> boolean hasPureDuplicateValues(T[] values) {
+        for (int i = 0; i < values.length; i++) {
             T value = values[i];
 
-            for (int i2 = i+1; i2 < values.length; i2++){
+            for (int i2 = i + 1; i2 < values.length; i2++) {
                 if (values[i2] == value) return true;
             }
         }
@@ -123,11 +140,11 @@ public class Util {
     /**
      * Compares the values with {@link Object#equals(Object)}.
      */
-    public static<T> boolean hasEqualDuplicateValues(T[] values){
-        for (int i = 0; i < values.length; i++){
+    public static <T> boolean hasEqualDuplicateValues(T[] values) {
+        for (int i = 0; i < values.length; i++) {
             T value = values[i];
 
-            for (int i2 = i+1; i2 < values.length; i2++){
+            for (int i2 = i + 1; i2 < values.length; i2++) {
                 if (values[i2] == value) return true;
             }
         }
@@ -138,16 +155,75 @@ public class Util {
     /**
      * Compares the values with == -operator.
      */
-    public static boolean hasPureDuplicateValues(int[] values){
-        for (int i = 0; i < values.length; i++){
+    public static boolean hasPureDuplicateValues(int[] values) {
+        for (int i = 0; i < values.length; i++) {
             int value = values[i];
 
-            for (int i2 = i+1; i2 < values.length; i2++){
+            for (int i2 = i + 1; i2 < values.length; i2++) {
                 if (values[i2] == value) return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static boolean containsPure(long[] list, long value) {
+        for (long obj : list) {
+            if (obj == value) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static <T> boolean containsPure(T[] list, T value) {
+        for (T obj : list) {
+            if (obj == value) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Compares the values with == -operator.
+     */
+    public static <T> boolean containsEqual(T[] list, T value) {
+        for (T obj : list) {
+            if (obj.equals(value)) return true;
+        }
+
+        return false;
+    }
+
+    public static byte[] bufferedImageToBytes(BufferedImage image) {
+        Raster raster = image.getRaster();
+        DataBufferByte dataBufferByte = (DataBufferByte) raster.getDataBuffer();
+        return dataBufferByte.getData();
+    }
+
+    /***
+     * 12345     -> 12345
+     * <@34567>  -> 34567
+     * <@!56789> -> 56789
+     * DFHRGHHST -> -1
+     */
+    public static long idOrMentionToId(String string) {
+        if (string.charAt(0) == '<') {
+            int last = string.length() - 1;
+            if (string.charAt(2) == '!') string = string.substring(3, last);
+            else string = string.substring(2, last);
+        }
+
+        try {
+            return Long.parseLong(string);
+        } catch (Exception ignored) {
+            return -1L;
+        }
     }
 
 }

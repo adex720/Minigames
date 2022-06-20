@@ -4,13 +4,17 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.discord.command.CommandInfo;
+import io.github.adex720.minigames.gameplay.guild.Guild;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
-import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.interactions.components.Button;
+import io.github.adex720.minigames.minigame.party.PartyCompetitiveMinigame;
+import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -28,6 +32,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
 
     protected long lastActive; // used to find inactive parties
 
+    private boolean finished;
+
     public Minigame(MinigamesBot bot, MinigameType<? extends Minigame> type, long id, boolean isParty, long lastActive) {
         this.bot = bot;
         this.type = type;
@@ -38,6 +44,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         if (requiresLockedParty() && isParty) {
             bot.getPartyManager().getParty(id).lock();
         }
+
+        finished = false;
     }
 
     @Override
@@ -49,54 +57,74 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return type;
     }
 
-    public String finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
-        if (type.hasExtraArgumentsForReplay()) {
-            type.saveState(id, getState());
-        }
+    public void finish(Replyable replyable, CommandInfo commandInfo, boolean won) {
+        finished = true;
 
         bot.getMinigameManager().deleteMinigame(id);
         Profile profile = commandInfo.profile();
 
-        if (isEveryoneOnSameTeam() && profile.isInParty()) {
-            return finishForParty(replyable, commandInfo.party(), won);
-        } else {
-            return finishForUser(replyable, profile, won, true);
+        if (!profile.isInParty()) {
+            finishForUser(replyable, profile, won, true);
+            return;
+
         }
+        if (isEveryoneOnSameTeam()) {
+            finishForParty(replyable, commandInfo.party(), won);
+            return;
+        }
+
+        Long[] winnerIds;
+
+        if (this instanceof PartyCompetitiveMinigame minigame) {
+            winnerIds = minigame.getWinners();
+        } else {
+            // This should never be reached, but it's still included to prevent possible errors if something is wrong.
+            winnerIds = new Long[]{commandInfo.authorId()};
+        }
+
+        // Players who lost
+        for (long user : commandInfo.party().getMembersWithOwner()) {
+            if (!Util.containsEqual(winnerIds, user)) {
+                finishForUser(replyable, bot.getProfileManager().getProfile(user), false, false);
+            }
+        }
+
+        // Players who won
+        // Since this is never supposed to use the user from CommandInfo, it's not worth checking it and getting profile from there.
+        for (long userId : winnerIds) {
+            finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, false);
+        }
+
+        replyable.reply("You received rewards for the ended minigame", Button.primary(getReplayButtonId(), "Play again"));
     }
 
-    public String finishForUser(Replyable replyable, Profile profile, boolean won, boolean shouldReply) {
+    public void finishForUser(Replyable replyable, Profile profile, boolean won, boolean shouldReply) {
         String rewards = addRewards(replyable, profile, won);
 
         if (shouldReply) {
-            if (replyable.isWebhookBased()) {
-                replyable.getWebhookMessageAction(rewards)
-                        .addActionRow(Button.primary("play-again", "Play again")).queue(); // Add replay button
-                addReplay();
-            } else {
-                replyable.reply(rewards);
-            }
+            replyable.reply(rewards, Button.primary(getReplayButtonId(), "Play again")); // Add replay button
         }
 
         appendQuest(replyable, profile, won); // Update quests and stats
         appendStats(profile, won);
 
-        return rewards;
-    }
-
-    public void addReplay() {
-        bot.getReplayManager().addReplay(id, type);
-
-        if (type.hasExtraArgumentsForReplay()) {
-            type.saveState(id, getState());
+        if (profile.isInGuild()) {
+            Guild guild = bot.getGuildManager().getById(profile.getGuildId());
+            guild.minigameWon(bot);
         }
+
     }
 
-    public String finishForParty(Replyable replyable, Party party, boolean won) {
-        for (long userId : party.getMembersWithOwner()) {
+    public String getReplayButtonId() {
+        return "replay-" + type.getNameWithoutDashes() + "-" + id;
+    }
+
+    public void finishForParty(Replyable replyable, Party party, boolean won) {
+        for (long userId : party.getActiveMembers()) {
             finishForUser(replyable, bot.getProfileManager().getProfile(userId), won, false);
         }
 
-        return "You received rewards for the ended minigame";
+        replyable.reply("You received rewards for the ended minigame", Button.primary(getReplayButtonId(), "Play again"));
     }
 
     public void appendQuest(Replyable replyable, Profile profile, boolean won) {
@@ -133,6 +161,11 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
             profile.increaseStat(type.getNameWithSpaces() + " games won");
             profile.increaseStat("minigames won");
         }
+
+        if (isParty) {
+            profile.increaseStat("party minigames played");
+            if (won) profile.increaseStat("party minigames won");
+        }
     }
 
     public void delete(@Nullable Replyable replyable) {
@@ -141,6 +174,8 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         if (requiresLockedParty() && isParty) {
             bot.getPartyManager().getParty(id).clearLock(replyable);
         }
+
+        finished = true;
     }
 
     /**
@@ -160,17 +195,32 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
      *
      * @param commandInfo commandInfo to calculate party with.
      *                    If the commandInfo is not created or easily accessible,
-     *                    just insert null, and it'll be calculated if needed
+     *                    use {@link Minigame#active(long, Party)}.
      */
-    public void active(@Nullable CommandInfo commandInfo) {
+    public void active(@Nonnull CommandInfo commandInfo) {
         lastActive = System.currentTimeMillis();
 
         if (isParty) {
-            Party party;
-            if (commandInfo != null) party = commandInfo.party();
-            else party = bot.getPartyManager().getParty(id);
+            Party party = commandInfo.party();
 
-            party.active();
+            party.active(commandInfo.authorId());
+        }
+    }
+
+    /**
+     * Updates the stored value when the minigame was played.
+     * Calling this on each interaction is important so the minigame doesn't get deleted as inactive.
+     *
+     * @param party  Party of the user. Can be null.
+     * @param userId Id of the user who is active on the party.
+     */
+    public void active(long userId, @Nullable Party party) {
+        lastActive = System.currentTimeMillis();
+
+        if (isParty) {
+            if (party == null) party = bot.getPartyManager().getParty(id);
+
+            party.active(userId);
         }
     }
 
@@ -190,7 +240,19 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
         return 1;
     }
 
+    /**
+     * Sets the state of the minigame.
+     * This should only be used at the start of the minigame.
+     */
+    public void setState(String mode) {
+    }
 
+    /**
+     * A locked party can chance its size.
+     * If a member leaves or gets kicked the current minigame is removed.
+     *
+     * @return does the minigame require locked party.
+     */
     public boolean requiresLockedParty() {
         return false;
     }
@@ -207,5 +269,9 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
      * @return amount of coins to give as reward.
      */
     public abstract int getReward(Random random);
+
+    public boolean shouldStart() {
+        return !finished;
+    }
 
 }

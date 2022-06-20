@@ -7,7 +7,7 @@ import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 
 /**
  * Each player has own daily quests.
@@ -125,6 +125,16 @@ public class Quest implements JsonSavable<Quest> {
     public void kitClaimed(Replyable replyable, String kit, Profile profile) {
         if (isCompleted()) return;
         append(replyable, profile, this.type.kitClaimed(kit, profile));
+    }
+
+    public void moneyGambled(Replyable replyable, int bet, Profile profile) {
+        if (isCompleted()) return;
+        append(replyable, profile, this.type.moneyGambled(bet, false));
+    }
+
+    public void betWon(Replyable replyable, int bet, Profile profile) {
+        if (isCompleted()) return;
+        append(replyable, profile, this.type.moneyGambled(bet, true));
     }
 
     public boolean isCompleted() {

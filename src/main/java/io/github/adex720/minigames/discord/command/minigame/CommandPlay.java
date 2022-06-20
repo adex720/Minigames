@@ -7,8 +7,8 @@ import io.github.adex720.minigames.discord.command.ParentCommand;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.minigame.MinigameType;
-import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.util.replyable.Replyable;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
@@ -58,22 +58,26 @@ public class CommandPlay extends ParentCommand {
         }
 
         @Override
-        public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+        public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
             if (!this.minigame.canStart(ci)) {
-                event.getHook().sendMessage(this.minigame.getReplyForInvalidStartState()).queue();
+                event.getHook().sendMessage(this.minigame.getReplyForInvalidStartState(ci)).queue();
+                return true;
             }
 
             if (ci.hasMinigame()) {
                 event.getHook().sendMessage(ci.minigame().quit(Replyable.from(event))).queue();
             }
 
-            Minigame minigame = this.minigame.create(event, ci);
+            Replyable replyable = Replyable.from(event);
+            Minigame minigame = this.minigame.create(replyable, ci);
             if (minigame != null) {
-                bot.getMinigameManager().addMinigame(minigame);
-            } else {
-                event.getHook().sendMessage(this.minigame.getReplyForInvalidStartState()).queue();
+                if (minigame.shouldStart()) { // This is false on scenarios like start card sum being 21 on blackjack
+                    bot.getMinigameManager().addMinigame(minigame);
+                }
+                return true;
             }
 
+            event.getHook().sendMessage(this.minigame.getReplyForNullAfterConstructor(ci)).queue();
             return true;
         }
     }

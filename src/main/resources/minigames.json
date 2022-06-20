@@ -1,18 +1,18 @@
 {
   "hangman": {
-    "description": "Hangman is a classic game originally played with paper and pencil. A word is chosen and the guessers get to know its length. The guessers proceed to guessing letters. If the word contains at least one of the letter places of all of that letter are revealed. If the word does not contain the guessed letter a picture of hang is drawn to be closer to finished. If the picture gets finished the game is lost. If the guesser thinks he/she knows the word he can also guess the word but if it's wrong a the picture is being continued on.",
+    "description": "Hangman is a classic game originally played with paper and pencil. A word is chosen and the guessers get to know its length. The guessers proceed to guessing letters. If the word contains at least one of the letter places of all of that letter are revealed. If the word does not contain the guessed letter a picture of hang is drawn to be closer to finished. If the picture gets finished the game is lost. If the guesser thinks he/she knows the word he can also guess the word but if it's wrong the picture is being continued on.",
     "tips": "- Start by guessing the most common letters. (e, t, a, o, i, n)\n- Guess letters that you think would be in a word with the known letters.\n- Only guess as word when you are sure. You don't lose anything from guessing only letters.",
     "rules": "Each wrong guess reduces one life. You have 10 life per game. Each wrong guess draws a new part to the image.",
     "color": "8A6308"
   },
   "unscramble": {
-    "description": "Unscramble is a game where you have to guess a word in 3 tries. The letters are shuffled but you will get more hints after each guess. You will also get extra hints for longer words.",
+    "description": "Unscramble is a game where you have to guess a word in 3 tries. The letters are shuffled, but you will get new hint letter at correct place after each guess. You will get two hint letters per guess on longer words.",
     "tips": "- The bolded letters are at correct position.\n- The game is up to the last round on most of the cases because that round you have the most hints.\n- Try to guess the word on the first rounds too since you will earn better reward if you guess it earlier.",
     "rules": "You only have 3 guesses. The correct hint letters are in **__bold and underline__**. The amount of hint letters increases when the amount of guesses increases.",
     "color": "7132E2"
   },
   "higher-lower": {
-    "description": "Higher or Lower is a number guessing game where you guess a number. You will be told if your guess was too high or low. But you only have little tries, so you must guess wisely to win.",
+    "description": "Higher or Lower is a number guessing game where you guess a number. You will be told if your guess was too high or low. You only have little tries, so you must guess wisely to guess the correct number and win.",
     "tips": "- Always pick a number from the very middle of the range.\n- Risks aren't worth trying.\n- There is no pattern, the numbers are picked by random.\n- Do not risk silly guesses, even with optimal playing winning is not guaranteed.",
     "rules": "Guess a number on the range. You will be told if it's lower or higher than the correct number. You have 6 guesses to find the correct number.",
     "color": "03C4BA"
@@ -40,5 +40,33 @@
     "tips": "- Try to find the position of one or two marks at a time instead of trying to find a place for each at the same time.\n- Using already know correct colors, duplicate colors or already knows non-present values is effective when trying to gather new info.",
     "rules": "A red mark will be present for each correct color on correct position. A white mark will be present for each correct color on wrong position. It is not revealed which mark represents which position.",
     "color": "960909"
+  },
+  "memo": {
+    "description": "Memo is memory based multiplayer competition. By each one's own turn, they turn two cards. If their pattern matches, they are removed from the board and you get to turn another two cards. There is no limit on how many times you can turn cards if you always find a pair. If they don't match, they are flipped over again and everyone tries to remember their positions. Then it's the next person's turn. When all pairs are found, the winner(s) are the player(s) who found the most pairs.",
+    "tips": "- Do not try to remember too many tiles. It's easier to remember them if you don't try to remember each.\n- Create sentences that you match to few cards and remember the path the sentence goes on.\n- If it's your turn and you know the position of a pair, but you are unsure of the exact position of another of them, turn first one card where you think it could be, and if it was wrong, flip your second card somewhere else so you don't reveal the position.",
+    "rules": "There are eight different colorings and fill patterns, which results on 64 different combinations. The order of the cards on the board is fully random. Although good memory plays a larger role on the game, a bit of luck is also on the game.",
+    "color": "F58989"
+  },
+  "blackjack": {
+    "description": "Blackjack is one of the most famous gambling games. The player and the dealer are both dealt two cards from start, but one of the dealer's stays hidden. The player draws more cards until the player decides to stop. After the player finished, the dealer draws cards. In the end, the one with larger total sum is the winner, but if either goes past 21, it's instantly a loose.",
+    "tips": "- The advantage is on the dealer. Don't play this minigame if you want more money.",
+    "rules": "Number cards are worth normal. Face cards are worth 10. Ace is worth 11 or 1 if the higher score would surpass the limit of 21. The dealer will stop drawing more cards when the sum of the cards is over 16. If your score is 21 after the first two cards, you win 1.5x your bet. If you haven't drawn any optional cards, you can double your bet, but then you must draw one card, and then give the turn to the dealer.",
+    "color": "A8A8A8"
+  },
+  "connect4": {
+    "description": "In Connect 4 game, two players aim to get 4 marks of their own color on a row. The row can be horizontal, vertical or diagonal. The marks can only be put on the lowest fromm spot of a column. The board has 7 columns and 6 rows.",
+    "tips": "- Aim placing your marks close to the middle.\n- Plan your future moves.\n- Keep track of game ending positions.\n- Block your opponent before it's too late.\n- Don't focus too much on defence.\n- Find out the purpose of each move your opponent made.",
+    "rules": "The player with red marks starts. On one's turn, the player drops one mark on one of the free columns, and it falls to the bottom of it. Once a mark is dropped, it can't be moved. If the board gets full without either player winning the result is a draw.",
+    "color": "FFBE3B"
+  },
+  "available-colors": {
+    "dark turquoise": "046B5B",
+    "blue": "172BBF"
+  },
+  "default": {
+    "description": "",
+    "tips": "- ",
+    "rules": "",
+    "color": ""
   }
 }

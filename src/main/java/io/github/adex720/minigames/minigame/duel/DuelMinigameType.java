@@ -15,14 +15,20 @@ public abstract class DuelMinigameType<M extends DuelMinigame> extends MinigameT
     protected final boolean hasAI;
     protected final MinigameAI<? extends DuelMinigame> ai;
 
-    protected DuelMinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name, boolean hasAI, MinigameAI<? extends DuelMinigame> ai) {
-        super(bot, typeManager, name, !hasAI, 2);
-        this.hasAI = hasAI;
+    protected DuelMinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name, MinigameAI<? extends DuelMinigame> ai) {
+        super(bot, typeManager, name, false, 2);
+        this.hasAI = true;
         this.ai = ai;
     }
 
+    protected DuelMinigameType(MinigamesBot bot, MinigameTypeManager typeManager, String name) {
+        super(bot, typeManager, name, true, 2);
+        this.hasAI = false;
+        this.ai = null;
+    }
+
     @Override
-    public String getReplyForInvalidStartState() {
+    public String getReplyForInvalidStartState(CommandInfo commandInfo) {
         return hasAI ? "Your party needs to have 2 members for you to play this minigame." :
                 "This minigame can only be played on a party with size of 2.";
     }

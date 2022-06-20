@@ -5,8 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.Manager;
-import io.github.adex720.minigames.gameplay.profile.badge.Badge;
 import io.github.adex720.minigames.gameplay.profile.Profile;
+import io.github.adex720.minigames.gameplay.profile.badge.Badge;
 import io.github.adex720.minigames.util.JsonHelper;
 
 import java.util.*;
@@ -25,8 +25,9 @@ public class BadgeManager extends Manager {
     public BadgeManager(MinigamesBot bot) {
         super(bot, "badge-manager");
 
-        BADGES = new TreeMap<>((o1, o2) -> o2 - o1);
+        BADGES = new TreeMap<>(Comparator.comparingInt(o -> o));
         BADGES_BY_NAME = new HashMap<>();
+        BADGES_AMOUNT = 0;
         loadBadges();
     }
 
@@ -91,5 +92,9 @@ public class BadgeManager extends Manager {
 
     public void addBadgeForEveryone(Badge badge) {
         bot.getProfileManager().getValues().forEach(profile -> addBadge(badge, profile));
+    }
+
+    public int[] getBadgesForNewUsers() {
+        return new int[]{2};
     }
 }

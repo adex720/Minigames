@@ -3,7 +3,6 @@ package io.github.adex720.minigames.discord.command.minigame;
 import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.ParentCommand;
-import io.github.adex720.minigames.discord.command.Subcommand;
 
 /**
  * @author adex720
@@ -15,8 +14,4 @@ public class MinigameCommand extends ParentCommand {
         requiresProfile();
     }
 
-    @Override
-    public void addSubcommand(Subcommand subcommand) {
-        super.addSubcommand(subcommand);
-    }
 }

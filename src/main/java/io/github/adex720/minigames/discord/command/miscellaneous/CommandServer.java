@@ -9,7 +9,7 @@ import io.github.adex720.minigames.discord.command.SimpleEmbedReplyCommand;
  */
 public class CommandServer extends SimpleEmbedReplyCommand {
 
-    public static final String SERVER_LINK = "https://discord.gg/MUpdS2cMcJ";
+    public static final String SERVER_LINK = "https://discord.gg/u2f6N7mvek";
     public static final long SERVER_ID = 814212042839162900L;
 
     public CommandServer(MinigamesBot bot) {

@@ -5,25 +5,32 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.adex720.minigames.discord.listener.*;
+import io.github.adex720.minigames.gameplay.guild.boss.GuildBossList;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
-import io.github.adex720.minigames.gameplay.manager.command.ReplayManager;
+import io.github.adex720.minigames.gameplay.manager.command.PageMovementManager;
 import io.github.adex720.minigames.gameplay.manager.data.BotDataManager;
 import io.github.adex720.minigames.gameplay.manager.data.ResourceDataManager;
 import io.github.adex720.minigames.gameplay.manager.file.FilePathManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildBossManager;
+import io.github.adex720.minigames.gameplay.manager.guild.GuildManager;
 import io.github.adex720.minigames.gameplay.manager.kit.KitCooldownManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameManager;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
+import io.github.adex720.minigames.gameplay.manager.minigame.ReplayManager;
 import io.github.adex720.minigames.gameplay.manager.party.PartyManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BadgeManager;
 import io.github.adex720.minigames.gameplay.manager.profile.BanManager;
 import io.github.adex720.minigames.gameplay.manager.profile.ProfileManager;
 import io.github.adex720.minigames.gameplay.manager.quest.QuestManager;
-import io.github.adex720.minigames.gameplay.manager.stat.LeaderboardManager;
 import io.github.adex720.minigames.gameplay.manager.stat.StatManager;
 import io.github.adex720.minigames.gameplay.manager.timer.TimerManager;
 import io.github.adex720.minigames.gameplay.manager.word.WordManager;
 import io.github.adex720.minigames.gameplay.profile.quest.QuestList;
 import io.github.adex720.minigames.gameplay.profile.settings.SettingsList;
+import io.github.adex720.minigames.minigame.duel.connect4.Connect4ButtonManager;
+import io.github.adex720.minigames.minigame.duel.tictactoe.TicTacToeButtonManager;
+import io.github.adex720.minigames.minigame.gamble.blackjack.BlackjackButtonManager;
+import io.github.adex720.minigames.minigame.party.memo.ImageBank;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
 import io.github.adex720.minigames.util.network.ConnectionApp;
@@ -39,6 +46,7 @@ import net.dv8tion.jda.internal.requests.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.CheckReturnValue;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,11 +54,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Contains all event listeners, managers and other objects the bot has.
@@ -75,7 +80,13 @@ public class MinigamesBot {
     private final DevCommandListener devCommandListener;
 
     private final ButtonListener buttonListener;
+
     private final ReplayManager replayManager;
+    private final PageMovementManager pageMovementManager;
+    private final BlackjackButtonManager blackjackButtonManager;
+    private final TicTacToeButtonManager ticTacToeButtonManager;
+    private final Connect4ButtonManager connect4ButtonManager;
+
 
     private final GuildJoinListener guildJoinListener;
     private final SelfMentionListener selfMentionListener;
@@ -84,10 +95,16 @@ public class MinigamesBot {
     private final BadgeManager badgeManager;
     private final StatManager statManager;
 
+    private final ImageBank memoImageBank;
+
+    private final GuildBossManager guildBossManager;
+    private final GuildBossList guildBossList;
+
     private final BanManager banManager;
     private final ProfileManager profileManager;
 
     private final PartyManager partyManager;
+    private final GuildManager guildManager;
 
     private final BotDataManager saveDataManager;
     private final ResourceDataManager resourceDataManager;
@@ -102,7 +119,6 @@ public class MinigamesBot {
     private final QuestList questList;
 
     private final TimerManager timerManager;
-    private final LeaderboardManager leaderboardManager;
 
     private final KitCooldownManager kitCooldownManager;
 
@@ -133,8 +149,15 @@ public class MinigamesBot {
 
         devCommandListener = new DevCommandListener(this, developerId, "-");
 
+
         buttonListener = new ButtonListener(this);
+
         replayManager = new ReplayManager(this);
+        pageMovementManager = new PageMovementManager(this);
+        blackjackButtonManager = new BlackjackButtonManager(this);
+        ticTacToeButtonManager = new TicTacToeButtonManager(this);
+        connect4ButtonManager = new Connect4ButtonManager(this);
+
 
         guildJoinListener = new GuildJoinListener(this);
         selfMentionListener = new SelfMentionListener(this);
@@ -146,19 +169,25 @@ public class MinigamesBot {
         questManager = new QuestManager(this);
         questList = new QuestList(this);
 
+        guildBossManager = new GuildBossManager(this);
+        guildBossList = new GuildBossList(this);
+
         banManager = new BanManager(this);
         profileManager = new ProfileManager(this);
+        statManager.initLeaderboards();
 
         partyManager = new PartyManager(this);
-
-        minigameTypeManager = new MinigameTypeManager(this);
-        minigameManager = new MinigameManager(this);
+        guildManager = new GuildManager(this);
 
         filePathManager = new FilePathManager(this);
         wordManager = new WordManager(this);
 
+        memoImageBank = new ImageBank(this);
+
+        minigameTypeManager = new MinigameTypeManager(this);
+        minigameManager = new MinigameManager(this);
+
         timerManager = new TimerManager(this);
-        leaderboardManager = new LeaderboardManager(this);
 
         kitCooldownManager = new KitCooldownManager(this);
 
@@ -179,8 +208,6 @@ public class MinigamesBot {
 
         commandManager.commandUptime.setStarted(startTime);
         commandManager.commandUptime.botOnline(botOnlineTime);
-
-        leaderboardManager.start();
 
         startTimers();
 
@@ -222,108 +249,167 @@ public class MinigamesBot {
         addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true); // Clear cached resource json files
 
         addTimerTask(questManager::unloadQuests, Util.MILLISECONDS_IN_DAY, Util.getMillisecondsUntilUtcMidnight()); // Unload all quests at UTC midnight
-
-        addTimerTask(leaderboardManager::run, 1000 * 60 * 5, true); // Update leaderboards
+        addTimerTask(guildManager::onNewWeek, Util.MILLISECONDS_IN_WEEK, Util.getMillisecondsUntilUtcNewWeek()); // Reset guild weekly progress at new UTC week
 
         addTimerTask(this::save, 1000 * 60 * 5, true); // save data
     }
 
+    @CheckReturnValue
     public JDA getJda() {
         return jda;
     }
 
+    @CheckReturnValue
     public Logger getLogger() {
         return logger;
     }
 
+    @CheckReturnValue
     public CommandManager getCommandManager() {
         return commandManager;
     }
 
+    @CheckReturnValue
     public CommandListener getCommandListener() {
         return commandListener;
     }
 
+    @CheckReturnValue
     public DevCommandListener getDevCommandListener() {
         return devCommandListener;
     }
 
+    @CheckReturnValue
     public ButtonListener getButtonListener() {
         return buttonListener;
     }
 
+    @CheckReturnValue
     public ReplayManager getReplayManager() {
         return replayManager;
     }
 
+    @CheckReturnValue
+    public PageMovementManager getPageMovementManager() {
+        return pageMovementManager;
+    }
+
+    @CheckReturnValue
+    public BlackjackButtonManager getBlackjackButtonManager() {
+        return blackjackButtonManager;
+    }
+
+    @CheckReturnValue
+    public TicTacToeButtonManager getTicTacToeButtonManager() {
+        return ticTacToeButtonManager;
+    }
+
+    @CheckReturnValue
+    public Connect4ButtonManager getConnect4ButtonManager() {
+        return connect4ButtonManager;
+    }
+
+
+    @CheckReturnValue
     public GuildJoinListener getGuildJoinListener() {
         return guildJoinListener;
     }
 
+    @CheckReturnValue
     public SelfMentionListener getSelfMentionListener() {
         return selfMentionListener;
     }
 
+    @CheckReturnValue
     public CountingListener getCountingListener() {
         return countingListener;
     }
 
+    @CheckReturnValue
     public BanManager getBanManager() {
         return banManager;
     }
 
+    @CheckReturnValue
     public ProfileManager getProfileManager() {
         return profileManager;
     }
 
+    @CheckReturnValue
     public MinigameTypeManager getMinigameTypeManager() {
         return minigameTypeManager;
     }
 
+    @CheckReturnValue
     public PartyManager getPartyManager() {
         return partyManager;
     }
 
+    public GuildManager getGuildManager() {
+        return guildManager;
+    }
+
+    @CheckReturnValue
     public MinigameManager getMinigameManager() {
         return minigameManager;
     }
 
+    @CheckReturnValue
     public FilePathManager getFilePathManager() {
         return filePathManager;
     }
 
+    @CheckReturnValue
     public WordManager getWordManager() {
         return wordManager;
     }
 
+    @CheckReturnValue
     public BadgeManager getBadgeManager() {
         return badgeManager;
     }
 
+    @CheckReturnValue
     public StatManager getStatManager() {
         return statManager;
     }
 
+    @CheckReturnValue
     public QuestManager getQuestManager() {
         return questManager;
     }
 
+    @CheckReturnValue
     public QuestList getQuestList() {
         return questList;
     }
 
+    @CheckReturnValue
+    public GuildBossManager getGuildBossManager() {
+        return guildBossManager;
+    }
+
+    @CheckReturnValue
+    public GuildBossList getGuildBossList() {
+        return guildBossList;
+    }
+
+    @CheckReturnValue
     public Random getRandom() {
         return random;
     }
 
+    @CheckReturnValue
     public KitCooldownManager getKitCooldownManager() {
         return kitCooldownManager;
     }
 
+    @CheckReturnValue
     public SettingsList getSettingsList() {
         return settingsList;
     }
 
+    @CheckReturnValue
     public HttpsRequester getHttpsRequester() {
         return httpsRequester;
     }
@@ -332,20 +418,29 @@ public class MinigamesBot {
         return JsonHelper.getLong(emoteJson, name, 1L);
     }
 
+    @CheckReturnValue
     public String getEmote(String name) {
         return "<:" + name + ":" + getEmoteId(name) + ">";
     }
 
+    @CheckReturnValue
     public int getLinesOfCodeTotal() {
         return linesOfCodeTotal;
     }
 
+    @CheckReturnValue
     public int getLinesOfCodeJava() {
         return linesOfCodeJava;
     }
 
+    @CheckReturnValue
     public int getLinesOfCodeJson() {
         return linesOfCodeJson;
+    }
+
+    @CheckReturnValue
+    public ImageBank getMemoImageBank() {
+        return memoImageBank;
     }
 
     public void addTimerTask(TimerManager.Task task, int delay, boolean repeat) {
@@ -371,10 +466,10 @@ public class MinigamesBot {
         for (JsonElement jsonElement : jsonArray) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-            switch (jsonObject.get("language").getAsString()) {
-                case "Java" -> linesOfCodeJava = jsonObject.get("lines").getAsInt();
-                case "JSON" -> linesOfCodeJson = jsonObject.get("lines").getAsInt();
-                case "Total" -> linesOfCodeTotal = jsonObject.get("lines").getAsInt();
+            switch (JsonHelper.getString(jsonObject, "language")) {
+                case "Java" -> linesOfCodeJava = JsonHelper.getInt(jsonObject, "lines");
+                case "JSON" -> linesOfCodeJson = JsonHelper.getInt(jsonObject, "lines");
+                case "Total" -> linesOfCodeTotal = JsonHelper.getInt(jsonObject, "lines");
             }
         }
 
@@ -382,6 +477,7 @@ public class MinigamesBot {
     }
 
 
+    @CheckReturnValue
     private static JsonObject getConfigJson() {
         String filePath = "config.json";
 
@@ -405,6 +501,7 @@ public class MinigamesBot {
         return json;
     }
 
+    @CheckReturnValue
     public JsonElement getResourceJson(String name) {
         return resourceDataManager.loadJson(name);
     }
@@ -415,6 +512,7 @@ public class MinigamesBot {
         }
     }
 
+    @CheckReturnValue
     public JsonElement loadJson(String name) {
         return saveDataManager.loadJson(name);
     }
@@ -424,18 +522,32 @@ public class MinigamesBot {
 
         saveJson(profileManager.asJson(), "profiles");
         saveJson(partyManager.asJson(), "parties");
+        saveJson(guildManager.asJson(), "guilds");
         saveJson(minigameManager.asJson(), "minigames");
+        saveJson(createSaveInfoJson(start), "save");
 
         long end = System.currentTimeMillis();
         logger.info("Saved all data in {}ms", end - start);
     }
 
+    /**
+     * Creates a Json containing information about the save.
+     */
+    private JsonObject createSaveInfoJson(long startTimestamp) {
+        JsonObject json = new JsonObject();
+
+        json.addProperty("time", startTimestamp);
+
+        return json;
+    }
+
     public void reload() {
         long start = System.currentTimeMillis();
 
-        profileManager.load((JsonArray) saveDataManager.loadJson("profiles"));
-        partyManager.load((JsonArray) saveDataManager.loadJson("parties"));
-        minigameManager.load((JsonArray) saveDataManager.loadJson("minigames"));
+        profileManager.load(saveDataManager.loadJson("profiles").getAsJsonArray());
+        partyManager.load(saveDataManager.loadJson("parties").getAsJsonArray());
+        guildManager.load(saveDataManager.loadJson("guilds").getAsJsonArray());
+        minigameManager.load(saveDataManager.loadJson("minigames").getAsJsonArray());
 
         long end = System.currentTimeMillis();
         logger.info("Reloaded all data in {}ms", end - start);
@@ -444,7 +556,6 @@ public class MinigamesBot {
     public void stop() {
         jda.shutdown();
         timerManager.stop();
-        leaderboardManager.interrupt();
     }
 
     public void clearInactive() {
@@ -485,16 +596,20 @@ public class MinigamesBot {
 
 /*
     TODO: minigames to add
-     - connect 4
-     - blackjack
-     - memo (party)
 
-    TODO: include minigame state on replay button id
+    TODO: buttons to add
 
-    TODO: guilds
+    TODO: cache recently accessed guilds, profiles and parties
+
+    TODO: guilds:
+     - leaderboard
 
     TODO: trivia (party)
      (https://opentdb.com/api_config.php)
+
+    TODO: adventures
+
+    TODO: xp, leveling system
 
     TODO: (After a long time)
      - vote (after verification)

@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.devcommand.*;
+import io.github.adex720.minigames.discord.command.guild.*;
 import io.github.adex720.minigames.discord.command.minigame.*;
 import io.github.adex720.minigames.discord.command.miscellaneous.*;
 import io.github.adex720.minigames.discord.command.party.*;
@@ -24,7 +25,8 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
- * This class contains all commands the bot has.
+ * This class creates all commands the bot has.
+ * Exceptions are minigame commands, but they are also added to the lists.
  *
  * @author adex720
  */
@@ -36,6 +38,7 @@ public class CommandManager extends Manager {
     // Parent commands must be declared as their own variables,
     // so they can be given as parameters for subcommands.
     public final CommandParty parentCommandParty;
+    public final CommandGuild parentCommandGuild;
     public final CommandPlay parentCommandPlay;
 
     // Some commands must be declared as their own variables,
@@ -50,6 +53,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS = new ArrayList<>();
 
         parentCommandParty = new CommandParty(bot);
+        parentCommandGuild = new CommandGuild(bot);
         parentCommandPlay = new CommandPlay(bot);
 
         commandUptime = new CommandUptime(bot);
@@ -61,6 +65,7 @@ public class CommandManager extends Manager {
      */
     public void initCommands(MinigamesBot bot) {
         MAIN_COMMANDS.add(new CommandHelp(bot));
+        MAIN_COMMANDS.add(new CommandGuide(bot));
         MAIN_COMMANDS.add(new CommandInvite(bot));
         MAIN_COMMANDS.add(new CommandPing(bot));
         MAIN_COMMANDS.add(new CommandServer(bot));
@@ -68,6 +73,7 @@ public class CommandManager extends Manager {
         MAIN_COMMANDS.add(new CommandSuggest(bot));
         MAIN_COMMANDS.add(new CommandReportBug(bot));
         MAIN_COMMANDS.add(new CommandUsage(bot));
+        MAIN_COMMANDS.add(new CommandWebsite(bot));
         MAIN_COMMANDS.add(commandUptime);
 
         MAIN_COMMANDS.add(new CommandProfile(bot));
@@ -99,6 +105,7 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyDelete(bot));
         SUBCOMMANDS.add(new CommandPartyInfo(bot));
         SUBCOMMANDS.add(new CommandPartyInvite(bot));
+        SUBCOMMANDS.add(new CommandPartyHelp(bot));
         SUBCOMMANDS.add(new CommandPartyJoin(bot));
         SUBCOMMANDS.add(new CommandPartyKick(bot));
         SUBCOMMANDS.add(new CommandPartyLeave(bot));
@@ -106,7 +113,24 @@ public class CommandManager extends Manager {
         SUBCOMMANDS.add(new CommandPartyPrivate(bot));
         SUBCOMMANDS.add(new CommandPartyPublic(bot));
         SUBCOMMANDS.add(new CommandPartyTransfer(bot));
-        SUBCOMMANDS.add(new CommandPartyHelp(bot));
+
+        MAIN_COMMANDS.add(parentCommandGuild);
+        SUBCOMMANDS.add(new CommandGuildBoss(bot));
+        SUBCOMMANDS.add(new CommandGuildCreate(bot));
+        SUBCOMMANDS.add(new CommandGuildDelete(bot));
+        SUBCOMMANDS.add(new CommandGuildDemote(bot));
+        SUBCOMMANDS.add(new CommandGuildHelp(bot));
+        SUBCOMMANDS.add(new CommandGuildInfo(bot));
+        SUBCOMMANDS.add(new CommandGuildInvite(bot));
+        SUBCOMMANDS.add(new CommandGuildJoin(bot));
+        SUBCOMMANDS.add(new CommandGuildKick(bot));
+        SUBCOMMANDS.add(new CommandGuildLeave(bot));
+        SUBCOMMANDS.add(new CommandGuildMembers(bot));
+        SUBCOMMANDS.add(new CommandGuildPrivate(bot));
+        SUBCOMMANDS.add(new CommandGuildPromote(bot));
+        SUBCOMMANDS.add(new CommandGuildPublic(bot));
+        SUBCOMMANDS.add(new CommandGuildRename(bot));
+        SUBCOMMANDS.add(new CommandGuildTransfer(bot));
 
         MAIN_COMMANDS.add(parentCommandPlay);
         MAIN_COMMANDS.add(new CommandMinigameInfo(bot));
@@ -131,13 +155,15 @@ public class CommandManager extends Manager {
 
         devCommandListener.addCommand(new DevCommandReloadCommands(bot));
 
-        devCommandListener.addCommand(new DevCommandUpdateLeaderboards(bot));
         devCommandListener.addCommand(new DevCommandUpdateLineCount(bot));
 
         devCommandListener.addCommand(new DevCommandBan(bot));
         devCommandListener.addCommand(new DevCommandUnban(bot));
 
         devCommandListener.addCommand(new DevCommandBadgeEveryone(bot));
+
+        devCommandListener.addCommand(new DevCommandAddCoins(bot));
+        devCommandListener.addCommand(new DevCommandRemoveCoins(bot));
     }
 
     public void addCommand(Command command) {
@@ -176,7 +202,7 @@ public class CommandManager extends Manager {
      * Returns an {@link ArrayList} containing each slash command including subcommands.
      * The commands are on the order registered but subcommands are last.
      */
-    public ArrayList<Command> getCommands(CommandCategory category) {
+    public ArrayList<Command> getCommandsForHelp(CommandCategory category) {
         ArrayList<Command> commands = new ArrayList<>();
         for (Command command : MAIN_COMMANDS) {
             if (command.shouldBeInHelp(category)) {
@@ -193,17 +219,17 @@ public class CommandManager extends Manager {
     }
 
     /**
-     * @return Amount off all slash commands including subcommands.
+     * @return Amount off all slash commands including subcommands which should be shown on /help.
      */
     public int getCommandAmount(CommandCategory category) {
         int amount = 0;
         for (Command command : MAIN_COMMANDS) {
-            if (command.category == category) {
+            if (command.shouldBeInHelp(category)) {
                 amount++;
             }
         }
         for (Command command : SUBCOMMANDS) {
-            if (command.category == category) {
+            if (command.shouldBeInHelp(category)) {
                 amount++;
             }
         }
@@ -211,10 +237,16 @@ public class CommandManager extends Manager {
         return amount;
     }
 
+    /**
+     * Returns the amount of commands, excluding subcommands
+     */
     public int getCommandAmount() {
         return MAIN_COMMANDS.size();
     }
 
+    /**
+     * Returns the amount usable commands
+     */
     public int getAllCommandAmount() {
         int usableCommands = 0;
 

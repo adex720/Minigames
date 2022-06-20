@@ -1,0 +1,3 @@
+cd website
+scp -r * <ip>:<path>/adexminigames.eu
+<PASSWORD>

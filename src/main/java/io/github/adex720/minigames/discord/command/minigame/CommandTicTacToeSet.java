@@ -4,8 +4,8 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.Minigame;
-import io.github.adex720.minigames.minigame.tictactoe.MinigameTicTacToe;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.minigame.duel.tictactoe.MinigameTicTacToe;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -21,18 +21,18 @@ public class CommandTicTacToeSet extends MinigameSubcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         Minigame minigame = ci.minigame();
 
         if (minigame != null) {
             if (minigame.getType() == bot.getMinigameTypeManager().TIC_TAC_TOE) {
-                MinigameTicTacToe hangman = (MinigameTicTacToe) minigame;
-                hangman.set(event, ci);
+                MinigameTicTacToe ticTacToe = (MinigameTicTacToe) minigame;
+                ticTacToe.set(event, ci);
 
                 return true;
             }
         }
-        event.getHook().sendMessage("You don't have an ongoing tic tac toe game!").queue();
+        event.getHook().sendMessage("You don't have an ongoing tic-tac-toe game!").queue();
         return true;
     }
 

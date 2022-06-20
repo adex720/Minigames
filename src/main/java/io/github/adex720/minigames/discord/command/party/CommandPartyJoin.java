@@ -7,8 +7,8 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
-import io.github.adex720.minigames.util.Replyable;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.util.replyable.Replyable;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
@@ -23,7 +23,7 @@ public class CommandPartyJoin extends Subcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         if (ci.isInParty()) {
             event.getHook().sendMessage("You can't join a party because you already are in one.").queue();
             return true;
@@ -61,8 +61,8 @@ public class CommandPartyJoin extends Subcommand {
             return true;
         }
 
-        if (party.isPublic() || party.isInvited(authorId)) {
-            event.reply("This party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
+        if (!(party.isPublic() || party.isInvited(authorId))) {
+            event.getHook().sendMessage("This party requires you to be invited before joining. Ask the party owner to invite you with /party invite").queue();
             return true;
         }
 

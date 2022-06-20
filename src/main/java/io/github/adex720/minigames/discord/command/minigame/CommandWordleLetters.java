@@ -4,8 +4,8 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.minigame.Minigame;
-import io.github.adex720.minigames.minigame.wordle.MinigameWordle;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.minigame.normal.wordle.MinigameWordle;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -21,22 +21,17 @@ public class CommandWordleLetters extends MinigameSubcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         Minigame minigame = ci.minigame();
 
-        if (minigame == null) { // no minigame
-            event.getHook().sendMessage("You don't have an ongoing wordle game!").queue();
-            return true;
-        }
-
-        if (minigame.getType() != bot.getMinigameTypeManager().WORDLE) { // wrong minigame
+        if (minigame == null || minigame.getType() != bot.getMinigameTypeManager().WORDLE) { // no minigame or wrong minigame
             event.getHook().sendMessage("You don't have an ongoing wordle game!").queue();
             return true;
         }
 
         MinigameWordle wordle = (MinigameWordle) minigame;
 
-        File image = new File("wordle.png");
+        File image = new File("wordle" + wordle.id + ".png");
         try {
             ImageIO.write(wordle.getLetters(), "png", image);
             event.getHook().sendMessage("Letters on the word:").addFile(image).queue();

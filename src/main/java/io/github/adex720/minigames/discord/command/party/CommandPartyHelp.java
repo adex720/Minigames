@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 /**
  * @author adex720
@@ -17,14 +17,14 @@ public class CommandPartyHelp extends Subcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         event.getHook().sendMessage("""
-        Party lets you play minigames with your friends (and other people too)!
-        When a party completes a minigame everyone gets rewards.
-        Some minigames require a party to be played.
-        To see list of all party commands use `/help Party`.
-        """)
-        .queue();
+                        Party lets you play minigames with your friends (and other people too)!
+                        When a party completes a minigame everyone gets rewards.
+                        Some minigames require a party to be played.
+                        To see list of all party commands use `/help Party`.
+                        """)
+                .queue();
         return true;
     }
 }

@@ -4,10 +4,16 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.discord.command.Command;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.gameplay.manager.command.CommandManager;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.util.Util;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 
 /**
  * @author adex720
@@ -18,13 +24,19 @@ public class CommandListener extends ListenerAdapter {
 
     private final CommandManager commandManager;
 
+    private final HashMap<Long, Long> COOLDOWNS;
+    public static final long COMMAND_COOLDOWN = 750;
+
+    public static final OffsetDateTime ZERO = LocalDateTime.of(1970, 1, 1, 0, 0, 0).atOffset(ZoneOffset.UTC);
+
     public CommandListener(MinigamesBot bot, CommandManager commandManager) {
         this.bot = bot;
         this.commandManager = commandManager;
+        COOLDOWNS = new HashMap<>();
     }
 
-    @Override
-    public void onSlashCommand(@NotNull SlashCommandEvent event) {
+
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (!event.isFromGuild()) {
             // Discord has a limit for how often a bot can dm a user.
             // There isn't any lost for not being able to use commands on dms anyways.
@@ -32,10 +44,12 @@ public class CommandListener extends ListenerAdapter {
         }
 
         String commandName = event.getName();
-        Member member = event.getInteraction().getMember();
-        long userId = member.getIdLong(); // Only produces null pointer exception when command was used on dms.
+        long userId = event.getUser().getIdLong();
 
         if (bot.getBanManager().isBanned(userId)) return; // Check if user is banned
+
+        long timestamp = ZERO.until(event.getInteraction().getTimeCreated(), ChronoUnit.MILLIS);
+        if (isOnCooldown(userId, timestamp)) return; // Ignore commands sent too fast
 
         for (Command command : commandManager.MAIN_COMMANDS) {
             if (commandName.equals(command.getMainName())) {
@@ -49,10 +63,23 @@ public class CommandListener extends ListenerAdapter {
                 CommandInfo commandInfo = CommandInfo.create(event, bot);
                 if (!command.onRun(event, commandInfo)) {
                     bot.getLogger().error("Failed to run command {}, info: {}", command.getFullName(), commandInfo); // Log failure
+                    return;
                 }
-                break;
+                startCooldown(userId, timestamp);
+                return;
             }
         }
 
+    }
+
+    private boolean isOnCooldown(long userId, long interactionTimestamp) {
+        Long lastInteraction = COOLDOWNS.get(userId);
+        if (lastInteraction == null) return false;
+        return lastInteraction + COMMAND_COOLDOWN > interactionTimestamp;
+    }
+
+    private void startCooldown(long userId, long interactionTimestamp) {
+        COOLDOWNS.put(userId, interactionTimestamp);
+        Util.schedule(() -> COOLDOWNS.remove(userId, interactionTimestamp), COMMAND_COOLDOWN);
     }
 }

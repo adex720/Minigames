@@ -4,7 +4,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.util.Pair;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import org.jetbrains.annotations.Nullable;
 
 /**

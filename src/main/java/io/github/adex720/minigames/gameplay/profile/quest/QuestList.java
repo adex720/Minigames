@@ -54,6 +54,7 @@ public class QuestList {
                 case "crate" -> addTypeOpenCrates(typeJson);
                 case "booster" -> addTypeUseBoosters(typeJson);
                 case "kit" -> addTypeClaimKits(typeJson);
+                case "gamble" -> addTypeGambleMoney(typeJson);
 
                 default -> bot.getLogger().error("Invalid quest category \"{}\" on quest type id {}!", typeJson.get("type"), typeJson.get("id"));
             }
@@ -174,6 +175,27 @@ public class QuestList {
             type = QuestType.claimKits(id, name, textStart, textEnd, hint, goals, JsonHelper.getString(typeJson, "kit"));
         } else {
             type = QuestType.claimKits(id, name, textStart, textEnd, hint, goals);
+        }
+
+        addType(type);
+    }
+
+    public void addTypeGambleMoney(JsonObject typeJson) {
+        int id = JsonHelper.getInt(typeJson, "id");
+        JsonObject textJson = JsonHelper.getJsonObject(typeJson, "name");
+        String textStart = JsonHelper.getString(textJson, "start");
+        String textEnd = JsonHelper.getString(textJson, "end");
+        String name = JsonHelper.getString(textJson, "name", textStart + " " + textEnd);
+        String hint = JsonHelper.getString(typeJson, "hint");
+
+        JsonArray goalsJson = JsonHelper.getJsonArray(typeJson, "goals");
+        int[] goals = JsonHelper.jsonArrayToIntArray(goalsJson);
+
+        QuestType type;
+        if (JsonHelper.getBoolean(typeJson, "need_win", false)) {
+            type = QuestType.winBet(id, name, textStart, textEnd, hint, goals);
+        } else {
+            type = QuestType.gambleMoney(id, name, textStart, textEnd, hint, goals);
         }
 
         addType(type);

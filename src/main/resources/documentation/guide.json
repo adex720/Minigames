@@ -1,0 +1,72 @@
+[
+  [
+    {
+      "question": "How to play a minigame?",
+      "answer": "Use `/play <name of minigame>` (Ex. `/play hangman`) to start the game. Then use either buttons or slash commands starting with the name of the minigame to interact with it. (Ex. `/hangman guess`)"
+    },
+    {
+      "question": "How to see my stats?",
+      "answer": "You can use `/profile` to see your balance. You can use `/stats` to view your stats. To compare your ranks to others use `/leaderboard`."
+    },
+    {
+      "question": "What are the rewards for completing a minigame?",
+      "answer": "You some coins after playing a minigame. The reward is higher if you won the minigame. You also have a chance of receiving a crate if you won."
+    },
+    {
+      "question": "How to get more coins?",
+      "answer": "Claim kits (`/cooldowns`), complete quests `/quests` use boosters if you play multiple minigames. (`/boosters`)"
+    },
+    {
+      "question": "How to increase time which marks minigame or party as inactive?",
+      "answer": "Currently there are none, but the ways are planned."
+    }
+  ],
+  [
+    {
+      "question": "How to play minigames with my friends?",
+      "answer": "Create a party with `/party create`. Your friends (or other people) can join it with `/party join`."
+    },
+    {
+      "question": "How to prevent random people from joining my party?",
+      "answer": "You can make the party private with `/party private`. Invite people to a private party with `/party invite`. If you no longer want your party to be private, use `/party public`."
+    },
+    {
+      "question": "How to prevent random people from joining my party?",
+      "answer": "You can make the party private with `/party private`. Invite people to a private party with `/party invite`. If you no longer want your party to be private, use `/party public`."
+    },
+    {
+      "question": "How to leave my party?",
+      "answer": "You can leave a party with `/party leave`. If you are the owner of the party, you can't leave the party. Instead, you need to either transfer the party ownership to someone else with `/party transfer` or delete the party with `/party delete`."
+    },
+    {
+      "question": "How to remove someone from my party?",
+      "answer": "You can use `/party kick` to remove a user from your party. If you are not the owner of the party, you need to ask the owner to kick the user."
+    },
+    {
+      "question": "How to see the members of my party?",
+      "answer": "Use `/party members` to see list of the members on your party."
+    }
+  ],
+  [
+    {
+      "question": "How do I play minigames on my own server?",
+      "answer": "Invite the bot to your server with `/invite`.."
+    },
+    {
+      "question": "How do I report a bug?",
+      "answer": "Create a new issue on the [GitHub page](https://github.com/adex720/Minigames/issues). Make sure the bug is not already reported before creating the issue. Be as detailed as possible."
+    },
+    {
+      "question": "How can I suggest a new feature?",
+      "answer": "Create a new issue on the [GitHub page](https://github.com/adex720/Minigames/issues). Make sure the feature isn't already suggested before creating the issue. Give much detail about the feature and why it should be added."
+    },
+    {
+      "question": "Where can I ask questions about the bot?",
+      "answer": "Use the #help channel on the support server to ask questions. You can find answers to frequently asked questions on the #faq channel."
+    },
+    {
+      "question": "How can I join the support server?",
+      "answer": "Join the support server by pressing [here](https://discord.gg/u2f6N7mvek)."
+    }
+  ]
+]

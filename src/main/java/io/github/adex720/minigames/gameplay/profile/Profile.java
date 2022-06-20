@@ -22,14 +22,15 @@ import io.github.adex720.minigames.gameplay.profile.stat.Stat;
 import io.github.adex720.minigames.gameplay.profile.stat.StatList;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.CheckReturnValue;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,16 +45,23 @@ import java.util.Set;
  */
 public class Profile implements IdCompound, JsonSavable<Profile> {
 
+    public static final int STAT_COINS_EARNED_ID = 101;
+
     private final MinigamesBot bot;
 
     private final long userId;
+    private String tag;
     private final long created;
+
     private boolean banned;
 
     private boolean isInParty;
     private long partyId;
 
-    private int coins;
+    private boolean isInGuild;
+    private long guildId;
+
+    private long coins;
 
     private final Set<Integer> badges;
     private final StatList statList;
@@ -67,16 +75,22 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     private final PlayerSettings playerSettings;
 
-    public Profile(MinigamesBot bot, long userId) {
+    public Profile(MinigamesBot bot, long userId, String tag) {
+        created = System.currentTimeMillis();
+
         this.bot = bot;
         this.userId = userId;
-        created = System.currentTimeMillis();
+        this.tag = tag;
+
         this.banned = false;
 
         isInParty = false;
         partyId = userId;
 
-        coins = 0;
+        isInGuild = false;
+        guildId = userId;
+
+        coins = 0L;
         badges = new HashSet<>();
         statList = new StatList(bot);
 
@@ -87,15 +101,31 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         playerSettings = new PlayerSettings(userId);
     }
 
-    public Profile(MinigamesBot bot, long userId, long crated, int coins,
+    public Profile(MinigamesBot bot, long userId, String tag, long crated, long coins, @Nullable Long partyId, @Nullable Long guildId,
                    JsonObject statsJson, @Nullable JsonArray questsJson, JsonObject cratesJson, JsonObject boostersJson,
                    JsonArray activeBoostersJson, JsonArray statusesJson, JsonArray settingsJson, JsonArray badgesJson) {
         this.bot = bot;
         this.userId = userId;
+        this.tag = tag;
         this.created = crated;
+
         banned = false;
-        isInParty = false;
-        partyId = userId;
+
+        if (partyId != null) {
+            isInParty = true;
+            this.partyId = partyId;
+        } else {
+            isInParty = false;
+            this.partyId = userId;
+        }
+
+        if (guildId != null) {
+            isInGuild = true;
+            this.guildId = guildId;
+        } else {
+            isInGuild = false;
+            this.guildId = userId;
+        }
 
         this.coins = coins;
         badges = JsonHelper.jsonArrayToIntHashSet(badgesJson);
@@ -123,8 +153,8 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         }
     }
 
-    public static Profile create(MinigamesBot bot, long id) {
-        return new Profile(bot, id);
+    public static Profile create(MinigamesBot bot, long id, String tag) {
+        return new Profile(bot, id, tag);
     }
 
     @Override
@@ -139,7 +169,11 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         JsonObject json = new JsonObject();
 
         json.addProperty("id", userId);
+        json.addProperty("tag", tag);
         json.addProperty("created", created);
+
+        if (isInParty) json.addProperty("party", partyId);
+        if (isInGuild) json.addProperty("guild", guildId);
 
         json.addProperty("coins", coins);
         json.add("stats", statList.asJson());
@@ -165,9 +199,14 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
     public static Profile fromJson(MinigamesBot bot, JsonObject json) {
         long id = JsonHelper.getLong(json, "id");
+        String tag = JsonHelper.getString(json, "tag", "");
+
         long created = JsonHelper.getLong(json, "created");
 
-        int coins = JsonHelper.getInt(json, "coins");
+        Long partyId = JsonHelper.getLongOrNull(json, "party");
+        Long guildId = JsonHelper.getLongOrNull(json, "guild");
+
+        long coins = JsonHelper.getLong(json, "coins");
         JsonObject statsJson = JsonHelper.getJsonObject(json, "stats");
 
         JsonArray questsJson = JsonHelper.getJsonArray(json, "quests", null);
@@ -182,7 +221,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         JsonArray badgesJson = JsonHelper.getJsonArray(json, "badges", new JsonArray());
 
-        return new Profile(bot, id, created, coins, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson, badgesJson);
+        return new Profile(bot, id, tag, created, coins, partyId, guildId, statsJson, questsJson, cratesJson, boostersJson, activeBoostersJson, statusesJson, settingsJson, badgesJson);
     }
 
     private JsonArray getStatusesJson() {
@@ -225,26 +264,85 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         isInParty = false;
     }
 
+    public boolean isInGuild() {
+        return isInGuild;
+    }
+
     /**
-     * @param count should the amount be affected by current multiplier and counted towards quests and stats.
-     * @param replyable       must be non-null if {@param count} is true. If countForQuests is false event is ignored.
+     * Returns the id of the guild the user is in.
+     * If the user is not in a guild this value is either the id of the previous guild or the id of the user.
+     * If it is not certain if the user is in a party {@link Profile#isInGuild()} should be checked.
      */
-    public void addCoins(int amount, boolean count, Replyable replyable) {
+    public long getGuildId() {
+        return guildId;
+    }
+
+    public void guildJoined(long guildId) {
+        isInGuild = true;
+        this.guildId = guildId;
+    }
+
+    public void guildLeft() {
+        isInGuild = false;
+    }
+
+    public String getTag() {
+        if (tag.isEmpty()) requestTag();
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    /**
+     * Makes a request to Discord receiving the user tag.
+     * <p>
+     * If the request doesn't return a tag the tag is not chanced.
+     * If it failed, and the current value at {@link Profile#tag} is empty, it is set to "unknown user".
+     */
+    private void requestTag() {
+        bot.getJda().retrieveUserById(userId).queue(v -> {
+            String result = v.getAsTag();
+
+            if (!result.isEmpty()) {
+                tag = result;
+                return;
+            }
+
+            if (tag.isEmpty()) tag = "unknown user";
+        });
+    }
+
+    /**
+     * @param amount    amount of coins.
+     * @param count     should the amount be affected by current multiplier and counted towards quests and stats.
+     * @param replyable must be non-null if {@param count} is true.
+     *                  Use {@link Replyable#IGNORE_ALL} if needed.
+     */
+    public void addCoins(long amount, boolean count, Replyable replyable) {
 
         if (count) {
             int finalAmount = (int) (amount * getBoosterMultiplier());
 
-            statList.increaseStat("coins earned", finalAmount);
+            statList.increaseStat("coins earned", finalAmount, this);
             coins += finalAmount;
 
             appendQuests(quest -> quest.coinsEarned(replyable, finalAmount, this));
         } else {
             coins += amount;
         }
+
+        bot.getStatManager().getLeaderboard(STAT_COINS_EARNED_ID).update(this);
     }
 
-    public int getCoins() {
+    public long getCoins() {
         return coins;
+    }
+
+    public void removeCoins(int amount) {
+        coins -= amount;
+        bot.getStatManager().getLeaderboard(STAT_COINS_EARNED_ID).update(this);
     }
 
     /**
@@ -255,48 +353,51 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         badges.add(id);
     }
 
-    public int getStatValue(int id) {
+    @CheckReturnValue
+    public long getStatValue(int id) {
         return statList.getValue(id);
     }
 
-    public int getStatValue(String name) {
+    @CheckReturnValue
+    public long getStatValue(String name) {
         return statList.getValue(name);
     }
 
-    public int getStatValue(Stat stat) {
+    @CheckReturnValue
+    public long getStatValue(Stat stat) {
         return statList.getValue(stat.id());
     }
 
     public void setStatValue(int id, int value) {
-        statList.setValue(id, value);
+        statList.setValue(id, value, this);
     }
 
     public void setStatValue(String name, int value) {
-        statList.setValue(name, value);
+        statList.setValue(name, value, this);
     }
 
-    public int increaseStat(String stat) {
-        return statList.increaseStat(stat);
+    public long increaseStat(String stat) {
+        return statList.increaseStat(stat, this);
     }
 
-    public int increaseStat(Stat stat) {
-        return statList.increaseStat(stat);
+    public long increaseStat(int stat) {
+        return statList.increaseStat(stat, this);
     }
 
-    public int increaseStat(String stat, int amount) {
-        return statList.increaseStat(stat, amount);
+    public long increaseStat(Stat stat) {
+        return statList.increaseStat(stat, this);
     }
 
-    public int increaseStat(int stat) {
-        return statList.increaseStat(stat);
+    public long increaseStat(String stat, int amount) {
+        return statList.increaseStat(stat, amount, this);
     }
 
-    public int increaseStat(int stat, int amount) {
-        return statList.increaseStat(stat, amount);
+    public long increaseStat(int stat, int amount) {
+        return statList.increaseStat(stat, amount, this);
     }
 
-    public int increaseStat(Stat stat, int amount) {
-        return statList.increaseStat(stat, amount);
+    public long increaseStat(Stat stat, int amount) {
+        return statList.increaseStat(stat, amount, this);
     }
 
     /**
@@ -370,7 +471,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
 
         Stat current = bot.getStatManager().get("current daily quest streak");
         Stat highest = bot.getStatManager().get("highest daily quest streak");
-        int streak = increaseStat(current);
+        long streak = increaseStat(current);
         if (getStatValue(current) > getStatValue(highest)) {
             increaseStat(highest);
         }
@@ -393,6 +494,17 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         addCrate(type.id);
     }
 
+    public void addCrates(int type, int count) {
+        while (count > 0) {
+            crates.add(type);
+            count--;
+        }
+    }
+
+    public void addCrates(CrateType type, int count) {
+        addCrates(type.id, count);
+    }
+
     public boolean hasCrate(int crateType) {
         return crates.amount(crateType) > 0;
     }
@@ -412,7 +524,10 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
      * @return message to send
      */
     public String openCrate(Replyable replyable, CrateType type) {
-        if (!hasCrate(type)) return "You don't have " + type.getNameWithArticle() + " crate!";
+        if (!hasCrate(type)) {
+            replyable.reply("You don't have any " + type.name() + " crates!");
+            return "";
+        }
 
         crates.subtract(type);
 
@@ -579,13 +694,13 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         StringBuilder statsString = new StringBuilder();
         boolean newLine = false;
         for (Stat stat : bot.getStatManager().getLeaderboardStats()) {
-            int value = statList.getValue(stat.id());
+            long value = statList.getValue(stat.id());
             if (value == 0) continue;
 
             if (newLine) statsString.append('\n');
             newLine = true;
 
-            statsString.append(stat.name()).append(" - ").append(value);
+            statsString.append(stat.name()).append(" - ").append(Util.formatNumber(value));
         }
 
         return statsString.toString();
@@ -637,7 +752,7 @@ public class Profile implements IdCompound, JsonSavable<Profile> {
         return setting;
     }
 
-    public void onDelete(SlashCommandEvent event) {
+    public void onDelete(SlashCommandInteractionEvent event) {
         bot.getQuestManager().removeQuests(userId);
         bot.getKitCooldownManager().clearCooldowns(userId);
 

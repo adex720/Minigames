@@ -1,15 +1,18 @@
 package io.github.adex720.minigames.discord.command;
 
 import io.github.adex720.minigames.MinigamesBot;
+import io.github.adex720.minigames.gameplay.guild.Guild;
 import io.github.adex720.minigames.gameplay.party.Party;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.minigame.Minigame;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.CheckReturnValue;
 
 /**
  * This class is used to access various variables throughout the execution of an interaction.
@@ -20,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class CommandInfo {
 
+    private final CalculableValue<Party> party;
     @Nullable
     private Party calculatedParty;
 
@@ -27,6 +31,13 @@ public class CommandInfo {
     private final CalculableValue<Profile> profile;
     @Nullable
     private Profile calculatedProfile;
+
+    private final CalculableValue<Boolean> isInGuild;
+    private final CalculableValue<Boolean> isGuildOwner;
+    private final CalculableValue<Guild> guild;
+    private Boolean calculatedIsInGuild;
+    private Boolean calculatedIsGuildOwner;
+    private Guild calculatedGuild;
 
     private final User author;
 
@@ -37,68 +48,123 @@ public class CommandInfo {
 
     private final MinigamesBot bot;
 
-    public CommandInfo(MessageChannel channel, User author, MinigamesBot bot) {
+    @Nullable
+    private final CalculableValue<String[]> args;
+    private String[] calculatedArgs;
+
+    public CommandInfo(MessageChannel channel, User author, MinigamesBot bot, @Nullable CalculableValue<String[]> args) {
+        this.party = () -> bot.getPartyManager().getParty(profile().getPartyId());
+
         this.hasProfile = () -> bot.getProfileManager().hasProfile(author.getIdLong());
         this.profile = () -> bot.getProfileManager().getProfile(author.getIdLong());
+
+        this.isInGuild = () -> bot.getGuildManager().isInGuild(author.getIdLong());
+        this.isGuildOwner = () -> bot.getGuildManager().isGuildOwner(author.getIdLong());
+        this.guild = () -> bot.getGuildManager().getGuild(author.getIdLong());
+
         this.author = author;
         this.channel = channel;
+
         this.bot = bot;
+        this.args = args;
 
         calculatedParty = null;
         calculatedProfile = null;
+        calculatedGuild = null;
+        calculatedIsInGuild = null;
+        calculatedIsGuildOwner = null;
         calculatedMinigame = null;
+        calculatedArgs = null;
     }
 
-    public static CommandInfo create(SlashCommandEvent event, MinigamesBot bot) {
+    public static CommandInfo create(SlashCommandInteractionEvent event, MinigamesBot bot) {
         User user = event.getUser();
-        return new CommandInfo(event.getChannel(), user, bot);
+        return new CommandInfo(event.getChannel(), user, bot, null);
     }
 
-    public static CommandInfo create(ButtonClickEvent event, MinigamesBot bot) {
+    public static CommandInfo create(ButtonInteractionEvent event, MinigamesBot bot) {
         User user = event.getUser();
-        return new CommandInfo(event.getChannel(), user, bot);
+
+        String buttonId = event.getButton().getId();
+        CalculableValue<String[]> args = buttonId != null ? () -> buttonId.split("-") : null;
+
+        return new CommandInfo(event.getChannel(), user, bot, args);
     }
 
     public static CommandInfo create(MessageReceivedEvent event, MinigamesBot bot) {
         User user = event.getAuthor();
-        return new CommandInfo(event.getChannel(), user, bot);
+        return new CommandInfo(event.getChannel(), user, bot, () -> event.getMessage().getContentRaw().split(" "));
     }
 
-
+    @CheckReturnValue
     public boolean isInParty() {
         if (calculatedParty != null) return true;
         return profile().isInParty();
     }
 
+    @CheckReturnValue
     public Party party() {
         if (calculatedParty == null) {
-            calculatedParty = bot.getPartyManager().getParty(profile().getPartyId());
+            calculatedParty = party.calculate();
         }
 
         return calculatedParty;
     }
 
+    @CheckReturnValue
+    public boolean isInGuild() {
+        if (calculatedGuild != null) return true;
+        if (calculatedIsInGuild == null) calculatedIsInGuild = isInGuild.calculate();
+
+        return calculatedIsInGuild;
+    }
+
+    @CheckReturnValue
+    public boolean isGuildOwner() {
+        if (calculatedGuild != null && calculatedGuild.getId() == author.getIdLong()) return true;
+        if (calculatedIsGuildOwner == null) calculatedIsGuildOwner = isGuildOwner.calculate();
+
+        return calculatedIsGuildOwner;
+    }
+
+    @CheckReturnValue
+    public Guild guild() {
+        if (calculatedGuild == null) {
+            calculatedGuild = guild.calculate();
+        }
+
+        return calculatedGuild;
+    }
+
+    @CheckReturnValue
     public long gameId() {
         return isInParty() ? profile().getPartyId() : profile().getId();
     }
 
+    @CheckReturnValue
     public boolean hasProfile() {
         return hasProfile.calculate();
     }
 
+    @CheckReturnValue
     public Profile profile() {
         if (calculatedProfile == null) {
             calculatedProfile = profile.calculate();
+
+            if (calculatedProfile == null) return null;
+            calculatedProfile.setTag(author.getAsTag()); // Update tag
         }
 
-        return profile.calculate();
+        return calculatedProfile;
     }
 
+    @CheckReturnValue
     public boolean hasMinigame() {
         if (calculatedMinigame != null) return true;
         return bot.getMinigameManager().hasMinigame(gameId());
     }
 
+    @CheckReturnValue
     public Minigame minigame() {
         if (calculatedMinigame == null) {
             calculatedMinigame = bot.getMinigameManager().getMinigame(gameId());
@@ -106,32 +172,62 @@ public class CommandInfo {
         return calculatedMinigame;
     }
 
+    @CheckReturnValue
     public User author() {
         return author;
     }
 
+    @CheckReturnValue
     public long authorId() {
         return author.getIdLong();
     }
 
+    @CheckReturnValue
+    public String authorIdString() {
+        return author.getId();
+    }
+
+    @CheckReturnValue
     public String getAuthorTag() {
         return author.getAsTag();
     }
 
+    @CheckReturnValue
     public String authorMention() {
         return "<@!" + author.getId() + ">";
     }
 
-    public MessageChannel channel(){
+    @CheckReturnValue
+    public MessageChannel channel() {
         return channel;
     }
 
-    public long channelId(){
+    @CheckReturnValue
+    public long channelId() {
         return channel.getIdLong();
     }
 
+    @CheckReturnValue
     public MinigamesBot bot() {
         return bot;
+    }
+
+    @CheckReturnValue
+    public String[] args() {
+        if (calculatedArgs == null && args != null) {
+            calculatedArgs = args.calculate();
+        }
+
+        return calculatedArgs;
+    }
+
+    @CheckReturnValue
+    public String getArgumentOrDefault(int id, String defaultValue) {
+        String[] args = args();
+        if (args == null) return defaultValue;
+        if (args.length <= id) return defaultValue;
+
+        return args[id];
     }
 
     @FunctionalInterface

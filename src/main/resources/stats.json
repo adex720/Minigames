@@ -67,7 +67,7 @@
   },
   {
     "id": 12,
-    "name": "tic-tac-toe games won",
+    "name": "tic tac toe games won",
     "description": "",
     "on_leaderboard": false
   },
@@ -114,10 +114,58 @@
     "on_leaderboard": false
   },
   {
+    "id": 21,
+    "name": "memo games played",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 22,
+    "name": "memo games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 23,
+    "name": "memo pairs found",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 25,
+    "name": "blackjack games played",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 26,
+    "name": "blackjack games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 27,
+    "name": "connect4 games played",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
+    "id": 28,
+    "name": "connect4 games won",
+    "description": "",
+    "on_leaderboard": false
+  },
+  {
     "id": 101,
     "name": "coins earned",
     "description": "",
     "on_leaderboard": true
+  },
+  {
+    "id": 102,
+    "name": "bet won",
+    "description": "",
+    "on_leaderboard": false
   },
   {
     "id": 110,

@@ -7,8 +7,8 @@ import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.discord.command.minigame.MinigameCommand;
 import io.github.adex720.minigames.gameplay.manager.minigame.MinigameTypeManager;
 import io.github.adex720.minigames.util.JsonHelper;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import io.github.adex720.minigames.util.replyable.Replyable;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -52,11 +52,37 @@ public abstract class MinigameType<M extends Minigame> {
         this.color = Integer.parseInt(JsonHelper.getString(minigameJson, "color"), 16);
     }
 
+    /**
+     * Creates a new minigame of this type.
+     *
+     * @param replyable Replyable to send messages with.
+     */
     @Nullable
-    public abstract M create(SlashCommandEvent event, CommandInfo ci);
+    public abstract M create(Replyable replyable, CommandInfo ci);
 
+    /**
+     * Creates a new minigame of this type.
+     * Calls {@link MinigameType#create(Replyable, CommandInfo)} if not overridden.
+     *
+     * @param event     {@link SlashCommandInteractionEvent} to get options from
+     * @param replyable Replyable to send messages with
+     */
     @Nullable
-    public abstract M create(ButtonClickEvent event, CommandInfo ci);
+    public M create(Replyable replyable, CommandInfo ci, SlashCommandInteractionEvent event) {
+        return create(replyable, ci);
+    }
+
+    /**
+     * Creates a new minigame of this type.
+     * Calls {@link MinigameType#create(Replyable, CommandInfo)} if not overridden.
+     *
+     * @param buttonArgs Arguments on the button id
+     * @param replyable  Replyable to send messages with
+     */
+    @Nullable
+    public M create(Replyable replyable, CommandInfo ci, String[] buttonArgs) {
+        return create(replyable, ci);
+    }
 
     public abstract M fromJson(JsonObject json);
 
@@ -71,8 +97,7 @@ public abstract class MinigameType<M extends Minigame> {
 
     public void initCommand() {
         command = new MinigameCommand(bot, name, "Performs actions in a game of " + name);
-        getSubcommands().forEach(command::addSubcommand);
-        //bot.getCommandManager().addCommand(command);
+        getSubcommands().forEach(command -> bot.getCommandManager().addSubcommand(command));
     }
 
     /**
@@ -91,18 +116,41 @@ public abstract class MinigameType<M extends Minigame> {
     }
 
     /**
-     * If the initialization of minigame ends this will be sent as reason.
-     * If the initialization of the minigame can't fail it doesn't matter what is returned.
+     * Returns the message to be sent when {@link MinigameType#canStart(CommandInfo)} returns false.
+     * If the method never returns false for the minigame type, this method doesn't need to be overridden.
+     *
+     * @param commandInfo CommandInfo to send correct reply.
      */
-    public String getReplyForInvalidStartState() {
+    public String getReplyForInvalidStartState(CommandInfo commandInfo) {
+        return "";
+    }
+
+    /**
+     * If the returned value of {@link MinigameType#create(Replyable, CommandInfo, SlashCommandInteractionEvent)} or
+     * {@link MinigameType#create(Replyable, CommandInfo, String[])} results on null,
+     * this will be sent as the reason why it failed.
+     * If the initialization of the minigame can't result on null, this method doesn't need to be overridden.
+     *
+     * @param commandInfo Command info to send correct reply.
+     */
+    public String getReplyForNullAfterConstructor(CommandInfo commandInfo) {
         return "";
     }
 
     /**
      * Returns the name with dashes being replaced by spaces.
+     * Ex. 'tic-tac-toe' -> 'tic tac toe
      */
     public String getNameWithSpaces() {
         return name.replaceAll("-", " ");
+    }
+
+    /**
+     * Returns the name without dashes.
+     * Ex. 'tic-tac-toe' -> 'tictactoe
+     */
+    public String getNameWithoutDashes() {
+        return name.replaceAll("-", "");
     }
 
     /**
@@ -113,23 +161,9 @@ public abstract class MinigameType<M extends Minigame> {
     }
 
     /**
-     * @return if arguments need to be saved for this type of minigame.
-     */
-    public boolean hasExtraArgumentsForReplay() {
-        return false;
-    }
-
-    /**
      * @return id of the default state for this minigame.
      */
     public int getDefaultState() {
         return 1;
-    }
-
-    /**
-     * Saves the state for one minute if a state exists.
-     * Since only few minigames use states, each type doesn't have a map for them.
-     */
-    public void saveState(long gameId, int state) {
     }
 }

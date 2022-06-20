@@ -5,9 +5,9 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.party.Party;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
  * @author adex720
@@ -20,7 +20,7 @@ public class CommandPartyKick extends Subcommand {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         if (ci.isInParty()) {
             event.getHook().sendMessage("You aren't in a party.").queue();
             return true;
@@ -60,7 +60,7 @@ public class CommandPartyKick extends Subcommand {
     }
 
     @Override
-    public CommandData createCommandData() {
+    public SlashCommandData createCommandData() {
         return super.createCommandData()
                 .addOption(OptionType.USER, "party", "A member of the party to kick.", true);
     }

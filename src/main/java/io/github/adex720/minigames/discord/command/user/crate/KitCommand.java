@@ -8,9 +8,9 @@ import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.Pair;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -70,7 +70,7 @@ public class KitCommand extends Command {
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         Replyable replyable = Replyable.from(event);
 
         int canClaim = canClaim(event, ci);
@@ -79,7 +79,7 @@ public class KitCommand extends Command {
             OffsetDateTime current = event.getTimeCreated();
             if (ready != null) {
                 if (ready.isAfter(current)) {
-                    replyable.reply("This booster is on cooldown for " + getCooldown(ready, current) + ".");
+                    replyable.reply("This kit is on cooldown for " + getCooldown(ready, current) + ".");
                     return true;
                 }
             }
@@ -88,7 +88,7 @@ public class KitCommand extends Command {
             addReward(replyable, profile);
 
             startCooldown(ci.authorId(), current);
-            replyable.reply("You claimed your " + name + " booster. You received " + rewardCoins + " coins.");
+            replyable.reply("You claimed your " + name + " kit. You received " + rewardCoins + " coins.");
 
             profile.appendQuests(quest -> quest.kitClaimed(replyable, name, profile));
         } else {
@@ -97,7 +97,7 @@ public class KitCommand extends Command {
         return true;
     }
 
-    public Pair<Integer, Integer> addRewardAndCooldown(SlashCommandEvent event, Profile profile, OffsetDateTime time) {
+    public Pair<Integer, Integer> addRewardAndCooldown(SlashCommandInteractionEvent event, Profile profile, OffsetDateTime time) {
         startCooldown(profile.getId(), time);
         return addReward(Replyable.from(event), profile);
     }
@@ -148,23 +148,23 @@ public class KitCommand extends Command {
 
     public interface PermissionCheck {
         /**
-         * @return 0 if booster can be used.
+         * @return 0 if kit can be claimed.
          * Different positive return values are used to indicate reply message.
          */
-        int canUse(SlashCommandEvent event, CommandInfo ci);
+        int canUse(SlashCommandInteractionEvent event, CommandInfo ci);
 
         /**
-         * @param reason reply message id specified by {@link KitCommand.PermissionCheck#canUse(SlashCommandEvent, CommandInfo)}
+         * @param reason reply message id specified by {@link KitCommand.PermissionCheck#canUse(net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent, CommandInfo)}
          * @return a specific fail message reasoning why the kit can't be claimed.
          */
-        String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason);
+        String getFailMessage(SlashCommandInteractionEvent event, CommandInfo ci, int reason);
     }
 
     /**
-     * Returns 0 if booster can be used.
+     * @return 0 if kit can be claimed.
      * Positive return values are used to indicate reply message.
      */
-    public int canClaim(SlashCommandEvent event, CommandInfo ci) {
+    public int canClaim(SlashCommandInteractionEvent event, CommandInfo ci) {
         return permissionCheck.canUse(event, ci);
     }
 
@@ -177,12 +177,12 @@ public class KitCommand extends Command {
 
         public static final PermissionCheck ALWAYS = new PermissionCheck() {
             @Override
-            public int canUse(SlashCommandEvent event, CommandInfo ci) {
+            public int canUse(SlashCommandInteractionEvent event, CommandInfo ci) {
                 return 0;
             }
 
             @Override
-            public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
+            public String getFailMessage(SlashCommandInteractionEvent event, CommandInfo ci, int reason) {
                 return "";
             }
         };
@@ -190,7 +190,7 @@ public class KitCommand extends Command {
         public static final PermissionCheck IN_SUPPORT_SERVER = new PermissionCheck() {
 
             @Override
-            public int canUse(SlashCommandEvent event, CommandInfo ci) {
+            public int canUse(SlashCommandInteractionEvent event, CommandInfo ci) {
                 if (event.getGuild().getIdLong() != CommandServer.SERVER_ID) {
                     // Wrong server
                     return 1;
@@ -207,12 +207,12 @@ public class KitCommand extends Command {
             }
 
             @Override
-            public String getFailMessage(SlashCommandEvent event, CommandInfo ci, int reason) {
+            public String getFailMessage(SlashCommandInteractionEvent event, CommandInfo ci, int reason) {
                 if (reason == 1) {
-                    return "This booster can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
+                    return "This kit can only be claimed on the support server.\n" + CommandServer.SERVER_LINK;
                 }
                 if (reason == 2) {
-                    return "You need to be on this server for 24 hours to claim this booster. This is to ensure people leaving after claiming the booster and then leaving.";
+                    return "You need to be on this server for 24 hours to claim this kit. This is to prevent people from leaving after claiming the kit and rejoining after 24 hours.";
                 }
 
                 return ""; // never reached

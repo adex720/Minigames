@@ -8,15 +8,15 @@ import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.booster.BoosterRarity;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.Pair;
-import io.github.adex720.minigames.util.Replyable;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -31,22 +31,22 @@ public class CommandOpen extends Command {
         requiresProfile();
     }
 
-    public OptionMapping getType(SlashCommandEvent event) {
+    public OptionMapping getType(SlashCommandInteractionEvent event) {
         return event.getOption("type");
     }
 
-    public OptionMapping getAmount(SlashCommandEvent event) {
+    public OptionMapping getAmount(SlashCommandInteractionEvent event) {
         return event.getOption("amount");
     }
 
-    public int getTypeId(SlashCommandEvent event) {
+    public int getTypeId(SlashCommandInteractionEvent event) {
         OptionMapping type = getType(event);
         if (type == null) return -1;
-        return (int) type.getAsLong();
+        return type.getAsInt();
     }
 
     @Override
-    public boolean execute(SlashCommandEvent event, CommandInfo ci) {
+    public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
         OptionMapping type = getType(event);
         OptionMapping amount = getAmount(event);
         if (type == null && amount == null) {
@@ -65,6 +65,8 @@ public class CommandOpen extends Command {
         Replyable replyable = Replyable.from(event);
 
         String description = getDescription(replyable, ci.profile(), type, typeId, count);
+        if (description.isEmpty()) return true; // Can't open any crates, replies are handled in the method
+
         event.getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("OPEN CRATES")
                 .addField("Opened " + count + " crates", description, false)
@@ -78,7 +80,7 @@ public class CommandOpen extends Command {
     /**
      * @return Amount of crates to open regarding the given argument. Returns -1 on invalid count or circumstances.
      */
-    public int getOpeningCount(SlashCommandEvent event, CommandInfo ci) {
+    public int getOpeningCount(SlashCommandInteractionEvent event, CommandInfo ci) {
         String amountString = getAmount(event).getAsString();
         OptionMapping type = getType(event);
 
@@ -95,7 +97,7 @@ public class CommandOpen extends Command {
                 return -1;
             }
 
-            int maxCount = ci.profile().amountOfCrates((int) type.getAsLong());
+            int maxCount = ci.profile().amountOfCrates(type.getAsInt());
             if (maxCount == 0) {
                 event.getHook().sendMessage("You don't have crates. You can get them from claiming kits or playing minigames.").queue();
                 return -1;
@@ -121,7 +123,7 @@ public class CommandOpen extends Command {
             }
 
             if (type != null) {
-                int typeId = (int) type.getAsLong();
+                int typeId = type.getAsInt();
                 int count = ci.profile().amountOfCrates(typeId);
 
                 if (count == 0) {
@@ -284,7 +286,7 @@ public class CommandOpen extends Command {
     }
 
     @Override
-    protected CommandData createCommandData() {
+    protected SlashCommandData createCommandData() {
         OptionData optionData = new OptionData(OptionType.INTEGER, "type", "Type of crate", false);
 
         for (int id = 0; id < CrateType.TYPES_AMOUNT; id++) {

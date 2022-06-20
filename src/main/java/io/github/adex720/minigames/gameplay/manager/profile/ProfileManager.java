@@ -7,7 +7,7 @@ import io.github.adex720.minigames.MinigamesBot;
 import io.github.adex720.minigames.gameplay.manager.IdCompoundSavableManager;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.util.Util;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,7 +29,7 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         PROFILES = new HashMap<>();
         DELETION_CODES = new HashMap<>();
 
-        load((JsonArray) bot.loadJson("profiles"));
+        load(bot.loadJson("profiles").getAsJsonArray());
     }
 
     @Override
@@ -50,20 +50,30 @@ public class ProfileManager extends IdCompoundSavableManager<Profile> {
         return PROFILES.get(userId);
     }
 
-    public void createProfile(long id) {
-        Profile profile = Profile.create(bot, id);
+    public void createProfile(long id, String tag) {
+        Profile profile = Profile.create(bot, id, tag);
         PROFILES.put(id, profile);
+
+        BadgeManager badgeManager = bot.getBadgeManager();
+        for (int badgeId : badgeManager.getBadgesForNewUsers()) {
+            profile.addBadge(badgeId);
+        }
     }
 
     private void addProfile(Profile profile) {
         PROFILES.put(profile.getId(), profile);
+
+        bot.getStatManager().addToLeaderboards(profile);
     }
 
     /**
      * @param event event to reply minigame results.
      */
-    public void deleteProfile(SlashCommandEvent event, long id) {
-        PROFILES.remove(id).onDelete(event);
+    public void deleteProfile(SlashCommandInteractionEvent event, long id) {
+        Profile profile = PROFILES.remove(id);
+
+        profile.onDelete(event);
+        bot.getStatManager().removeFromLeaderboards(profile);
     }
 
     /**
