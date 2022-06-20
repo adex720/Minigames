@@ -25,6 +25,8 @@ import io.github.adex720.minigames.minigame.party.counting.MinigameCounting;
 import io.github.adex720.minigames.minigame.party.counting.MinigameTypeCounting;
 import io.github.adex720.minigames.minigame.party.memo.MinigameMemo;
 import io.github.adex720.minigames.minigame.party.memo.MinigameTypeMemo;
+import io.github.adex720.minigames.minigame.party.trivia.MinigameTrivia;
+import io.github.adex720.minigames.minigame.party.trivia.MinigameTypeTrivia;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -49,6 +51,8 @@ public class MinigameTypeManager extends Manager {
 
     public MinigameType<MinigameCounting> COUNTING;
     public MinigameType<MinigameMemo> MEMO;
+
+    public MinigameType<MinigameTrivia> TRIVIA;
 
     public GambleMinigameType<MinigameBlackjack> BLACKJACK;
 
@@ -90,6 +94,10 @@ public class MinigameTypeManager extends Manager {
         initCommand(MEMO);
 
 
+        TRIVIA = new MinigameTypeTrivia(bot, this);
+        initCommand(TRIVIA);
+
+
         BLACKJACK = new MinigameTypeBlackjack(bot, this);
         initCommand(BLACKJACK);
     }
@@ -120,6 +128,7 @@ public class MinigameTypeManager extends Manager {
 
             case "counting" -> COUNTING;
             case "memo" -> MEMO;
+            case "trivia" -> TRIVIA;
 
             case "blackjack" -> BLACKJACK;
             default -> throw new IllegalStateException("Invalid minigame type: " + name);

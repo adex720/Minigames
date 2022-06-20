@@ -10,7 +10,7 @@ import io.github.adex720.minigames.data.JsonSavable;
  *
  * @author adex720
  * */
-public abstract class SavableManager<T extends JsonSavable<T>> extends Manager implements JsonConvertible<T> {
+public abstract class SavableManager<T extends JsonSavable> extends Manager implements JsonConvertible<T> {
 
     public SavableManager(MinigamesBot bot, String name) {
         super(bot, name);

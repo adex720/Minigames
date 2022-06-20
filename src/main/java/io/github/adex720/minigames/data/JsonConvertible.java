@@ -13,7 +13,7 @@ import java.util.Set;
  *
  * @author adex720
  * */
-public interface JsonConvertible<T extends JsonSavable<T>> {
+public interface JsonConvertible<T extends JsonSavable> {
 
     T fromJson(JsonObject json);
 

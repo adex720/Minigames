@@ -7,8 +7,8 @@ import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.minigame.Minigame;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -24,7 +24,7 @@ import java.util.Set;
  *
  * @author adex720
  */
-public class Party implements JsonSavable<Party>, IdCompound {
+public class Party implements JsonSavable, IdCompound {
 
     public static final int MAX_SIZE = 10;
 
@@ -332,6 +332,14 @@ public class Party implements JsonSavable<Party>, IdCompound {
         return new Party(bot, ownerId, memberIds);
     }
 
+    /**
+     * Does nothing if there's no active minigame.
+     */
+    private void deleteActiveMinigame(Replyable replyable) {
+        Minigame minigame = bot.getMinigameManager().getMinigame(owner);
+        if (minigame != null) minigame.delete(replyable);
+    }
+
     public void onCreate() {
     }
 
@@ -344,6 +352,7 @@ public class Party implements JsonSavable<Party>, IdCompound {
 
     public void onTransfer(long oldOwner) {
         updatePartyId();
+        deleteActiveMinigame(Replyable.IGNORE_ALL);
         active();
     }
 
@@ -359,11 +368,11 @@ public class Party implements JsonSavable<Party>, IdCompound {
         activeMembers.remove(member);
     }
 
-    public void onMinigameStart(){
+    public void onMinigameStart() {
         activeMembers.clear();
     }
 
-    public void onMinigameEnd(){
+    public void onMinigameEnd() {
         activeMembers.clear();
     }
 

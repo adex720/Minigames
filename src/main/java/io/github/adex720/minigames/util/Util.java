@@ -226,4 +226,40 @@ public class Util {
         }
     }
 
+    /**
+     * Decodes an url3986 String.
+     * <p>
+     * Example: Hello%20World%21 -> Hello World!
+     */
+    public static String format(String encoded) {
+        StringBuilder formatted = new StringBuilder();
+        int encodedLength = encoded.length();
+
+        char first = 0;
+        int state = 0; // 0 -> normal 1 -> start of symbol 2 -> end of symbol
+        for (int i = 0; i < encodedLength; i++) {
+            char current = encoded.charAt(i);
+
+            switch (state) {
+                case 0 -> {
+                    if (current == '%') {
+                        state = 1;
+                        continue;
+                    }
+                    formatted.append(current);
+                }
+                case 1 -> {
+                    first = current;
+                    state = 2;
+                }
+                case 2 -> {
+                    String hex = "" + first + current;
+                    formatted.append((char) Integer.parseInt(hex, 16));
+                    state = 0;
+                }
+            }
+        }
+        return formatted.toString();
+    }
+
 }

@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * @author adex720
  */
-public class Guild implements JsonSavable<Guild>, IdCompound { //TODO: record member join date
+public class Guild implements JsonSavable, IdCompound { //TODO: record member join date
 
     public static final int MAX_NAME_LENGTH = 15;
     public static final char[] INVALID_NAME_CHARACTERS = {'@', '\\'};

@@ -18,6 +18,7 @@ public class DevCommandShutdown extends DevCommand {
     public boolean onRun(MessageReceivedEvent event) {
         bot.save();
         event.getChannel().sendMessage("Saved all data. Shutting down!").queue();
+        bot.getDisconnectListener().doNotSaveOnReconnect(); // Data was already saved
         bot.stop();
         return true;
         // A shutdown can take multiple minutes because each timer with a low delay isn't stored to be stopped.

@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
  *
  * @author adex720
  * */
-public interface JsonSavable<S> {
+public interface JsonSavable {
 
     JsonObject getAsJson();
 

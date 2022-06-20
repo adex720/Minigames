@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 public class Connect4ButtonManager extends ButtonManager {
 
     public Connect4ButtonManager(MinigamesBot bot) {
-        super(bot, "connect4");
+        super(bot, "connect4", true);
     }
 
     @Override

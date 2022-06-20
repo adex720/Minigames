@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @author adex720
  */
-public class PlayerSettings implements IdCompound, JsonSavable<PlayerSettings> {
+public class PlayerSettings implements IdCompound, JsonSavable {
 
     private final long userId;
 

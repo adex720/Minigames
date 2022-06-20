@@ -18,7 +18,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 public class ReplayManager extends ButtonManager {
 
     public ReplayManager(MinigamesBot bot) {
-        super(bot, "replay");
+        super(bot, "replay", true);
     }
 
     @Override

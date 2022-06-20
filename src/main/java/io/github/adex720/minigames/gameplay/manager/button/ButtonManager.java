@@ -13,10 +13,12 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 public abstract class ButtonManager extends Manager {
 
     public final String buttonName;
+    public final boolean requiresProfile;
 
-    protected ButtonManager(MinigamesBot bot, String name) {
+    protected ButtonManager(MinigamesBot bot, String name, boolean requiresProfile) {
         super(bot, name + "-button-manager");
         this.buttonName = name;
+        this.requiresProfile = requiresProfile;
 
         bot.getButtonListener().addButtonManager(this);
     }

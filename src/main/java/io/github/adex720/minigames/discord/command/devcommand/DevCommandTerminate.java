@@ -17,6 +17,7 @@ public class DevCommandTerminate extends DevCommand {
     @Override
     public boolean onRun(MessageReceivedEvent event) {
         event.getChannel().sendMessage("Shutting down without saving date!").queue();
+        bot.getDisconnectListener().doNotSaveOnReconnect(); // Data is not wanted to be saved
         bot.stop();
         return true;
         // A shutdown can take multiple minutes because each timer with a low delay isn't stored to be stopped.

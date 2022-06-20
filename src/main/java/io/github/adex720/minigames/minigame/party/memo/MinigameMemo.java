@@ -43,29 +43,6 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
     private int turnedY;
     private AuditableRestAction<Void> turnedMessageDeletion;
 
-    /**
-     * If card is not turned, {@param turnedX} should be -1.
-     */
-    public MinigameMemo(MinigamesBot bot, long id, long lastActive, int[][] cards, long[] players, int currentPlayerIndex, int[] scores, int turnedX, int turnedY) {
-        super(bot, bot.getMinigameTypeManager().MEMO, id, lastActive);
-
-        this.cards = cards;
-        this.width = cards.length;
-        this.height = cards[0].length;
-
-        this.players = players;
-        this.currentPlayerIndex = currentPlayerIndex;
-
-        this.scores = scores;
-
-        onBlock = false;
-
-        this.turned = turnedX >= 0;
-        this.turnedX = turnedX;
-        this.turnedY = turnedY;
-        this.turnedMessageDeletion = null;
-    }
-
     public MinigameMemo(MinigamesBot bot, Party party, long lastActive) {
         super(bot, bot.getMinigameTypeManager().MEMO, party.getId(), lastActive);
         Random random = bot.getRandom();
@@ -87,6 +64,29 @@ public class MinigameMemo extends PartyCompetitiveMinigame {
         Arrays.fill(this.scores, 0);
 
         onBlock = false;
+    }
+
+    /**
+     * If no card is not turned, {@param turnedX} should be -1.
+     */
+    public MinigameMemo(MinigamesBot bot, long id, long lastActive, int[][] cards, long[] players, int currentPlayerIndex, int[] scores, int turnedX, int turnedY) {
+        super(bot, bot.getMinigameTypeManager().MEMO, id, lastActive);
+
+        this.cards = cards;
+        this.width = cards.length;
+        this.height = cards[0].length;
+
+        this.players = players;
+        this.currentPlayerIndex = currentPlayerIndex;
+
+        this.scores = scores;
+
+        onBlock = false;
+
+        this.turned = turnedX >= 0;
+        this.turnedX = turnedX;
+        this.turnedY = turnedY;
+        this.turnedMessageDeletion = null;
     }
 
     public MinigameMemo(CommandInfo commandInfo) {

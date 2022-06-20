@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author adex720
  */
-public interface MapAndJsonConvertible<T extends JsonSavable<T> & IdCompound> extends JsonConvertible<T> {
+public interface MapAndJsonConvertible<T extends JsonSavable & IdCompound> extends JsonConvertible<T> {
 
 
     default HashMap<Long, T> mapFromJson(JsonArray jsonArray) {

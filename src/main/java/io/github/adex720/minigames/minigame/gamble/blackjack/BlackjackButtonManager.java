@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 public class BlackjackButtonManager extends ButtonManager {
 
     public BlackjackButtonManager(MinigamesBot bot) {
-        super(bot, "blackjack");
+        super(bot, "blackjack", true);
     }
 
     @Override

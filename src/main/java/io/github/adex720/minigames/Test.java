@@ -7,17 +7,77 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * This class runs bunch of task which are faster for computer than human.
  * (For example turning white background transparent)
+ * The code can be bad and hard to read, since the only purpose of the class is to make testing small task easier.
  *
  * @author adex720
  */
 public class Test {
 
     public static void main(String[] args) {
-        testCharacterBytes();
+      testQuestionOptionArranging();
+    }
+
+    public static void testQuestionOptionArranging() {
+
+        for (int i = 0; i < 0x18; i++) {
+            System.out.println(arrangeQuestionOptions(i));
+        }
+    }
+
+    public static String arrangeQuestionOptions(int optionsShuffleSeed) {
+        int correctAnswerIndex = optionsShuffleSeed & 0x3;
+
+        int firstIncorrectAnswerIndex = (optionsShuffleSeed >> 3) & 0x3;
+        int secondIncorrectAnswerIndex = (optionsShuffleSeed >> 2) & 0x1;
+        int thirdIncorrectAnswerIndex = 0;
+
+        String seedString = optionsShuffleSeed >= 10 ? optionsShuffleSeed + " " : " " + optionsShuffleSeed + " ";
+        String valuesStart = seedString + "|correct|1st|2nd|3rd\nRAW|   " + correctAnswerIndex + "   | "
+                + firstIncorrectAnswerIndex + " | " + secondIncorrectAnswerIndex + " | " + thirdIncorrectAnswerIndex;
+
+        if (secondIncorrectAnswerIndex >= firstIncorrectAnswerIndex) secondIncorrectAnswerIndex++;
+
+        if (thirdIncorrectAnswerIndex >= firstIncorrectAnswerIndex) thirdIncorrectAnswerIndex++;
+        if (thirdIncorrectAnswerIndex >= secondIncorrectAnswerIndex) {
+            thirdIncorrectAnswerIndex++;
+            if (thirdIncorrectAnswerIndex == firstIncorrectAnswerIndex) thirdIncorrectAnswerIndex++;
+        }
+
+        if (firstIncorrectAnswerIndex >= correctAnswerIndex) firstIncorrectAnswerIndex++;
+        if (secondIncorrectAnswerIndex >= correctAnswerIndex) secondIncorrectAnswerIndex++;
+        if (thirdIncorrectAnswerIndex >= correctAnswerIndex) thirdIncorrectAnswerIndex++;
+
+        String valuesEnd = "\nEND|   " + correctAnswerIndex + "   | "
+                + firstIncorrectAnswerIndex + " | " + secondIncorrectAnswerIndex + " | " + thirdIncorrectAnswerIndex + "\n";
+
+        boolean valid = true;
+        if (correctAnswerIndex == firstIncorrectAnswerIndex) valid = false;
+        else if (correctAnswerIndex == secondIncorrectAnswerIndex) valid = false;
+        else if (correctAnswerIndex == thirdIncorrectAnswerIndex) valid = false;
+
+        else if (firstIncorrectAnswerIndex == secondIncorrectAnswerIndex) valid = false;
+        else if (firstIncorrectAnswerIndex == thirdIncorrectAnswerIndex) valid = false;
+
+        else if (secondIncorrectAnswerIndex == thirdIncorrectAnswerIndex) valid = false;
+
+        return valuesStart + valuesEnd + "VALID: " + valid + "\n";
+    }
+
+    public static void testTriviaWebRequests() {
+        String address = "https://opentdb.com/api.php?amount=10&type=multiple&encode=url3986";
+        HttpsRequester httpsRequester = new HttpsRequester();
+
+        try {
+            System.out.println(httpsRequester.requestString(address));
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + Arrays.toString(e.getStackTrace()));
+        }
+
     }
 
     public static void testCharacterBytes() {

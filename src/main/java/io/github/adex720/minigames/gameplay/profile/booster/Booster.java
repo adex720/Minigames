@@ -10,7 +10,7 @@ import io.github.adex720.minigames.util.JsonHelper;
  *
  * @author adex720
  * */
-public class Booster implements JsonSavable<Booster> {
+public class Booster implements JsonSavable {
 
     public final BoosterRarity rarity;
     public final long expiration;

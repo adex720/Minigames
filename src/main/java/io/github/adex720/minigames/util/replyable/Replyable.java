@@ -1,15 +1,22 @@
 package io.github.adex720.minigames.util.replyable;
 
+import io.github.adex720.minigames.MinigamesBot;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageAction;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A class serving as a way to use multiple types of Discord events
@@ -21,9 +28,12 @@ import javax.annotation.CheckReturnValue;
 public class Replyable {
 
     private final boolean isWebhookBased;
+    private Message lastMessage;
+    private boolean processingLastMessage;
 
     Replyable(boolean isWebhookBased) {
         this.isWebhookBased = isWebhookBased;
+        lastMessage = null;
     }
 
     /**
@@ -62,12 +72,14 @@ public class Replyable {
      * Sends the message to the channel.
      */
     public void reply(String message) {
+        if (message.isEmpty()) return;
+        processingLastMessage = true;
         if (isWebhookBased) {
-            getWebhookMessageAction(message).queue();
+            getWebhookMessageAction(message).queue(this::updateLastMessage);
             return;
         }
 
-        getMessageAction(message).queue();
+        getMessageAction(message).queue(this::updateLastMessage);
     }
 
     /**
@@ -75,11 +87,11 @@ public class Replyable {
      */
     public void reply(MessageEmbed message) {
         if (isWebhookBased) {
-            getWebhookMessageAction(message).queue();
+            getWebhookMessageAction(message).queue(this::updateLastMessage);
             return;
         }
 
-        getMessageAction(message).queue();
+        getMessageAction(message).queue(this::updateLastMessage);
     }
 
     /**
@@ -87,12 +99,14 @@ public class Replyable {
      * The message will be ephemeral (Hidden to other users) if possible.
      */
     public void replyEphemeral(String message) {
+        if (message.isEmpty()) return;
+        processingLastMessage = true;
         if (isWebhookBased) {
-            getWebhookMessageAction(message).setEphemeral(true).queue();
+            getWebhookMessageAction(message).setEphemeral(true).queue(this::updateLastMessage);
             return;
         }
 
-        getMessageAction(message).queue();
+        getMessageAction(message).queue(this::updateLastMessage);
     }
 
     /**
@@ -100,36 +114,40 @@ public class Replyable {
      * The message will be ephemeral (Hidden to other users) if possible.
      */
     public void replyEphemeral(MessageEmbed message) {
+        processingLastMessage = true;
         if (isWebhookBased) {
-            getWebhookMessageAction(message).setEphemeral(true).queue();
+            getWebhookMessageAction(message).setEphemeral(true).queue(this::updateLastMessage);
             return;
         }
 
-        getMessageAction(message).queue();
+        getMessageAction(message).queue(this::updateLastMessage);
     }
 
     /**
      * Sends the message with the {@link ActionRow}s to the channel.
      */
     public void reply(String message, ActionRow... actionRows) {
+        if (message.isEmpty()) return;
+        processingLastMessage = true;
         if (!isWebhookBased) {
-            getMessageAction(message).setActionRows(actionRows).queue();
+            getMessageAction(message).setActionRows(actionRows).queue(this::updateLastMessage);
             return;
         }
 
-        getWebhookMessageAction(message).addActionRows(actionRows).queue();
+        getWebhookMessageAction(message).addActionRows(actionRows).queue(this::updateLastMessage);
     }
 
     /**
      * Sends the message with the {@link ActionRow}s to the channel.
      */
     public void reply(MessageEmbed message, ActionRow... actionRows) {
+        processingLastMessage = true;
         if (!isWebhookBased) {
-            getMessageAction(message).setActionRows(actionRows).queue();
+            getMessageAction(message).setActionRows(actionRows).queue(this::updateLastMessage);
             return;
         }
 
-        getWebhookMessageAction(message).addActionRows(actionRows).queue(m -> System.out.println("Sent"));
+        getWebhookMessageAction(message).addActionRows(actionRows).queue(this::updateLastMessage);
     }
 
     /**
@@ -156,6 +174,74 @@ public class Replyable {
      */
     public boolean isWebhookBased() {
         return isWebhookBased;
+    }
+
+    private void updateLastMessage(Message message) {
+        lastMessage = message;
+        processingLastMessage = false;
+    }
+
+    private void updateLastMessage(Object message) {
+        lastMessage = (Message) message;
+        processingLastMessage = false;
+    }
+
+    /**
+     * Returns the last message which was sent by this replyable.
+     * If no message is sent yet, null is returned.
+     * The cached message doesn't get updated when the action is created with
+     * {@link #getMessageAction(String)}, {@link #getMessageAction(MessageEmbed)},
+     * {@link #getWebhookMessageAction(String)} or {@link #getWebhookMessageAction(MessageEmbed)}
+     * and queued (or completed, etc.) outside this class.
+     */
+    @Nullable
+    @CheckReturnValue
+    public Message getLastMessage() {
+        return lastMessage;
+    }
+
+    /**
+     * Returns the last message which was sent by this replyable.
+     * If there last message is not updated yet, this method will wait until it is sent.
+     * If no message is sent yet or the updating of the last message takes over 5 seconds, null is returned.
+     * <p>
+     * The cached message doesn't get updated when the action is created with
+     * {@link #getMessageAction(String)}, {@link #getMessageAction(MessageEmbed)},
+     * {@link #getWebhookMessageAction(String)} or {@link #getWebhookMessageAction(MessageEmbed)}
+     * and queued (or completed, etc.) outside this class.
+     * This doesn't result on the message being null, but the last message queued inside this replyable to be used.
+     */
+    public synchronized Message waitLastMessage() {
+        if (!processingLastMessage) return lastMessage;
+        long end = System.currentTimeMillis() + 5000;
+
+        while (processingLastMessage && end < System.currentTimeMillis()) {
+            continue;
+        }
+        return lastMessage;
+    }
+
+    /**
+     * Returns the last message which was sent by this replyable.
+     * If there last message is not updated yet, this method will wait until it is sent.
+     * If no message is sent yet or the updating of the last message takes over the given time limit, null is returned.
+     * <p>
+     * The cached message doesn't get updated when the action is created with
+     * {@link #getMessageAction(String)}, {@link #getMessageAction(MessageEmbed)},
+     * {@link #getWebhookMessageAction(String)} or {@link #getWebhookMessageAction(MessageEmbed)}
+     * and queued (or completed, etc.) outside this class.
+     * This doesn't result on the message being null, but the last message queued inside this replyable to be used.
+     *
+     * @param maxWait Amount of millis to wait for updating.
+     */
+    public Message waitLastMessage(int maxWait) {
+        if (!processingLastMessage) return lastMessage;
+        long end = System.currentTimeMillis() + maxWait;
+
+        while (processingLastMessage && end < System.currentTimeMillis()) {
+            continue;
+        }
+        return lastMessage;
     }
 
     /**
@@ -223,7 +309,7 @@ public class Replyable {
         return new Replyable(false) {
             @Override
             public MessageAction getMessageAction(String message) {
-                return event.getMessage().editMessage(message).setActionRow();
+                return event.getMessage().editMessage(message);
             }
 
             @Override
@@ -231,6 +317,48 @@ public class Replyable {
                 return event.getMessage().editMessageEmbeds(message);
             }
         };
+    }
+
+    /**
+     * Creates a replyable which sends the messages as direct messages for the given user.
+     * <p>
+     * If opening a channel fails, {@link Replyable#IGNORE_ALL} is returned.
+     */
+    public static Replyable directMessage(User user) {
+        RestAction<PrivateChannel> action = user.openPrivateChannel();
+        AtomicReference<PrivateChannel> channelAtomicReference = new AtomicReference<>();
+        AtomicReference<Boolean> isChannelLoaded = new AtomicReference<>(false);
+
+        action.queue(channel -> {
+            channelAtomicReference.set(channel);
+            isChannelLoaded.set(true);
+        });
+
+        while (!isChannelLoaded.get()) {
+        }
+
+        return new Replyable(false) {
+            @Override
+            public MessageAction getMessageAction(String message) {
+                return channelAtomicReference.get().sendMessage(message);
+            }
+
+            @Override
+            public MessageAction getMessageAction(MessageEmbed message) {
+                return channelAtomicReference.get().sendMessageEmbeds(message);
+            }
+        };
+    }
+
+    /**
+     * Creates a replyable which sends the messages as direct messages for the given user.
+     * <p>
+     * If opening a channel fails, {@link Replyable#IGNORE_ALL} is returned.
+     */
+    public static Replyable directMessage(long userId, MinigamesBot bot) {
+        User user = bot.getJda().getUserById(userId);
+        if (user != null) return directMessage(user);
+        return IGNORE_ALL;
     }
 
     /**

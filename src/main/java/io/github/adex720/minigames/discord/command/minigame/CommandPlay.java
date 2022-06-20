@@ -65,7 +65,8 @@ public class CommandPlay extends ParentCommand {
             }
 
             if (ci.hasMinigame()) {
-                event.getHook().sendMessage(ci.minigame().quit(Replyable.from(event))).queue();
+                String quitMessage = ci.minigame().quit(Replyable.from(event));
+                if (!quitMessage.isEmpty()) event.getHook().sendMessage(quitMessage).queue();
             }
 
             Replyable replyable = Replyable.from(event);

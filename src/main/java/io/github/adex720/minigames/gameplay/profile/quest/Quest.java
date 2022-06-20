@@ -21,7 +21,7 @@ import io.github.adex720.minigames.util.replyable.Replyable;
  *
  * @author adex720
  */
-public class Quest implements JsonSavable<Quest> {
+public class Quest implements JsonSavable {
 
     private final QuestType type;
     private final QuestDifficulty difficulty;

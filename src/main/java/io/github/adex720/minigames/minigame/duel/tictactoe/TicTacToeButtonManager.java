@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 public class TicTacToeButtonManager extends ButtonManager {
 
     public TicTacToeButtonManager(MinigamesBot bot) {
-        super(bot, "tictactoe");
+        super(bot, "tictactoe", true);
     }
 
     @Override

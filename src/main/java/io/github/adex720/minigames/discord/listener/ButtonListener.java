@@ -36,12 +36,16 @@ public class ButtonListener extends ListenerAdapter {
 
         CommandInfo commandInfo = CommandInfo.create(event, bot); // Create command info
 
-        if (bot.getBanManager().isBanned(commandInfo.authorId()))
-            return; // Banned users shouldn't be able to use buttons
+        if (bot.getBanManager().isBanned(commandInfo.authorId())) return;
+        // Banned users shouldn't be able to use buttons
 
         String[] args = event.getButton().getId().split("-");
 
-        BUTTON_MANAGERS.get(args[0]).onButtonPressed(event, commandInfo, args);
+        ButtonManager buttonManager = BUTTON_MANAGERS.get(args[0]);
+
+        if (buttonManager.requiresProfile == !commandInfo.hasProfile()) return;
+
+        buttonManager.onButtonPressed(event, commandInfo, args);
     }
 
 }

@@ -23,6 +23,10 @@ import javax.annotation.CheckReturnValue;
  */
 public class CommandInfo {
 
+//    private final CalculableValue<Replyable> replyable;
+//    @Nullable
+//    private Replyable calculatedReplyable;
+
     private final CalculableValue<Party> party;
     @Nullable
     private Party calculatedParty;
@@ -53,6 +57,7 @@ public class CommandInfo {
     private String[] calculatedArgs;
 
     public CommandInfo(MessageChannel channel, User author, MinigamesBot bot, @Nullable CalculableValue<String[]> args) {
+        //this.replyable = replyable;
         this.party = () -> bot.getPartyManager().getParty(profile().getPartyId());
 
         this.hasProfile = () -> bot.getProfileManager().hasProfile(author.getIdLong());
@@ -68,6 +73,7 @@ public class CommandInfo {
         this.bot = bot;
         this.args = args;
 
+        //calculatedReplyable = null;
         calculatedParty = null;
         calculatedProfile = null;
         calculatedGuild = null;
@@ -95,6 +101,12 @@ public class CommandInfo {
         User user = event.getAuthor();
         return new CommandInfo(event.getChannel(), user, bot, () -> event.getMessage().getContentRaw().split(" "));
     }
+
+//    @CheckReturnValue
+//    public Replyable replyable() {
+//        if (calculatedReplyable == null) calculatedReplyable = replyable.calculate();
+//        return calculatedReplyable;
+//    }
 
     @CheckReturnValue
     public boolean isInParty() {

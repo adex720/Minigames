@@ -22,7 +22,7 @@ import java.util.Random;
  *
  * @author adex720
  */
-public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
+public abstract class Minigame implements IdCompound, JsonSavable {
 
     protected final MinigamesBot bot;
     protected final MinigameType<? extends Minigame> type;
@@ -171,8 +171,12 @@ public abstract class Minigame implements IdCompound, JsonSavable<Minigame> {
     public void delete(@Nullable Replyable replyable) {
         bot.getMinigameManager().deleteMinigame(id);
 
-        if (requiresLockedParty() && isParty) {
-            bot.getPartyManager().getParty(id).clearLock(replyable);
+        if (isParty) {
+            Party party = bot.getPartyManager().getParty(id);
+
+            if (requiresLockedParty() && isParty) {
+                bot.getPartyManager().getParty(id).clearLock(replyable);
+            }
         }
 
         finished = true;

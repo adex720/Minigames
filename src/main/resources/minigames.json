@@ -66,7 +66,15 @@
     "description": "In Connect 4 game, two players aim to get 4 marks of their own color on a row. The row can be horizontal, vertical or diagonal. The marks can only be put on the lowest fromm spot of a column. The board has 7 columns and 6 rows.",
     "tips": "- Aim placing your marks close to the middle.\n- Plan your future moves.\n- Keep track of game ending positions.\n- Block your opponent before it's too late.\n- Don't focus too much on defence.\n- Find out the purpose of each move your opponent made.",
     "rules": "The player with red marks starts. On one's turn, the player drops one mark on one of the free columns, and it falls to the bottom of it. Once a mark is dropped, it can't be moved. If the board gets full without either player winning the result is a draw.",
-    "color": "FFBE3B"
+    "color": "FFBE3B",
+    "color_name": "light orange"
+  },
+  "trivia": {
+    "description": "a",
+    "tips": "- ",
+    "rules": "r",
+    "color": "BBA14F",
+    "color_name": "gold"
   },
   "available-colors": {
     "dark turquoise": "046B5B",

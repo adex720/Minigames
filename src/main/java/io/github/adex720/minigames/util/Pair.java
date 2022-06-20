@@ -1,5 +1,7 @@
 package io.github.adex720.minigames.util;
 
+import java.util.Map;
+
 /**
  * @author adex720
  */
@@ -13,9 +15,13 @@ public class Pair<F, S> {
         this.second = second;
     }
 
+    public Pair(Map.Entry<F, S> entry) {
+        this.first = entry.getKey();
+        this.second = entry.getValue();
+    }
+
     @Override
     public int hashCode() {
-
         if (first != null && second != null) return first.hashCode() ^ second.hashCode();
         if (first != null) return first.hashCode();
         if (second != null) return second.hashCode();

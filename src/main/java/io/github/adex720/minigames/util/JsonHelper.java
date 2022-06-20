@@ -4,8 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import io.github.adex720.minigames.data.JsonSavable;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -422,6 +425,66 @@ public class JsonHelper {
         }
 
         return jsonArray;
+    }
+
+    /**
+     * Converts an array of Objects whose can be converted to {@link JsonObject} to a {@link JsonArray}.
+     */
+    public static <T extends JsonSavable> JsonArray arrayToJsonArray(T[] elements) {
+        JsonArray json = new JsonArray();
+        for (T element : elements) {
+            json.add(element.getAsJson());
+        }
+        return json;
+    }
+
+    /**
+     * Adds an array of Objects whose can be converted to a {@link JsonObject} to a {@link JsonArray} on a JsonObject.
+     *
+     * @param json     Json add on
+     * @param key      Key of the array on the json
+     * @param elements Elements to add to the json
+     * @param <T>      Type of the elements on the array
+     */
+    public static <T extends JsonSavable> void addArray(JsonObject json, String key, T[] elements) {
+        json.add(key, arrayToJsonArray(elements));
+    }
+
+    /**
+     * Converts a {@link JsonArray} to an array of other objects.
+     * Each {@link JsonObject} on the is converted with the {@link Convertor}.
+     * If the length on the given array is unequal to the length of the given json, a new array is created.
+     *
+     * @param json      JsonArray of elements
+     * @param convertor Convertor to use
+     * @param array     Array to store elements in
+     * @param <T>       Type of elements on the array
+     */
+    public static <T> T[] jsonArrayToArray(JsonArray json, Convertor<JsonObject, T> convertor, @Nonnull T[] array) {
+        int size = json.size();
+        if (array.length != size) array = Arrays.copyOf(array, size);
+
+        for (int i = 0; i < size; i++) {
+            array[i] = convertor.convert(json.get(i).getAsJsonObject());
+        }
+
+        return array;
+    }
+
+    /**
+     * Returns the value of the key as an array of Objects.
+     *
+     * @param json      Json to read from
+     * @param key       Key of the value
+     * @param convertor Convertor to convert JsonObjects to correct type
+     * @param array     Array to store the elements in
+     * @param <T>       Type of the elements after conversion
+     * @return Parameter {@param array}
+     */
+    public static <T> T[] getArray(JsonObject json, String key, Convertor<JsonObject, T> convertor, @Nonnull T[] array) {
+        if (!json.has(key)) return array;
+        JsonArray jsonArray = getJsonArray(json, key);
+        return jsonArrayToArray(jsonArray, convertor, array);
     }
 
     /**

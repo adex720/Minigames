@@ -19,7 +19,7 @@ public class PageMovementManager extends ButtonManager {
     private final HashMap<String, PageCommand> COMMANDS;
 
     public PageMovementManager(MinigamesBot bot) {
-        super(bot, "page");
+        super(bot, "page", false);
 
         COMMANDS = new HashMap<>();
     }

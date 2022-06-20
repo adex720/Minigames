@@ -43,7 +43,7 @@ import java.util.Set;
  *
  * @author adex720
  */
-public class Profile implements IdCompound, JsonSavable<Profile> {
+public class Profile implements IdCompound, JsonSavable {
 
     public static final int STAT_COINS_EARNED_ID = 101;
 
