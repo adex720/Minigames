@@ -1,5 +1,9 @@
 package io.github.adex720.minigames;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.network.HttpsRequester;
 
 import javax.imageio.ImageIO;
@@ -91,7 +95,15 @@ public class Test {
     public static void testWebRequest() throws IOException {
         HttpsRequester requester = new HttpsRequester();
 
-        System.out.println(requester.requestString("https://api.github.com/repos/adex720/Minigames/stargazers"));
+        JsonArray response = requester.requestJson("https://api.github.com/repos/adex720/Minigames/stargazers").getAsJsonArray();
+
+        for (JsonElement jsonElement : response) {
+            JsonObject userJson = (JsonObject) jsonElement;
+
+            String name = JsonHelper.getString(userJson, "login");
+
+        }
+
     }
 
     public static void generateMastermindHintpinEmotes() throws IOException {

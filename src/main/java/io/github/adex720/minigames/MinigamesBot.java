@@ -34,11 +34,16 @@ import io.github.adex720.minigames.minigame.party.memo.ImageBank;
 import io.github.adex720.minigames.minigame.party.trivia.TriviaButtonManager;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.network.ConnectionApp;
 import io.github.adex720.minigames.util.network.HttpsRequester;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.utils.data.DataArray;
+import net.dv8tion.jda.api.utils.data.DataObject;
+import net.dv8tion.jda.internal.requests.RestActionImpl;
+import net.dv8tion.jda.internal.requests.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -215,6 +220,8 @@ public class MinigamesBot {
         startTimers();
 
         calculateLinesOfCode();
+
+        testStuff();
     }
 
     public static void main(String[] args) {
@@ -423,6 +430,10 @@ public class MinigamesBot {
     }
 
     @CheckReturnValue
+    public HttpsRequester getHttpsRequester() {
+        return httpsRequester;
+    }
+
     public long getEmoteId(String name) {
         return JsonHelper.getLong(emoteJson, name, 1L);
     }
@@ -574,6 +585,32 @@ public class MinigamesBot {
 
     private void onException(Exception exception) {
         logger.error("Exception: {} Message: {} Stack-trace: {}", exception.getClass().getPackageName() + "." + exception.getClass().getName(), exception.getMessage(), exception.getStackTrace());
+    }
+
+    private ConnectionApp fromJson(DataObject json, List<ConnectionApp> list) {
+        ConnectionApp app = ConnectionApp.fromJson(json);
+        list.add(app);
+        return app;
+    }
+
+    private void testStuff() {
+
+
+        /*try {
+            Request request = new Request.Builder().url("https://discord.com/oauth2/users/@me/connections")
+                    .build();
+
+            Call call = jda.getHttpClient().newCall(request);
+
+
+            System.out.println(call);
+            Response response = call.execute();
+            System.out.println(response);
+            System.out.println("body: " + response.body() + "; head: " + response.headers());
+            response.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + Arrays.toString(e.getStackTrace()));
+        }*/
     }
 }
 
