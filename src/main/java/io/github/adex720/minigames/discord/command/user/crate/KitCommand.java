@@ -136,7 +136,7 @@ public class KitCommand extends Command {
     }
 
     private void startCooldown(long userId, long used) {
-        COOLDOWNS.put(userId, used + cooldownHours);
+        COOLDOWNS.put(userId, used + cooldownMillis);
 
         bot.addTimerTask(() -> COOLDOWNS.remove(userId, used), cooldownMillis, false);
     }
