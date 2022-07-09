@@ -15,23 +15,27 @@ body {
 }
 
 h1 {
+    font-family: "Times New Roman", serif;
     color: var(--darkestBlue);
     padding-top: 110px;
     margin-top: 0px;
 }
 
 h2 {
+    font-family: "Times New Roman", serif;
     color: var(--darkerBlue);
     font-size: 64px;
     padding-top: 100px;
 }
 
 p {
+    font-family: Arial, sans-serif;
     font-size: 150%
 }
 
 
 .topnav {
+  font-family: "Times New Roman", serif;
   background-color: var(--lighterBlue);
   overflow: hidden;
   position: fixed;
