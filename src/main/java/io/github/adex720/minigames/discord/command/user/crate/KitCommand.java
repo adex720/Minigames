@@ -87,7 +87,18 @@ public class KitCommand extends Command {
             addReward(replyable, profile);
 
             startCooldown(ci.authorId(), current);
-            replyable.reply("You claimed your " + name + " kit. You received " + rewardCoins + " coins.");
+            String reward = "";
+            if (rewardCoins > 0) {
+                String and = crateId >= 0 ? " and " : ".";
+                reward = "You received " + rewardCoins + " coins" + and;
+            }
+
+            if (crateId >= 0) {
+                CrateType crateType = CrateType.get(crateId);
+                reward += crateType.getNameWithArticle() + " crate.";
+            }
+
+            replyable.reply("You claimed your " + name + " kit. You received " + reward);
 
             profile.appendQuests(quest -> quest.kitClaimed(replyable, name, profile));
         } else {
