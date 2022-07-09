@@ -8,11 +8,10 @@ import io.github.adex720.minigames.discord.command.miscellaneous.CommandServer;
 import io.github.adex720.minigames.gameplay.profile.Profile;
 import io.github.adex720.minigames.gameplay.profile.crate.CrateType;
 import io.github.adex720.minigames.util.Pair;
-import io.github.adex720.minigames.util.replyable.Replyable;
 import io.github.adex720.minigames.util.Util;
+import io.github.adex720.minigames.util.replyable.Replyable;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 
@@ -33,7 +32,7 @@ public class KitCommand extends Command {
     private final int cooldownHours;
     private final int cooldownMillis;
 
-    private final HashMap<Long, OffsetDateTime> COOLDOWNS;
+    private final HashMap<Long, Long> COOLDOWNS;
 
     private final PermissionCheck permissionCheck;
 
@@ -75,10 +74,10 @@ public class KitCommand extends Command {
 
         int canClaim = canClaim(event, ci);
         if (canClaim == 0) {
-            OffsetDateTime ready = COOLDOWNS.get(ci.authorId()); // Getting times
-            OffsetDateTime current = event.getTimeCreated();
+            Long ready = COOLDOWNS.get(ci.authorId()); // Getting time
+            long current = Util.getEpoch(event);
             if (ready != null) {
-                if (ready.isAfter(current)) {
+                if (ready > current) {
                     replyable.reply("This kit is on cooldown for " + getCooldown(ready, current) + ".");
                     return true;
                 }
@@ -97,7 +96,7 @@ public class KitCommand extends Command {
         return true;
     }
 
-    public Pair<Integer, Integer> addRewardAndCooldown(SlashCommandInteractionEvent event, Profile profile, OffsetDateTime time) {
+    public Pair<Integer, Integer> addRewardAndCooldown(SlashCommandInteractionEvent event, Profile profile, long time) {
         startCooldown(profile.getId(), time);
         return addReward(Replyable.from(event), profile);
     }
@@ -115,14 +114,14 @@ public class KitCommand extends Command {
         return new Pair<>(rewardCoins, crateId);
     }
 
-    public String getCooldown(OffsetDateTime ready, OffsetDateTime current) {
-        return Util.formatTime(Duration.between(current, ready));
+    public String getCooldown(long ready, long current) {
+        return Util.formatTime((int) ((ready - current) * 0.001f));
     }
 
-    public String getCooldownFull(long userId, OffsetDateTime current) {
-        OffsetDateTime ready = COOLDOWNS.get(userId);
+    public String getCooldownFull(long userId, long current) {
+        Long ready = COOLDOWNS.get(userId);
         if (ready != null) {
-            if (ready.isAfter(current)) {
+            if (ready > current) {
                 return bot.getEmote("kit_loading") + " **" + name + "**: " + getCooldown(ready, current);
             }
         }
@@ -130,14 +129,14 @@ public class KitCommand extends Command {
         return bot.getEmote("kit_ready") + " " + name + ": Ready";
     }
 
-    public boolean isOnCooldown(long userId, OffsetDateTime time) {
+    public boolean isOnCooldown(long userId, long time) {
         if (!COOLDOWNS.containsKey(userId)) return false;
 
-        return COOLDOWNS.get(userId).isAfter(time);
+        return COOLDOWNS.get(userId) > time;
     }
 
-    private void startCooldown(long userId, OffsetDateTime used) {
-        COOLDOWNS.put(userId, used.plusHours(cooldownHours));
+    private void startCooldown(long userId, long used) {
+        COOLDOWNS.put(userId, used + cooldownHours);
 
         bot.addTimerTask(() -> COOLDOWNS.remove(userId, used), cooldownMillis, false);
     }

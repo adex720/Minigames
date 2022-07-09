@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -29,7 +28,7 @@ public class CommandClaim extends Command {
 
     @Override
     public boolean execute(SlashCommandInteractionEvent event, CommandInfo ci) {
-        OffsetDateTime time = OffsetDateTime.now();
+        long time = Util.getEpoch(event);
         User user = ci.author();
         long userId = user.getIdLong();
         Profile profile = ci.profile();

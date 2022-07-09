@@ -49,7 +49,7 @@ public class CommandGuildTransfer extends Subcommand {
             return true;
         }
 
-        bot.getGuildManager().transfer(previousOwnerId, newOwnerId, newOwner.getAsTag());
+        bot.getGuildManager().transfer(previousOwnerId, newOwnerId, newOwner.getAsTag(), guild.getJoinTimestamp(newOwnerId));
         event.getHook().sendMessage("The guild was transferred successfully!\n" + guild.getName() + " is now owned by " + newOwner.getAsMention() + ".").queue();
         return true;
     }

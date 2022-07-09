@@ -8,7 +8,6 @@ import io.github.adex720.minigames.data.IdCompound;
 import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.gameplay.guild.boss.GuildBoss;
 import io.github.adex720.minigames.util.JsonHelper;
-import io.github.adex720.minigames.util.Pair;
 import io.github.adex720.minigames.util.Triple;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -47,7 +46,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
 
     private GuildBoss boss;
 
-    public Guild(MinigamesBot bot, long ownerId,String ownerTag, String name) {
+    public Guild(MinigamesBot bot, long ownerId, String ownerTag, String name) {
         createdTime = System.currentTimeMillis();
 
         this.ownerId = ownerId;
@@ -153,7 +152,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
             boss = bot.getGuildBossList().get(0);
         }
 
-        return new Guild(ownerId, ownerTag, ownerJoined,members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss);
+        return new Guild(ownerId, ownerTag, ownerJoined, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss);
     }
 
     @Override
@@ -376,6 +375,16 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
         }
 
         return memberIds;
+    }
+
+    public long getJoinTimestamp(long userId) {
+        if (userId == ownerId) return ownerJoined;
+
+        for (Triple<Long, String, Long> member : members) {
+            if (member.first == userId) return member.third;
+        }
+
+        return -1;
     }
 
     /**

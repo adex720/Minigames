@@ -654,13 +654,13 @@ public class Profile implements IdCompound, JsonSavable {
     }
 
 
-    public String getKitCooldown(int kitId, OffsetDateTime current) {
+    public String getKitCooldown(int kitId, long current) {
         KitCommand command = bot.getKitCooldownManager().getKitCommand(kitId);
         return command.getCooldownFull(userId, current);
     }
 
     public String getKitCooldowns() {
-        OffsetDateTime current = OffsetDateTime.now();
+        long current = System.currentTimeMillis();
         StringBuilder cooldowns = new StringBuilder();
 
         boolean newLine = false;
