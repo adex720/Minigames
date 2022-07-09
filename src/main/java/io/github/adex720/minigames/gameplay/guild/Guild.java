@@ -9,6 +9,7 @@ import io.github.adex720.minigames.data.JsonSavable;
 import io.github.adex720.minigames.gameplay.guild.boss.GuildBoss;
 import io.github.adex720.minigames.util.JsonHelper;
 import io.github.adex720.minigames.util.Pair;
+import io.github.adex720.minigames.util.Triple;
 import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -29,11 +30,10 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
 
     public static final int MAX_SIZE = 10;
 
-    public static final int MAX_COINS = 1000;
-
     private long ownerId;
     private String ownerTag;
-    private final Set<Pair<Long, String>> members;
+    private long ownerJoined;
+    private final Set<Triple<Long, String, Long>> members; // id, tag, join-time
     private String name;
 
     private final Set<Long> elders;
@@ -47,11 +47,12 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
 
     private GuildBoss boss;
 
-    public Guild(MinigamesBot bot, long ownerId, String ownerTag, String name) {
+    public Guild(MinigamesBot bot, long ownerId,String ownerTag, String name) {
         createdTime = System.currentTimeMillis();
 
         this.ownerId = ownerId;
         this.ownerTag = ownerTag;
+        this.ownerJoined = createdTime;
         members = new HashSet<>();
         this.name = name;
 
@@ -66,11 +67,12 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
         boss = bot.getGuildBossList().get(0);
     }
 
-    public Guild(long ownerId, String ownerTag, ArrayList<Pair<Long, String>> members, ArrayList<Long> elders, String name,
+    public Guild(long ownerId, String ownerTag, long ownerJoined, ArrayList<Triple<Long, String, Long>> members, ArrayList<Long> elders, String name,
                  long created, boolean isPublic, int minigamesWonTotal, int minigamesWonCurrentWeek, GuildBoss boss) {
 
         this.ownerId = ownerId;
         this.ownerTag = ownerTag;
+        this.ownerJoined = ownerJoined;
 
         this.members = new HashSet<>();
         this.members.addAll(members);
@@ -118,9 +120,10 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
     public static Guild fromJson(JsonObject json, MinigamesBot bot) {
         long ownerId = JsonHelper.getLong(json, "owner");
         String ownerTag = JsonHelper.getString(json, "owner-tag");
+        long ownerJoined = JsonHelper.getLong(json, "owner-joined", System.currentTimeMillis());
 
         JsonArray membersJson = JsonHelper.getJsonArrayOrEmpty(json, "members");
-        ArrayList<Pair<Long, String>> members = new ArrayList<>();
+        ArrayList<Triple<Long, String, Long>> members = new ArrayList<>();
         ArrayList<Long> elders = new ArrayList<>();
 
         for (JsonElement jsonElement : membersJson) {
@@ -128,7 +131,8 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
 
             long userId = JsonHelper.getLong(memberJson, "id");
             String tag = JsonHelper.getString(memberJson, "tag");
-            members.add(new Pair<>(userId, tag));
+            long joined = JsonHelper.getLong(memberJson, "join", System.currentTimeMillis());
+            members.add(new Triple<>(userId, tag, joined));
 
             if (memberJson.has("elder")) elders.add(userId);
         }
@@ -149,7 +153,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
             boss = bot.getGuildBossList().get(0);
         }
 
-        return new Guild(ownerId, ownerTag, members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss);
+        return new Guild(ownerId, ownerTag, ownerJoined,members, elders, name, created, isPublic, minigamesWonTotal, minigamesWonCurrentWeek, boss);
     }
 
     @Override
@@ -175,7 +179,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
     private JsonArray getMembersJson() {
         JsonArray json = new JsonArray();
 
-        for (Pair<Long, String> member : members) {
+        for (Triple<Long, String, Long> member : members) {
             JsonObject memberJson = new JsonObject();
 
             memberJson.addProperty("id", member.first);
@@ -197,7 +201,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
     public boolean isInGuild(long userId) {
         if (userId == ownerId) return true;
 
-        for (Pair<Long, String> member : members) {
+        for (Triple<Long, String, Long> member : members) {
             if (member.first == userId) return true;
         }
         return false;
@@ -209,7 +213,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
      * @param userId Id of the user
      */
     public boolean isGuildMember(long userId) {
-        for (Pair<Long, String> member : members) {
+        for (Triple<Long, String, Long> member : members) {
             if (member.first == userId) return true;
         }
         return false;
@@ -299,7 +303,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
         StringBuilder membersString = new StringBuilder();
         boolean newLine = false;
 
-        for (Pair<Long, String> member : members) {
+        for (Triple<Long, String, Long> member : members) {
             if (newLine) membersString.append('\n');
 
             membersString.append(member.second);
@@ -312,12 +316,13 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
         return new MessageEmbed.Field("Members:", membersString.toString(), false);
     }
 
-    public void transfer(MinigamesBot bot, long newOwnerId, String newOwnerTag) {
+    public void transfer(MinigamesBot bot, long newOwnerId, String newOwnerTag, long newOwnerJoined) {
         removeMember(newOwnerId);
-        members.add(new Pair<>(ownerId, ownerTag));
+        members.add(new Triple<>(ownerId, ownerTag, ownerJoined));
 
         ownerId = newOwnerId;
         ownerTag = newOwnerTag;
+        ownerJoined = newOwnerJoined;
 
         onTransfer(bot);
     }
@@ -344,8 +349,8 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
      * @param userId Id of the member
      * @param tag    Tag of the member
      */
-    public void addMember(long userId, String tag) {
-        members.add(new Pair<>(userId, tag));
+    public void addMember(long userId, String tag, long timestamp) {
+        members.add(new Triple<>(userId, tag, timestamp));
     }
 
     /**
@@ -366,7 +371,7 @@ public class Guild implements JsonSavable, IdCompound { //TODO: record member jo
         Set<Long> memberIds = new HashSet<>();
         memberIds.add(ownerId);
 
-        for (Pair<Long, String> member : members) {
+        for (Triple<Long, String, Long> member : members) {
             memberIds.add(member.first);
         }
 

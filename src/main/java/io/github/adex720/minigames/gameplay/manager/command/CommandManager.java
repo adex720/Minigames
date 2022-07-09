@@ -164,6 +164,8 @@ public class CommandManager extends Manager {
 
         devCommandListener.addCommand(new DevCommandAddCoins(bot));
         devCommandListener.addCommand(new DevCommandRemoveCoins(bot));
+
+        devCommandListener.addCommand(new DevCommandTest(bot));
     }
 
     public void addCommand(Command command) {

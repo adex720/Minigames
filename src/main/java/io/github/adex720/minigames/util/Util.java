@@ -1,9 +1,12 @@
 package io.github.adex720.minigames.util;
 
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
-import java.time.Duration;
+import java.sql.Timestamp;
+import java.time.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -260,6 +263,16 @@ public class Util {
             }
         }
         return formatted.toString();
+    }
+
+    /**
+     * Returns the amount of milliseconds since 0 am at UTC timezone on 1-1-1970 until the interaction was created.
+     */
+    public static long getEpoch(SlashCommandInteractionEvent event) {
+        OffsetDateTime dateTime = event.getInteraction().getTimeCreated();
+        Instant instant = Timestamp.valueOf(LocalDateTime.ofInstant(dateTime.toInstant(), ZoneOffset.UTC)).toInstant();
+
+        return instant.toEpochMilli();
     }
 
 }

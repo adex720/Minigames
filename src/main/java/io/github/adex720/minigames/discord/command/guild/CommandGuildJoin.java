@@ -5,6 +5,7 @@ import io.github.adex720.minigames.discord.command.CommandCategory;
 import io.github.adex720.minigames.discord.command.CommandInfo;
 import io.github.adex720.minigames.discord.command.Subcommand;
 import io.github.adex720.minigames.gameplay.guild.Guild;
+import io.github.adex720.minigames.util.Util;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -58,7 +59,8 @@ public class CommandGuildJoin extends Subcommand {
             return true;
         }
 
-        guild.addMember(userId, ci.getAuthorTag());
+        long timestamp = Util.getEpoch(event);
+        guild.addMember(userId, ci.getAuthorTag(), timestamp);
         event.getHook().sendMessage("You joined " + guild.getName() + ".").queue();
         ci.profile().guildJoined(guild.getId());
         return true;

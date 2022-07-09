@@ -40,10 +40,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
-import net.dv8tion.jda.internal.requests.RestActionImpl;
-import net.dv8tion.jda.internal.requests.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +53,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -407,11 +405,6 @@ public class MinigamesBot {
     @CheckReturnValue
     public GuildBossList getGuildBossList() {
         return guildBossList;
-    }
-
-    @CheckReturnValue
-    public HttpsRequester getHttpsRequester() {
-        return httpsRequester;
     }
 
     @CheckReturnValue
