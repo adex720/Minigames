@@ -3,7 +3,9 @@
 /out
 /build
 
-src/main/resources/excel
+/src/main/resources/excel
+
+/backup
 
 config.json
 

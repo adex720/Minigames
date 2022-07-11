@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 class GuildTest {
 
-    Guild exampleGuild = new Guild(22L, "User#1234", System.currentTimeMillis(), new ArrayList<>(), new ArrayList<>(), "name", 123456L, true, 27, 12,
+    Guild exampleGuild = new Guild(bot, 22L, "User#1234", System.currentTimeMillis(), new ArrayList<>(), new ArrayList<>(), "name", 123456L, true, 27, 12,
             new GuildBoss("Boss 1", 0, 1234567, 20, new GuildBossReward(200)));
 
     GuildTest() {

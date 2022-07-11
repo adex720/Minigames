@@ -248,6 +248,13 @@ public class MinigamesBot {
         }
     }
 
+    public void forceRestart() {
+        save();
+        stop();
+
+        Util.schedule(() -> main(new String[0]), 10000);
+    }
+
     private void startTimers() {
         addTimerTask(this::clearInactive, 1000 * 60 * 5, true); // Delete inactive parties and minigames
         addTimerTask(resourceDataManager::clearCache, 1000 * 60 * 60 * 6, true); // Clear cached resource json files
